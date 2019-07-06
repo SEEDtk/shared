@@ -6,7 +6,9 @@ package org.theseed.shared;
 import java.io.File;
 import java.io.IOException;
 import java.util.Scanner;
+import java.util.SortedSet;
 
+import org.theseed.utils.CountMap;
 import org.theseed.utils.MagicMap;
 
 import junit.framework.TestCase;
@@ -91,6 +93,26 @@ public class TestLibrary extends TestCase {
             assertEquals("Loaded table has wrong thing name.", newThing.getName(), oldThing.getName());
             assertEquals("Loaded thing has wrong checksum.", newThing, oldThing);
         }
+    }
+
+    public void testCounts() {
+        CountMap<String> testMap = new CountMap<String>();
+        testMap.setGood("AAA");
+        testMap.setGood("AAA");
+        testMap.setGood("AAA");
+        testMap.setGood("AAA");
+        testMap.setBad("AAA");
+        assertEquals("Incorrect fraction good for AAA.", 0.8, testMap.fractionGood("AAA"));
+        testMap.setBad("BBB");
+        assertEquals("Incorrect bad count for BBB.", 1, testMap.bad("BBB"));
+        testMap.setGood("CCC");
+        assertEquals("Incorrect good count for BBB.", 1, testMap.good("CCC"));
+        testMap.setGood("DDD");
+        testMap.setBad("DDD");
+        SortedSet<String> keys = testMap.keys();
+        String key1 = keys.first();
+        assertEquals("Incorrect smallest key.", "AAA", key1);
+        assertEquals("Incorrect number of keys.", 4, key1.length());
     }
 
 

@@ -66,11 +66,11 @@ public class CountMap<K> {
     }
 
     /**
-     * @return the mean good count for a given key
+     * @return the fraction of good instances for a given key
      *
      * @param key	key for the counter of interest
      */
-    public double meanGood(K key) {
+    public double fractionGood(K key) {
         double retVal = 0;
         int good = this.good(key);
         if (good > 0) {
