@@ -1,7 +1,7 @@
 /**
  *
  */
-package org.theseed.utils;
+package org.theseed.counters;
 
 import java.util.HashMap;
 import java.util.SortedSet;
@@ -9,15 +9,13 @@ import java.util.TreeSet;
 
 /**
  *
- * This is a simple map from a random object to a number. It is used for simple counters.
- * Currently, the implementation is fairly inefficient.  When I have time, I will do something
- * smarter.  There are two counts computed-- good and bad.  The user can also ask for the mean
- * good count and the mean bad count.  Both values can be retrieved, but only one can be incremented.
+ * This is a simple map from a random object to a pair of numbers. It is used for simple counters.
+ * There are two counts computed-- good and bad.
  *
  * @author Bruce Parrello
  *
  */
-public class CountMap<K> {
+public class QualityCountMap<K> {
 
     /** underlying hash map */
     HashMap<K, Counts> map;
@@ -35,7 +33,7 @@ public class CountMap<K> {
     /**
      * Create a blank counting map.
      */
-    public CountMap() {
+    public QualityCountMap() {
         this.map = new HashMap<K, Counts>();
     }
 
@@ -46,8 +44,9 @@ public class CountMap<K> {
      */
     public int good(K key) {
         int retVal = 0;
-        if (this.map.containsKey(key)) {
-            retVal = this.map.get(key).good;
+        Counts found = this.map.get(key);
+        if (found != null) {
+            retVal = found.good;
         }
         return retVal;
     }
@@ -59,8 +58,9 @@ public class CountMap<K> {
      */
     public int bad(K key) {
         int retVal = 0;
-        if (this.map.containsKey(key)) {
-            retVal = this.map.get(key).bad;
+        Counts found = this.map.get(key);
+        if (found != null) {
+            retVal = found.bad;
         }
         return retVal;
     }
@@ -86,9 +86,8 @@ public class CountMap<K> {
      */
     private Counts getCounts(K key) {
         Counts retVal;
-        if (this.map.containsKey(key)) {
-            retVal = this.map.get(key);
-        } else {
+        retVal = this.map.get(key);
+        if (retVal == null) {
             retVal = new Counts();
             this.map.put(key, retVal);
         }
@@ -114,6 +113,15 @@ public class CountMap<K> {
         TreeSet<K> retVal = new TreeSet<K>(this.map.keySet());
         return retVal;
     }
+
+    /**
+     * @return the number of keys in this map
+     */
+    public int size() {
+        return this.map.size();
+    }
+
+
 
 
 }

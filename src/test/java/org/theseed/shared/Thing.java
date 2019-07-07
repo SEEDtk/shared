@@ -14,7 +14,7 @@ import org.theseed.utils.MagicObject;
 public class Thing extends MagicObject {
 
     /**
-     *
+     * serialization object type ID
      */
     private static final long serialVersionUID = -5855290474686618053L;
 

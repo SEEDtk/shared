@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
-
 import org.theseed.locations.Location;
 import org.theseed.locations.Region;
 
@@ -224,6 +223,24 @@ public class Genome  {
     @Override
     public String toString() {
         return this.id + " (" + this.name + ")";
+    }
+
+    public Collection<Feature> getContigFeatures(String contigId) {
+        ArrayList<Feature> retVal = new ArrayList<Feature>(this.getFeatureCount());
+        for (Feature feat : this.features.values()) {
+            if (feat.getLocation().getContigId().equals(contigId)) {
+                retVal.add(feat);
+            }
+        }
+        retVal.sort(new Feature.LocationComparator());
+        return retVal;
+    }
+
+    /**
+     * @return the number of features in this genome
+     */
+    public int getFeatureCount() {
+        return this.features.size();
     }
 
 

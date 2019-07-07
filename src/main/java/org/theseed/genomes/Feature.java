@@ -1,5 +1,7 @@
 package org.theseed.genomes;
 
+import java.util.Comparator;
+
 import org.theseed.locations.Location;
 
 import com.github.cliftonlabs.json_simple.JsonArray;
@@ -148,6 +150,46 @@ public class Feature implements Comparable<Feature> {
             }
         }
         return retVal;
+    }
+
+    /**
+     * This class is used to sort the features by location.
+     *
+     * @author Bruce Parrello
+     *
+     */
+    public static class LocationComparator implements Comparator<Feature> {
+
+        @Override
+        public int compare(Feature arg0, Feature arg1) {
+            return arg0.location.compareTo(arg1.location);
+        }
+
+    }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((this.id == null) ? 0 : this.id.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (!(obj instanceof Feature))
+            return false;
+        Feature other = (Feature) obj;
+        if (this.id == null) {
+            if (other.id != null)
+                return false;
+        } else if (!this.id.equals(other.id))
+            return false;
+        return true;
     }
 
 

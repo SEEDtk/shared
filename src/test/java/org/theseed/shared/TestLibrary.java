@@ -6,23 +6,33 @@ package org.theseed.shared;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.SortedSet;
 
+import org.theseed.counters.CountMap;
+import org.theseed.counters.KeyPair;
+import org.theseed.counters.PairCounter;
+import org.theseed.counters.QualityCountMap;
+import org.theseed.genomes.Contig;
 import org.theseed.genomes.Feature;
 import org.theseed.genomes.Genome;
 import org.theseed.genomes.GenomeDirectory;
+import org.theseed.locations.FLocation;
 import org.theseed.locations.Frame;
 import org.theseed.locations.Location;
 import org.theseed.locations.LocationList;
 import org.theseed.locations.Region;
-import org.theseed.utils.CountMap;
 import org.theseed.utils.MagicMap;
 
 import junit.framework.TestCase;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.*;
 
 /**
  * @author Bruce Parrello
@@ -110,7 +120,7 @@ public class TestLibrary extends TestCase {
     }
 
     public void testCounts() {
-        CountMap<String> testMap = new CountMap<String>();
+        QualityCountMap<String> testMap = new QualityCountMap<String>();
         testMap.setGood("AAA");
         testMap.setGood("AAA");
         testMap.setGood("AAA");
@@ -418,6 +428,131 @@ public class TestLibrary extends TestCase {
         }
     }
 
+    /**
+     * Test the feature-by-location sort
+     */
+    public void testContigFeatures() {
+        Collection<Contig> contigs = myGto.getContigs();
+        int featureCount = 0;
+        for (Contig contig : contigs) {
+            Collection<Feature> contigFeatures = myGto.getContigFeatures(contig.getId());
+            featureCount += contigFeatures.size();
+            Location previous = new FLocation(contig.getId());
+            previous.addRegion(0, 0);
+            for (Feature feat : contigFeatures) {
+                Location current = feat.getLocation();
+                assertEquals("Feature is on wrong contig.", contig.getId(), current.getContigId());
+                assertTrue("Feature is out of order.", current.getBegin() >= previous.getBegin());
+            }
+        }
+        assertEquals("Feature count incorrect.", myGto.getFeatureCount(), featureCount);
+    }
 
+    /**
+     * Test the key pairs.
+     */
+    public void testKeyPair() {
+        Thing t1 = new Thing("T1", "first thing");
+        Thing t2 = new Thing("T2", "second thing");
+        Thing t3 = new Thing("T3", "third thing");
+        KeyPair<Thing> p12 = new KeyPair<Thing>(t1, t2);
+        KeyPair<Thing> p21 = new KeyPair<Thing>(t2, t1);
+        KeyPair<Thing> p13 = new KeyPair<Thing>(t1, t3);
+        assertEquals("Equality is not commutative.", p12, p21);
+        assertEquals("Hash codes are not commutative.", p12.hashCode(), p21.hashCode());
+        assertFalse("Different things compare equal.", p13.equals(p12));
+        assertSame("Wrong left value.", t1, p12.getLeft());
+        assertSame("Wrong right value.", t2, p12.getRight());
+    }
 
+    /**
+     * Test counting maps.
+     */
+    public void testCounters() {
+        Thing t1 = new Thing("T1", "first thing");
+        Thing t2 = new Thing("T2", "second thing");
+        Thing t3 = new Thing("T3", "third thing");
+        Thing t4 = new Thing("T4", "fourth thing");
+        Thing t5 = new Thing("T5", "fifth thing");
+        CountMap<Thing> thingCounter = new CountMap<Thing>();
+        assertEquals("New thingcounter not empty (items).", 0, thingCounter.size());
+        assertEquals("Thing 5 count not zero.", 0, thingCounter.getCount(t5));
+        assertEquals("Asking about thing 5 added to map.", 0, thingCounter.size());
+        thingCounter.count(t1);
+        thingCounter.count(t4);
+        thingCounter.count(t2);
+        thingCounter.count(t3);
+        thingCounter.count(t2);
+        thingCounter.count(t3);
+        thingCounter.count(t4);
+        thingCounter.count(t3);
+        thingCounter.count(t4);
+        thingCounter.count(t4);
+        assertEquals("Wrong count for thing 1.", 1, thingCounter.getCount(t1));
+        assertEquals("Wrong count for thing 2.", 2, thingCounter.getCount(t2));
+        assertEquals("Wrong count for thing 3.", 3, thingCounter.getCount(t3));
+        assertEquals("Wrong count for thing 4.", 4, thingCounter.getCount(t4));
+        assertEquals("Wrong count for thing 5.", 0, thingCounter.getCount(t5));
+        Collection<Thing> keysFound = thingCounter.keys();
+        assertThat("Wrong keys returned.", keysFound, contains(t1, t4, t2, t3));
+        assertEquals("Too many keys returned.", 4, keysFound.size());
+        assertEquals("Wrong number of entries in counter.", 4, thingCounter.size());
+        Collection<CountMap<Thing>.Count> countsFound = thingCounter.sortedCounts();
+        Collection<Thing> keysCounted = new ArrayList<Thing>(4);
+        int prev = Integer.MAX_VALUE;
+        for (CountMap<Thing>.Count result : countsFound) {
+            assertThat("Counts out of order for " + result.getKey() + ".", result.getCount(), lessThan(prev));
+            prev = result.getCount();
+            keysCounted.add(result.getKey());
+        }
+        assertThat("Wrong keys returned in result list.", keysCounted, contains(t4, t3, t2, t1));
+        PairCounter<Thing> pairCounter = new PairCounter<Thing>();
+        assertEquals("Pair counter not empty after creation (pairs).", 0, pairCounter.size());
+        assertEquals("Pair counter not empty after creation (items).", 0, pairCounter.itemSize());
+        assertEquals("Pair counter nonzero at creation.", 0, pairCounter.getCount(t1, t2));
+        pairCounter.recordOccurrence(t1);
+        assertEquals("Pair count for t1 wrong.", 1, pairCounter.getCount(t1));
+        assertEquals("Pair counter not empty after item record.", 0, pairCounter.size());
+        assertEquals("Pair item counter not 1 after first count.", 1, pairCounter.itemSize());
+        List<Thing> myList = Arrays.asList(t2, t3);
+        pairCounter.recordOccurrence(t4, myList);
+        pairCounter.recordPairing(t2, t4);
+        // We have recorded t1 with no pairs and t4 with t2 and t3. We also have a pairing of t2 and t4.
+        // The counts we expect are t1 = 1, t4 = 1, t2/t4 = 2, t3/t4 = 1, t4/t3 = 1, t4/t2 = 1.
+        assertEquals("Pair counter pairs wrong.", 2, pairCounter.size());
+        assertEquals("t1 counter wrong.", 1, pairCounter.getCount(t1));
+        assertEquals("t2 counter wrong.", 0, pairCounter.getCount(t2));
+        assertEquals("t4 counter wrong.", 1, pairCounter.getCount(t4));
+        assertEquals("t2/t4 counter wrong.", 2, pairCounter.getCount(t2, t4));
+        assertEquals("t3/t4 counter wrong.", 1, pairCounter.getCount(t3, t4));
+        assertEquals("t4/t3 counter wrong.", 1, pairCounter.getCount(t4, t3));
+        assertEquals("t4/t2 counter wrong.", 2, pairCounter.getCount(t4, t2));
+        myList = Arrays.asList(t4, t1, t3, t3);
+        pairCounter.recordOccurrence(t2, myList);
+        pairCounter.recordOccurrence(t4, myList);
+        assertEquals("Pair counter pairs wrong after second pass.", 6, pairCounter.size());
+        assertEquals("Pair counter items wrong after second pass.", 3, pairCounter.itemSize());
+        assertEquals("t1 counter wrong after second pass.", 1, pairCounter.getCount(t1));
+        assertEquals("t2 counter wrong after second pass.", 1, pairCounter.getCount(t2));
+        assertEquals("t4 counter wrong after second pass.", 2, pairCounter.getCount(t4));
+        assertEquals("t2/t1 counter wrong after second pass.", 1, pairCounter.getCount(t2, t1));
+        assertEquals("t1/t2 counter wrong after second pass.", 1, pairCounter.getCount(t1, t2));
+        assertEquals("t2/t3 counter wrong after second pass.", 2, pairCounter.getCount(t2, t3));
+        assertEquals("t3/t2 counter wrong after second pass.", 2, pairCounter.getCount(t3, t2));
+        assertEquals("t1/t4 counter wrong after second pass.", 1, pairCounter.getCount(t1, t4));
+        assertEquals("t2/t4 counter wrong after second pass.", 3, pairCounter.getCount(t2, t4));
+        assertEquals("t3/t4 counter wrong after second pass.", 3, pairCounter.getCount(t3, t4));
+        assertEquals("t4/t4 counter wrong after second pass.", 1, pairCounter.getCount(t4, t4));
+        assertEquals("t4/t3 counter wrong after second pass.", 3, pairCounter.getCount(t4, t3));
+        assertEquals("t4/t2 counter wrong after second pass.", 3, pairCounter.getCount(t4, t2));
+        assertEquals("t4/t1 counter wrong after second pass.", 1, pairCounter.getCount(t4, t1));
+        // Get the sorted list of counts.
+        Collection<PairCounter<Thing>.Count> sortedPairs = pairCounter.sortedCounts();
+        prev = Integer.MAX_VALUE;
+        for (PairCounter<Thing>.Count counter : sortedPairs) {
+            assertThat("Counts out of order.", prev, greaterThanOrEqualTo(counter.getCount()));
+            prev = counter.getCount();
+        }
+
+    }
 }
