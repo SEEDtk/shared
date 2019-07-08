@@ -588,6 +588,16 @@ public class TestLibrary extends TestCase {
             assertThat("Counts out of order.", prev, greaterThanOrEqualTo(counter.getCount()));
             prev = counter.getCount();
         }
+        // Get the sorted list of items counted.
+        Collection<CountMap<Thing>.Count> sortedItems = pairCounter.sortedItemCounts();
+        assertThat("Wrong list of items counted.",
+                sortedItems.stream().map(CountMap<Thing>.Count::getKey).collect(Collectors.toList()),
+                containsInAnyOrder(t1, t2, t4));
+        prev = Integer.MAX_VALUE;
+        for (CountMap<Thing>.Count counter : sortedItems) {
+            assertThat("Counts out of order.", prev, greaterThanOrEqualTo(counter.getCount()));
+            prev = counter.getCount();
+        }
     }
 
     public void testDistance() {
@@ -705,6 +715,12 @@ public class TestLibrary extends TestCase {
             assertEquals("Loaded table has wrong role name.", newRole.getName(), oldRole.getName());
             assertEquals("Loaded role has wrong checksum.", newRole, oldRole);
         }
+        // Test on-the-fly registration.
+        RoleMap goodRoles = new RoleMap();
+        goodRoles.register("Role 1", "Role 2", "Role 3");
+        assertNotNull("Role 1 not found", goodRoles.containsName("role 1"));
+        assertNotNull("Role 2 not found", goodRoles.containsName("role 2"));
+        assertNotNull("Role 3 not found", goodRoles.containsName("role 3"));
     }
 
     /**
@@ -857,7 +873,15 @@ public class TestLibrary extends TestCase {
         assertEquals("Wrong first role of feature", "IMP cyclohydrolase (EC 3.5.4.10)", roles[0]);
         assertEquals("Wrong second role of feature", "Phosphoribosylaminoimidazolecarboxamide formyltransferase (EC 2.1.2.3)",
                 roles[1]);
-
+        // Test useful roles.
+        RoleMap goodRoles = new RoleMap();
+        goodRoles.register("Phosphoribosylaminoimidazolecarboxamide formyltransferase (EC 2.1.2.3)");
+        List<Role> found = testFeat.getUsefulRoles(goodRoles);
+        assertEquals("Useful role count wrong.", 1, found.size());
+        assertEquals("Wrong useful role returned", "PhosForm", found.get(0).getId());
+        testFeat = myGto.getFeature("fig|1313.7001.peg.1190");
+        found = testFeat.getUsefulRoles(goodRoles);
+        assertEquals("Useful role found in useless peg.", 0, found.size());
     }
 
 }

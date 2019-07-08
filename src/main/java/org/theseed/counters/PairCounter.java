@@ -203,5 +203,11 @@ public class PairCounter<K> {
         return retVal;
     }
 
+    /**
+     * @return a list of the items that participated in counts
+     */
+    public Collection<CountMap<K>.Count> sortedItemCounts() {
+        return this.keyCountMap.sortedCounts();
+    }
 
 }

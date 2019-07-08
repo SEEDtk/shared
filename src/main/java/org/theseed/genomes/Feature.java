@@ -1,12 +1,16 @@
 package org.theseed.genomes;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.RegExUtils;
 import org.theseed.locations.Location;
+import org.theseed.proteins.Role;
+import org.theseed.proteins.RoleMap;
 
 import com.github.cliftonlabs.json_simple.JsonArray;
 import com.github.cliftonlabs.json_simple.JsonKey;
@@ -282,6 +286,23 @@ public class Feature implements Comparable<Feature> {
         } else if (!this.id.equals(other.id))
             return false;
         return true;
+    }
+
+    /**
+     * @return the roles in this feature that are also found in the specified role map.
+     *
+     * @param map	map containing the roles considered useful
+     */
+    public List<Role> getUsefulRoles(RoleMap map) {
+        String[] roleNames = this.getRoles();
+        ArrayList<Role> retVal = new ArrayList<Role>(roleNames.length);
+        for (String roleName : roleNames) {
+            Role role = map.getByName(roleName);
+            if (role != null) {
+                retVal.add(role);
+            }
+        }
+        return retVal;
     }
 
 

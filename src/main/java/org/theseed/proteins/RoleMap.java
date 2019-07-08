@@ -75,4 +75,15 @@ public class RoleMap extends MagicMap<Role> {
         return retVal;
     }
 
+    /**
+     * Add one or more roles to the map by name.
+     *
+     * @param roleNames		one or more role names for the role to add
+     */
+    public void register(String... roleNames) {
+        for (String roleName : roleNames) {
+            this.findOrInsert(roleName);
+        }
+    }
+
 }

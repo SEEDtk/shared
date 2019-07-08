@@ -274,7 +274,7 @@ public class MagicMap<T extends MagicObject> {
      *
      * @param name	name of the desired object
      */
-    protected T getByName(String name) {
+    public T getByName(String name) {
         // Store the name in our handy search object.
         searchObj.setName(name);
         // Get the checksum.
