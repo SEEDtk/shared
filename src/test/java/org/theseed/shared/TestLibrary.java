@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.SortedSet;
+import java.util.stream.Collectors;
 
 import org.theseed.counters.CountMap;
 import org.theseed.counters.KeyPair;
@@ -748,6 +749,83 @@ public class TestLibrary extends TestCase {
             }
         }
         assertEquals("Test feature not found.", 1, found);
+        // Create a feature list for the contig and do a coupling iteration.
+        FeatureList contigFeatures = fakeGenome.getContigFeatures("con1");
+        FeatureList.Position pos = contigFeatures.new Position();
+        assertTrue("End-of-list at beginning.", pos.hasNext());
+        Feature current = pos.next();
+        assertEquals("Wrong feature first.", "fig|12345.6.peg.1", current.getId());
+        Collection<Feature> neighbors = pos.within(100);
+        assertThat("Wrong neighbors found at 100 for peg1.",
+                neighbors.stream().map(Feature::getId).collect(Collectors.toList()),
+                containsInAnyOrder("fig|12345.6.peg.2", "fig|12345.6.peg.3"));
+        neighbors = pos.within(1000);
+        assertThat("Wrong neighbors found at 1000 for peg1.",
+                neighbors.stream().map(Feature::getId).collect(Collectors.toList()),
+                containsInAnyOrder("fig|12345.6.peg.2", "fig|12345.6.peg.3",
+                        "fig|12345.6.peg.4", "fig|12345.6.peg.5"));
+        assertTrue("End of list after peg 1", pos.hasNext());
+        current = pos.next();
+        assertEquals("Wrong feature after peg 1.", "fig|12345.6.peg.2", current.getId());
+        neighbors = pos.within(100);
+        assertThat("Wrong neighbors found at 100 for peg2.",
+                neighbors.stream().map(Feature::getId).collect(Collectors.toList()),
+                contains("fig|12345.6.peg.3"));
+        current = pos.next();
+        assertEquals("Wrong feature after peg 2.", "fig|12345.6.peg.3", current.getId());
+        neighbors = pos.within(100);
+        assertEquals("Found neighbors at 100 for peg3.", 0, neighbors.size());
+        current = pos.next();
+        assertEquals("Wrong feature after peg 3.", "fig|12345.6.peg.4", current.getId());
+        neighbors = pos.within(100);
+        assertThat("Wrong neighbors found at 100 for peg4.",
+                neighbors.stream().map(Feature::getId).collect(Collectors.toList()),
+                contains("fig|12345.6.peg.5"));
+        assertTrue("End-of-list after peg 4.", pos.hasNext());
+        current = pos.next();
+        assertEquals("Wrong feature after peg 4.", "fig|12345.6.peg.5", current.getId());
+        neighbors = pos.within(100);
+        assertEquals("Found neighbors at 100 for peg5.", 0, neighbors.size());
+        current = pos.next();
+        assertEquals("Wrong feature after peg 5.", "fig|12345.6.peg.6", current.getId());
+        neighbors = pos.within(100);
+        assertEquals("Found neighbors at 100 for peg6.", 0, neighbors.size());
+        current = pos.next();
+        assertEquals("Wrong feature after peg 6.", "fig|12345.6.peg.7", current.getId());
+        neighbors = pos.within(48);
+        assertEquals("Found neighbors at 48 for peg7.", 0, neighbors.size());
+        neighbors = pos.within(49);
+        assertThat("Wrong neighbors found at 49 for peg7.",
+                neighbors.stream().map(Feature::getId).collect(Collectors.toList()),
+                contains("fig|12345.6.peg.8"));
+        neighbors = pos.within(50);
+        assertThat("Wrong neighbors found at 50 for peg7.",
+                neighbors.stream().map(Feature::getId).collect(Collectors.toList()),
+                contains("fig|12345.6.peg.8"));
+        neighbors = pos.within(10000);
+        assertThat("Wrong neighbors found at extreme distance for peg7.",
+                neighbors.stream().map(Feature::getId).collect(Collectors.toList()),
+                containsInAnyOrder("fig|12345.6.peg.8", "fig|12345.6.peg.9",
+                        "fig|12345.6.peg.10"));
+        assertTrue("End-of-list after peg 7.", pos.hasNext());
+        current = pos.next();
+        assertEquals("Wrong feature after peg 7.", "fig|12345.6.peg.8", current.getId());
+        neighbors = pos.within(48);
+        assertEquals("Found neighbors at 48 for peg8.", 0, neighbors.size());
+        neighbors = pos.within(100);
+        assertThat("Wrong neighbors found at 100 for peg8.",
+                neighbors.stream().map(Feature::getId).collect(Collectors.toList()),
+                contains("fig|12345.6.peg.9"));
+        current = pos.next();
+        assertEquals("Wrong feature after peg 8.", "fig|12345.6.peg.9", current.getId());
+        neighbors = pos.within(100);
+        assertThat("Wrong neighbors found at 100 for peg9.",
+                neighbors.stream().map(Feature::getId).collect(Collectors.toList()),
+                contains("fig|12345.6.peg.10"));
+        current = pos.next();
+        neighbors = pos.within(1000);
+        assertEquals("Found neighbors for peg10.", 0, neighbors.size());
+        assertFalse("No end-of-list after peg10.", pos.hasNext());
     }
 
 }

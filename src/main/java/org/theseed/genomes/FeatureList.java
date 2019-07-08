@@ -180,6 +180,64 @@ public class FeatureList implements Iterable<Feature> {
         return retVal;
     }
 
+    /**
+     * This nested class represents a current position in the feature list.  The client can ask
+     * for the feature at this position, can move the position forward, and can iterate through
+     * all the features within a certain distance to the right.
+     *
+     * @author Bruce Parrello
+     *
+     */
+    public class Position {
 
+        // FIELDS
+        /** position of next feature to return */
+        private int position;
+        /** right edge of current feature */
+        private int rEdge;
+
+        /**
+         * Initialize at the beginning of this feature list.
+         *
+         * @param distance	distance limit for iteration at this position
+         */
+        public Position() {
+            this.position = 0;
+            this.rEdge = 0;
+        }
+
+        /**
+         * @return TRUE if this is not the last position in the feature list.
+         */
+        public boolean hasNext() {
+            return this.position < size();
+        }
+
+        /**
+         * @return the next feature in the feature list
+         */
+        public Feature next() {
+            Feature retVal = features.get(position);
+            this.rEdge = retVal.getLocation().getRight();
+            position++;
+            return retVal;
+        }
+
+        /**
+         * @return a collection of the features within a certain distance after this one
+         */
+        public Collection<Feature> within(int distance) {
+            ArrayList<Feature> retVal = new ArrayList<Feature>();
+            if (position <= size() && position > 0) {
+                // Compute the distance from our right edge.
+                int limit = this.rEdge + distance + 1;
+                for (int i = this.position; i < size() && lEdge(i) <= limit; i++) {
+                    retVal.add(features.get(i));
+                }
+            }
+            return retVal;
+        }
+
+    }
 
 }
