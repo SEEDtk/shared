@@ -828,4 +828,36 @@ public class TestLibrary extends TestCase {
         assertFalse("No end-of-list after peg10.", pos.hasNext());
     }
 
+    /**
+     * test roles-of-function
+     */
+
+    public void testFunctions() {
+        String fun1 = "fun serum/thing / slash role @ at-role; semi role   # pound comment ## pounding";
+        String[] roles = Feature.rolesOfFunction(fun1);
+        assertEquals("Wrong role count.", 4, roles.length);
+        assertEquals("first role wrong", "fun serum/thing", roles[0]);
+        assertEquals("second role wrong", "slash role", roles[1]);
+        assertEquals("third role wrong", "at-role", roles[2]);
+        assertEquals("fourth role wrong", "semi role", roles[3]);
+        fun1 = "unitary role with comment ! bang comment";
+        roles = Feature.rolesOfFunction(fun1);
+        assertEquals("Wrong unit role count.", 1, roles.length);
+        assertEquals("Wrong unit role", "unitary role with comment", roles[0]);
+        roles = Feature.rolesOfFunction("");
+        assertEquals("Failure on empty function", 0, roles.length);
+        roles = Feature.rolesOfFunction(null);
+        assertEquals("Failure on null function", 0, roles.length);
+        roles = Feature.rolesOfFunction("simple");
+        assertEquals("Failure on simple role", 1, roles.length);
+        assertEquals("Wrong simple role", "simple", roles[0]);
+        Feature testFeat = myGto.getFeature("fig|1313.7001.peg.1189");
+        roles = testFeat.getRoles();
+        assertEquals("Wrong number of roles in feature", 2, roles.length);
+        assertEquals("Wrong first role of feature", "IMP cyclohydrolase (EC 3.5.4.10)", roles[0]);
+        assertEquals("Wrong second role of feature", "Phosphoribosylaminoimidazolecarboxamide formyltransferase (EC 2.1.2.3)",
+                roles[1]);
+
+    }
+
 }

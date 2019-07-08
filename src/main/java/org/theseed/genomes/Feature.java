@@ -1,9 +1,11 @@
 package org.theseed.genomes;
 
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.commons.lang3.RegExUtils;
 import org.theseed.locations.Location;
 
 import com.github.cliftonlabs.json_simple.JsonArray;
@@ -28,6 +30,12 @@ public class Feature implements Comparable<Feature> {
 
     /** parsing pattern for feature type */
     private static final Pattern TYPE_PATTERN = Pattern.compile("fig\\|\\d+\\.\\d+\\.(\\w+)\\.\\d+");
+
+    /** parsing pattern for function-to-roles */
+    private static final Pattern SEP_PATTERN = Pattern.compile("\\s+[\\/@]\\s+|\\s*;\\s+");
+
+    /** parsing pattern for removing function comments */
+    private static final Pattern COMMENT_PATTERN = Pattern.compile("\\s*[#!].+");
 
     /**
      * @return the feature type of a feature ID.
@@ -205,6 +213,32 @@ public class Feature implements Comparable<Feature> {
      */
     public int distance(Feature other) {
         return this.location.distance(other.location);
+    }
+
+    /**
+     * @return the roles of this feature's function
+     */
+    public String[] getRoles() {
+        return rolesOfFunction(this.function);
+    }
+
+    /**
+     * @return the roles for a given function
+     *
+     * @param function	functional assignment string of interest
+     */
+    public static String[] rolesOfFunction(String function) {
+        String[] retVal;
+        if (function == null) {
+            retVal = new String[0];
+        } else {
+            // Remove any comments.
+            String commentFree = RegExUtils.removeFirst(function, COMMENT_PATTERN);
+            // Split the function into roles.
+            retVal = Arrays.stream(SEP_PATTERN.split(commentFree)).
+                    filter(value -> value.length() > 0).toArray(String[]::new);
+        }
+        return retVal;
     }
 
     /**
