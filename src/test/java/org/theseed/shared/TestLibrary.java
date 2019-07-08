@@ -30,9 +30,9 @@ import org.theseed.locations.Frame;
 import org.theseed.locations.Location;
 import org.theseed.locations.LocationList;
 import org.theseed.locations.Region;
+import org.theseed.magic.MagicMap;
 import org.theseed.proteins.Role;
 import org.theseed.proteins.RoleMap;
-import org.theseed.utils.MagicMap;
 
 import junit.framework.TestCase;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -581,6 +581,11 @@ public class TestLibrary extends TestCase {
         assertEquals("t4/t3 counter wrong after second pass.", 3, pairCounter.getCount(t4, t3));
         assertEquals("t4/t2 counter wrong after second pass.", 3, pairCounter.getCount(t4, t2));
         assertEquals("t4/t1 counter wrong after second pass.", 1, pairCounter.getCount(t4, t1));
+        PairCounter<Thing>.Count testCounter = pairCounter.getPairCount(t4, t2);
+        assertThat("Wrong counter returned (k1).", testCounter.getKey1(), is(oneOf(t2, t4)));
+        assertThat("Wrong counter returned (k2).", testCounter.getKey2(), is(oneOf(t2, t4)));
+        assertEquals("Wrong counter value.", 3, testCounter.getCount());
+        assertEquals("Wrong togetherness.", 1.0, testCounter.togetherness(), 0.001);
         // Get the sorted list of counts.
         Collection<PairCounter<Thing>.Count> sortedPairs = pairCounter.sortedCounts();
         prev = Integer.MAX_VALUE;
@@ -598,6 +603,15 @@ public class TestLibrary extends TestCase {
             assertThat("Counts out of order.", prev, greaterThanOrEqualTo(counter.getCount()));
             prev = counter.getCount();
         }
+        // Get a better togetherness test.
+        pairCounter.recordOccurrence(t2);
+        pairCounter.recordOccurrence(t2);
+        pairCounter.recordOccurrence(t2);
+        pairCounter.recordOccurrence(t4);
+        testCounter = pairCounter.getPairCount(t4, t2);
+        assertThat("Wrong counter returned (k1).", testCounter.getKey1(), is(oneOf(t2, t4)));
+        assertThat("Wrong counter returned (k2).", testCounter.getKey2(), is(oneOf(t2, t4)));
+        assertEquals("Wrong togetherness value.", 0.75, testCounter.togetherness(), 0.001);
     }
 
     public void testDistance() {

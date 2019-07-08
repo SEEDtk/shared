@@ -127,6 +127,15 @@ public class CountMap<K> {
         return retVal;
     }
 
+    /**
+     * @return the counter object for the specified key, or NULL if the key has not been counted
+     *
+     * @param key	key of interest
+     */
+    public Count findCounter(K key) {
+        return this.map.get(key);
+    }
+
     /** Increment the count for a key and return the new result. */
     public int count(K key) {
         Count myCount = this.getCounter(key);

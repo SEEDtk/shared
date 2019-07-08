@@ -9,7 +9,7 @@ import java.io.PrintWriter;
 import java.util.Scanner;
 
 import org.apache.commons.lang3.StringUtils;
-import org.theseed.utils.MagicMap;
+import org.theseed.magic.MagicMap;
 
 /**
  * Test class for magic maps.

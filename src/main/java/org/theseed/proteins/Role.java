@@ -5,7 +5,7 @@ import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.RegExUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.theseed.utils.MagicObject;
+import org.theseed.magic.MagicObject;
 
 public class Role extends MagicObject {
 

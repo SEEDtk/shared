@@ -75,9 +75,13 @@ public class PairCounter<K> {
             int count1 = keyCountMap.getCount(key1);
             int count2 = keyCountMap.getCount(key2);
             int denom = (count1 + count2 - this.count);
-            double retVal = 0;
+            double retVal;
             if (denom > 0) {
                 retVal = (double) this.count / (count1 + count2 - this.count);
+            } else if (denom < count) {
+                retVal = 1.0;
+            } else {
+                retVal = 0;
             }
             return retVal;
         }
@@ -208,6 +212,24 @@ public class PairCounter<K> {
      */
     public Collection<CountMap<K>.Count> sortedItemCounts() {
         return this.keyCountMap.sortedCounts();
+    }
+
+    /**
+     * @return the counter object for the specified pair of keys, or NULL if the keys do not
+     * 		   occur together
+     *
+     * @param key1	first key of interest
+     * @param key2	second key of interest
+     */
+    public Count getPairCount(K key1, K key2) {
+        Count retVal = null;
+        this.testKey.left = key1;
+        this.testKey.right = key2;
+        CountMap<KeyPair<K>>.Count buffer = this.pairCountMap.findCounter(this.testKey);
+        if (buffer != null) {
+            retVal = new Count(buffer);
+        }
+        return retVal;
     }
 
 }

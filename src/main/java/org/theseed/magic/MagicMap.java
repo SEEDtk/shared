@@ -1,7 +1,7 @@
 /**
  *
  */
-package org.theseed.utils;
+package org.theseed.magic;
 
 import java.util.Collection;
 import java.util.HashMap;

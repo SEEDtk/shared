@@ -3,7 +3,7 @@
  */
 package org.theseed.shared;
 
-import org.theseed.utils.MagicObject;
+import org.theseed.magic.MagicObject;
 
 /**
  * Test class for magic objects.
