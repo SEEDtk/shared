@@ -433,4 +433,48 @@ public abstract class Location implements Comparable<Location>, Cloneable {
 
     }
 
+    /**
+     * @return the distance between this location and another location, or -1 if the locations
+     * 		   overlap
+     *
+     * This is a gap distance-- the whole number of base pairs between the two features.
+     *
+     * @param other		other location to measure against this one
+     */
+    public int distance(Location other) {
+        int retVal;
+        if (! this.isContig(other.getContigId())) {
+            retVal = Integer.MAX_VALUE;
+        } else {
+            // Is the other location to our left?
+            retVal = this.getLeft() - other.getRight() - 1;
+            if (retVal < 0) {
+                // No.  Is it to our right?
+                retVal = other.getLeft() - this.getRight() - 1;
+                if (retVal < 0) {
+                    // No, so we overlap.
+                    retVal = -1;
+                }
+            }
+        }
+        return retVal;
+    }
+
+    /**
+     * @return TRUE if this location is in the specified contig
+     *
+     * @param contigId2		ID of the contig of interest
+     */
+    public boolean isContig(String contigId2) {
+        boolean retVal = false;
+        if (contigId2 == null) {
+            retVal = (this.contigId == null);
+        } else if (this.contigId == null) {
+            retVal = false;
+        } else {
+            retVal = contigId2.contentEquals(this.contigId);
+        }
+        return retVal;
+    }
+
 }

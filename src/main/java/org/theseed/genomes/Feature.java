@@ -153,16 +153,29 @@ public class Feature implements Comparable<Feature> {
     }
 
     /**
-     * This class is used to sort the features by location.
+     * @return the distance between this feature and another feature, or -1 if the features
+     * 		   overlap
      *
-     * @author Bruce Parrello
-     *
+     * @param other		other location to measure against this one
+     */
+    public int distance(Feature other) {
+        return this.location.distance(other.location);
+    }
+
+    /**
+     * This class is used to sort the features by location.  If two features have the
+     * same location information, it will fall back to the feature ID, to insure no
+     * two distinct features compare equal.
      */
     public static class LocationComparator implements Comparator<Feature> {
 
         @Override
         public int compare(Feature arg0, Feature arg1) {
-            return arg0.location.compareTo(arg1.location);
+            int retVal= arg0.location.compareTo(arg1.location);
+            if (retVal == 0) {
+                retVal = arg0.compareTo(arg1);
+            }
+            return retVal;
         }
 
     }

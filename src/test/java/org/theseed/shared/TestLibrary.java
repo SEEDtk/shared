@@ -21,6 +21,7 @@ import org.theseed.counters.PairCounter;
 import org.theseed.counters.QualityCountMap;
 import org.theseed.genomes.Contig;
 import org.theseed.genomes.Feature;
+import org.theseed.genomes.FeatureList;
 import org.theseed.genomes.Genome;
 import org.theseed.genomes.GenomeDirectory;
 import org.theseed.locations.FLocation;
@@ -430,12 +431,14 @@ public class TestLibrary extends TestCase {
 
     /**
      * Test the feature-by-location sort
+     * @throws IOException
+     * @throws NumberFormatException
      */
-    public void testContigFeatures() {
+    public void testContigFeatures() throws NumberFormatException, IOException {
         Collection<Contig> contigs = myGto.getContigs();
         int featureCount = 0;
         for (Contig contig : contigs) {
-            Collection<Feature> contigFeatures = myGto.getContigFeatures(contig.getId());
+            FeatureList contigFeatures = myGto.getContigFeatures(contig.getId());
             featureCount += contigFeatures.size();
             Location previous = new FLocation(contig.getId());
             previous.addRegion(0, 0);
@@ -446,6 +449,35 @@ public class TestLibrary extends TestCase {
             }
         }
         assertEquals("Feature count incorrect.", myGto.getFeatureCount(), featureCount);
+        Genome gto2 = new Genome("src/test/testLocs.gto");
+        FeatureList contigFeatures = new FeatureList(gto2, "1313.7001.con.0029");
+        Location region = Location.create("1313.7001.con.0029", "+", 160, 6860);
+        Collection<Feature> inRegion = contigFeatures.inRegion(160, 6860);
+        ArrayList<String> fids = new ArrayList<String>(inRegion.size());
+        for (Feature feat : inRegion) {
+            fids.add(feat.getId());
+            assertEquals("Feature " + feat + " not in region.", -1, region.distance(feat.getLocation()));
+        }
+        assertThat("Not all expected features found.", fids,
+                hasItems("fig|1313.7001.peg.1244", "fig|1313.7001.peg.1245", "fig|1313.7001.peg.1246",
+                         "fig|1313.7001.peg.1249", "fig|1313.7001.peg.1250", "fig|1313.7001.peg.1251"));
+        inRegion = contigFeatures.inRegion(0, 100);
+        assertEquals("Error at left extreme.", 1, inRegion.size());
+        inRegion = contigFeatures.inRegion(14000, 15000);
+        assertEquals("Error at right extreme.", 0, inRegion.size());
+        inRegion = contigFeatures.inRegion(12000, 15000);
+        assertEquals("Count error at right edge.", 2, inRegion.size());
+        fids.clear();
+        for (Feature feat : inRegion) fids.add(feat.getId());
+        assertThat("Incorrect feature found at right edge.", fids,
+                containsInAnyOrder("fig|1313.7001.peg.1256", "fig|1313.7001.peg.1257"));
+        contigFeatures = new FeatureList(gto2, "1313.7001.con.0003");
+        inRegion = contigFeatures.inRegion(2000, 16000);
+        assertEquals("Features found in empty contig.", 0, inRegion.size());
+        contigFeatures = new FeatureList(gto2, "1313.7001.con.0025");
+        inRegion = contigFeatures.inRegion(0, 2000);
+        assertEquals("Features found in empty left edge.", 0, inRegion.size());
+
     }
 
     /**
@@ -553,6 +585,30 @@ public class TestLibrary extends TestCase {
             assertThat("Counts out of order.", prev, greaterThanOrEqualTo(counter.getCount()));
             prev = counter.getCount();
         }
+    }
 
+    public void testDistance() {
+        Location t1 = Location.create("myContig", "+", 10, 20);
+        Location t2 = Location.create("myContig", "-", 25, 45);
+        assertEquals("Wrong initial distance.", 4, t1.distance(t2));
+        assertEquals("Distance not commutative", 4, t2.distance(t1));
+        t1.setRight(24);
+        assertEquals("Distance wrong when left adjacent.", 0, t1.distance(t2));
+        t1.setRight(25);
+        assertEquals("Distance wrong at overlap left edge.", -1, t1.distance(t2));
+        t1.setRight(100);
+        assertEquals("Distance wrong when contained.", -1, t1.distance(t2));
+        t1.setLeft(45);
+        assertEquals("Distance wrong at overlap right edge.", -1, t1.distance(t2));
+        t1.setLeft(46);
+        assertEquals("Distance wrong at right adjacent.", 0, t1.distance(t2));
+        t1.setLeft(51);
+        assertEquals("Distance wrong at end.", 5, t1.distance(t2));
+        Feature f1 = myGto.getFeature("fig|1313.7001.peg.841");
+        Feature f2 = myGto.getFeature("fig|1313.7001.peg.847");
+        assertEquals("Feature distance not equal location distance.", f1.getLocation().distance(f2.getLocation()),
+                f1.distance(f2));
+        Feature f3 = myGto.getFeature("fig|1313.7001.peg.1113");
+        assertEquals("Contig mismatch not caught.", Integer.MAX_VALUE, f1.distance(f3));
     }
 }

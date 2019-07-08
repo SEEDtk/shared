@@ -225,14 +225,8 @@ public class Genome  {
         return this.id + " (" + this.name + ")";
     }
 
-    public Collection<Feature> getContigFeatures(String contigId) {
-        ArrayList<Feature> retVal = new ArrayList<Feature>(this.getFeatureCount());
-        for (Feature feat : this.features.values()) {
-            if (feat.getLocation().getContigId().equals(contigId)) {
-                retVal.add(feat);
-            }
-        }
-        retVal.sort(new Feature.LocationComparator());
+    public FeatureList getContigFeatures(String contigId) {
+        FeatureList retVal = new FeatureList(this, contigId);
         return retVal;
     }
 
