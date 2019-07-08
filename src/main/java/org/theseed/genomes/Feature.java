@@ -1,6 +1,8 @@
 package org.theseed.genomes;
 
 import java.util.Comparator;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.theseed.locations.Location;
 
@@ -23,6 +25,28 @@ public class Feature implements Comparable<Feature> {
     private String function;
     private String protein_translation;
     private Location location;
+
+    /** parsing pattern for feature type */
+    private static final Pattern TYPE_PATTERN = Pattern.compile("fig\\|\\d+\\.\\d+\\.(\\w+)\\.\\d+");
+
+    /**
+     * @return the feature type of a feature ID.
+     *
+     * @param fid	feature ID of interest
+     */
+    public static String fidType(String fid) {
+        Matcher m = TYPE_PATTERN.matcher(fid);
+        String retVal = "error";
+        if (m.matches()) {
+            retVal = m.group(1);
+            // For historical reasons, CDS features have a name of "peg".
+            if (retVal.contentEquals("peg")) {
+                retVal = "CDS";
+            }
+        }
+        return retVal;
+    }
+
 
     /** This enum defines the keys used and their default values.
      */
@@ -56,7 +80,8 @@ public class Feature implements Comparable<Feature> {
     }
 
 
-    /** Create this feature from its JsonObject.
+    /**
+     * Create this feature from its JsonObject.
      *
      * @param feat	JsonObject read in for this feature
      */
@@ -80,6 +105,26 @@ public class Feature implements Comparable<Feature> {
             int length = region.getInteger(3);
             this.location.addRegion(begin, length);
         }
+    }
+
+    /**
+
+    /**
+     * Create a basic feature at a specific location.
+     *
+     * @param fid		ID to give to the feature
+     * @param function	the functional role of the feature
+     * @param contigId	the ID of the contig containing the feature
+     * @param strand	the strand containing the feature- "+" or "-"
+     * @param left		the leftmost position of the feature
+     * @param right		the rightmost position of the feature
+     */
+    public Feature(String fid, String function, String contigId, String strand, int left, int right) {
+        this.id = fid;
+        this.type = fidType(fid);
+        this.function = function;
+        Location loc = Location.create(contigId, strand, left, right);
+        this.location = loc;
     }
 
     /**

@@ -706,5 +706,48 @@ public class TestLibrary extends TestCase {
         }
     }
 
+    /**
+     * Create a genome and check it for couplings.
+     */
+    public void testCouples() {
+        Genome fakeGenome = new Genome("12345.6", "Bacillus praestrigiae Narnia", "Bacteria", 11);
+        fakeGenome.addContig(new Contig("con1", "agct", 11));
+        fakeGenome.addFeature(new Feature("fig|12345.6.peg.1",  "Role 1", "con1", "+",  100,  300));
+        fakeGenome.addFeature(new Feature("fig|12345.6.peg.2",  "Role 2", "con1", "-",  100,  400));
+        fakeGenome.addFeature(new Feature("fig|12345.6.peg.3",  "Role 3", "con1", "+",  200,  500));
+        fakeGenome.addFeature(new Feature("fig|12345.6.peg.4",  "Role 4", "con1", "-", 1000, 1200));
+        fakeGenome.addFeature(new Feature("fig|12345.6.peg.5",  "Role 5", "con1", "+", 1010, 1300));
+        fakeGenome.addFeature(new Feature("fig|12345.6.peg.6",  "Role 6 / Role 1", "con1", "-", 3300, 4000));
+        fakeGenome.addFeature(new Feature("fig|12345.6.peg.7",  "Role 2 # comment", "con1", "-", 5000, 5100));
+        fakeGenome.addFeature(new Feature("fig|12345.6.peg.8",  "Role 3", "con1", "+", 5150, 5200));
+        fakeGenome.addFeature(new Feature("fig|12345.6.peg.9",  "Role 1", "con1", "+", 5250, 5400));
+        fakeGenome.addFeature(new Feature("fig|12345.6.peg.10", "Role 2", "con1", "-", 5401, 5450));
+        assertEquals("Incorrect ID in fake genome.", "12345.6", fakeGenome.getId());
+        assertEquals("Incorrect name in fake genome.", "Bacillus praestrigiae Narnia", fakeGenome.getName());
+        assertEquals("Incorrect domain in fake genome.", "Bacteria", fakeGenome.getDomain());
+        assertEquals("Incorrect genetic code in fake genome.", 11, fakeGenome.getGeneticCode());
+        Collection<Contig> contigs0 = fakeGenome.getContigs();
+        assertEquals("Wrong number of contigs in fake genome.", 1, contigs0.size());
+        Contig[] contigs = new Contig[1];
+        contigs = contigs0.toArray(contigs);
+        assertEquals("Incorrect contig ID in fake contig.", "con1", contigs[0].getId());
+        assertEquals("Incorrect genetic code in fake contig.", 11, contigs[0].getGeneticCode());
+        assertEquals("Incorrect sequence in fake contig.", "agct", contigs[0].getSequence());
+        Collection<Feature> features = fakeGenome.getFeatures();
+        assertEquals("Incorrect number of features in fake genome.", 10, features.size());
+        int found = 0;
+        for (Feature feat : features) {
+            assertTrue("Incorrect contig in " + feat + ".", feat.getLocation().isContig("con1"));
+            if (feat.getId().contentEquals("fig|12345.6.peg.1")) {
+                assertEquals("Wrong role in peg.1.", "Role 1", feat.getFunction());
+                Location loc = feat.getLocation();
+                assertEquals("Wrong strand in peg 1.", '+', loc.getDir());
+                assertEquals("Wrong left in peg 1.", 100, loc.getLeft());
+                assertEquals("Wrong right in peg 1.", 300, loc.getRight());
+                found++;
+            }
+        }
+        assertEquals("Test feature not found.", 1, found);
+    }
 
 }

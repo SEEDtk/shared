@@ -149,6 +149,15 @@ public class MagicMap<T extends MagicObject> {
     }
 
     /**
+     * @return TRUE if this map has an object with the given name in it.
+     *
+     * @param name	name of the object for which to search
+     */
+    public boolean containsName(String name) {
+        return (this.getByName(name) != null);
+    }
+
+    /**
      * @return the object with the given ID, or NULL if it does not exist
      *
      * @param key	ID of interest

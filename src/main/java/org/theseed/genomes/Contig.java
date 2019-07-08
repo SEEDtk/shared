@@ -62,6 +62,19 @@ public class Contig {
     }
 
     /**
+     * Create a simple contig from its basic elements.
+     *
+     * @param contigId	the ID of the contig
+     * @param sequence	the sequence of the contig
+     * @param code		the genetic code of the contig
+     */
+    public Contig(String contigId, String sequence, int code) {
+        this.id = contigId;
+        this.sequence = sequence;
+        this.geneticCode = code;
+    }
+
+    /**
      * @return the id
      */
     public String getId() {

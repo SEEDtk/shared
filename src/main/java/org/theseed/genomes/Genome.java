@@ -9,6 +9,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+
+import org.apache.commons.lang3.StringUtils;
 import org.theseed.locations.Location;
 import org.theseed.locations.Region;
 
@@ -114,6 +116,27 @@ public class Genome  {
             contigs.put(contig.getId(), contig);
         }
 
+    }
+
+    /**
+     * Create an empty genome.
+     *
+     * @param genomeId	ID of this genome
+     * @param name		name of the genome
+     * @param domain	domain of the genome ("Archaea", "Bacteria", etc.)
+     * @param code		genetic code of the genome
+     *
+     * @throws NumberFormatException
+     */
+    public Genome(String genomeId, String name, String domain, int code) throws NumberFormatException {
+        this.id = genomeId;
+        this.name = name;
+        this.taxonomyId = Integer.parseInt(StringUtils.substringBefore(genomeId, "."));
+        this.domain = domain;
+        this.geneticCode = code;
+        // Create empty maps for features and contigs.
+        this.features = new HashMap<String, Feature>();
+        this.contigs = new HashMap<String, Contig>();
     }
 
     /**
@@ -237,5 +260,22 @@ public class Genome  {
         return this.features.size();
     }
 
+    /**
+     * Add a feature to this genome.
+     *
+     * @param feat	feature to add
+     */
+    public void addFeature(Feature feat) {
+        this.features.put(feat.getId(), feat);
+    }
+
+    /**
+     * Add a contig to this genome.
+     *
+     * @param contig	contig to add
+     */
+    public void addContig(Contig contig) {
+        this.contigs.put(contig.getId(), contig);
+    }
 
 }

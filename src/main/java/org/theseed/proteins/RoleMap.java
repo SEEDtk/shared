@@ -12,7 +12,11 @@ import org.apache.commons.lang3.StringUtils;
 import org.theseed.utils.MagicMap;
 
 /**
- * @author parrello
+ * This class tracks a set of roles.  It provides facilities for converting from role names to IDs, conflating
+ * synonomous role names, and generating unique readable role IDs.  Most of its functionality is in the base
+ * magic-map class.
+ *
+ * @author Bruce Parrello
  *
  */
 public class RoleMap extends MagicMap<Role> {
@@ -25,7 +29,7 @@ public class RoleMap extends MagicMap<Role> {
     }
 
     /**
-     * Find the named role.  If it does not exist, a new role will be created.
+     * Find the named role.  If it does not exist, a new role object will be created.
      *
      * @param roleDesc	the role name
      *
