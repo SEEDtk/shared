@@ -284,5 +284,4 @@ public class MagicMap<T extends MagicObject> {
         return retVal;
     }
 
-
 }

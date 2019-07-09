@@ -3,8 +3,9 @@
  */
 package org.theseed.counters;
 
-import java.util.Collection;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
@@ -136,12 +137,31 @@ public class CountMap<K> {
         return this.map.get(key);
     }
 
-    /** Increment the count for a key and return the new result. */
+    /** Increment the count for a key and return the new result.
+     *
+     * @param key	key of interest
+     *
+     * @return the new count value.
+     *
+     *  */
     public int count(K key) {
-        Count myCount = this.getCounter(key);
-        int retVal = ++myCount.num;
-        return retVal;
+        return this.count(key, 1);
     }
+
+    /** Increment the count for a key and return the new result.
+    *
+    * @param key	key of interest
+    * @param num	number to add to the count
+    *
+    * @return the new count value.
+    *
+    *  */
+   public int count(K key, int num) {
+       Count myCount = this.getCounter(key);
+       myCount.num += num;
+       return myCount.num;
+   }
+
     /**
      * @return	a sorted collection of all the keys in this object
      */
@@ -160,8 +180,9 @@ public class CountMap<K> {
     /**
      * @return a collection of all the counts in this object, sorted from highest to lowest
      */
-    public Collection<CountMap<K>.Count> sortedCounts() {
-        TreeSet<CountMap<K>.Count> retVal = new TreeSet<CountMap<K>.Count>(this.map.values());
+    public List<CountMap<K>.Count> sortedCounts() {
+        ArrayList<CountMap<K>.Count> retVal = new ArrayList<CountMap<K>.Count>(this.map.values());
+        retVal.sort(null);
         return retVal;
     }
 

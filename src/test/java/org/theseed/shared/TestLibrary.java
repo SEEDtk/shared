@@ -521,8 +521,7 @@ public class TestLibrary extends TestCase {
         thingCounter.count(t3);
         thingCounter.count(t4);
         thingCounter.count(t3);
-        thingCounter.count(t4);
-        thingCounter.count(t4);
+        thingCounter.count(t4, 2);
         assertEquals("Wrong count for thing 1.", 1, thingCounter.getCount(t1));
         assertEquals("Wrong count for thing 2.", 2, thingCounter.getCount(t2));
         assertEquals("Wrong count for thing 3.", 3, thingCounter.getCount(t3));
@@ -604,14 +603,15 @@ public class TestLibrary extends TestCase {
             prev = counter.getCount();
         }
         // Get a better togetherness test.
-        pairCounter.recordOccurrence(t2);
-        pairCounter.recordOccurrence(t2);
-        pairCounter.recordOccurrence(t2);
+        pairCounter.recordOccurrences(t2, 3);
         pairCounter.recordOccurrence(t4);
         testCounter = pairCounter.getPairCount(t4, t2);
         assertThat("Wrong counter returned (k1).", testCounter.getKey1(), is(oneOf(t2, t4)));
         assertThat("Wrong counter returned (k2).", testCounter.getKey2(), is(oneOf(t2, t4)));
         assertEquals("Wrong togetherness value.", 0.75, testCounter.togetherness(), 0.001);
+        // Add some pairings.
+        pairCounter.recordPairings(t1, t5, 4);
+        assertEquals("Wrong counter returned after multi-count", 4, pairCounter.getCount(t5, t1));
     }
 
     public void testDistance() {
@@ -740,7 +740,7 @@ public class TestLibrary extends TestCase {
     /**
      * Create a genome and check it for couplings.
      */
-    public void testCouples() {
+    public void testNeighbors() {
         Genome fakeGenome = new Genome("12345.6", "Bacillus praestrigiae Narnia", "Bacteria", 11);
         fakeGenome.addContig(new Contig("con1", "agct", 11));
         fakeGenome.addFeature(new Feature("fig|12345.6.peg.1",  "Role 1", "con1", "+",  100,  300));
