@@ -218,13 +218,21 @@ public class PairCounter<K> {
 
     /**
      * @return a list of pairings, sorted from most frequent to least frequent.
+     *
+     * @param minTogether	minimum acceptable togetherness fraction
+     * @param minCount 		minimum acceptable occurrence count
      */
-    public List<Count> sortedCounts() {
+    public List<Count> sortedCounts(double minTogether, int minCount) {
         // Create space to store our results.
         ArrayList<Count> retVal = new ArrayList<Count>(this.size());
         // Run through a sorted list of pair counts.  Add them to the output array in order.
         for (CountMap<KeyPair<K>>.Count counter : this.pairCountMap.sortedCounts()) {
-            retVal.add(new Count(counter));
+            if (counter.getCount() >= minCount) {
+                Count retCount = new Count(counter);
+                if (retCount.togetherness() >= minTogether) {
+                    retVal.add(retCount);
+                }
+            }
         }
         // Return the array.
         return retVal;

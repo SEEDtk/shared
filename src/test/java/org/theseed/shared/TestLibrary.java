@@ -586,7 +586,7 @@ public class TestLibrary extends TestCase {
         assertEquals("Wrong counter value.", 3, testCounter.getCount());
         assertEquals("Wrong togetherness.", 1.0, testCounter.togetherness(), 0.001);
         // Get the sorted list of counts.
-        Collection<PairCounter<Thing>.Count> sortedPairs = pairCounter.sortedCounts();
+        Collection<PairCounter<Thing>.Count> sortedPairs = pairCounter.sortedCounts(0.0, 0);
         prev = Integer.MAX_VALUE;
         for (PairCounter<Thing>.Count counter : sortedPairs) {
             assertThat("Counts out of order.", prev, greaterThanOrEqualTo(counter.getCount()));
@@ -612,6 +612,20 @@ public class TestLibrary extends TestCase {
         // Add some pairings.
         pairCounter.recordPairings(t1, t5, 4);
         assertEquals("Wrong counter returned after multi-count", 4, pairCounter.getCount(t5, t1));
+        // Bump the item counts.
+        pairCounter.recordOccurrences(t1, 6);
+        pairCounter.recordOccurrences(t3, 10);
+        pairCounter.recordOccurrences(t5, 8);
+        // Try pair retrieval again with threshholds.
+        sortedPairs = pairCounter.sortedCounts(0.30, 2);
+        assertEquals("Threshold returned wrong number of pairs.", 3, sortedPairs.size());
+        prev = Integer.MAX_VALUE;
+        for (PairCounter<Thing>.Count counter : sortedPairs) {
+            assertThat("Counts out of order in threshold list.", prev, greaterThanOrEqualTo(counter.getCount()));
+            prev = counter.getCount();
+            assertThat("Togetherness threshold failed.", counter.togetherness(), greaterThanOrEqualTo(0.30));
+            assertThat("Mincount threshold failed.", counter.getCount(), greaterThanOrEqualTo(2));
+        }
     }
 
     public void testDistance() {
