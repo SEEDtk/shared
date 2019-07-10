@@ -3,9 +3,13 @@
  */
 package org.theseed.counters;
 
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
+
 
 /**
  *
@@ -15,7 +19,7 @@ import java.util.TreeSet;
  * @author Bruce Parrello
  *
  */
-public class QualityCountMap<K> {
+public class QualityCountMap<K extends Comparable<K>> {
 
     /** underlying hash map */
     HashMap<K, Counts> map;
@@ -119,6 +123,42 @@ public class QualityCountMap<K> {
      */
     public int size() {
         return this.map.size();
+    }
+
+    /**
+     * This nested class is a comparator for sorting by best good count
+     */
+    private class Sorter implements Comparator<K> {
+
+        @Override
+        public int compare(K o1, K o2) {
+            Counts count1 = map.get(o1);
+            Counts count2 = map.get(o2);
+            int g1 = (count1 == null ? 0 : count1.good);
+            int g2 = (count2 == null ? 0 : count2.good);
+            int retVal = g2 - g1;
+            if (retVal == 0) {
+                // Good counts same, prefer lower bad count.
+                int b1 = (count1 == null ? 0 : count1.bad);
+                int b2 = (count2 == null ? 0 : count2.bad);
+                retVal = b1 - b2;
+                if (retVal == 0) {
+                    // All counts same, sort by key.
+                    retVal = o1.compareTo(o2);
+                }
+            }
+            return retVal;
+        }
+
+    }
+
+    /**
+     * @return the keys in this map, sorted by highest good count
+     */
+    public List<K> bestKeys() {
+        ArrayList<K> retVal = new ArrayList<K>(this.map.keySet());
+        retVal.sort(this.new Sorter());
+        return retVal;
     }
 
 

@@ -141,6 +141,8 @@ public class TestLibrary extends TestCase {
         String key1 = keys.first();
         assertEquals("Incorrect smallest key.", "AAA", key1);
         assertEquals("Incorrect number of keys.", 4, keys.size());
+        List<String> sorted = testMap.bestKeys();
+        assertThat("Incorrect sort key results", sorted, contains("AAA", "CCC", "DDD", "BBB"));
     }
 
     private static final String myProtein = "MNERYQCLKTKEYQALLSSKGRQIFAKRKIDMKSVFGQIKVCLGYKRCHLRGKRQVRIDMGFILMANNLLKYNKRKRQN";
