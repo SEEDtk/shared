@@ -120,6 +120,9 @@ public class TestLibrary extends TestCase {
             assertNotNull("Could not find thing in loaded table.", newThing);
             assertEquals("Loaded table has wrong thing name.", newThing.getName(), oldThing.getName());
             assertEquals("Loaded thing has wrong checksum.", newThing, oldThing);
+            newThing = newTable.getByName(oldThing.getName());
+            assertNotNull("Could not find thing by name in loaded table.", newThing);
+            assertEquals("Found incorrect object by name in loaded table.", oldThing.getId(), newThing.getId());
         }
     }
 

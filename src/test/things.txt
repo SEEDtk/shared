@@ -2574,7 +2574,6 @@ AtpSyntEpsiChai	1pS6ZPPvDqYqMGxSJAHDmQ	ATP synthase epsilon chain (EC 3.6.3.14)
 AtpSyntF0SectSubu	6Cpv02LRYRVqt4rPdCDs2g	ATP synthase F0 sector subunit a (EC 3.6.3.14)
 AtpSyntF0SectSubu2	MpQ+9h3cSmnaxwbFJM6h6A	ATP synthase F0 sector subunit c (EC 3.6.3.14)
 AtpSyntF0SectSubu3	srvtqJWAXjjJWX5fQ8GZpA	ATP synthase F0 sector subunit b (EC 3.6.3.14)
-AtpSyntF0SectSubu4	024Fgy5nvamgRj9zHUhUSg	ATP synthase F0 sector subunit b' (EC 3.6.3.14)
 AtpSyntGammChai	81ytHbU2ucbNTyYszXt2YQ	ATP synthase gamma chain (EC 3.6.3.14)
 AtpSyntProtI	tnke00SyN/aodulI2yNNjQ	ATP synthase protein I
 AtteCompAtteAbcTran	IS4pWFU2N/gY5nxTAuohcw	AttE component of AttEFGH ABC transport system
@@ -3314,7 +3313,6 @@ CobComHeteReduSubu3	tA3efS1MiZJrmD/Gi/THzg	CoB--CoM heterodisulfide reductase su
 CobComHeteReduSubu4	pLhx26OyH8NQO+v1hNgAbw	CoB--CoM heterodisulfide reductase subunit D (EC 1.8.98.1)
 CobComReduHydrAlph	sb7SoUDXPGnXNwZTvYr1fw	CoB--CoM-reducing hydrogenase (Cys) alpha subunit
 CobComReduHydrAlph2	JU/B3I7+m2Z4Sp9K+fmSKg	CoB--CoM-reducing hydrogenase (Sec) alpha subunit
-CobComReduHydrAlph3	8kIKyW2Cc3ojZAXPWh21FA	CoB--CoM-reducing hydrogenase (Sec) alpha' subunit
 CobComReduHydrBeta	C3eGc8MBLnoy4ogCRGsQew	CoB--CoM-reducing hydrogenase (Sec) beta subunit
 CobComReduHydrBeta2	C7bSSdaSnfqEzSyyNzwklQ	CoB--CoM-reducing hydrogenase (Cys) beta subunit
 CobComReduHydrDelt	SvFE/LpN000nNRtSxPWKxQ	CoB--CoM-reducing hydrogenase (Sec) delta subunit
@@ -3782,8 +3780,6 @@ DeltTocoMeth	N7rnk7JHlDKCX5H/45uwWw	delta-tocopherol methyltransferase (EC 2.1.1
 Deme4DeoxSyntMysa	5TyunCGbFcCKpSbWKkxdJA	Demethyl 4-deoxygadusol synthase MysA
 DemeMeth	2E47oRKiIpldM3ghn3kREA	Demethylmenaquinone methyltransferase (EC 2.1.1.163)
 DeorTypeTranRegu2	S1iKrK1cTB2DeD4Xa16k/g	DeoR-type transcriptional regulator YihW
-Deox5TripNucl	zeCAldAnLMmY7NqkfF0N4A	Deoxyuridine 5'-triphosphate nucleotidohydrolase (EC 3.6.1.23)
-Deox5TripNuclSaBact	o2W82y29YPu9Ju19MDGpXg	Deoxyuridine 5'-triphosphate nucleotidohydrolase (EC 3.6.1.23) [SA bacteriophages 11, Mu50B]
 DeoxHydr	+DEva6IpAHuN7x9B/kukjA	Deoxyhypusine hydroxylase (EC 1.14.99.29)
 DeoxKina2	b7H5zvSn9eS+Ja09zdbldA	Deoxyguanosine kinase (EC 2.7.1.113)
 DeoxKina4	Y328ZOe+DxNFBUUqYAvjpw	Deoxynucleoside kinase (EC 2.7.1.145)
@@ -3993,13 +3989,7 @@ DnaBindTranDualRegu	RM5WrEqQmH01+TdYRYt20g	DNA-binding transcriptional dual regu
 DnaDamaInduProtI	eZc9BgLW2VkBsYolhm3Z6g	DNA-damage-inducible protein I
 DnaDireRnaPolyAlph	t6xXKnQuD/xAX2EWL1lMSA	DNA-directed RNA polymerase alpha subunit (EC 2.7.7.6)
 DnaDireRnaPolyAlph5	N7Hfo0JfcAEcjBMZCrFZYA	DNA-directed RNA polymerase alpha subunit (EC 2.7.7.6), chloroplast
-DnaDireRnaPolyBeta	Z6otznh8ukC38GDhmdBpbA	DNA-directed RNA polymerase beta' subunit (EC 2.7.7.6)
-DnaDireRnaPolyBeta10	ghpn7eio3awCeZlWm05Vfw	DNA-directed RNA polymerase beta subunit (EC 2.7.7.6), chloroplast
-DnaDireRnaPolyBeta2	w96ooFQRsWFA6cNU6dpU1A	DNA-directed RNA polymerase beta subunit (EC 2.7.7.6)
-DnaDireRnaPolyBeta4	2Evdr+aeHTYU0Rr+BlObSg	DNA-directed RNA polymerase beta' subunit, cyanobacterial form (EC 2.7.7.6)
-DnaDireRnaPolyBeta9	tV3aLwbQg/28Vw4+z4livw	DNA-directed RNA polymerase beta' subunit (EC 2.7.7.6), chloroplast
 DnaDireRnaPolyDelt	nnDY23yEd65+0l/qEC+NiA	DNA-directed RNA polymerase delta subunit (EC 2.7.7.6)
-DnaDireRnaPolyDelt3	FS+CZOM45I3/R8tMEKUeOQ	DNA-directed RNA polymerase delta (= beta'') subunit (EC 2.7.7.6), chloroplast
 DnaDireRnaPolyGamm	iVzfME4EC77XmjOCGuLa8A	DNA-directed RNA polymerase gamma subunit (EC 2.7.7.6)
 DnaDireRnaPolyGamm2	oppCJMBRAW2On7zTPPOXqw	DNA-directed RNA polymerase gamma subunit (EC 2.7.7.6), chloroplast
 DnaDireRnaPolyI13n1	unSPtHJwFqUjRNsTSyrkkg	DNA-directed RNA polymerase I 13.7 kDa polypeptide (EC 2.7.7.6)
@@ -4035,23 +4025,6 @@ DnaDireRnaPolyISeco	lUR6KNEBlijJPzhVbRWXRA	DNA-directed RNA polymerase I second 
 DnaDireRnaPolyOmeg	a9ZaTMqQ5yJoIiNQOnxJRA	DNA-directed RNA polymerase omega subunit (EC 2.7.7.6)
 DnaDireRnaPolyOmeg2	NeCqZVsHil6LJGVUZ3I/bA	DNA-directed RNA polymerase omega subunit (EC 2.7.7.6), chloroplast
 DnaDireRnaPolySubu	iRDqy6sMxryWTlUT/6HbnQ	DNA-directed RNA polymerase subunit D (EC 2.7.7.6)
-DnaDireRnaPolySubu10	Hv1nmcRyLQdI3Sw5d9hA3Q	DNA-directed RNA polymerase subunit Rpo13 (EC 2.7.7.6)
-DnaDireRnaPolySubu11	xqlzQ7f3omyslKIN9lPdQg	DNA-directed RNA polymerase subunit K (EC 2.7.7.6)
-DnaDireRnaPolySubu12	IxDKfj3GIYP93anMfL4pOg	DNA-directed RNA polymerase subunit E' (EC 2.7.7.6)
-DnaDireRnaPolySubu13	OELd/LLko4+NzdQTnV51hQ	DNA-directed RNA polymerase subunit E''
-DnaDireRnaPolySubu14	0Vr8om6fPjBwTA+AyR9Rrg	DNA-directed RNA polymerase subunit P (EC 2.7.7.6)
-DnaDireRnaPolySubu15	EO5XSeZOv8z7bx4TG9A2PQ	DNA-directed RNA polymerase subunit B'' (EC 2.7.7.6)
-DnaDireRnaPolySubu16	fokjMA7jJRNoGfgJF15Fpg	DNA-directed RNA polymerase subunit B' (EC 2.7.7.6)
-DnaDireRnaPolySubu2	esY7djmxLxZwshMuKjCo2g	DNA-directed RNA polymerase subunit N (EC 2.7.7.6)
-DnaDireRnaPolySubu20	3oX/KPZWbkbj01G/9Wr2bw	DNA-directed RNA polymerase subunit A (EC 2.7.7.6)
-DnaDireRnaPolySubu23	u7RRmBWFqiRdRLv/A3hA8g	DNA-directed RNA polymerase subunit M (EC 2.7.7.6)
-DnaDireRnaPolySubu3	C+/xrdQPrityUSHmD+RSyg	DNA-directed RNA polymerase subunit F (EC 2.7.7.6)
-DnaDireRnaPolySubu4	mugyXc9uIV25EIqFLY4eMg	DNA-directed RNA polymerase subunit G (EC 2.7.7.6)
-DnaDireRnaPolySubu5	nzzNCwOf0kszHgC1bHY9iQ	DNA-directed RNA polymerase subunit H (EC 2.7.7.6)
-DnaDireRnaPolySubu6	7NyM9FuacMgy2o8Dwnp9zg	DNA-directed RNA polymerase subunit B (EC 2.7.7.6)
-DnaDireRnaPolySubu7	rKCLw1txlsLM2YTIkJheaQ	DNA-directed RNA polymerase subunit A' (EC 2.7.7.6)
-DnaDireRnaPolySubu8	41q93meH3jaxsVWqgnX6xA	DNA-directed RNA polymerase subunit A'' (EC 2.7.7.6)
-DnaDireRnaPolySubu9	UnzMlcCFl3YLBawBLTfERw	DNA-directed RNA polymerase subunit L (EC 2.7.7.6)
 DnaDoubStraBreaRepa	ZD4sSIxmPYJUeGOO3Hdmnw	DNA double-strand break repair Rad50 ATPase
 DnaDoubStraBreaRepa2	u1Ct+YHqrYraYXT69PrDeg	DNA double-strand break repair protein Mre11
 DnaDoubStraBreaRepa3	vuJB2W8hN5HrhtY7E3s+5A	DNA double-strand break repair nuclease NurA
@@ -4294,7 +4267,6 @@ EndoCoatAssoProt2	6KQYvPSkawINyrQIIuIhCQ	Endospore coat-associated protein YheD
 EndoIii	O1UQomdC1/zLV6uh6TlJHA	Endonuclease III (EC 4.2.99.18)
 EndoIv	XKLrC+LzkAy4xPRLtQdQHQ	Endonuclease IV (EC 3.1.21.2)
 EndoLAlanDGlutPept	uzGhRYGywIhyI98nSMacnw	Endolysin, L-alanyl-D-glutamate peptidase (EC 3.4.-.-) [Bacteriophage A118]
-EndoQClea5DamaDna	xUXiYgpxEr6lpmrQ3UXb/w	Endonuclease Q, cleaves 5' to damaged DNA bases
 EndoV	NNgxqqEW2UC25BzBNrPBCg	Endonuclease V (EC 3.1.21.7)
 EndoViii	60p+4cOIFMX29U1AtwDvmQ	Endonuclease VIII
 EnerConsHydrEhaAsso	q89duAzbqnPPnyxjkqPc/A	Energy conserving hydrogenase Eha associated protein (protein R)
@@ -5289,7 +5261,6 @@ Glyc3PhosFerrOxid	/BPAhanV0zA+47dlefeOKQ	Glyceraldehyde-3-phosphate: ferredoxin 
 Glyc3PhosKetoIsom	oG17lJfi12WAtdZnpLvmdQ	Glyceraldehyde-3-phosphate ketol-isomerase (EC 5.3.1.1)
 Glyc3PhosReguRepr2	8wsq+vYXMGcpGHj25fW0Kg	Glycerol-3-phosphate regulon repressor GlpR
 Glyc3PhosTran	zDcsAer/19MI+PXCZj4qpQ	Glycerol-3-phosphate transporter
-Glyc44DiapAcylPrec	eRhuM7cu9a68ZvhWe2plYQ	Glycosyl-4,4'-diaponeurosporenoate acyltransferase precursor (EC 2.3.1.-)
 GlycAbcTranAtpBind	uvrNbWvTINIuNOp/JNgjGQ	Glycerol ABC transporter, ATP-binding protein GlpS
 GlycAbcTranAtpBind2	Y97ZXVeLOReXqbO2QNgIlQ	Glycerol ABC transporter, ATP-binding protein GlpT
 GlycAbcTranPermProt	CXqyea6q4qXngz+RnR1QEg	Glycerol ABC transporter, permease protein GlpQ
@@ -5379,7 +5350,6 @@ GmpSyntGlutHydr	fYvjS0fFJXoISL7d7ZEQow	GMP synthase [glutamine-hydrolyzing] (EC 
 GmpSyntGlutHydrAmid	qIJ0G9zevK+2DO9vm/Zxmw	GMP synthase [glutamine-hydrolyzing], amidotransferase subunit (EC 6.3.5.2)
 GmpSyntGlutHydrAtp	y7fWNwjL5I6KjdJZIbUZrQ	GMP synthase [glutamine-hydrolyzing], ATP pyrophosphatase subunit (EC 6.3.5.2)
 GSpecAdenGlyc	9I/vSfMvGtdEOn/5VZyqig	A/G-specific adenine glycosylase (EC 3.2.2.-)
-Gtp38Cycl	HR1AB3Wz8DZWu1ziVTHUqg	GTP 3',8-cyclase (EC 4.1.99.22)
 GtpBindNuclAcidBind	Juf6oBeYwE9akIJ5GT38Yg	GTP-binding and nucleic acid-binding protein YchF
 GtpBindProt	iHWyqk9ScAUSCQOUEa+ptw	GTP-binding protein
 GtpBindProtEnga	vPJHnFq9MxtBAcYc1wn8/w	GTP-binding protein EngA
@@ -5400,8 +5370,6 @@ GtpPyroPpgpSyntI	+y5gyShoF/gYJphckNyHZg	GTP pyrophosphokinase (EC 2.7.6.5), (p)p
 GtpPyroPpgpSyntIi	lDy0KZETEZm814TbCKnNSg	GTP pyrophosphokinase (EC 2.7.6.5), (p)ppGpp synthetase II
 GtpSensTranPleiRepr	awOBaWb1+FpfMAkn7Wt0pw	GTP-sensing transcriptional pleiotropic repressor CodY
 GTUMismSpecUracThym	+vDXD8iNJb/6A0qnVnjojQ	G:T/U mismatch-specific uracil/thymine DNA-glycosylase (EC 3.2.2.27)
-Guan35Bis3Pyro	tajZNfSNn3LcEU6M/PPs2g	Guanosine-3',5'-bis(diphosphate) 3'-pyrophosphohydrolase (EC 3.1.7.2)
-Guan5Trip3DiphPyro	cT3oPLFXDhlAjS+dlmep8Q	Guanosine-5'-triphosphate,3'-diphosphate pyrophosphatase (EC 3.6.1.40)
 GuanDeam	LbZV1hnkOMt1UsmVLK//rQ	Guanine deaminase (EC 3.5.4.3)
 GuanKina	h4iTdd5vIphzi1wpxyefCQ	Guanylate kinase (EC 2.7.4.8)
 GuanSpecRibo	NI/o1kpBlU56Q5f/s1kwyg	Guanyl-specific ribonuclease (EC 3.1.27.3)
@@ -5478,8 +5446,6 @@ HeptDiphSyntComp2	Dg9YweSWgzKhZUCLsxFU9w	Heptaprenyl diphosphate synthase compon
 HeptPhosSynt	fL5/zZtwbQtVvZjOCMZhcA	Heptaprenylglyceryl phosphate synthase (EC 2.5.1.n9)
 HesaMoebThifFami4	CEzFGKBBY8h1WxnfT83tyg	HesA/MoeB/ThiF family protein => sulfur transfer pathway protein CsdL
 HesaMoebThifFami7	zxIFJfA4lKz44b3f77XeqQ	HesA/MoeB/ThiF family protein, possibly E1-enzyme activating SAMPs for protein conjugation
-HeteDecaBetaDRibo	sEdEatkgaIzOTv54EFvj8g	Heteromeric decaprenylphosphoryl-beta-D-ribose 2'-epimerase (EC 1.1.1.333) subunit DprE2
-HeteDecaBetaDRibo2	ZELQKay9TVgO8tcNct/n9Q	Heteromeric decaprenylphosphoryl-beta-D-ribose 2'-epimerase (EC 1.1.98.3) subunit DprE1
 HeteDiffProtHetc	9ErIfRRzUvPdqVk0WD8qQg	Heterocyst differentiation protein HetC
 HeteDiffProtHetp	mpnSeVHpb85K921lXSgIpQ	Heterocyst differentiation protein HetP
 HeteEfflAbcTranAtp	v02RHpiZ3+tD9i48e4jB0g	Heterodimeric efflux ABC transporter, ATP-binding/permease subunit
@@ -5851,7 +5817,6 @@ InorPyro	6L+1I2+SOXqZO+8XKe4uYg	Inorganic pyrophosphatase (EC 3.6.1.1)
 InorPyroPpax	UW42EGbz8ArebtLuKKIzqg	Inorganic pyrophospatase PpaX
 Inos1Mono	S3iwM14IgHc7r2sEsQwHaw	Inositol-1-monophosphatase (EC 3.1.3.25)
 Inos1PhosSynt	yvxQoAXmBnQeRGqfR6QeQA	Inositol-1-phosphate synthase (EC 5.5.1.4)
-Inos5MonoDehy	YH55Kk5VaxdaJ4jkOHhBcw	Inosine-5'-monophosphate dehydrogenase (EC 1.1.1.205)
 InosDehy	rfzLJr+6HaFHZW8tkOtJyg	Inosose dehydratase (EC 4.2.1.44)
 InosGuanKina	bQ0oDl5SMmbzzhAn2R1gyA	Inosine-guanosine kinase (EC 2.7.1.73)
 InosIsom	9cqA5qEiWEMabo2z8GF3iQ	Inosose isomerase (EC 5.3.99.11)
@@ -6079,7 +6044,6 @@ L2Keto3DeoxDehy	S4y9LQfHCll7nYIW5TqgdQ	L-2-keto-3-deoxyarabonate dehydratase (EC
 Lact2Mono	Co3TWwegCDZTyFEgZogAtA	Lactate 2-monooxygenase (EC 1.13.12.4)
 LactDehyInvoFuco	JUmzaRUg+/NAEgOePmGPRw	Lactaldehyde dehydrogenase involved in fucose or rhamnose utilization (EC 1.2.1.22)
 LactDelbPhagMv4Main	96mliNkdAtveo8mIOK66AQ	Lactobacillus delbrueckii phage mv4 main capsid protein Gp34 homolog lin2390
-LactDiphGuan78Dide	HQrS6PIKZKnph7guTCfhcg	Lactyl (2) diphospho-(5')guanosine:7,8-didemethyl-8-hydroxy-5-deazariboflavin 2-phospho-L-lactate transferase (EC 2.7.8.28)
 LactGalaPermGphTran	R6QOl2dSlwj7Uh2UYB8Yyw	Lactose and galactose permease, GPH translocator family
 LactHydr	55OOShuCzQOl29+FHKaDhQ	Lactoylbacillithiol hydrolase
 LactLyas	SMSdpPs/8mr2wlaIziFDQg	Lactoylglutathione lyase (EC 4.4.1.5)
@@ -6172,7 +6136,6 @@ LDTranLprq	bgLAnD8u7Ks+9hyy0x2c+Q	L,D-transpeptidase => LprQ
 LDTranYbis2	eMT18mA8o9naQHe+9GuxZA	L,D-transpeptidase => YbiS
 LDTranYcfs2	VpIMr7yBIZa/P+KR079kVQ	L,D-transpeptidase => YcfS
 LDTranYkud	LtMVWh33kuF0jp9DT+fjxg	L,D-transpeptidase YkuD
-LDTranYkud2	gv7Bg3PfyJvtuWZisGnDJw	L,D-transpeptidase => YkuD
 LDTranYnhg2	SQSseKlXGf31hYNvl/wX8A	L,D-transpeptidase => YnhG
 LeadCadmZincMerc	8Q1gLUnHRgga/ZvZfWeZAQ	Lead, cadmium, zinc and mercury transporting ATPase (EC 3.6.3.3) (EC 3.6.3.5)
 LeadPept	eu6Z2pBtvLIqt/T1wbHJKA	Leader peptidase (Prepilin peptidase) (EC 3.4.23.43)
@@ -6229,7 +6192,6 @@ LipaAcylWithGdsl2	LpgHdRGadsZpnc4+rZkqTg	Lipase/Acylhydrolase with GDSL-like mot
 LipaPrec	SZxXSAOdUqZtcMXzAhGjWA	Lipase precursor (EC 3.1.1.3)
 LipaTsel	THM18+CFSb+5Z0AU0+sKEQ	Lipase TseL
 Lipi1PhosLpxeHPylo	kH3pK2cnhVbwD262J2nuOw	Lipid A 1-phosphatase LpxE [H.pylori] (EC 3.1.3.-)
-Lipi4PhosLpxfFran	MiB/xFHocFK29yr1kSR8dg	Lipid A 4'-phosphatase LpxF [Francisella] (EC 3.1.3.-)
 LipiBiosLaurAcyl	8eCqYCPkUI73tqFxHUDzVg	Lipid A biosynthesis lauroyl acyltransferase (EC 2.3.1.-)
 LipiCoreOAntiLiga4	qXAoRnWThXMPQT/o8/lfMw	Lipid A core O-antigen ligase related Slr0728
 LipiDisaSynt	EcwP4woGsbGMqbRuRYKBag	Lipid-A-disaccharide synthase (EC 2.4.1.182)
@@ -6648,11 +6610,6 @@ LythProtInvoMeth	RFlrMmvidqt8GRr3ii3lOw	LytH protein involved in methicillin res
 LytiEnzyAmidSaBact	LcrdhZetNUpwNbFYVM/n3g	Lytic enzyme, amidase [SA bacteriophages 11, Mu50B]
 LytiTranClusWith	m4oxKzbNijfgC8+TO3+BxA	Lytic transglycosylase clustered with flagellum synthetic genes
 LyzoM1n1	1siA1XQyL3Ve/MHJSgWosw	Lyzozyme M1 (1,4-beta-N-acetylmuramidase) (EC 3.2.1.17)
-Macr2PhosMphFami	ublqkmsbqfhB/imHJOyj9Q	Macrolide 2'-phosphotransferase => Mph(C) family
-Macr2PhosMphFami2	bU4EtXNNRnKvddD4CvkHqg	Macrolide 2'-phosphotransferase => Mph(A) family
-Macr2PhosMphFami3	LShNcoCyxNKpizJQe9/8Aw	Macrolide 2'-phosphotransferase => Mph(B) family
-Macr2PhosMphFami4	na5ER/k9kyfCGYyKonacXA	Macrolide 2'-phosphotransferase => Mph(F) family
-Macr2PhosMphMphFami	Ho09MRD9tBMGh+lk5VLDXg	Macrolide 2'-phosphotransferase => Mph(E)/Mph(G) family
 MacrExpoAtpBindPerm	6G+z+3fC7b6Y2cV7UsAojg	Macrolide export ATP-binding/permease protein MacB
 MacrResiMfsEfflPump	mdRTMQZWYL/ivpQwNk43kQ	Macrolide resistance, MFS efflux pump => Mef(A)
 MacrResiMfsEfflPump2	UQ4Wm8nKi51T9r28Of9qyg	Macrolide resistance, MFS efflux pump => Mef(B)
@@ -7332,41 +7289,9 @@ NadTranEndoPoss	QLVV9kSmX8MzrmmNbOaDMA	NAD transporter of endosymbionts, possibl
 NadTranSubuBeta	i4ApPUC9bQcPjDwxuHeygw	NAD(P) transhydrogenase subunit beta (EC 1.6.1.2)
 NadUtilDehySll0Homo	x0me+qf5OfbkIuWk4ACBQw	NAD(FAD)-utilizing dehydrogenase, sll0175 homolog
 NaHAnti	TflWT+gFTDWOCCLFk+yh1w	Na+/H+ antiporter
-NaHAnti2	sUWW4GOkPVHrbvKdTCkLpQ	Na(+)/H(+) antiporter
-NaHAntiNapa	nUB1zqBUFNPXY4jQCXINvg	Na+/H+ antiporter NapA
-NaHAntiNhaaType	ouos+6YWnsei/XfwZ0Kh3A	Na+/H+ antiporter NhaA type
-NaHAntiNhab	aTfNPHZCKRNUjWf6xArdLw	Na+/H+ antiporter NhaB
-NaHAntiNhac	IyNxnuHKqpnMtbHef9Lsew	Na+/H+ antiporter NhaC
-NaHAntiNhadType	hE5uApqaJXIW3yKeEhvVBg	Na+/H+ antiporter NhaD type
-NaHAntiNhapFami	vgse4yj/ErlBDf1AVGXk1w	Na+/H+ antiporter, NhaP family
-NaHAntiNhas	L0A9fVXCypNHYrGJm6uQTA	Na+/H+ antiporter Nhas3
-NaHAntiSubu	21coDuMd2jlUefWr8wp12Q	Na(+) H(+) antiporter subunit A
-NaHAntiSubuB	UagxmgVzy4nPRxsIBYjoKg	Na(+) H(+) antiporter subunit B
-NaHAntiSubuC	P3XeLEfp3G1f9WSUIDFOlA	Na(+) H(+) antiporter subunit C
-NaHAntiSubuD	nPZkQEiOb3q3raa7oeuIZQ	Na(+) H(+) antiporter subunit D
-NaHAntiSubuE	3xgljcJHReVZoPR1oeZLXQ	Na(+) H(+) antiporter subunit E
-NaHAntiSubuF	x0FgDGSnOr2rHm6sgblBAA	Na(+) H(+) antiporter subunit F
-NaHAntiSubuG	lCX8RoEDDWXZ95KBU2Xc9A	Na(+) H(+) antiporter subunit G
-NaHDicaSymp2	fCvQ9MbZsnHKVhfnv6B1bw	Na+/H+-dicarboxylate symporters
-NaHDicaSymp3	SnS3nkQ5ZbJT3PGXBWHQjA	Na+/H+-dicarboxylate symporter
-NaLiHAntiNhab	VFcpm7rWo2wQdeKk/YylgA	Na+ or Li+/H+ antiporter NhaB
 NAlphAcetL24Diam	FuSfDqFVB20Fx8K1mR6a4A	N-alpha-acetyl-L-2,4-diaminobutyrate deacetylase
 NaphSynt	Wwlv65PbgAkheqyjW4W88w	Naphthoate synthase (EC 4.1.3.36)
 NaProlSymp	uYXDoUewqIGLvrEjFx3ddA	Na+/proline symporter
-NaTranNadhQuinRedu	oW3CRU1vVuaagN1K+ArwwA	Na(+)-translocating NADH-quinone reductase subunit A (EC 1.6.5.8)
-NaTranNadhQuinRedu2	GnQeKnkQnYN7PN+4nQ9ZyA	Na(+)-translocating NADH-quinone reductase subunit B (EC 1.6.5.8)
-NaTranNadhQuinRedu3	laRsyGsGixD+FtA/lUqrzA	Na(+)-translocating NADH-quinone reductase subunit C (EC 1.6.5.8)
-NaTranNadhQuinRedu4	z2KSCDDfLKLkLM/unMEueQ	Na(+)-translocating NADH-quinone reductase subunit D (EC 1.6.5.8)
-NaTranNadhQuinRedu5	q0vX0X7ZapKiG0rYYg/uaQ	Na(+)-translocating NADH-quinone reductase subunit E (EC 1.6.5.8)
-NaTranNadhQuinRedu6	/1DwKszgVxKdUFD58y2D2A	Na(+)-translocating NADH-quinone reductase subunit F (EC 1.6.5.8)
-NButaLHomoLactBind	99MY6P2gbFvbx8KWeyz2ZQ	N-butanoyl-L-homoserine lactone-binding transcriptional activator
-NButaLHomoLactSynt	SyfS6rTkc7NilgVPxHeUig	N-butanoyl-L-homoserine lactone synthase
-NCarbAmid	f3KndHma88kOojzXeHjB1g	N-carbamoylputrescine amidase (EC 3.5.1.53)
-NCarbAmid2	rVIBqh7UrN46pCFhPwXZug	N-carbamoylsarcosine amidase (EC 3.5.1.59)
-NCarbLAminAcidHydr	Wk6sOWw4yra16+nUSPagHg	N-carbamoyl-L-amino acid hydrolase (EC 3.5.1.87)
-NCitrNAcetNHydrSynt	5Jh635YvB5PM65XV4p01oA	N(2)-citryl-N(6)-acetyl-N(6)-hydroxylysine synthase (EC 6.3.2.38), aerobactin biosynthesis protein IucA
-NegaReguFlagSynt	GKsHi5Gm3MzO/qdlctJ/IA	Negative regulator of flagellin synthesis FlgM (anti-sigma28)
-NegaReguHrpExprHrpv	FIoo+LrD34NOxfLUsZbNGg	negative regulator of hrp expression HrpV
 NegaTranReguCopp	VpyUHBEU40wdn26EXM8/MA	Negative transcriptional regulator-copper transport operon
 Neop	WFFV24/j5fHqqdMYg2mjbQ	Neopullulanase (EC 3.2.1.135)
 NeopDSynt	7fdLMF/UQUWGu4tYi43dOw	Neopentalenolactone D synthase (EC 1.14.13.171)
@@ -10984,7 +10909,6 @@ TrnaProoProtStm4n1	JiSFV16g5pLZGUg/3f2Qcw	tRNA proofreading protein STM4549
 TrnaPropWyosNMeth	uuC8dwdwD0tW9Z6FXbLkxA	tRNA(Phe) (7-(3-amino-3-(methoxycarbonyl)propyl)wyosine(37)-N)-methoxycarbonyltransferase (EC 2.3.1.231)
 TrnaPseuSynt11	6yYcE3hK1cQjBdi0ifukKA	tRNA pseudouridine(38/39) synthase (EC 5.4.99.45)
 TrnaPseuSynt12	qZwRYNR5+c/Bnq6sYBXrDA	tRNA pseudouridine(31) synthase (EC 5.4.99.42)
-TrnaPseuSynt13	6htPXB/NmKV2GIMteUETNg	tRNA pseudouridine (54/55) synthase
 TrnaPseuSynt2	aEwHv0PCeSzyQ9R2BZO9rA	tRNA pseudouridine(38-40) synthase (EC 5.4.99.12)
 TrnaPseuSynt3	cWVwsY3HFvuL2g12WtIx9g	tRNA pseudouridine(55) synthase (EC 5.4.99.25)
 TrnaPseuSynt5	BnR3p32vRHITzSt9G7kuow	tRNA pseudouridine(32) synthase (EC 5.4.99.28)
@@ -11364,7 +11288,6 @@ UreaAbcTranAtpaProt	TYZEfRMK7XFwPnmBgRTJqQ	Urea ABC transporter, ATPase protein 
 UreaAbcTranAtpaProt2	a65eDo/CLc+Tg6D+IKOLrA	Urea ABC transporter, ATPase protein UrtE
 UreaAbcTranPermProt	4Ku/bc60XDfXfucxjnAdnw	Urea ABC transporter, permease protein UrtB
 UreaAbcTranPermProt2	qef9+cmCCdXyJlb9NHcR0w	Urea ABC transporter, permease protein UrtC
-UreaAbcTranSubsBind2	7EkBodA0uRAr6Klxobb0yQ	Urea ABC transporter, substrate-binding protein UrtA
 UreaAcceProtUred	+GT7UW40VdfDTfP8tDodZw	Urease accessory protein UreD
 UreaAcceProtUree	PqE8rG54l3yVU+fJ4Lpe+A	Urease accessory protein UreE
 UreaAcceProtUref	gmzBA03vZtZxnIrbroVllQ	Urease accessory protein UreF

@@ -114,6 +114,8 @@ public class MagicMap<T extends MagicObject> {
         }
         // Associate the value with the ID.
         this.idMapper.put(id, obj);
+        // Update the checksum map.
+        this.checkMapper.put(obj.getChecksum(), obj);
     }
 
     /**
