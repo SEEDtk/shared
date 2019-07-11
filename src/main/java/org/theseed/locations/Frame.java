@@ -36,7 +36,7 @@ public enum Frame {
     private static HashMap<String, Frame> labelMap = null;
 
     /** label of frame */
-    String label;
+    private String label;
 
     private Frame(String label) {
         this.label = label;
