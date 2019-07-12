@@ -25,6 +25,7 @@ import org.theseed.genomes.Feature;
 import org.theseed.genomes.FeatureList;
 import org.theseed.genomes.Genome;
 import org.theseed.genomes.GenomeDirectory;
+import org.theseed.io.TabbedLineReader;
 import org.theseed.locations.FLocation;
 import org.theseed.locations.Frame;
 import org.theseed.locations.Location;
@@ -916,5 +917,64 @@ public class TestLibrary extends TestCase {
         found = testFeat.getUsefulRoles(goodRoles);
         assertEquals("Useful role found in useless peg.", 0, found.size());
     }
+
+    /**
+     * Test the tabbed input file.
+     *
+     * @throws IOException
+     */
+    public void testTabbedFile() throws IOException {
+        File inFile = new File("src/test", "tabbed.txt");
+        TabbedLineReader tabReader = new TabbedLineReader(inFile);
+        // Test the column finder.
+        assertThat("Did not find genome name.", tabReader.findField("genome_name"), equalTo(1));
+        assertThat("Did not find fraction.", tabReader.findField("fraction"), equalTo(3));
+        assertThat("Could not find column 3.", tabReader.findField("3"), equalTo(2));
+        assertThat("Cound not find last column.", tabReader.findField("0"), equalTo(4));
+        int colIdx = 0;
+        try {
+            colIdx = tabReader.findField("genome");
+            fail("Found genome column at " + colIdx);
+        } catch (IOException e) {
+            // this is good
+        }
+        try {
+            colIdx = tabReader.findField("10");
+            fail("Found out-of-bounds column at " + colIdx);
+        } catch (IOException e) {
+            // this is good
+        }
+        try {
+            colIdx = tabReader.findField("-6");
+            fail("Found out-of-bounds column at " + colIdx);
+        } catch (IOException e) {
+            // this is good
+        }
+        TabbedLineReader.Line line = tabReader.next();
+        assertThat("Wrong value in column 0 of line 1", line.get(0), equalTo("100.99"));
+        assertThat("Wrong value in column 2 of line 1", line.getInt(2), equalTo(10));
+        assertThat("Wrong value in column 3 of line 1", line.getDouble(3), closeTo(0.8, 0.0001));
+        assertFalse("Boolean adjustment fail in line 1", line.getFlag(4));
+        line = tabReader.next();
+        assertThat("Wrong value in column 2 of line 2", line.getInt(2), equalTo(-4));
+        assertThat("Wrong value in column 3 of line 2", line.getDouble(3), equalTo(12.0));
+        assertTrue("Wrong value in column 4 of line 2", line.getFlag(4));
+        line = tabReader.next();
+        assertFalse("Wrong value in column 4 of line 3", line.getFlag(4));
+        assertFalse("End of file not detected", tabReader.hasNext());
+        assertNull("Error reading past end-of-file", tabReader.next());
+        tabReader.close();
+        // Reopen to test iteration.
+        tabReader = new TabbedLineReader(inFile);
+        String[] testLabels = new String[] { "100.99", "200.20", "1000.6" };
+        int i = 0;
+        for (TabbedLineReader.Line l : tabReader) {
+            assertThat("Wrong record at index " + i, l.get(0), equalTo(testLabels[i]));
+            i++;
+        }
+        assertThat("Wrong number of records", i, equalTo(3));
+        tabReader.close();
+    }
+
 
 }
