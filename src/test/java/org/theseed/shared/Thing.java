@@ -11,7 +11,7 @@ import org.theseed.magic.MagicObject;
  * @author Bruce Parrello
  *
  */
-public class Thing extends MagicObject {
+public class Thing extends MagicObject implements Comparable<Thing> {
 
     /**
      * serialization object type ID
@@ -31,6 +31,11 @@ public class Thing extends MagicObject {
         // Convert all sequences of non-word characters to a single space and lower-case it.
         String retVal = this.getName().replaceAll("\\W+", " ").toLowerCase();
         return retVal;
+    }
+
+    @Override
+    public int compareTo(Thing o) {
+        return super.compareTo(o);
     }
 
 }

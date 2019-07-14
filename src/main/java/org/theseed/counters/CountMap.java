@@ -4,6 +4,7 @@
 package org.theseed.counters;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.SortedSet;
@@ -114,6 +115,15 @@ public class CountMap<K> {
     }
 
     /**
+     * Erase all the counts in this map without deleting any keys.
+     */
+    public void clear() {
+        for (Count count : this.map.values()) {
+            count.num = 0;
+        }
+    }
+
+    /**
      * @return the counter object for a specified key.  If none exists, one will be created.
      *
      * @param key	key for the counter of interest
@@ -180,10 +190,17 @@ public class CountMap<K> {
     /**
      * @return a collection of all the counts in this object, sorted from highest to lowest
      */
-    public List<CountMap<K>.Count> sortedCounts() {
-        ArrayList<CountMap<K>.Count> retVal = new ArrayList<CountMap<K>.Count>(this.map.values());
+    public List<Count> sortedCounts() {
+        ArrayList<Count> retVal = new ArrayList<Count>(this.map.values());
         retVal.sort(null);
         return retVal;
+    }
+
+    /**
+     * @return an unordered list of all the counts
+     */
+    public Collection<Count> counts() {
+        return this.map.values();
     }
 
 }

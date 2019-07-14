@@ -14,7 +14,7 @@ import murmur3.MurmurHash3.LongPair;
  * @author Bruce Parrello
  *
  */
-public abstract class MagicObject implements Comparable<MagicObject>, Serializable {
+public abstract class MagicObject implements Serializable {
 
 
     /**
@@ -66,7 +66,6 @@ public abstract class MagicObject implements Comparable<MagicObject>, Serializab
         this.checksum = new LongPair();
     }
 
-    @Override
     /** Two objects with the same name will have the same checksum.  So, if checksums
      * are equal, the objects are equal. Otherwise, we compare names.  NULL compares
      * last.

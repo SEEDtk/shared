@@ -546,6 +546,10 @@ public class TestLibrary extends TestCase {
             keysCounted.add(result.getKey());
         }
         assertThat("Wrong keys returned in result list.", keysCounted, contains(t4, t3, t2, t1));
+        thingCounter.clear();
+        assertThat("Wrong count for thing 2 after clear.", thingCounter.getCount(t2), equalTo(0));
+        thingCounter.count(t1);
+        assertThat("Wrong count for thing 1 after recount.", thingCounter.getCount(t1), equalTo(1));
         PairCounter<Thing> pairCounter = new PairCounter<Thing>();
         assertEquals("Pair counter not empty after creation (pairs).", 0, pairCounter.size());
         assertEquals("Pair counter not empty after creation (items).", 0, pairCounter.itemSize());

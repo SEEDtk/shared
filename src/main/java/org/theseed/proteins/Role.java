@@ -7,7 +7,7 @@ import org.apache.commons.lang3.RegExUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.theseed.magic.MagicObject;
 
-public class Role extends MagicObject {
+public class Role extends MagicObject implements Comparable<Role> {
 
     // ROLE-PARSING PATTERNS
     static private final Pattern EC_PATTERN = Pattern.compile("(.+?)\\s*\\(\\s*E\\.?C\\.?(?:\\s+|:)(\\d\\.(?:\\d+|-)\\.(?:\\d+|-)\\.(?:n?\\d+|-))\\s*\\)\\s*(.*)");
@@ -80,6 +80,11 @@ public class Role extends MagicObject {
         // Now remove the extra spaces and punctuation.
         retVal = RegExUtils.replaceAll(retVal, EXTRA_SPACES, " ");
         return retVal;
+    }
+
+    @Override
+    public int compareTo(Role o) {
+        return super.compareTo(o);
     }
 
 }
