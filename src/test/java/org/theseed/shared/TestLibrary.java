@@ -147,6 +147,8 @@ public class TestLibrary extends TestCase {
         assertEquals("Incorrect number of keys.", 4, keys.size());
         List<String> sorted = testMap.bestKeys();
         assertThat("Incorrect sort key results", sorted, contains("AAA", "CCC", "DDD", "BBB"));
+        assertThat("Allkeys returned wrong set.", testMap.allKeys(),
+                containsInAnyOrder("AAA", "BBB", "CCC", "DDD"));
     }
 
     private static final String myProtein = "MNERYQCLKTKEYQALLSSKGRQIFAKRKIDMKSVFGQIKVCLGYKRCHLRGKRQVRIDMGFILMANNLLKYNKRKRQN";
@@ -537,14 +539,16 @@ public class TestLibrary extends TestCase {
         assertThat("Wrong keys returned.", keysFound, contains(t1, t4, t2, t3));
         assertEquals("Too many keys returned.", 4, keysFound.size());
         assertEquals("Wrong number of entries in counter.", 4, thingCounter.size());
-        Collection<CountMap<Thing>.Count> countsFound = thingCounter.sortedCounts();
-        Collection<Thing> keysCounted = new ArrayList<Thing>(4);
+        List<CountMap<Thing>.Count> countsFound = thingCounter.sortedCounts();
+        List<Thing> keysCounted = new ArrayList<Thing>(4);
         int prev = Integer.MAX_VALUE;
         for (CountMap<Thing>.Count result : countsFound) {
             assertThat("Counts out of order for " + result.getKey() + ".", result.getCount(), lessThan(prev));
             prev = result.getCount();
             keysCounted.add(result.getKey());
         }
+        Collection<CountMap<Thing>.Count> allCounts = thingCounter.counts();
+        assertThat("Unsorted counts came back wrong.", allCounts, containsInAnyOrder(countsFound.toArray()));
         assertThat("Wrong keys returned in result list.", keysCounted, contains(t4, t3, t2, t1));
         thingCounter.clear();
         assertThat("Wrong count for thing 2 after clear.", thingCounter.getCount(t2), equalTo(0));

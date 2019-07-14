@@ -4,6 +4,7 @@
 package org.theseed.counters;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
@@ -161,7 +162,12 @@ public class QualityCountMap<K extends Comparable<K>> {
         return retVal;
     }
 
-
+    /**
+     * @return all the keys in this map, unordered
+     */
+    public Collection<K> allKeys() {
+        return this.map.keySet();
+    }
 
 
 }
