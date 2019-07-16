@@ -149,6 +149,10 @@ public class TestLibrary extends TestCase {
         assertThat("Incorrect sort key results", sorted, contains("AAA", "CCC", "DDD", "BBB"));
         assertThat("Allkeys returned wrong set.", testMap.allKeys(),
                 containsInAnyOrder("AAA", "BBB", "CCC", "DDD"));
+        testMap.setGood("BBB", 4);
+        assertEquals("Incremental set-good failed.", 4, testMap.good("BBB"));
+        testMap.setBad("DDD", 6);
+        assertEquals("Incremental set-bad failed.", 7, testMap.bad("DDD"));
     }
 
     private static final String myProtein = "MNERYQCLKTKEYQALLSSKGRQIFAKRKIDMKSVFGQIKVCLGYKRCHLRGKRQVRIDMGFILMANNLLKYNKRKRQN";

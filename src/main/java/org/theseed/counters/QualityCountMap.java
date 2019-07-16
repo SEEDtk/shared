@@ -101,14 +101,32 @@ public class QualityCountMap<K extends Comparable<K>> {
 
     /** Increment the good count for a key. */
     public void setGood(K key) {
-        Counts myCount = this.getCounts(key);
-        myCount.good++;
+        this.setGood(key, 1);
     }
 
     /** Increment the bad count for a key. */
     public void setBad(K key) {
+        this.setBad(key, 1);
+    }
+
+    /**
+     * Increment the good count for a key.
+     *
+     * @param num	amount to increment the count
+     */
+    public void setGood(K key, int num) {
         Counts myCount = this.getCounts(key);
-        myCount.bad++;
+        myCount.good += num;
+    }
+
+    /**
+     * Increment the bad count for a key.
+     *
+     * @param num	amount to increment the count
+     */
+    public void setBad(K key, int num) {
+        Counts myCount = this.getCounts(key);
+        myCount.bad += num;
     }
 
     /**
