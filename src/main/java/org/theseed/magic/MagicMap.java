@@ -26,6 +26,9 @@ import murmur3.MurmurHash3.LongPair;
  */
 public class MagicMap<T extends MagicObject> {
 
+    // TODO:  add list of aliases, put aliases in checksum hash
+
+
     // FIELDS
     /** map from prefixes to the next usable suffix number */
     HashMap<String, Integer> suffixMapper;
