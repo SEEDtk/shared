@@ -938,6 +938,7 @@ public class TestLibrary extends TestCase {
     public void testTabbedFile() throws IOException {
         File inFile = new File("src/test", "tabbed.txt");
         TabbedLineReader tabReader = new TabbedLineReader(inFile);
+        assertThat("Wrong number of columns.", tabReader.size(), equalTo(5));
         // Test the column finder.
         assertThat("Did not find genome name.", tabReader.findField("genome_name"), equalTo(1));
         assertThat("Did not find fraction.", tabReader.findField("fraction"), equalTo(3));

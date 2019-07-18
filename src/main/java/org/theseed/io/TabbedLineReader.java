@@ -286,4 +286,11 @@ public class TabbedLineReader implements Closeable, AutoCloseable, Iterable<Tabb
         return this.lineCount;
     }
 
+    /**
+     * @return the number of fields in each record
+     */
+    public int size() {
+        return this.labels.length;
+    }
+
 }
