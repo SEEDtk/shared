@@ -103,6 +103,13 @@ public class Contig {
     }
 
     /**
+     * @return the length of the contig
+     */
+    public int length() {
+        return this.sequence.length();
+    }
+
+    /**
      * @return the DNA string for the specified region on this contig
      *
      * @param region	the region whose DNA is desired
