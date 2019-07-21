@@ -1044,5 +1044,18 @@ public class TestLibrary extends TestCase {
         }
     }
 
+    /**
+     * test frame comparison
+     */
+    public void testFrames() {
+        assertThat("M0 compare fail.", Frame.M0.compareTo(Frame.F0), lessThan(0));
+        assertThat("M1 compare fail.", Frame.M1.compareTo(Frame.F0), lessThan(0));
+        assertThat("M2 compare fail.", Frame.M2.compareTo(Frame.F0), lessThan(0));
+        assertThat("F0 compare fail.", Frame.F0.compareTo(Frame.F0), equalTo(0));
+        assertThat("P0 compare fail.", Frame.P0.compareTo(Frame.F0), greaterThan(0));
+        assertThat("P1 compare fail.", Frame.P1.compareTo(Frame.F0), greaterThan(0));
+        assertThat("P2 compare fail.", Frame.P2.compareTo(Frame.F0), greaterThan(0));
+    }
+
 
 }
