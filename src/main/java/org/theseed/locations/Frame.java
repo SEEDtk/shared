@@ -88,4 +88,11 @@ public enum Frame {
         return retVal;
     }
 
+    /**
+     * @return TRUE if this frame is on the minus strand, else FALSE
+     */
+	public boolean negative() {
+		return this.compareTo(Frame.F0) < 0;
+	}
+
 }

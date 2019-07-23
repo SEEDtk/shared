@@ -1055,6 +1055,13 @@ public class TestLibrary extends TestCase {
         assertThat("P0 compare fail.", Frame.P0.compareTo(Frame.F0), greaterThan(0));
         assertThat("P1 compare fail.", Frame.P1.compareTo(Frame.F0), greaterThan(0));
         assertThat("P2 compare fail.", Frame.P2.compareTo(Frame.F0), greaterThan(0));
+        assertTrue("M0 negative fail.", Frame.M0.negative());
+        assertTrue("M1 negative fail.", Frame.M1.negative());
+        assertTrue("M2 negative fail.", Frame.M2.negative());
+        assertFalse("F0 negative fail.", Frame.F0.negative());
+        assertFalse("P0 negative fail.", Frame.P0.negative());
+        assertFalse("P1 negative fail.", Frame.P1.negative());
+        assertFalse("P2 negative fail.", Frame.P2.negative());
     }
 
 
