@@ -1,0 +1,4 @@
+-z
+--bins this is a long string
+-t 10
+-tab	used here

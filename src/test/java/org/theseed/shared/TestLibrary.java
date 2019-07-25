@@ -37,6 +37,7 @@ import org.theseed.proteins.RoleMap;
 import org.theseed.sequence.FastaInputStream;
 import org.theseed.sequence.FastaOutputStream;
 import org.theseed.sequence.Sequence;
+import org.theseed.utils.Parms;
 
 import junit.framework.TestCase;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -1062,6 +1063,18 @@ public class TestLibrary extends TestCase {
         assertFalse("P0 negative fail.", Frame.P0.negative());
         assertFalse("P1 negative fail.", Frame.P1.negative());
         assertFalse("P2 negative fail.", Frame.P2.negative());
+    }
+
+    /**
+     * test parm reader
+     *
+     * @throws IOException
+     */
+    public void testParms() throws IOException {
+        File parmFile = new File("src/test", "parms.tbl");
+        List<String> parms = Parms.fromFile(parmFile);
+        assertThat("Invalid parms result.", parms, contains("-z", "--bins", "this is a long string",
+                "-t", "10", "-tab", "used here"));
     }
 
 
