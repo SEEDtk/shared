@@ -1,4 +1,7 @@
--z
+-z # comment on an option
 --bins this is a long string
--t 10
+-t 10       # with comment
+
+# comment line 1
+# comment line 2
 -tab	used here

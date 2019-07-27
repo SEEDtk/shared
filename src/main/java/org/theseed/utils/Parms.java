@@ -14,7 +14,9 @@ import org.apache.commons.lang3.StringUtils;
 /**
  * This class reads a parameter file and converts it into a String array.  Each line
  * of the file should consist of a command-line option (with the preceding hyphen or
- * hyphens), one or more spaces, and then the parameter value (if any).
+ * hyphens), one or more spaces, and then the parameter value (if any).  Anything after
+ * a pound sign (#) in the value area is treated as a comment.  A pound sign in the
+ * first column also counts as a comment.
  *
  * @author Bruce Parrello
  *
@@ -38,11 +40,18 @@ public class Parms {
             // Get the option name.
             String option = inStream.next();
             // Get the option value.  This may be an empty string.  Nextline gives us the
-            // separating whitespace as well as the rest of the line, so we strip it.
-            String value = StringUtils.strip(inStream.nextLine());
-            // Now add the option.  If the value is nonempty, add that, too.
-            retVal.add(option);
-            if (! value.isEmpty()) retVal.add(value);
+            // separating whitespace as well as the rest of the line, so we will need to
+            // strip it.
+            String value = inStream.nextLine();
+            // Only proceed if this is not a comment.
+            if (option.charAt(0) != '#') {
+                retVal.add(option);
+                // We need to check the value.  Strip off the comment (if any), and
+                // trim the leading and trailing whitespace.
+                value = StringUtils.trimToEmpty(StringUtils.substringBefore(value,  "#"));
+                // If the value is nonempty, add it.
+                if (! value.isEmpty()) retVal.add(value);
+            }
         }
         inStream.close();
         // Convert the buffer to an array and pass it back.
