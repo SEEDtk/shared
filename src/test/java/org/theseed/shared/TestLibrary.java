@@ -37,6 +37,7 @@ import org.theseed.proteins.RoleMap;
 import org.theseed.sequence.FastaInputStream;
 import org.theseed.sequence.FastaOutputStream;
 import org.theseed.sequence.Sequence;
+import org.theseed.utils.IntegerList;
 import org.theseed.utils.Parms;
 
 import junit.framework.TestCase;
@@ -1075,6 +1076,76 @@ public class TestLibrary extends TestCase {
         List<String> parms = Parms.fromFile(parmFile);
         assertThat("Invalid parms result.", parms, contains("-z", "--bins", "this is a long string",
                 "-t", "10", "-tab", "used here"));
+    }
+
+    /**
+     * test integer list
+     */
+    public void testIntList() {
+        // Start with an empty list.
+        IntegerList newList = new IntegerList();
+        assertThat(newList.size(), equalTo(0));
+        assertTrue(newList.isEmpty());
+        assertFalse(newList.hasNext());
+        assertThat(newList.toString(), equalTo(""));
+        assertThat(newList.original(), equalTo(""));
+        assertThat(newList.last(), equalTo(0));
+        // Repeat with an empty string.
+        newList = new IntegerList("");
+        assertThat(newList.size(), equalTo(0));
+        assertTrue(newList.isEmpty());
+        assertFalse(newList.hasNext());
+        assertThat(newList.toString(), equalTo(""));
+        assertThat(newList.original(), equalTo(""));
+        // Use the default feature.
+        newList.setDefault(12);
+        assertThat(newList.size(), equalTo(1));
+        assertThat(newList.get(0), equalTo(12));
+        assertThat(newList.toString(), equalTo("12"));
+        assertThat(newList.original(), equalTo("12"));
+        assertThat(newList.last(), equalTo(12));
+        // Verify out-of-bounds works.
+        assertThat(newList.get(-1), equalTo(0));
+        assertThat(newList.get(1), equalTo(0));
+        // Use a more sophisticated list.
+        newList = new IntegerList("4,6,8,10");
+        assertThat(newList.size(), equalTo(4));
+        assertThat(newList.get(0), equalTo(4));
+        assertThat(newList.get(1), equalTo(6));
+        assertThat(newList.get(2), equalTo(8));
+        assertThat(newList.get(3), equalTo(10));
+        assertThat(newList.last(), equalTo(10));
+        // Try traversal.
+        assertThat(newList.next(), equalTo(4));
+        assertThat(newList.next(), equalTo(6));
+        assertThat(newList.next(), equalTo(8));
+        assertThat(newList.next(), equalTo(10));
+        assertThat(newList.next(), equalTo(0));
+        // Reset to the first and traverse again, using hasnext checks.
+        newList.reset();
+        assertTrue(newList.hasNext());
+        assertThat(newList.next(), equalTo(4));
+        assertTrue(newList.hasNext());
+        assertThat(newList.next(), equalTo(6));
+        assertTrue(newList.hasNext());
+        assertThat(newList.next(), equalTo(8));
+        assertTrue(newList.hasNext());
+        assertThat(newList.next(), equalTo(10));
+        assertFalse(newList.hasNext());
+        assertThat(newList.next(), equalTo(0));
+        assertThat(newList.toString(), equalTo("4, 6, 8, 10"));
+        assertThat(newList.original(), equalTo("4,6,8,10"));
+        // Iterate through the list.
+        Iterator<Integer> iter = newList.new Iter();
+        assertTrue(iter.hasNext());
+        assertThat(iter.next(), equalTo(4));
+        assertTrue(iter.hasNext());
+        assertThat(iter.next(), equalTo(6));
+        assertTrue(iter.hasNext());
+        assertThat(iter.next(), equalTo(8));
+        assertTrue(iter.hasNext());
+        assertThat(iter.next(), equalTo(10));
+        assertFalse(iter.hasNext());
     }
 
 
