@@ -233,8 +233,11 @@ public class LocationList implements Iterable<Location> {
         this.searchLoc.setRegion(pos, end);
         // Find the rightmost location that can include the search location.
         Location loc = this.locations.floor(this.searchLoc);
-        if (loc != null) {
-            // Use it to compute the frame.
+        if (loc == null) {
+            // Here we are in front of the first coding region.
+            retVal = Frame.F0;
+        } else {
+            // We found one. Use it to compute the frame.
             retVal = loc.regionFrame(pos, end);
         }
         return retVal;

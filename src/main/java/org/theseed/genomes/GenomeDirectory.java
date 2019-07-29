@@ -76,7 +76,7 @@ public class GenomeDirectory implements Iterable<Genome> {
             // Read the genome.  Note we have to percolate some checked exceptions.
             Genome retVal;
             try {
-                retVal = new Genome(gtoFile.getPath());
+                retVal = new Genome(gtoFile);
             } catch (NumberFormatException | IOException e) {
                 throw new RuntimeException("Error processing genomes.", e);
             }

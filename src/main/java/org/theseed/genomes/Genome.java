@@ -3,6 +3,7 @@
  */
 package org.theseed.genomes;
 
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -86,9 +87,9 @@ public class Genome  {
      * @throws IOException
      * @throws NumberFormatException
      */
-    public Genome(String fileName) throws NumberFormatException, IOException {
+    public Genome(File inFile) throws NumberFormatException, IOException {
         // Get a reader for the named file.
-        FileReader reader = new FileReader(fileName);
+        FileReader reader = new FileReader(inFile);
         // Read the genome from the file.
         JsonObject gto;
         try {

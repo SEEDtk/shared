@@ -54,7 +54,7 @@ public class TestLibrary extends TestCase {
      */
     public TestLibrary(String name) throws IOException {
         super(name);
-        this.myGto = new Genome("src/test/gto_test/1313.7001.gto");
+        this.myGto = new Genome(new File("src/test/gto_test", "1313.7001.gto"));
     }
 
     private Genome myGto = null;
@@ -410,7 +410,7 @@ public class TestLibrary extends TestCase {
             }
         }
         // Finally, we want to test the frame computation.
-        assertEquals("Invalid frame for pre-loc position.", Frame.XX, newList.computeRegionFrame(1, 15));
+        assertEquals("Invalid frame for contig start.", Frame.F0, newList.computeRegionFrame(1, 9));
         assertEquals("Invalid frame for segmented position.", Frame.XX, newList.computeRegionFrame(40, 45));
         assertEquals("Invalid frame for simple minus position.", Frame.M1, newList.computeRegionFrame(390, 399));
         assertEquals("Invalid frame for simple plus position.", Frame.P0, newList.computeRegionFrame(4009, 4054));
@@ -469,7 +469,7 @@ public class TestLibrary extends TestCase {
             assertEquals("Contig has wrong length.", contig.getSequence().length(), contig.length());
         }
         assertEquals("Feature count incorrect.", myGto.getFeatureCount(), featureCount);
-        Genome gto2 = new Genome("src/test/testLocs.gto");
+        Genome gto2 = new Genome(new File("src/test", "testLocs.gto"));
         FeatureList contigFeatures = new FeatureList(gto2, "1313.7001.con.0029");
         Location region = Location.create("1313.7001.con.0029", "+", 160, 6860);
         Collection<Feature> inRegion = contigFeatures.inRegion(160, 6860);
