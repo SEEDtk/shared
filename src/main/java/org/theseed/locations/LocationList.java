@@ -39,6 +39,25 @@ public class LocationList implements Iterable<Location> {
     private TreeSet<Location> locations;
     /** utility location for point searches */
     private Location searchLoc;
+    /** starts and stops on plus strand */
+    private HashMap<Integer, Edge> plusEdges;
+    /** starts amd stops on minus strand */
+    private HashMap<Integer, Edge> minusEdges;
+
+    /** types of edges */
+    public enum Edge { OTHER("other"), START("start"), STOP("stop");
+
+        private String name;
+
+        private Edge(String name) {
+            this.name = name;
+        }
+
+        public String toString() {
+            return this.name;
+        }
+
+    };
 
     /**
      * Construct a location list for a specified contig.
@@ -49,6 +68,8 @@ public class LocationList implements Iterable<Location> {
         this.contigId = contigId;
         this.locations = new TreeSet<Location>(new Location.Sorter());
         this.searchLoc = Location.create(contigId, "+", 1, 1);
+        this.plusEdges = new HashMap<Integer, Edge>(200);
+        this.minusEdges = new HashMap<Integer, Edge>(200);
     }
 
     /**
@@ -67,6 +88,14 @@ public class LocationList implements Iterable<Location> {
             // Invalidate it if it is segmented.
             if (loc.isSegmented()) {
                 regionLoc.invalidate();
+            }
+            // Process the edges.
+            if (loc.getDir() == '+') {
+                this.plusEdges.put(regionLoc.getLeft(), Edge.START);
+                this.plusEdges.put(regionLoc.getRight() + 1, Edge.STOP);
+            } else {
+                this.minusEdges.put(regionLoc.getRight(), Edge.START);
+                this.minusEdges.put(regionLoc.getLeft() - 1, Edge.STOP);
             }
             // Now we need to merge it in.  The only tricky part to this is if there is an overlap,
             // we have to create invalid locations for the overlap area. Since there is no overlap
@@ -186,6 +215,22 @@ public class LocationList implements Iterable<Location> {
      */
     public String getContigId() {
         return this.contigId;
+    }
+
+    /**
+     * @return the type of edge at the specified location
+     *
+     * @param pos		the location of interest
+     * @param negative	TRUE if a negative strand edge should be considered
+     */
+    public Edge isEdge(int pos, boolean negative) {
+        Edge retVal = Edge.OTHER;
+        if (this.plusEdges.containsKey(pos)) {
+            retVal = this.plusEdges.get(pos);
+        } else if (negative && this.minusEdges.containsKey(pos)) {
+            retVal = this.minusEdges.get(pos);
+        }
+        return retVal;
     }
 
     /**

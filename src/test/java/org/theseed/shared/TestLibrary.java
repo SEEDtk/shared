@@ -30,6 +30,7 @@ import org.theseed.locations.FLocation;
 import org.theseed.locations.Frame;
 import org.theseed.locations.Location;
 import org.theseed.locations.LocationList;
+import org.theseed.locations.LocationList.Edge;
 import org.theseed.locations.Region;
 import org.theseed.magic.MagicMap;
 import org.theseed.proteins.Role;
@@ -410,6 +411,25 @@ public class TestLibrary extends TestCase {
                         newList.computeStrand(pos) != '0');
             }
         }
+        // Test edge computation.
+        assertThat(newList.isEdge(10, false), equalTo(Edge.START));
+        assertThat(newList.isEdge(50, false), equalTo(Edge.OTHER));
+        assertThat(newList.isEdge(200, false), equalTo(Edge.STOP));
+        assertThat(newList.isEdge(400, false), equalTo(Edge.OTHER));
+        assertThat(newList.isEdge(99, false), equalTo(Edge.OTHER));
+        assertThat(newList.isEdge(999, false), equalTo(Edge.OTHER));
+        assertThat(newList.isEdge(499, false), equalTo(Edge.OTHER));
+        assertThat(newList.isEdge(8000, false), equalTo(Edge.START));
+        assertThat(newList.isEdge(8200, false), equalTo(Edge.STOP));
+        assertThat(newList.isEdge(10, true), equalTo(Edge.START));
+        assertThat(newList.isEdge(50, true), equalTo(Edge.OTHER));
+        assertThat(newList.isEdge(200, true), equalTo(Edge.STOP));
+        assertThat(newList.isEdge(400, true), equalTo(Edge.START));
+        assertThat(newList.isEdge(99, true), equalTo(Edge.STOP));
+        assertThat(newList.isEdge(999, true), equalTo(Edge.START));
+        assertThat(newList.isEdge(499, true), equalTo(Edge.STOP));
+        assertThat(newList.isEdge(8000, true), equalTo(Edge.START));
+        assertThat(newList.isEdge(8200, true), equalTo(Edge.STOP));
         // Finally, we want to test the frame computation.
         assertEquals("Invalid frame for contig start.", Frame.F0, newList.computeRegionFrame(1, 9));
         assertEquals("Invalid frame for segmented position.", Frame.XX, newList.computeRegionFrame(40, 45));
