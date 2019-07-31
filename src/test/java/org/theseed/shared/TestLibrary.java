@@ -1166,6 +1166,14 @@ public class TestLibrary extends TestCase {
         assertTrue(iter.hasNext());
         assertThat(iter.next(), equalTo(10));
         assertFalse(iter.hasNext());
+        // Test softnext.
+        newList.reset();
+        assertThat(newList.softNext(), equalTo(4));
+        assertThat(newList.softNext(), equalTo(6));
+        assertThat(newList.softNext(), equalTo(8));
+        assertThat(newList.softNext(), equalTo(10));
+        assertThat(newList.softNext(), equalTo(10));
+        assertThat(newList.softNext(), equalTo(10));
     }
 
 

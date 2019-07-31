@@ -91,6 +91,14 @@ public class IntegerList implements Iterable<Integer> {
     }
 
     /**
+     * @return 	the next integer in the list unless we are at the end, in which
+     * 			case we return the last
+     */
+    public int softNext() {
+    	return (this.hasNext() ? this.next() : this.last());
+    }
+
+    /**
      * @return the last integer in the list
      */
     public int last() {
