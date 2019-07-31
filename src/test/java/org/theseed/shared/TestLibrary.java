@@ -16,6 +16,7 @@ import java.util.Scanner;
 import java.util.SortedSet;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.StringUtils;
 import org.theseed.counters.CountMap;
 import org.theseed.counters.KeyPair;
 import org.theseed.counters.PairCounter;
@@ -25,7 +26,9 @@ import org.theseed.genomes.Feature;
 import org.theseed.genomes.FeatureList;
 import org.theseed.genomes.Genome;
 import org.theseed.genomes.GenomeDirectory;
+import org.theseed.io.BalancedOutputStream;
 import org.theseed.io.TabbedLineReader;
+import org.theseed.io.TabbedLineReader.Line;
 import org.theseed.locations.FLocation;
 import org.theseed.locations.Frame;
 import org.theseed.locations.Location;
@@ -1176,5 +1179,108 @@ public class TestLibrary extends TestCase {
         assertThat(newList.softNext(), equalTo(10));
     }
 
-
+    /**
+     * Test the balanced stream.
+     *
+     * @throws IOException
+     */
+    public void testBalancedStream() throws IOException {
+        File testFile = new File("src/test", "balanced.ser");
+        BalancedOutputStream outStream = new BalancedOutputStream(1.5, testFile);
+        outStream.writeImmediate("type", "text");
+        outStream.write("a", "a1");
+        outStream.write("a", "a2");
+        outStream.write("a", "a3");
+        outStream.write("a", "a4");
+        outStream.write("a", "a5");
+        outStream.write("a", "a6");
+        outStream.write("a", "a7");
+        outStream.write("b", "b1");
+        outStream.write("b", "b2");
+        outStream.write("b", "b3");
+        outStream.write("b", "b4");
+        outStream.write("b", "b5");
+        outStream.write("b", "b6");
+        outStream.write("b", "b7");
+        outStream.write("b", "b8");
+        outStream.write("b", "b9");
+        outStream.write("b", "b10");
+        outStream.write("b", "b11");
+        outStream.write("b", "b12");
+        outStream.write("b", "b13");
+        outStream.write("b", "b14");
+        outStream.write("b", "b15");
+        outStream.write("b", "b16");
+        outStream.write("b", "b17");
+        outStream.write("b", "b18");
+        outStream.write("b", "b19");
+        outStream.write("b", "b20");
+        outStream.write("c", "c1");
+        outStream.write("c", "c2");
+        outStream.write("c", "c3");
+        outStream.write("c", "c4");
+        outStream.write("c", "c5");
+        outStream.write("c", "c6");
+        outStream.write("c", "c7");
+        outStream.write("c", "c8");
+        outStream.close();
+        // The file should contain 7 a, 10 b, and 8 c.
+        TabbedLineReader reader = new TabbedLineReader(testFile);
+        assertThat(reader.findField("type"), equalTo(0));
+        assertThat(reader.findField("text"), equalTo(1));
+        assertThat(reader.size(), equalTo(2));
+        CountMap<String> counts = new CountMap<String>();
+        for (Line line : reader) {
+            String label = line.get(0);
+            String text = line.get(1);
+            assertTrue("Text has wrong label.", StringUtils.startsWith(text, label));
+            counts.count(label);
+        }
+        assertThat(counts.getCount("a"), equalTo(7));
+        assertThat(counts.getCount("b"), equalTo(10));
+        assertThat(counts.getCount("c"), equalTo(8));
+        reader.close();
+        // Verify the first half of the file has half the objects.
+        reader = new TabbedLineReader(testFile);
+        counts = new CountMap<String>();
+        for (int i = 0; i < 13; i++) {
+            Line line = reader.next();
+            String label = line.get(0);
+            counts.count(label);
+        }
+        assertThat(counts.getCount("a"), equalTo(4));
+        assertThat(counts.getCount("b"), equalTo(5));
+        assertThat(counts.getCount("c"), equalTo(4));
+        reader.close();
+        outStream = new BalancedOutputStream(0, testFile);
+        outStream.writeImmediate("type", "text");
+        outStream.write("a", "a1");
+        outStream.write("a", "a2");
+        outStream.write("a", "a3");
+        outStream.write("a", "a4");
+        outStream.write("b", "b1");
+        outStream.write("b", "b2");
+        outStream.close();
+        reader = new TabbedLineReader(testFile);
+        Line line = reader.next();
+        assertThat(line.get(0), equalTo("a"));
+        assertThat(line.get(1), equalTo("a1"));
+        line = reader.next();
+        assertThat(line.get(0), equalTo("a"));
+        assertThat(line.get(1), equalTo("a2"));
+        line = reader.next();
+        assertThat(line.get(0), equalTo("a"));
+        assertThat(line.get(1), equalTo("a3"));
+        line = reader.next();
+        assertThat(line.get(0), equalTo("a"));
+        assertThat(line.get(1), equalTo("a4"));
+        line = reader.next();
+        assertThat(line.get(0), equalTo("b"));
+        assertThat(line.get(1), equalTo("b1"));
+        line = reader.next();
+        assertThat(line.get(0), equalTo("b"));
+        assertThat(line.get(1), equalTo("b2"));
+        assertFalse(reader.hasNext());
+        reader.close();
+    }
 }
