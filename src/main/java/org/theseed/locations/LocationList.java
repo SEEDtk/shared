@@ -9,9 +9,9 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.TreeSet;
 
-import org.theseed.genomes.Contig;
-import org.theseed.genomes.Feature;
-import org.theseed.genomes.Genome;
+import org.theseed.genome.Contig;
+import org.theseed.genome.Feature;
+import org.theseed.genome.Genome;
 
 /**
  *
@@ -92,10 +92,10 @@ public class LocationList implements Iterable<Location> {
             // Process the edges.
             if (loc.getDir() == '+') {
                 this.plusEdges.put(regionLoc.getLeft(), Edge.START);
-                this.plusEdges.put(regionLoc.getRight() + 1, Edge.STOP);
+                this.plusEdges.put(regionLoc.getRight() - 2, Edge.STOP);
             } else {
                 this.minusEdges.put(regionLoc.getRight(), Edge.START);
-                this.minusEdges.put(regionLoc.getLeft() - 1, Edge.STOP);
+                this.minusEdges.put(regionLoc.getLeft() + 2, Edge.STOP);
             }
             // Now we need to merge it in.  The only tricky part to this is if there is an overlap,
             // we have to create invalid locations for the overlap area. Since there is no overlap

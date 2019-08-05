@@ -1,7 +1,7 @@
 /**
  *
  */
-package org.theseed.genomes;
+package org.theseed.genome;
 
 import java.io.File;
 import java.io.FileReader;

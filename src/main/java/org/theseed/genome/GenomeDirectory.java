@@ -1,7 +1,7 @@
 /**
  *
  */
-package org.theseed.genomes;
+package org.theseed.genome;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -92,9 +92,19 @@ public class GenomeDirectory implements Iterable<Genome> {
      * @throws IOException
      */
     public GenomeDirectory(String dirName) throws IOException {
-        // Verify that the directory exists.
         this.dirName = new File(dirName);
-        if (! this.dirName.isDirectory())
+        setup();
+    }
+
+    /**
+     * Initialize this object.  This mostly involves figuring out which genomes
+     * are in the directory.
+     *
+     * @throws IOException
+     */
+	private void setup() throws IOException {
+		// Verify that the directory exists.
+		if (! this.dirName.isDirectory())
             throw new FileNotFoundException(dirName + " is not found or not a directory.");
         // Get the list of genome files.
         GtoFilter filter = new GtoFilter();
@@ -107,9 +117,22 @@ public class GenomeDirectory implements Iterable<Genome> {
             String genomeId = filter.genomeId(genomeFile);
             this.genomeIDs.add(genomeId);
         }
-    }
+	}
 
-    @Override
+	/**
+	 * Construct a new genome directory (file parameter).
+	 *
+	 * @param inDir		directory containing the GTOs
+	 *
+	 * @throws IOException
+	 */
+    public GenomeDirectory(File inDir) throws IOException {
+    	this.dirName = inDir;
+    	setup();
+	}
+
+
+	@Override
     public Iterator<Genome> iterator() {
         return new GenomeIterator();
     }

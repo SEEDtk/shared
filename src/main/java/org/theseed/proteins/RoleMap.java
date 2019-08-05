@@ -46,6 +46,11 @@ public class RoleMap extends MagicMap<Role> {
         return retVal;
     }
 
+    /**
+     * Save a role map to a file
+     *
+     * @param saveFile	file to contain a text representation of the role map
+     */
     public void save(File saveFile) {
         try {
             PrintWriter printer = new PrintWriter(saveFile);
@@ -58,6 +63,11 @@ public class RoleMap extends MagicMap<Role> {
         }
     }
 
+    /**
+     * @return the role map saved to the specified file
+     *
+     * @param loadFile	the role map file to load
+     */
     public static RoleMap load(File loadFile) {
         RoleMap retVal = new RoleMap();
         try {

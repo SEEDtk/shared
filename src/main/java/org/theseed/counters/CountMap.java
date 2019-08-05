@@ -241,4 +241,11 @@ public class CountMap<K> {
         return this.map.values();
     }
 
+    /**
+     * Erase all classes and counts from this map.
+     */
+	public void deleteAll() {
+		this.map.clear();
+	}
+
 }

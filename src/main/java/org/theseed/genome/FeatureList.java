@@ -1,7 +1,7 @@
 /**
  *
  */
-package org.theseed.genomes;
+package org.theseed.genome;
 
 import java.util.ArrayList;
 import java.util.Collection;

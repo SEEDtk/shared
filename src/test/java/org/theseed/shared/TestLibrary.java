@@ -21,11 +21,11 @@ import org.theseed.counters.CountMap;
 import org.theseed.counters.KeyPair;
 import org.theseed.counters.PairCounter;
 import org.theseed.counters.QualityCountMap;
-import org.theseed.genomes.Contig;
-import org.theseed.genomes.Feature;
-import org.theseed.genomes.FeatureList;
-import org.theseed.genomes.Genome;
-import org.theseed.genomes.GenomeDirectory;
+import org.theseed.genome.Contig;
+import org.theseed.genome.Feature;
+import org.theseed.genome.FeatureList;
+import org.theseed.genome.Genome;
+import org.theseed.genome.GenomeDirectory;
 import org.theseed.io.BalancedOutputStream;
 import org.theseed.io.TabbedLineReader;
 import org.theseed.io.TabbedLineReader.Line;
@@ -417,22 +417,22 @@ public class TestLibrary extends TestCase {
         // Test edge computation.
         assertThat(newList.isEdge(10, false), equalTo(Edge.START));
         assertThat(newList.isEdge(50, false), equalTo(Edge.OTHER));
-        assertThat(newList.isEdge(200, false), equalTo(Edge.STOP));
+        assertThat(newList.isEdge(197, false), equalTo(Edge.STOP));
         assertThat(newList.isEdge(400, false), equalTo(Edge.OTHER));
-        assertThat(newList.isEdge(99, false), equalTo(Edge.OTHER));
+        assertThat(newList.isEdge(102, false), equalTo(Edge.OTHER));
         assertThat(newList.isEdge(999, false), equalTo(Edge.OTHER));
-        assertThat(newList.isEdge(499, false), equalTo(Edge.OTHER));
+        assertThat(newList.isEdge(502, false), equalTo(Edge.OTHER));
         assertThat(newList.isEdge(8000, false), equalTo(Edge.START));
-        assertThat(newList.isEdge(8200, false), equalTo(Edge.STOP));
+        assertThat(newList.isEdge(8197, false), equalTo(Edge.STOP));
         assertThat(newList.isEdge(10, true), equalTo(Edge.START));
         assertThat(newList.isEdge(50, true), equalTo(Edge.OTHER));
-        assertThat(newList.isEdge(200, true), equalTo(Edge.STOP));
+        assertThat(newList.isEdge(197, true), equalTo(Edge.STOP));
         assertThat(newList.isEdge(400, true), equalTo(Edge.START));
-        assertThat(newList.isEdge(99, true), equalTo(Edge.STOP));
+        assertThat(newList.isEdge(102, true), equalTo(Edge.STOP));
         assertThat(newList.isEdge(999, true), equalTo(Edge.START));
-        assertThat(newList.isEdge(499, true), equalTo(Edge.STOP));
+        assertThat(newList.isEdge(502, true), equalTo(Edge.STOP));
         assertThat(newList.isEdge(8000, true), equalTo(Edge.START));
-        assertThat(newList.isEdge(8200, true), equalTo(Edge.STOP));
+        assertThat(newList.isEdge(8197, true), equalTo(Edge.STOP));
         // Finally, we want to test the frame computation.
         assertEquals("Invalid frame for contig start.", Frame.F0, newList.computeRegionFrame(1, 9));
         assertEquals("Invalid frame for segmented position.", Frame.XX, newList.computeRegionFrame(40, 45));
@@ -587,6 +587,8 @@ public class TestLibrary extends TestCase {
         assertThat("Wrong count for thing 2 after clear.", thingCounter.getCount(t2), equalTo(0));
         thingCounter.count(t1);
         assertThat("Wrong count for thing 1 after recount.", thingCounter.getCount(t1), equalTo(1));
+        thingCounter.deleteAll();
+        assertThat("Keys left after deleteAll", thingCounter.keys().size(), equalTo(0));
         PairCounter<Thing> pairCounter = new PairCounter<Thing>();
         assertEquals("Pair counter not empty after creation (pairs).", 0, pairCounter.size());
         assertEquals("Pair counter not empty after creation (items).", 0, pairCounter.itemSize());
@@ -698,6 +700,7 @@ public class TestLibrary extends TestCase {
                 f1.distance(f2));
         Feature f3 = myGto.getFeature("fig|1313.7001.peg.1113");
         assertEquals("Contig mismatch not caught.", Integer.MAX_VALUE, f1.distance(f3));
+
     }
 
     /**
@@ -997,6 +1000,7 @@ public class TestLibrary extends TestCase {
         assertThat("Wrong value in column 2 of line 1", line.getInt(2), equalTo(10));
         assertThat("Wrong value in column 3 of line 1", line.getDouble(3), closeTo(0.8, 0.0001));
         assertFalse("Boolean adjustment fail in line 1", line.getFlag(4));
+        assertThat("Line input not working", line.getAll(), equalTo("100.99\tname of 100.99\t10\t0.8"));
         line = tabReader.next();
         assertThat("Wrong value in column 2 of line 2", line.getInt(2), equalTo(-4));
         assertThat("Wrong value in column 3 of line 2", line.getDouble(3), equalTo(12.0));
@@ -1282,5 +1286,35 @@ public class TestLibrary extends TestCase {
         assertThat(line.get(1), equalTo("b2"));
         assertFalse(reader.hasNext());
         reader.close();
+        outStream = new BalancedOutputStream(1.2, testFile);
+        BalancedOutputStream.setBufferMax(600);
+        outStream.writeImmediate("type", "text");
+        for (int i = 0; i < 200; i++) {
+        	outStream.write("a", "a1");
+        	outStream.write("b", "b1");
+        	outStream.write("b", "b1");
+        }
+        outStream.write("a", "a2");
+        outStream.close();
+        reader = new TabbedLineReader(testFile);
+        int aCount = 0;
+        int bCount = 0;
+        for (int i = 0; i < 440; i++) {
+        	line = reader.next();
+        	String label = line.get(0);
+        	if (label.equals("a")) {
+        		aCount++;
+        		assertThat(line.get(1), equalTo("a1"));
+        	} else if (label.equals("b")) {
+        		bCount++;
+        		assertThat(line.get(1), equalTo("b1"));
+        	}
+        }
+        assertThat(aCount, equalTo(200));
+        assertThat(bCount, equalTo(240));
+        line = reader.next();
+        assertThat(line.get(1), equalTo("a2"));
+        reader.close();
     }
+
 }

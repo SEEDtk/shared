@@ -43,6 +43,11 @@ public class BalancedOutputStream implements Closeable, AutoCloseable {
     Random randStream;
     /** TRUE if we opened the stream */
     boolean openFlag;
+    /** number of records buffered */
+    int bufferCount;
+
+    /** maximum number of records to buffer */
+    private static int BUFFER_MAX = 100000;
 
     /**
      * Construct a new balanced output stream.
@@ -81,6 +86,7 @@ public class BalancedOutputStream implements Closeable, AutoCloseable {
         this.classLines = new HashMap<String, List<String>>();
         this.classCounts = new CountMap<String>();
         this.randStream = new Random();
+        this.bufferCount = 0;
     }
 
     /**
@@ -114,11 +120,24 @@ public class BalancedOutputStream implements Closeable, AutoCloseable {
             // Add this line to it and count it.
             queue.add(line);
             this.classCounts.count(label);
+            this.bufferCount++;
+            // If we've buffered too much, flush the system.
+            if (this.bufferCount >= BUFFER_MAX) {
+            	this.writeAll();
+            	this.reset();
+            }
         }
 
     }
 
-    /** class to track the status of a label's output */
+    /** Clear all the buffered lines from memory. */
+    private void reset() {
+    	this.classCounts.deleteAll();
+    	this.classLines.clear();
+    	this.bufferCount = 0;
+	}
+
+	/** class to track the status of a label's output */
     private class Status {
         /** interval for emitting extra lines */
         protected int interval;
@@ -160,7 +179,17 @@ public class BalancedOutputStream implements Closeable, AutoCloseable {
      */
     @Override
     public void close() throws IOException {
-        // Get the classes in order of most to least frequent.  This list serves as
+        writeAll();
+        // Close the stream if needed.
+        if (this.openFlag) this.outputStream.close();
+    }
+
+
+    /**
+     * Write everything currently accumulated in memory.
+     */
+	private void writeAll() {
+		// Get the classes in order of most to least frequent.  This list serves as
         // a key to our various status and progress arrays.  All of those arrays
         // are indexed in parallel to this list.
         List<CountMap<String>.Count> labelCounts = this.classCounts.sortedCounts();
@@ -208,9 +237,15 @@ public class BalancedOutputStream implements Closeable, AutoCloseable {
                 }
             }
         }
-        // Close the stream if needed.
-        if (this.openFlag) this.outputStream.close();
-    }
+	}
 
+	/**
+	 * Specify a new maximum number of buffered lines.
+	 *
+	 * @param newMax	maximum number of lines to keep in memory
+	 */
+	public static void setBufferMax(int newMax) {
+		BalancedOutputStream.BUFFER_MAX = newMax;
+	}
 
 }

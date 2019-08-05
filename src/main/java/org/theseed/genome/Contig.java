@@ -1,4 +1,4 @@
-package org.theseed.genomes;
+package org.theseed.genome;
 
 import org.theseed.locations.Region;
 

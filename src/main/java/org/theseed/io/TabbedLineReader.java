@@ -37,6 +37,8 @@ public class TabbedLineReader implements Closeable, AutoCloseable, Iterable<Tabb
         //** FIELDS
         /** array of field contents */
         String[] fields;
+        /** original input line */
+        String lineText;
 
         /**
          * Create this object from an input text line.
@@ -44,6 +46,8 @@ public class TabbedLineReader implements Closeable, AutoCloseable, Iterable<Tabb
          * @param inLine	input line read from the stream, without the line-end character
          */
         private Line(String inLine) {
+        	// Save the input line.
+        	this.lineText = inLine;
             // Get the number of fields in the line.
             int nFields = labels.length;
             // Normally, this will work.
@@ -121,6 +125,13 @@ public class TabbedLineReader implements Closeable, AutoCloseable, Iterable<Tabb
             return (colValue.length() > 0 && ! colValue.contentEquals("0"));
         }
 
+        /**
+         * @return the original input line
+         */
+        public String getAll() {
+        	return this.lineText;
+        }
+
     }
 
     //FIELDS
@@ -188,29 +199,29 @@ public class TabbedLineReader implements Closeable, AutoCloseable, Iterable<Tabb
             fieldName = "";
             retVal = -1;
         } else {
-            retVal = this.labels.length - 1;
-            // First look for a named field.
-            boolean found = false;
-            while (! found && retVal >= 0) {
-                if (fieldName.contentEquals(this.labels[retVal]) ||
-                        fieldName.contentEquals(StringUtils.substringAfterLast(this.labels[retVal], "."))) {
-                    found = true;
-                } else {
-                    retVal--;
+            try {
+                retVal = Integer.parseInt(fieldName);
+                // Convert from 1-based to 0-based.
+                retVal--;
+                // Convert end-of-line values.
+                if (retVal < 0) {
+                    retVal = this.labels.length + retVal;
                 }
-            }
-            if (! found) {
-                try {
-                    retVal = Integer.parseInt(fieldName);
-                    // Convert from 1-based to 0-based.
-                    retVal--;
-                    // Convert end-of-line values.
-                    if (retVal < 0) {
-                        retVal = this.labels.length + retVal;
+            } catch (NumberFormatException e) {
+                // If it's not a number, that means we have to search for a name.
+                retVal = this.labels.length - 1;
+                // First look for a named field.
+                boolean found = false;
+                while (! found && retVal >= 0) {
+                    if (fieldName.contentEquals(this.labels[retVal]) ||
+                            fieldName.contentEquals(StringUtils.substringAfterLast(this.labels[retVal], "."))) {
+                        found = true;
+                    } else {
+                        retVal--;
                     }
-                } catch (NumberFormatException e) {
-                    // If it's not a number, that means we have an error.
-                    retVal = -1;
+                }
+                if (! found) {
+                	retVal = -1;
                 }
             }
         }
