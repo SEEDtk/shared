@@ -6,22 +6,32 @@ package org.theseed.utils;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Scanner;
 
 import org.apache.commons.lang3.StringUtils;
 
 /**
- * This class reads a parameter file and converts it into a String array.  Each line
- * of the file should consist of a command-line option (with the preceding hyphen or
- * hyphens), one or more spaces, and then the parameter value (if any).  Anything after
- * a pound sign (#) in the value area is treated as a comment.  A pound sign in the
- * first column also counts as a comment.
+ * This class reads a parameter files and converts them into String arrays.
+ *
+ * In the simple case, each line of the file should consist of a command-line option
+ * (with the preceding hyphen or hyphens), one or more spaces, and then the parameter
+ * value (if any).  Anything after a pound sign (#) in the value area is treated as a
+ * comment.  A pound sign in the first column also counts as a comment.
+ *
+ * In the more complex case, multiple parameter configurations can be specified in a single file.
+ * For this, the multiple values should be delimited by tabs.  Again, a pound sign indicates a
+ * comment.  An instance of this object will be passed back that functions as an iterator
+ * which transmits the individual option arrays.
+ *
+ *
  *
  * @author Bruce Parrello
  *
  */
-public class Parms {
+public class Parms implements Iterator<List<String>> {
 
     /**
      * @return 	a list of strings that can be fed to a command parser to interpret the
@@ -54,8 +64,115 @@ public class Parms {
             }
         }
         inStream.close();
-        // Convert the buffer to an array and pass it back.
+        // Return the list.
         return retVal;
+    }
+
+    // FIELDS
+
+    /** array of boolean options */
+    private ArrayList<String> switches;
+    /** TRUE if we are done iterating */
+    private boolean done;
+
+    // All of these arrays run in parallel
+
+    /** array of option names */
+    private ArrayList<String> parmNames;
+    /** array of permissible value lists */
+    private ArrayList<String[]> parmValues;
+    /** array of current positions; this is the next position to return, and we increment afterward */
+    private int[] positions;
+
+    /**
+     * Construct an iterator through the parameter combinations encoded in a parameter file.  Note
+     * this is similar to fromFile above, but there are subtle differences.
+     *
+     * @param inFile	input file containing the parameters, with multiple options tab-delimited
+     *
+     * @throws IOException
+     */
+    public Parms(File inFile) throws IOException {
+        // Now we loop through the list, storing the string lists and the option names.
+        this.parmNames = new ArrayList<String>(20);
+        this.parmValues = new ArrayList<String[]>(20);
+        this.switches = new ArrayList<String>(20);
+        // Get a scanner for the file.
+        Scanner inStream = new Scanner(inFile);
+        try {
+            while (inStream.hasNext()) {
+                // Get the option name.
+                String option = inStream.next();
+                // Get the option value.  This may be an empty string.  Nextline gives us the
+                // separating whitespace as well as the rest of the line, so we will need to
+                // strip it later.
+                String value = inStream.nextLine();
+                // Only proceed if this is not a comment.
+                if (option.charAt(0) != '#') {
+                    // Verify that we have a real option.
+                    if (option.charAt(0) != '-')
+                        throw new IllegalArgumentException("Positional parameters are not allowed in multi-parameter files.");
+                    // We need to check the value.  Strip off the comment (if any), and
+                    // trim the leading and trailing whitespace.
+                    value = StringUtils.trimToEmpty(StringUtils.substringBefore(value, "#"));
+                    // If the value is empty, this is a switch.
+                    if (value.isEmpty()) {
+                        this.switches.add(option);
+                    } else {
+                        // Here we have an option with one or more values.
+                        String[] possibilities = StringUtils.split(value, '\t');
+                        this.parmNames.add(option);
+                        this.parmValues.add(possibilities);
+                    }
+                }
+            }
+        } finally {
+            inStream.close();
+        }
+        // Now initialize the current position.
+        this.done = false;
+        this.positions = new int[this.parmNames.size()];
+        Arrays.fill(this.positions, 0);
+    }
+
+    @Override
+    public boolean hasNext() {
+        return ! this.done;
+    }
+
+    @Override
+    public List<String> next() {
+        List<String> retVal = null;
+        if (! this.done) {
+            retVal = new ArrayList<String>(this.parmNames.size() * 2 + this.switches.size() + 5);
+            // Accumulate the current values.
+            for (int i = 0; i < this.parmNames.size(); i++) {
+                retVal.add(this.parmNames.get(i));
+                retVal.add(this.parmValues.get(i)[this.positions[i]]);
+            }
+            // Add the switches.
+            retVal.addAll(this.switches);
+            // Now we position for the next round.
+            this.done = true;
+            int currentIdx = this.parmNames.size() - 1;
+            while (this.done && currentIdx >= 0) {
+                this.positions[currentIdx]++;
+                if (this.positions[currentIdx] >= parmValues.get(currentIdx).length) {
+                    this.positions[currentIdx] = 0;
+                    currentIdx--;
+                } else {
+                    this.done = false;
+                }
+            }
+        }
+        return retVal;
+    }
+
+    /**
+     * @return the number of strings expected from this iterator
+     */
+    public int size() {
+        return this.parmNames.size() * 2 + this.switches.size();
     }
 
 }

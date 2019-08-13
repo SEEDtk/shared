@@ -1106,6 +1106,43 @@ public class TestLibrary extends TestCase {
     }
 
     /**
+     * test parm iterator
+     *
+     * @throws IOException
+     */
+    public void testParms2() throws IOException {
+        File parmFile = new File("src/test", "parms2.tbl");
+        Parms parmIterator = new Parms(parmFile);
+        List<String> parms = parmIterator.next();
+        assertThat(parms, contains("--digits", "1", "--constant", "X", "--letters", "a", "--batch"));
+        assertTrue(parmIterator.hasNext());
+        parms = parmIterator.next();
+        assertThat(parms, contains("--digits", "1", "--constant", "X", "--letters", "b", "--batch"));
+        assertTrue(parmIterator.hasNext());
+        parms = parmIterator.next();
+        assertThat(parms, contains("--digits", "1", "--constant", "X", "--letters", "c", "--batch"));
+        assertTrue(parmIterator.hasNext());
+        parms = parmIterator.next();
+        assertThat(parms, contains("--digits", "2", "--constant", "X", "--letters", "a", "--batch"));
+        assertTrue(parmIterator.hasNext());
+        parms = parmIterator.next();
+        assertThat(parms, contains("--digits", "2", "--constant", "X", "--letters", "b", "--batch"));
+        assertTrue(parmIterator.hasNext());
+        parms = parmIterator.next();
+        assertThat(parms, contains("--digits", "2", "--constant", "X", "--letters", "c", "--batch"));
+        assertTrue(parmIterator.hasNext());
+        parms = parmIterator.next();
+        assertThat(parms, contains("--digits", "3", "--constant", "X", "--letters", "a", "--batch"));
+        assertTrue(parmIterator.hasNext());
+        parms = parmIterator.next();
+        assertThat(parms, contains("--digits", "3", "--constant", "X", "--letters", "b", "--batch"));
+        assertTrue(parmIterator.hasNext());
+        parms = parmIterator.next();
+        assertThat(parms, contains("--digits", "3", "--constant", "X", "--letters", "c", "--batch"));
+        assertFalse(parmIterator.hasNext());
+    }
+
+    /**
      * test integer list
      */
     public void testIntList() {
@@ -1290,9 +1327,9 @@ public class TestLibrary extends TestCase {
         BalancedOutputStream.setBufferMax(600);
         outStream.writeImmediate("type", "text");
         for (int i = 0; i < 200; i++) {
-        	outStream.write("a", "a1");
-        	outStream.write("b", "b1");
-        	outStream.write("b", "b1");
+            outStream.write("a", "a1");
+            outStream.write("b", "b1");
+            outStream.write("b", "b1");
         }
         outStream.write("a", "a2");
         outStream.close();
@@ -1300,15 +1337,15 @@ public class TestLibrary extends TestCase {
         int aCount = 0;
         int bCount = 0;
         for (int i = 0; i < 440; i++) {
-        	line = reader.next();
-        	String label = line.get(0);
-        	if (label.equals("a")) {
-        		aCount++;
-        		assertThat(line.get(1), equalTo("a1"));
-        	} else if (label.equals("b")) {
-        		bCount++;
-        		assertThat(line.get(1), equalTo("b1"));
-        	}
+            line = reader.next();
+            String label = line.get(0);
+            if (label.equals("a")) {
+                aCount++;
+                assertThat(line.get(1), equalTo("a1"));
+            } else if (label.equals("b")) {
+                bCount++;
+                assertThat(line.get(1), equalTo("b1"));
+            }
         }
         assertThat(aCount, equalTo(200));
         assertThat(bCount, equalTo(240));
