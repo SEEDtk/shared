@@ -7,6 +7,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Scanner;
@@ -74,6 +75,8 @@ public class Parms implements Iterator<List<String>> {
     private ArrayList<String> switches;
     /** TRUE if we are done iterating */
     private boolean done;
+    /** map of variable parameters to current values */
+    private HashMap<String, String> varMap;
 
     // All of these arrays run in parallel
 
@@ -93,13 +96,15 @@ public class Parms implements Iterator<List<String>> {
      * @throws IOException
      */
     public Parms(File inFile) throws IOException {
-        // Now we loop through the list, storing the string lists and the option names.
+        // Initialize the fields.
         this.parmNames = new ArrayList<String>(20);
         this.parmValues = new ArrayList<String[]>(20);
         this.switches = new ArrayList<String>(20);
+        this.varMap = new HashMap<String, String>(20);
         // Get a scanner for the file.
         Scanner inStream = new Scanner(inFile);
         try {
+            // Now we loop through the list, storing the string lists and the option names.
             while (inStream.hasNext()) {
                 // Get the option name.
                 String option = inStream.next();
@@ -123,6 +128,9 @@ public class Parms implements Iterator<List<String>> {
                         String[] possibilities = StringUtils.split(value, '\t');
                         this.parmNames.add(option);
                         this.parmValues.add(possibilities);
+                        // If this is a varying parameter, remember its name.
+                        if (possibilities.length > 1)
+                            this.varMap.put(option, "");
                     }
                 }
             }
@@ -145,10 +153,14 @@ public class Parms implements Iterator<List<String>> {
         List<String> retVal = null;
         if (! this.done) {
             retVal = new ArrayList<String>(this.parmNames.size() * 2 + this.switches.size() + 5);
-            // Accumulate the current values.
+            // Accumulate the current values, remembering the varying ones.
             for (int i = 0; i < this.parmNames.size(); i++) {
-                retVal.add(this.parmNames.get(i));
-                retVal.add(this.parmValues.get(i)[this.positions[i]]);
+                String option = this.parmNames.get(i);
+                String value = this.parmValues.get(i)[this.positions[i]];
+                retVal.add(option);
+                retVal.add(value);
+                if (this.varMap.containsKey(option))
+                    this.varMap.put(option, value);
             }
             // Add the switches.
             retVal.addAll(this.switches);
@@ -174,5 +186,43 @@ public class Parms implements Iterator<List<String>> {
     public int size() {
         return this.parmNames.size() * 2 + this.switches.size();
     }
+
+    /**
+     * @return a map of the varying-option names to their current values
+     */
+    public HashMap<String,String> getVariables() {
+        return this.varMap;
+    }
+
+    /**
+     * @return a representation of this iteration
+     */
+    @Override
+    public String toString() {
+        ArrayList<String> retVal = new ArrayList<String>(20);
+        // To insure the option names are in the correct order, we iterate through
+        // the parmNames array.
+        for (String option : parmNames)
+            if (this.varMap.containsKey(option))
+                retVal.add(option + " " + this.varMap.get(option));
+        return StringUtils.join(retVal, "; ");
+    }
+
+    /**
+     * @return an array of the varying-option names
+     */
+    public String[] getOptions() {
+        // Copy the option names in presentation order into an output array.
+        String[] retVal = new String[this.varMap.size()];
+        int i = 0;
+        for (String option : parmNames)
+            if (this.varMap.containsKey(option)) {
+                retVal[i] = option;
+                i++;
+            }
+        return retVal;
+    }
+
+
 
 }
