@@ -6,6 +6,7 @@ package org.theseed.utils;
 import java.util.Arrays;
 import java.util.Iterator;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 
 /**
@@ -32,6 +33,15 @@ public class IntegerList implements Iterable<Integer> {
     public IntegerList(String inString) {
         this.values = Arrays.stream(StringUtils.split(inString, ',')).mapToInt(Integer::parseInt).toArray();
         this.pos = 0;
+    }
+
+    /**
+     * Construct an integer list from an array.
+     *
+     * @param integers	array of integers to use
+     */
+    public IntegerList(int[] integers) {
+    	this.values = ArrayUtils.clone(integers);
     }
 
     /**

@@ -1225,6 +1225,14 @@ public class TestLibrary extends TestCase {
         assertThat(newList.softNext(), equalTo(10));
         assertThat(newList.softNext(), equalTo(10));
         assertThat(newList.softNext(), equalTo(10));
+        // Use an array initializer.
+        int[] test = new int[] { 3, 5, 7 };
+        newList = new IntegerList(test);
+        assertThat(newList.size(), equalTo(3));
+        assertThat(newList.get(0), equalTo(3));
+        assertThat(newList.get(1), equalTo(5));
+        assertThat(newList.get(2), equalTo(7));
+        assertThat(newList.last(), equalTo(7));
     }
 
     /**
