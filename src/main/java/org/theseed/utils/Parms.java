@@ -23,9 +23,9 @@ import org.apache.commons.lang3.StringUtils;
  * comment.  A pound sign in the first column also counts as a comment.
  *
  * In the more complex case, multiple parameter configurations can be specified in a single file.
- * For this, the multiple values should be delimited by tabs.  Again, a pound sign indicates a
- * comment.  An instance of this object will be passed back that functions as an iterator
- * which transmits the individual option arrays.
+ * For this, the multiple values should be delimited by a comma followed by a single space.
+ * Again, a pound sign indicates a comment.  An instance of this object will be passed back that
+ * functions as an iterator which transmits the individual option arrays.
  *
  *
  *
@@ -125,7 +125,7 @@ public class Parms implements Iterator<List<String>> {
                         this.switches.add(option);
                     } else {
                         // Here we have an option with one or more values.
-                        String[] possibilities = StringUtils.split(value, '\t');
+                        String[] possibilities = StringUtils.splitByWholeSeparator(value, ", ");
                         this.parmNames.add(option);
                         this.parmValues.add(possibilities);
                         // If this is a varying parameter, remember its name.
