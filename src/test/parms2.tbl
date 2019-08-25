@@ -1,5 +1,5 @@
 # comment line
---digits 1	2	3
+--digits 1, 2, 3
 --constant	X	# with comment
 --batch
---letters	a	b	c
+--letters	a, b, c
