@@ -28,6 +28,7 @@ import org.theseed.genome.FeatureList;
 import org.theseed.genome.Genome;
 import org.theseed.genome.GenomeDirectory;
 import org.theseed.io.BalancedOutputStream;
+import org.theseed.io.Shuffler;
 import org.theseed.io.TabbedLineReader;
 import org.theseed.io.TabbedLineReader.Line;
 import org.theseed.locations.FLocation;
@@ -1367,6 +1368,57 @@ public class TestLibrary extends TestCase {
         line = reader.next();
         assertThat(line.get(1), equalTo("a2"));
         reader.close();
+    }
+
+    /**
+     * Test the shuffler
+     */
+    public void testShuffler() {
+        Shuffler<Integer> test1 = new Shuffler<Integer>(100);
+        for (int i = 0; i < 100; i++)
+            test1.add(i);
+        for (int i = 0; i < 100; i++)
+            assertThat(test1.get(i), equalTo(i));
+        // Test the limited iterator.
+        Iterator<Integer> limited = test1.limitedIter(5);
+        assertTrue(limited.hasNext());
+        assertThat(limited.next(), equalTo(0));
+        assertTrue(limited.hasNext());
+        assertThat(limited.next(), equalTo(1));
+        assertTrue(limited.hasNext());
+        assertThat(limited.next(), equalTo(2));
+        assertTrue(limited.hasNext());
+        assertThat(limited.next(), equalTo(3));
+        assertTrue(limited.hasNext());
+        assertThat(limited.next(), equalTo(4));
+        assertFalse(limited.hasNext());
+        // Test the shuffling.
+        test1.shuffle(50);
+        for (int i = 0; i < 100; i++) {
+            assertThat(test1.get(i), lessThan(100));
+            assertThat(test1.get(i), greaterThanOrEqualTo(0));
+            for (int j = 0; j < 100; j++) {
+                if (i != j) assertThat(test1.get(i), not(equalTo(test1.get(j))));
+            }
+        }
+        // Insure the edge cases don't crash.
+        test1.shuffle(200);
+        test1.shuffle(101);
+        test1.shuffle(99);
+        // Test adding an iterable.
+        ArrayList<Integer> array1 = new ArrayList<Integer>(5);
+        array1.add(200);
+        array1.add(201);
+        array1.add(202);
+        array1.add(203);
+        array1.add(204);
+        test1.addSequence(array1);
+        assertThat(test1.get(100), equalTo(200));
+        assertThat(test1.get(101), equalTo(201));
+        assertThat(test1.get(102), equalTo(202));
+        assertThat(test1.get(103), equalTo(203));
+        assertThat(test1.get(104), equalTo(204));
+        assertThat(test1.size(), equalTo(105));
     }
 
 }

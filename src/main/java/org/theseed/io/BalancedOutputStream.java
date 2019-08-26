@@ -7,7 +7,6 @@ import java.io.Closeable;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -34,7 +33,7 @@ public class BalancedOutputStream implements Closeable, AutoCloseable {
     /** proportion of the smallest class's size to be allowed for output */
     double fuzzFactor;
     /** hash mapping each class to a list of data lines */
-    HashMap<String, List<String>> classLines;
+    HashMap<String, Shuffler<String>> classLines;
     /** number of lines in each class */
     CountMap<String> classCounts;
     /** target output stream */
@@ -83,7 +82,7 @@ public class BalancedOutputStream implements Closeable, AutoCloseable {
     private void setup(double fuzz, PrintStream outStream) {
         this.outputStream = outStream;
         this.fuzzFactor = fuzz;
-        this.classLines = new HashMap<String, List<String>>();
+        this.classLines = new HashMap<String, Shuffler<String>>();
         this.classCounts = new CountMap<String>();
         this.randStream = new Random();
         this.bufferCount = 0;
@@ -110,9 +109,9 @@ public class BalancedOutputStream implements Closeable, AutoCloseable {
             writeImmediate(label, line);
         } else {
             // Insure we have a queue for this class.
-            List<String> queue;
+            Shuffler<String> queue;
             if (! this.classLines.containsKey(label)) {
-                queue = new ArrayList<String>(20000);
+                queue = new Shuffler<String>(20000);
                 this.classLines.put(label, queue);
             } else {
                 queue = this.classLines.get(label);
@@ -123,8 +122,8 @@ public class BalancedOutputStream implements Closeable, AutoCloseable {
             this.bufferCount++;
             // If we've buffered too much, flush the system.
             if (this.bufferCount >= BUFFER_MAX) {
-            	this.writeAll();
-            	this.reset();
+                this.writeAll();
+                this.reset();
             }
         }
 
@@ -132,12 +131,12 @@ public class BalancedOutputStream implements Closeable, AutoCloseable {
 
     /** Clear all the buffered lines from memory. */
     private void reset() {
-    	this.classCounts.deleteAll();
-    	this.classLines.clear();
-    	this.bufferCount = 0;
-	}
+        this.classCounts.deleteAll();
+        this.classLines.clear();
+        this.bufferCount = 0;
+    }
 
-	/** class to track the status of a label's output */
+    /** class to track the status of a label's output */
     private class Status {
         /** interval for emitting extra lines */
         protected int interval;
@@ -145,34 +144,6 @@ public class BalancedOutputStream implements Closeable, AutoCloseable {
         protected Iterator<String> iter;
     }
 
-    /**
-     * This class iterates through a line list but stops after a
-     * certain number of lines.
-     */
-    private static class Limited implements Iterator<String> {
-
-        private int remaining;
-        private Iterator<String> iter;
-
-        protected Limited(List<String> list, int limit) {
-            remaining = limit;
-            iter = list.iterator();
-        }
-
-        @Override
-        public boolean hasNext() {
-            return (remaining > 0 && iter.hasNext());
-        }
-
-        @Override
-        public String next() {
-            remaining--;
-            return (remaining >= 0 ? iter.next() : null);
-        }
-
-
-
-    }
 
     /**
      * Close this stream to flush out all the queued lines.
@@ -188,8 +159,8 @@ public class BalancedOutputStream implements Closeable, AutoCloseable {
     /**
      * Write everything currently accumulated in memory.
      */
-	private void writeAll() {
-		// Get the classes in order of most to least frequent.  This list serves as
+    private void writeAll() {
+        // Get the classes in order of most to least frequent.  This list serves as
         // a key to our various status and progress arrays.  All of those arrays
         // are indexed in parallel to this list.
         List<CountMap<String>.Count> labelCounts = this.classCounts.sortedCounts();
@@ -209,8 +180,8 @@ public class BalancedOutputStream implements Closeable, AutoCloseable {
                 int outCount = Math.min(max, classCount);
                 Status myStatus = new Status();
                 myStatus.interval = outCount / (outCount - smallest + 1);
-                List<String> classList = this.classLines.get(labelCounts.get(i).getKey());
-                myStatus.iter = new Limited(classList, outCount);
+                Shuffler<String> classList = this.classLines.get(labelCounts.get(i).getKey());
+                myStatus.iter = classList.limitedIter(outCount);
                 statusArray[i] = myStatus;
                 // Shuffle this class's lines.
                 for (int j = outCount - 1; j > 1; j--) {
@@ -221,9 +192,7 @@ public class BalancedOutputStream implements Closeable, AutoCloseable {
                 }
             }
             // Now all the lines are in the proper order and we know how often to emit them.
-            // Get some fresh iterators.
-            //Loop
-            // through the groups to emit.
+            // Get some fresh iterators and loop through the groups to emit.
             for (int grp = 0; grp < smallest; grp++) {
                 // Loop through the classes.
                 for (int i = 0; i < nLabels; i++) {
@@ -237,15 +206,15 @@ public class BalancedOutputStream implements Closeable, AutoCloseable {
                 }
             }
         }
-	}
+    }
 
-	/**
-	 * Specify a new maximum number of buffered lines.
-	 *
-	 * @param newMax	maximum number of lines to keep in memory
-	 */
-	public static void setBufferMax(int newMax) {
-		BalancedOutputStream.BUFFER_MAX = newMax;
-	}
+    /**
+     * Specify a new maximum number of buffered lines.
+     *
+     * @param newMax	maximum number of lines to keep in memory
+     */
+    public static void setBufferMax(int newMax) {
+        BalancedOutputStream.BUFFER_MAX = newMax;
+    }
 
 }
