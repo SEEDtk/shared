@@ -43,6 +43,7 @@ import org.theseed.proteins.RoleMap;
 import org.theseed.sequence.FastaInputStream;
 import org.theseed.sequence.FastaOutputStream;
 import org.theseed.sequence.Sequence;
+import org.theseed.utils.FloatList;
 import org.theseed.utils.IntegerList;
 import org.theseed.utils.Parms;
 
@@ -1234,6 +1235,102 @@ public class TestLibrary extends TestCase {
         assertThat(newList.get(1), equalTo(5));
         assertThat(newList.get(2), equalTo(7));
         assertThat(newList.last(), equalTo(7));
+    }
+
+    /**
+     * test float list
+     */
+    public void testFLoatList() {
+        // Start with an empty list.
+        FloatList newList = new FloatList();
+        assertThat(newList.size(), equalTo(0));
+        assertTrue(newList.isEmpty());
+        assertFalse(newList.hasNext());
+        assertThat(newList.toString(), equalTo(""));
+        assertThat(newList.original(), equalTo(""));
+        assertThat(newList.last(), equalTo(0.0));
+        // Repeat with an empty string.
+        newList = new FloatList("");
+        assertThat(newList.size(), equalTo(0));
+        assertTrue(newList.isEmpty());
+        assertFalse(newList.hasNext());
+        assertThat(newList.toString(), equalTo(""));
+        assertThat(newList.original(), equalTo(""));
+        // Use the default feature.
+        newList.setDefault(1.5);
+        assertThat(newList.size(), equalTo(1));
+        assertThat(newList.get(0), equalTo(1.5));
+        assertThat(newList.toString(), equalTo("1.5"));
+        assertThat(newList.original(), equalTo("1.5"));
+        assertThat(newList.last(), equalTo(1.5));
+        // Verify out-of-bounds works.
+        assertThat(newList.get(-1), equalTo(0.0));
+        assertThat(newList.get(1), equalTo(0.0));
+        // Use a more sophisticated list.
+        newList = new FloatList("0.4,0.6,0.8,0.1");
+        assertThat(newList.size(), equalTo(4));
+        assertThat(newList.get(0), closeTo(0.4, 1e-6));
+        assertThat(newList.get(1), closeTo(0.6, 1e-6));
+        assertThat(newList.get(2), closeTo(0.8, 1e-6));
+        assertThat(newList.get(3), closeTo(0.1, 1e-6));
+        assertThat(newList.last(), closeTo(0.1, 1e-6));
+        // Try traversal.
+        assertThat(newList.next(), closeTo(0.4, 1e-6));
+        assertThat(newList.next(), closeTo(0.6, 1e-6));
+        assertThat(newList.next(), closeTo(0.8, 1e-6));
+        assertThat(newList.next(), closeTo(0.1, 1e-6));
+        assertThat(newList.next(), equalTo(0.0));
+        // Reset to the first and traverse again, using hasnext checks.
+        newList.reset();
+        assertTrue(newList.hasNext());
+        assertThat(newList.next(), closeTo(0.4, 1e-6));
+        assertTrue(newList.hasNext());
+        assertThat(newList.next(), closeTo(0.6, 1e-6));
+        assertTrue(newList.hasNext());
+        assertThat(newList.next(), closeTo(0.8, 1e-6));
+        assertTrue(newList.hasNext());
+        assertThat(newList.next(), closeTo(0.1, 1e-6));
+        assertFalse(newList.hasNext());
+        assertThat(newList.next(), equalTo(0.0));
+        assertThat(newList.toString(), equalTo("0.4, 0.6, 0.8, 0.1"));
+        assertThat(newList.original(), equalTo("0.4,0.6,0.8,0.1"));
+        // Iterate through the list.
+        Iterator<Double> iter = newList.new Iter();
+        assertTrue(iter.hasNext());
+        assertThat(iter.next(), closeTo(0.4, 1e-6));
+        assertTrue(iter.hasNext());
+        assertThat(iter.next(), closeTo(0.6, 1e-6));
+        assertTrue(iter.hasNext());
+        assertThat(iter.next(), closeTo(0.8, 1e-6));
+        assertTrue(iter.hasNext());
+        assertThat(iter.next(), closeTo(0.1, 1e-6));
+        assertFalse(iter.hasNext());
+        // Test softnext.
+        newList.reset();
+        assertThat(newList.softNext(), closeTo(0.4, 1e-6));
+        assertThat(newList.softNext(), closeTo(0.6, 1e-6));
+        assertThat(newList.softNext(), closeTo(0.8, 1e-6));
+        assertThat(newList.softNext(), closeTo(0.1, 1e-6));
+        assertThat(newList.softNext(), closeTo(0.1, 1e-6));
+        assertThat(newList.softNext(), closeTo(0.1, 1e-6));
+        // Use an array initializer.
+        double[] test = new double[] { 3, 5.5, 7 };
+        newList = new FloatList(test);
+        assertThat(newList.size(), equalTo(3));
+        assertThat(newList.get(0), equalTo(3.0));
+        assertThat(newList.get(1), equalTo(5.5));
+        assertThat(newList.get(2), equalTo(7.0));
+        assertThat(newList.last(), equalTo(7.0));
+        double[] test2 = newList.getValues();
+        assertThat(test2.length, equalTo(test.length));
+        for (int i = 0; i < test.length; i++) {
+            assertThat(test[i], equalTo(test2[i]));
+        }
+        // Use a fill initializer.
+        newList = new FloatList(1.5, 4);
+        assertThat(newList.size(), equalTo(4));
+        for (int i = 0; i < 4; i++)
+            assertThat(newList.get(i), equalTo(1.5));
     }
 
     /**
