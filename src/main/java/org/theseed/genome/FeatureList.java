@@ -39,7 +39,7 @@ public class FeatureList implements Iterable<Feature> {
     }
 
     /**
-     * Initialize this list with all the feaatures in the specified contig.
+     * Initialize this list with all the features in the specified contig.
      *
      * @param genome	the genome containing the features
      * @param contigId	the ID of the relevant contig

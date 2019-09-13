@@ -124,6 +124,23 @@ public class TestLibrary extends TestCase {
         modifiedThing = "Unique thing string 12345 with more numbers";
         newThing = magicTable.findOrInsert(modifiedThing);
         assertEquals("Wrong ID assigned for second numbered thing.", "UniqThinStri1234n2", newThing.getId());
+        // Add two aliases.
+        magicTable.addAlias("PhenTrnaSyntDoma", "alias second Phenylalanyl role string");
+        modifiedThing = "ALIAS Second phenylalanyl role string";
+        Thing myThing = magicTable.findOrInsert(modifiedThing);
+        assertEquals("Alias 1 did not work.", "PhenTrnaSyntDoma", myThing.getId());
+        assertEquals("Alias 1 overrode text.", "Phenylalanyl-tRNA synthetase domain protein (Bsu YtpR)", myThing.getName());
+        magicTable.addAlias("PhenTrnaSyntDoma", "alias third Phenylalanyl role string");
+        modifiedThing = "Phenylalanyl-tRNA synthetase domain protein (Bsu YtpR)";
+        newThing = magicTable.findOrInsert(modifiedThing);
+        assertSame("Original string did not work.", newThing, myThing);
+        modifiedThing = "alias second Phenylalanyl role string";
+        newThing = magicTable.findOrInsert(modifiedThing);
+        assertSame("Alias 1 string did not work.", newThing, myThing);
+        modifiedThing = "alias third Phenylalanyl role string";
+        newThing = magicTable.findOrInsert(modifiedThing);
+        assertSame("Alias 2 string did not work.", newThing, myThing);
+
         // Test save and load.
         File saveFile = new File("src/test", "things.ser");
         magicTable.save(saveFile);
@@ -131,12 +148,23 @@ public class TestLibrary extends TestCase {
         for (Thing oldThing : magicTable.values()) {
             newThing = newTable.get(oldThing.getId());
             assertNotNull("Could not find thing in loaded table.", newThing);
-            assertEquals("Loaded table has wrong thing name.", newThing.getName(), oldThing.getName());
-            assertEquals("Loaded thing has wrong checksum.", newThing, oldThing);
+            if (! oldThing.getName().startsWith("alias")) {
+	            assertEquals("Loaded table has wrong thing name.", oldThing.getName(), newThing.getName());
+	            assertEquals("Loaded thing has wrong checksum.", oldThing, newThing);
+            }
             newThing = newTable.getByName(oldThing.getName());
             assertNotNull("Could not find thing by name in loaded table.", newThing);
             assertEquals("Found incorrect object by name in loaded table.", oldThing.getId(), newThing.getId());
         }
+        modifiedThing = "Phenylalanyl-tRNA synthetase domain protein (Bsu YtpR)";
+        myThing = newTable.findOrInsert(modifiedThing);
+        modifiedThing = "alias second Phenylalanyl role string";
+        newThing = newTable.findOrInsert(modifiedThing);
+        assertSame("Alias 1 string did not work.", newThing, myThing);
+        modifiedThing = "alias third Phenylalanyl role string";
+        newThing = newTable.findOrInsert(modifiedThing);
+        assertSame("Alias 2 string did not work.", newThing, myThing);
+
     }
 
     public void testCounts() {
@@ -586,6 +614,8 @@ public class TestLibrary extends TestCase {
         Collection<CountMap<Thing>.Count> allCounts = thingCounter.counts();
         assertThat("Unsorted counts came back wrong.", allCounts, containsInAnyOrder(countsFound.toArray()));
         assertThat("Wrong keys returned in result list.", keysCounted, contains(t4, t3, t2, t1));
+        thingCounter.setCount(t4, 10);
+        assertThat("Wrong count after set.", thingCounter.getCount(t4), equalTo(10));
         thingCounter.clear();
         assertThat("Wrong count for thing 2 after clear.", thingCounter.getCount(t2), equalTo(0));
         thingCounter.count(t1);

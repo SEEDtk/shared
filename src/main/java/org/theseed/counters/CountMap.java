@@ -126,8 +126,6 @@ public class CountMap<K> {
             return CountMap.this;
         }
 
-
-
     }
 
 
@@ -246,6 +244,17 @@ public class CountMap<K> {
      */
 	public void deleteAll() {
 		this.map.clear();
+	}
+
+	/**
+	 * Set the count to a specific value.
+	 *
+	 * @param key		key whose count is to be set
+	 * @param newValue	value of the new count
+	 */
+	public void setCount(K key, int newValue) {
+       Count myCount = this.getCounter(key);
+       myCount.num = newValue;
 	}
 
 }

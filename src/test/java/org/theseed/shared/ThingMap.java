@@ -70,5 +70,16 @@ public class ThingMap extends MagicMap<Thing> {
         return retVal;
     }
 
+    /**
+     * Add an alias for an existing ID.
+     *
+     * @param id	ID to get the alias
+     * @param name	name string to be made an alias
+     */
+	public void addAlias(String id, String name) {
+		Thing altThing = new Thing(id, name);
+		this.register(altThing);
+	}
+
 
 }

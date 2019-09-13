@@ -41,7 +41,7 @@ public class LocationList implements Iterable<Location> {
     private Location searchLoc;
     /** starts and stops on plus strand */
     private HashMap<Integer, Edge> plusEdges;
-    /** starts amd stops on minus strand */
+    /** starts and stops on minus strand */
     private HashMap<Integer, Edge> minusEdges;
 
     /** types of edges */

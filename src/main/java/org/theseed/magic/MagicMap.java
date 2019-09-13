@@ -3,6 +3,7 @@
  */
 package org.theseed.magic;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -14,7 +15,7 @@ import java.util.stream.Stream;
 
 import org.apache.commons.lang3.RegExUtils;
 import org.apache.commons.lang3.StringUtils;
-
+import org.theseed.counters.CountMap;
 import murmur3.MurmurHash3.LongPair;
 
 /**
@@ -26,18 +27,17 @@ import murmur3.MurmurHash3.LongPair;
  */
 public class MagicMap<T extends MagicObject> {
 
-    // TODO:  add list of aliases, put aliases in checksum hash
-
-
     // FIELDS
     /** map from prefixes to the next usable suffix number */
-    HashMap<String, Integer> suffixMapper;
+    CountMap<String> suffixMapper;
     /** map from ids to objects */
     HashMap<String, T> idMapper;
     /** map from checksums to objects */
     HashMap<LongPair, T> checkMapper;
     /** dummy object for lookups */
     T searchObj;
+    /** list of aliases */
+    ArrayList<T> aliases;
 
     /** set of little words */
     private static final HashSet<String> LITTLE_WORDS =
@@ -55,10 +55,11 @@ public class MagicMap<T extends MagicObject> {
      * @param searchObject	dummy object that can be used for searching
      */
     public MagicMap(T searchObject) {
-        this.suffixMapper = new HashMap<String, Integer>();
+        this.suffixMapper = new CountMap<String>();
         this.idMapper = new HashMap<String, T>();
         this.checkMapper = new HashMap<LongPair, T>();
         this.searchObj = searchObject;
+        this.aliases = new ArrayList<T>();
     }
 
     /**
@@ -97,35 +98,50 @@ public class MagicMap<T extends MagicObject> {
      * @param obj	object to be mapped to the ID
      */
     public void register(T obj) {
-        // Get the ID and name.
+        // Get the ID and name
         String id = obj.getId();
-        // Parse out the prefix and suffix.
-        Matcher m = ID_PARSER.matcher(id);
-        String prefix, suffixString;
-        if (m.matches()) {
-            prefix = m.group(1);
-            suffixString = m.group(2);
-        } else {
-            prefix = id;
-            suffixString = "";
+        String name = obj.getName();
+        // Check for an existing object for this name.
+        T found = this.getByName(name);
+        if (found == null) {
+        	// No existing object.  See if this is an alias.
+        	found = this.get(id);
+	        if (found != null) {
+	        	// Here we have an alias.  Save the association.
+	        	this.aliases.add(obj);
+	        } else {
+		        // We have a new object. Parse out the prefix and suffix.
+		        Matcher m = ID_PARSER.matcher(id);
+		        String prefix, suffixString;
+		        if (m.matches()) {
+		            prefix = m.group(1);
+		            suffixString = m.group(2);
+		        } else {
+		            prefix = id;
+		            suffixString = "";
+		        }
+		        int suffix = (suffixString.isEmpty() ? 0 : Integer.valueOf(suffixString));
+		        // Insure this suffix is not reused.
+		        CountMap<String>.Count suffixCounter = this.suffixMapper.findCounter(prefix);
+		        if (suffixCounter == null)
+		        	this.suffixMapper.count(prefix, suffix + 1);
+		        else if (suffixCounter.getCount() <= suffix)
+		            this.suffixMapper.setCount(prefix, suffix + 1);
+		        // Associate the value with the ID.
+		        this.idMapper.put(id, obj);
+		        // Remember it as the found object.
+		        found = obj;
+	        }
+	        // Update the checksum map.
+	        this.checkMapper.put(obj.getChecksum(), found);
         }
-        int suffix = (suffixString.isEmpty() ? 0 : Integer.valueOf(suffixString));
-        // Insure this suffix is not reused.
-        if (! this.suffixMapper.containsKey(prefix) ||
-                this.suffixMapper.get(prefix) < suffix) {
-            suffixMapper.put(prefix, suffix + 1);
-        }
-        // Associate the value with the ID.
-        this.idMapper.put(id, obj);
-        // Update the checksum map.
-        this.checkMapper.put(obj.getChecksum(), obj);
     }
 
     /**
      * @return the number of objects in this map
      */
     public int size() {
-        return this.idMapper.size();
+        return this.idMapper.size() + this.aliases.size();
     }
 
     /**
@@ -145,7 +161,7 @@ public class MagicMap<T extends MagicObject> {
     }
 
     /**
-     * @return TRUE if this map has the given object in it
+     * @return TRUE if this map has the given object's key in it
      *
      * @param obj	object for which to search
      */
@@ -204,12 +220,13 @@ public class MagicMap<T extends MagicObject> {
             minSuffix = 1;
         }
         // Get the new suffix and append it.
-        int suffix = this.suffixMapper.getOrDefault(prefix, minSuffix);
+        int suffix = this.suffixMapper.getCount(prefix);
+        if (suffix < minSuffix) suffix = minSuffix;
         String id = (suffix > 0 ? prefix + suffix : prefix);
         // Update the suffix map. Note that we don't use 1 as a suffix except for
         // the "n"-prefix case.
         int newSuffix = (suffix < 2 ? 2 : suffix + 1);
-        this.suffixMapper.put(prefix, newSuffix);
+        this.suffixMapper.setCount(prefix, newSuffix);
         // Update the target object.
         value.setId(id);
         // Update the master map.
@@ -219,14 +236,21 @@ public class MagicMap<T extends MagicObject> {
     }
 
     /**
-     * Remove the object with the specified key.
+     * Remove the objects with the specified key.
      *
-     * @param key	key of object to remove
+     * @param key	key of objects to remove
      *
-     * @return the removed object
+     * @return the primary removed object
      */
     public T remove(String key) {
-        return idMapper.remove(key);
+        T retVal = idMapper.remove(key);
+        // Clear any aliases from the alias list.
+        for (int i = this.aliases.size() - 1; i >=0; i--) {
+        	T other = this.aliases.get(i);
+        	if (other.getId().contentEquals(retVal.getId()))
+        		this.aliases.remove(i);
+        }
+        return retVal;
     }
 
     /**
@@ -238,7 +262,6 @@ public class MagicMap<T extends MagicObject> {
         for (T value : m) {
             this.put(value);
         }
-
     }
 
     /**
@@ -260,7 +283,10 @@ public class MagicMap<T extends MagicObject> {
      * @return all the objects in this map
      */
     public Collection<T> values() {
-        return this.idMapper.values();
+    	ArrayList<T> retVal = new ArrayList<T>(this.size());
+    	retVal.addAll(this.idMapper.values());
+    	retVal.addAll(this.aliases);
+        return retVal;
     }
 
     /**
