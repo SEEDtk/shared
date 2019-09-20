@@ -149,8 +149,8 @@ public class TestLibrary extends TestCase {
             newThing = newTable.get(oldThing.getId());
             assertNotNull("Could not find thing in loaded table.", newThing);
             if (! oldThing.getName().startsWith("alias")) {
-	            assertEquals("Loaded table has wrong thing name.", oldThing.getName(), newThing.getName());
-	            assertEquals("Loaded thing has wrong checksum.", oldThing, newThing);
+                assertEquals("Loaded table has wrong thing name.", oldThing.getName(), newThing.getName());
+                assertEquals("Loaded thing has wrong checksum.", oldThing, newThing);
             }
             newThing = newTable.getByName(oldThing.getName());
             assertNotNull("Could not find thing by name in loaded table.", newThing);
@@ -216,6 +216,7 @@ public class TestLibrary extends TestCase {
         assertEquals("Incorrect feature found.", "fig|1313.7001.peg.758", myFeature.getId());
         assertEquals("Incorrect function in sample feature.", "Transposase, IS4 family", myFeature.getFunction());
         assertEquals("Incorrect protein for sample feature.", myProtein, myFeature.getProteinTranslation());
+        assertEquals("Incorrect protein length for sample feature.", myProtein.length(), myFeature.getProteinLength());
         assertEquals("Incorrect DNA for sample feature.", myDna1, this.myGto.getDna("fig|1313.7001.peg.758"));
         // Next the location.
         Location myLoc = myFeature.getLocation();

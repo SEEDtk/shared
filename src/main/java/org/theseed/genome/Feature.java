@@ -168,6 +168,17 @@ public class Feature implements Comparable<Feature> {
     }
 
     /**
+     * @return the protein length
+     */
+    public int getProteinLength() {
+        int retVal = 0;
+        if (protein_translation != null) {
+            retVal = protein_translation.length();
+        }
+        return retVal;
+    }
+
+    /**
      * @return the location for this feature
      */
     public Location getLocation() {
