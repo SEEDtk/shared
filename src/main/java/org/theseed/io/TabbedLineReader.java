@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UncheckedIOException;
+import java.util.Arrays;
 import java.util.Iterator;
 
 import org.apache.commons.lang3.StringUtils;
@@ -160,11 +161,59 @@ public class TabbedLineReader implements Closeable, AutoCloseable, Iterable<Tabb
     }
 
     /**
+     * Open a tabbed-line reader for a headerless file.
+     *
+     * @param inFile	input file to open
+     * @param fields	number of fields in each record
+     *
+     * @throws IOException
+     */
+    public TabbedLineReader(File inFile, int fields) throws IOException {
+        FileReader fileStream = new FileReader(inFile);
+        this.reader = new BufferedReader(fileStream);
+        this.clearLabels(fields);
+        this.readAhead();
+    }
+
+    /**
+     * Open a tabbed-line reader for a headerless stream.
+     *
+     * @param inStream	input stream to open
+     * @param fields	number of fields in each record
+     *
+     * @throws IOException
+     */
+    public TabbedLineReader(InputStream inStream, int fields) throws IOException {
+        InputStreamReader inStreamer = new InputStreamReader(inStream);
+        this.reader = new BufferedReader(inStreamer);
+        this.clearLabels(fields);
+        this.readAhead();
+    }
+    /**
+     * Open a tabbed-line reader for an input stream.
+     *
+     * @param inStream	input stream to open
+     *
+     * @throws IOException
+     */
+    public TabbedLineReader(InputStream inStream) throws IOException {
+        InputStreamReader inStreamer = new InputStreamReader(inStream);
+        this.reader = new BufferedReader(inStreamer);
+        this.readHeader();
+    }
+
+    /**
+     * Construct a blank, empty tabbed-file reader.
+     */
+    protected TabbedLineReader() {
+    }
+
+    /**
      * Read in the header record and create the array of field labels.
      *
      * @throws IOException
      */
-    private void readHeader() throws IOException {
+    protected void readHeader() throws IOException {
         try {
             // Denote no lines have been read.
             this.lineCount = 0;
@@ -182,6 +231,16 @@ public class TabbedLineReader implements Closeable, AutoCloseable, Iterable<Tabb
         } catch (IOException e) {
             throw new IOException("Error in header of tabbed input file.", e);
         }
+    }
+
+    /**
+     * Clear the label array.  This is used to create a tabbed input file without headers.
+     *
+     * @param fields	number of fields to store
+     */
+    protected void clearLabels(int fields) {
+        this.labels = new String[fields];
+        Arrays.fill(this.labels, "");
     }
 
     /**
@@ -234,19 +293,6 @@ public class TabbedLineReader implements Closeable, AutoCloseable, Iterable<Tabb
         return retVal;
     }
 
-    /**
-     * Open a tabbed-line reader for an input stream.
-     *
-     * @param inStream	input stream to open
-     *
-     * @throws IOException
-     */
-    public TabbedLineReader(InputStream inStream) throws IOException {
-        InputStreamReader inStreamer = new InputStreamReader(inStream);
-        this.reader = new BufferedReader(inStreamer);
-        this.readHeader();
-    }
-
     @Override
     public void close() throws IOException {
         reader.close();
@@ -284,7 +330,7 @@ public class TabbedLineReader implements Closeable, AutoCloseable, Iterable<Tabb
     /**
      * Prepare the line buffer with the next line of data.
      */
-    private void readAhead() {
+    protected void readAhead() {
         try {
             this.nextLine = reader.readLine();
         } catch (IOException e) {

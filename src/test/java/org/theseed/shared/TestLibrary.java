@@ -1055,6 +1055,24 @@ public class TestLibrary extends TestCase {
         }
         assertThat("Wrong number of records", i, equalTo(3));
         tabReader.close();
+        // Test headerless files.
+        File fixFile = new File("src/test", "fixed.txt");
+        tabReader = new TabbedLineReader(fixFile, 5);
+        line = tabReader.next();
+        assertThat("Wrong value in column 0 of line 1", line.get(0), equalTo("100.99"));
+        assertThat("Wrong value in column 2 of line 1", line.getInt(2), equalTo(10));
+        assertThat("Wrong value in column 3 of line 1", line.getDouble(3), closeTo(0.8, 0.0001));
+        assertFalse("Boolean adjustment fail in line 1", line.getFlag(4));
+        assertThat("Line input not working", line.getAll(), equalTo("100.99\tname of 100.99\t10\t0.8"));
+        line = tabReader.next();
+        assertThat("Wrong value in column 2 of line 2", line.getInt(2), equalTo(-4));
+        assertThat("Wrong value in column 3 of line 2", line.getDouble(3), equalTo(12.0));
+        assertTrue("Wrong value in column 4 of line 2", line.getFlag(4));
+        line = tabReader.next();
+        assertFalse("Wrong value in column 4 of line 3", line.getFlag(4));
+        assertFalse("End of file not detected", tabReader.hasNext());
+        assertNull("Error reading past end-of-file", tabReader.next());
+        tabReader.close();
     }
 
     /**
