@@ -46,8 +46,8 @@ public class TabbedLineReader implements Closeable, AutoCloseable, Iterable<Tabb
          * @param inLine	input line read from the stream, without the line-end character
          */
         private Line(String inLine) {
-        	// Save the input line.
-        	this.lineText = inLine;
+            // Save the input line.
+            this.lineText = inLine;
             // Get the number of fields in the line.
             int nFields = labels.length;
             // Normally, this will work.
@@ -129,7 +129,7 @@ public class TabbedLineReader implements Closeable, AutoCloseable, Iterable<Tabb
          * @return the original input line
          */
         public String getAll() {
-        	return this.lineText;
+            return this.lineText;
         }
 
     }
@@ -141,6 +141,8 @@ public class TabbedLineReader implements Closeable, AutoCloseable, Iterable<Tabb
     BufferedReader reader;
     /** text of next line to return */
     String nextLine;
+    /** text of header line */
+    String headerLine;
     /** number of data lines read */
     int lineCount;
 
@@ -167,7 +169,7 @@ public class TabbedLineReader implements Closeable, AutoCloseable, Iterable<Tabb
             // Denote no lines have been read.
             this.lineCount = 0;
             // Read the header.
-            String headerLine = this.reader.readLine();
+            this.headerLine = this.reader.readLine();
             if (headerLine == null) {
                 // Here the entire file is empty.  Insure we get EOF on the first read.
                 this.nextLine = null;
@@ -221,7 +223,7 @@ public class TabbedLineReader implements Closeable, AutoCloseable, Iterable<Tabb
                     }
                 }
                 if (! found) {
-                	retVal = -1;
+                    retVal = -1;
                 }
             }
         }
@@ -295,6 +297,13 @@ public class TabbedLineReader implements Closeable, AutoCloseable, Iterable<Tabb
      */
     public int linesRead() {
         return this.lineCount;
+    }
+
+    /**
+     * @return a copy of the header line
+     */
+    public String header() {
+        return this.headerLine;
     }
 
     /**

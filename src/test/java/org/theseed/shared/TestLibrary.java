@@ -1005,6 +1005,7 @@ public class TestLibrary extends TestCase {
         File inFile = new File("src/test", "tabbed.txt");
         TabbedLineReader tabReader = new TabbedLineReader(inFile);
         assertThat("Wrong number of columns.", tabReader.size(), equalTo(5));
+        assertThat("Header line wrong.", tabReader.header(), equalTo("genome_id\tgenome.genome_name\tcounter.0\tfraction\tflag"));
         // Test the column finder.
         assertThat("Did not find genome name.", tabReader.findField("genome_name"), equalTo(1));
         assertThat("Did not find fraction.", tabReader.findField("fraction"), equalTo(3));
