@@ -1559,7 +1559,8 @@ public class TestLibrary extends TestCase {
         array1.add(202);
         array1.add(203);
         array1.add(204);
-        test1.addSequence(array1);
+        Shuffler<Integer> test2 = test1.addSequence(array1);
+        assertSame(test1, test2);
         assertThat(test1.get(100), equalTo(200));
         assertThat(test1.get(101), equalTo(201));
         assertThat(test1.get(102), equalTo(202));

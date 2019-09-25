@@ -70,8 +70,9 @@ public class Shuffler<T> extends ArrayList<T> {
      *
      * @param iterable	set of things to add
      */
-    public void addSequence(Iterable<T> iter) {
+    public Shuffler<T> addSequence(Iterable<T> iter) {
         for (T entry : iter) this.add(entry);
+        return this;
     }
 
     /**
