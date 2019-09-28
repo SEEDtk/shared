@@ -1055,7 +1055,7 @@ public class TestLibrary extends TestCase {
             assertThat("Wrong record at index " + i, l.get(0), equalTo(testLabels[i]));
             i++;
         }
-        assertThat("Wrong number of records", i, equalTo(3));
+        assertThat("Wrong number of records", i, equalTo(4));
         tabReader.close();
         // Test headerless files.
         File fixFile = new File("src/test", "fixed.txt");
