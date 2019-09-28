@@ -52,7 +52,7 @@ public class TabbedLineReader implements Closeable, AutoCloseable, Iterable<Tabb
             // Get the number of fields in the line.
             int nFields = labels.length;
             // Normally, this will work.
-            this.fields = StringUtils.split(inLine, '\t');
+            this.fields = StringUtils.splitPreserveAllTokens(inLine, '\t');
             // If the number of fields is wrong, we have to adjust.
             if (this.fields.length != nFields) {
                 // Copy the old array and create a new one of the proper length.
@@ -294,8 +294,12 @@ public class TabbedLineReader implements Closeable, AutoCloseable, Iterable<Tabb
     }
 
     @Override
-    public void close() throws IOException {
-        reader.close();
+    public void close() {
+        try {
+            reader.close();
+        } catch (IOException e) {
+            // Just ignore an error in close.
+        }
     }
 
     @Override

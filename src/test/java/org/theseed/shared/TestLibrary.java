@@ -1042,12 +1042,14 @@ public class TestLibrary extends TestCase {
         assertTrue("Wrong value in column 4 of line 2", line.getFlag(4));
         line = tabReader.next();
         assertFalse("Wrong value in column 4 of line 3", line.getFlag(4));
+        line = tabReader.next();
+        assertThat("Blank column failure.", line.getInt(2), equalTo(5));
         assertFalse("End of file not detected", tabReader.hasNext());
         assertNull("Error reading past end-of-file", tabReader.next());
         tabReader.close();
         // Reopen to test iteration.
         tabReader = new TabbedLineReader(inFile);
-        String[] testLabels = new String[] { "100.99", "200.20", "1000.6" };
+        String[] testLabels = new String[] { "100.99", "200.20", "1000.6", "4" };
         int i = 0;
         for (TabbedLineReader.Line l : tabReader) {
             assertThat("Wrong record at index " + i, l.get(0), equalTo(testLabels[i]));
