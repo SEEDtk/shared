@@ -41,7 +41,12 @@ public class FastaInputStream implements Iterable<Sequence>, Closeable, AutoClos
      */
     private void setup() {
         this.inputSource.useDelimiter(DELIMITER);
-        this.inputSource.skip(">");
+        // Because the delimiter includes the ">" symbol, when we read in the middle of the
+        // file, we will be positioned past the symbol at the start of each record. We have
+        // to skip the initial symbol as a result.  We only do this if the file is nonempty
+        // to start.
+        if (this.inputSource.hasNext())
+            this.inputSource.skip(">");
     }
 
     /**

@@ -1082,8 +1082,12 @@ public class TestLibrary extends TestCase {
      * @throws IOException
      */
     public void testFasta() throws IOException {
-        File inFasta = new File("src/test", "test.fa");
+        File inFasta = new File("src/test", "empty.fa");
         FastaInputStream inStream = new FastaInputStream(inFasta);
+        assertFalse("Error in empty fasta.", inStream.hasNext());
+        inStream.close();
+        inFasta = new File("src/test", "test.fa");
+        inStream = new FastaInputStream(inFasta);
         ArrayList<Sequence> testSeqs = new ArrayList<Sequence>(5);
         for (Sequence input : inStream) {
             testSeqs.add(input);
