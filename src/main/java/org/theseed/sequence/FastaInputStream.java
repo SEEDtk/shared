@@ -6,7 +6,6 @@ package org.theseed.sequence;
 import java.io.Closeable;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.Iterator;
 import java.util.Scanner;
@@ -65,7 +64,7 @@ public class FastaInputStream implements Iterable<Sequence>, Closeable, AutoClos
     }
 
     @Override
-    public void close() throws IOException {
+    public void close() {
         if (this.inputSource != null) {
             this.inputSource.close();
             this.inputSource = null;

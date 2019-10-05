@@ -79,7 +79,7 @@ public class FastaOutputStream implements Closeable, AutoCloseable, Flushable {
     }
 
     @Override
-    public void close() throws IOException {
+    public void close() {
         if (writer != null) {
             writer.close();
         }
