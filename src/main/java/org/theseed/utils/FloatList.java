@@ -42,6 +42,7 @@ public class FloatList implements Iterable<Double> {
      */
     public FloatList(double[] doubles) {
         this.values = ArrayUtils.clone(doubles);
+        this.pos = 0;
     }
 
     /**
@@ -54,6 +55,7 @@ public class FloatList implements Iterable<Double> {
         this.values = new double[size];
         for (int i = 0; i < size; i++)
             this.values[i] = value;
+        this.pos = 0;
     }
 
     /**
