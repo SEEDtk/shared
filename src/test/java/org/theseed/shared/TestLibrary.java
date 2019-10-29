@@ -1296,7 +1296,7 @@ public class TestLibrary extends TestCase {
     /**
      * test float list
      */
-    public void testFLoatList() {
+    public void testFloatList() {
         // Start with an empty list.
         FloatList newList = new FloatList();
         assertThat(newList.size(), equalTo(0));
