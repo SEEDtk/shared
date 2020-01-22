@@ -1369,8 +1369,21 @@ public class TestLibrary extends TestCase {
         assertThat(newList.softNext(), closeTo(0.1, 1e-6));
         assertThat(newList.softNext(), closeTo(0.1, 1e-6));
         assertThat(newList.softNext(), closeTo(0.1, 1e-6));
+        // Test getValues.
+        double[] test = newList.getValues(6);
+        assertThat(test.length, equalTo(6));
+        assertThat(test[0], closeTo(0.4, 1e-6));
+        assertThat(test[1], closeTo(0.6, 1e-6));
+        assertThat(test[2], closeTo(0.8, 1e-6));
+        assertThat(test[3], closeTo(0.1, 1e-6));
+        assertThat(test[4], closeTo(0.1, 1e-6));
+        assertThat(test[5], closeTo(0.1, 1e-6));
+        test = newList.getValues(2);
+        assertThat(test.length, equalTo(2));
+        assertThat(test[0], closeTo(0.4, 1e-6));
+        assertThat(test[1], closeTo(0.6, 1e-6));
         // Use an array initializer.
-        double[] test = new double[] { 3, 5.5, 7 };
+        test = new double[] { 3, 5.5, 7 };
         newList = new FloatList(test);
         assertThat(newList.size(), equalTo(3));
         assertThat(newList.get(0), equalTo(3.0));

@@ -244,6 +244,13 @@ public class TabbedLineReader implements Closeable, AutoCloseable, Iterable<Tabb
     }
 
     /**
+     * @return the label array
+     */
+    public String[] getLabels() {
+        return this.labels;
+    }
+
+    /**
      * @return the index of a field given a field name.  The name can be the label of the field,
      * or it can be a 1-based numeric index.  An index of 0 indicates the last field.  A negative
      * index indicates a position before the last field.  An invalid name will cause an

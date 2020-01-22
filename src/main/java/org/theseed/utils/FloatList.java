@@ -198,4 +198,17 @@ public class FloatList implements Iterable<Double> {
 
     }
 
+    /**
+     * @return an array of the values, expanded to the specified size
+     *
+     * @param size	size of the array to return
+     */
+    public double[] getValues(int size) {
+        double[] retVal = new double[size];
+        this.reset();
+        for (int i = 0; i < size; i++)
+            retVal[i] = this.softNext();
+        return retVal;
+    }
+
 }
