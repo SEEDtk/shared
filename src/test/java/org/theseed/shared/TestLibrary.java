@@ -40,6 +40,7 @@ import org.theseed.locations.Region;
 import org.theseed.magic.MagicMap;
 import org.theseed.proteins.Role;
 import org.theseed.proteins.RoleMap;
+import org.theseed.proteins.kmers.ProteinKmers;
 import org.theseed.sequence.FastaInputStream;
 import org.theseed.sequence.FastaOutputStream;
 import org.theseed.sequence.Sequence;
@@ -47,6 +48,8 @@ import org.theseed.utils.FloatList;
 import org.theseed.utils.IntegerList;
 import org.theseed.utils.Parms;
 
+import com.github.cliftonlabs.json_simple.JsonArray;
+import com.github.cliftonlabs.json_simple.JsonObject;
 import junit.framework.TestCase;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
@@ -218,6 +221,9 @@ public class TestLibrary extends TestCase {
         assertEquals("Incorrect protein for sample feature.", myProtein, myFeature.getProteinTranslation());
         assertEquals("Incorrect protein length for sample feature.", myProtein.length(), myFeature.getProteinLength());
         assertEquals("Incorrect DNA for sample feature.", myDna1, this.myGto.getDna("fig|1313.7001.peg.758"));
+        assertEquals("Incorrect local family for sample feature.", "PLF_1301_00010583", myFeature.getPlfam());
+        assertEquals("Incorrect global family for sample feature.", "PGF_07475842", myFeature.getPgfam());
+        assertTrue("PEG not a CDS", myFeature.isCDS());
         // Next the location.
         Location myLoc = myFeature.getLocation();
         assertEquals("Incorrect contig for feature.", "1313.7001.con.0017", myLoc.getContigId());
@@ -238,6 +244,7 @@ public class TestLibrary extends TestCase {
         assertEquals("Incorrect length for feature.", 209, myLoc.getLength());
         assertEquals("Incorrect strand for segmented location.", '+', myLoc.getDir());
         assertTrue("Segmentation flag failure.", myLoc.isSegmented());
+        assertFalse("Non-peg typed as CDS", myFeature.isCDS());
         // Now iterate over the proteins.
         for (Feature feat : this.myGto.getPegs()) {
             assertEquals("Feature" + feat.getId() + " is not a PEG.", "CDS", feat.getType());
@@ -500,6 +507,8 @@ public class TestLibrary extends TestCase {
         int i = 0;
         for (Genome genome : gDir) {
             assertEquals("Incorrect result for genome at position " + i + ".", expected[i], genome.getId());
+            File expectedFile = new File("src/test/gto_test", expected[i] + ".gto");
+            assertEquals("Incorrect file name for genome at position " + i + ".", expectedFile.getPath(), genome.getFile().getPath());
             i++;
         }
     }
@@ -1586,6 +1595,67 @@ public class TestLibrary extends TestCase {
         assertThat(test1.get(103), equalTo(203));
         assertThat(test1.get(104), equalTo(204));
         assertThat(test1.size(), equalTo(105));
+    }
+
+    /**
+     * test protein kmers
+     */
+    public void testKmers() {
+        ProteinKmers.setKmerSize(10);
+        String myProt1 = "MGMLVPLISKISDLSEEAKACVAACSSVEELDEVRGRYIGRAGALTALLA"; // 50 AA
+        String myProt2 = "MDINLFKEELEELAKKAKHMLNETASKNDLEQVKVSLLGKKGLLTLQSAA";
+        String myProt3 = "MDINLFKEELKHMLNETASKKGLLTLQSA"; // 30 AA
+        ProteinKmers kmer1 = new ProteinKmers(myProt1);
+        ProteinKmers kmer2 = new ProteinKmers(myProt2);
+        ProteinKmers kmer3 = new ProteinKmers(myProt3);
+        assertEquals("Kmer1 has wrong protein.", myProt1, kmer1.getProtein());
+        assertEquals("Kmer1 has wrong count.", 41, kmer1.size());
+        assertEquals("Kmer1/kmer3 wrong similarity.", 3, kmer2.similarity(kmer3));
+        assertEquals("Similarity not commutative.", 3, kmer3.similarity(kmer2));
+        assertEquals("Kmer1 too close to kmer2.", 1.0, kmer1.distance(kmer2), 0.0);
+        assertEquals("Kmer1 too close to kmer3.", 0.95, kmer2.distance(kmer3), 0.005);
+    }
+
+    /**
+     * test GTO updating
+     *
+     * @throws IOException
+     * @throws NumberFormatException
+     */
+    public void testGTO() throws NumberFormatException, IOException {
+        Genome smallGenome = new Genome(new File("src/test", "small.gto"));
+        Collection<Contig> contigs = smallGenome.getContigs();
+        assertThat(contigs.size(), equalTo(1));
+        Contig contig = smallGenome.getContig("161.31.con.0001");
+        assertThat(contig.length(), equalTo(1139123));
+        Collection<Feature> features = smallGenome.getFeatures();
+        assertThat(features.size(), equalTo(1));
+        Feature feat = smallGenome.getFeature("fig|161.31.peg.985");
+        assertThat(feat.getPlfam(), equalTo("PLF_157_00003322"));
+        // Now we will add a feature.  This is not something we intend to do in practice, but it is a good
+        // way to test the ability to modify the internal JSON object.
+        JsonObject gto = smallGenome.getJson();
+        JsonObject newFeat = new JsonObject();
+        newFeat.put("id", "fig|161.31.rna.1");
+        JsonArray segment = new JsonArray().addChain("161.31.con.0001").addChain(90100).addChain("-").addChain(1000);
+        JsonArray location = new JsonArray().addChain(segment);
+        newFeat.put("location", location);
+        JsonArray fto = (JsonArray) gto.get("features");
+        fto.add(newFeat);
+        File testFile = new File("src/test", "gto.ser");
+        smallGenome.update(testFile);
+        Genome testGenome = new Genome(testFile);
+        features = testGenome.getFeatures();
+        assertThat(features.size(), equalTo(2));
+        assertThat(testGenome.getId(), equalTo(smallGenome.getId()));
+        Contig contig2 = testGenome.getContig("161.31.con.0001");
+        assertThat(contig2.length(), equalTo(contig.length()));
+        feat = testGenome.getFeature("fig|161.31.rna.1");
+        Location loc = feat.getLocation();
+        assertThat(loc.getContigId(), equalTo("161.31.con.0001"));
+        assertThat(loc.getBegin(), equalTo(90100));
+        assertThat(loc.getDir(), equalTo('-'));
+        assertThat(loc.getLength(), equalTo(1000));
     }
 
 }

@@ -6,6 +6,7 @@ package org.theseed.genome;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -41,6 +42,8 @@ public class Genome  {
     private int taxonomyId;
     private Map<String, Feature> features;
     private Map<String, Contig> contigs;
+    private File inFile;
+    private JsonObject gto;
 
 
     /** This is an empty list to use as a default intermediate value for cases where the contigs or
@@ -51,7 +54,7 @@ public class Genome  {
 
     /** This enum defines the keys used and their default values.
      */
-    private enum GenomeKeys implements JsonKey {
+    public enum GenomeKeys implements JsonKey {
         ID("0"),
         SCIENTIFIC_NAME("unknown organism"),
         NCBI_TAXONOMY_ID(2),
@@ -88,35 +91,36 @@ public class Genome  {
      * @throws NumberFormatException
      */
     public Genome(File inFile) throws NumberFormatException, IOException {
+        // Save the input file name.
+        this.inFile = inFile;
         // Get a reader for the named file.
         FileReader reader = new FileReader(inFile);
         // Read the genome from the file.
-        JsonObject gto;
-        try {
-            gto = (JsonObject) Jsoner.deserialize(reader);
+         try {
+            this.gto = (JsonObject) Jsoner.deserialize(reader);
         } catch (JsonException e) {
             throw new IOException("Error reading JSON data.", e);
         }
-        id = gto.getStringOrDefault(GenomeKeys.ID);
-        name = gto.getStringOrDefault(GenomeKeys.SCIENTIFIC_NAME);
-        taxonomyId = gto.getIntegerOrDefault(GenomeKeys.NCBI_TAXONOMY_ID);
-        geneticCode = gto.getIntegerOrDefault(GenomeKeys.GENETIC_CODE);
-        domain = gto.getStringOrDefault(GenomeKeys.DOMAIN);
+        id = this.gto.getStringOrDefault(GenomeKeys.ID);
+        name = this.gto.getStringOrDefault(GenomeKeys.SCIENTIFIC_NAME);
+        taxonomyId = this.gto.getIntegerOrDefault(GenomeKeys.NCBI_TAXONOMY_ID);
+        geneticCode = this.gto.getIntegerOrDefault(GenomeKeys.GENETIC_CODE);
+        domain = this.gto.getStringOrDefault(GenomeKeys.DOMAIN);
 
         // Now we need to process the features and contigs.
-        Collection<JsonObject> featureList = gto.getCollectionOrDefault(GenomeKeys.FEATURES);
+        Collection<JsonObject> featureList = this.gto.getCollectionOrDefault(GenomeKeys.FEATURES);
         features = new HashMap<String, Feature>();
         for (JsonObject feat : featureList) {
             Feature feature = new Feature(feat);
             features.put(feature.getId(), feature);
         }
-        Collection<JsonObject> contigList = gto.getCollectionOrDefault(GenomeKeys.CONTIGS);
+        Collection<JsonObject> contigList = this.gto.getCollectionOrDefault(GenomeKeys.CONTIGS);
         contigs = new HashMap<String, Contig>();
         for (JsonObject contigObj : contigList) {
             Contig contig = new Contig(contigObj);
             contigs.put(contig.getId(), contig);
         }
-
+        reader.close();
     }
 
     /**
@@ -138,6 +142,8 @@ public class Genome  {
         // Create empty maps for features and contigs.
         this.features = new HashMap<String, Feature>();
         this.contigs = new HashMap<String, Contig>();
+        // Denote there is no input file.
+        this.inFile = null;
     }
 
     /**
@@ -277,6 +283,34 @@ public class Genome  {
      */
     public void addContig(Contig contig) {
         this.contigs.put(contig.getId(), contig);
+    }
+
+    /**
+     * @return the name of the file from which the genome was read
+     */
+    public File getFile() {
+        return this.inFile;
+    }
+
+    /**
+     * @return the original json object containing the full gto
+     */
+    public JsonObject getJson() {
+        return this.gto;
+    }
+
+    /**
+     * Write the internal GTO to the specified file in JSON format.  This is useful
+     * if the GTO has been updated.
+     *
+     * @param testFile	output file
+     *
+     * @throws IOException
+     */
+    public void update(File testFile) throws IOException {
+        PrintWriter gtoStream = new PrintWriter(testFile);
+        Jsoner.serialize(this.gto, gtoStream);
+        gtoStream.close();
     }
 
 }

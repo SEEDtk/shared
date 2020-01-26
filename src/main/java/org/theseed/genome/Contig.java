@@ -20,12 +20,14 @@ public class Contig {
     private String id;
     private String sequence;
     private int geneticCode;
+    private int length;
 
     /** This enum defines the keys used and their default values.
      */
     private enum ContigKeys implements JsonKey {
         ID("0"),
         DNA(""),
+        LENGTH(0),
         GENETIC_CODE(11);
 
         private final Object m_value;
@@ -51,7 +53,8 @@ public class Contig {
     }
 
     /**
-     * Create the contig from the incoming JsonObject.  Note the DNA is converted to lower case.
+     * Create the contig from the incoming JsonObject.  Note the DNA is converted to lower case,
+     * and the length is computed if it is not present.
      *
      * @param contigObj	JsonObject read into memory during genome input
      */
@@ -59,6 +62,9 @@ public class Contig {
         this.id = contigObj.getStringOrDefault(ContigKeys.ID);
         this.sequence = contigObj.getStringOrDefault(ContigKeys.DNA).toLowerCase();
         this.geneticCode = contigObj.getIntegerOrDefault(ContigKeys.GENETIC_CODE);
+        this.length = contigObj.getIntegerOrDefault(ContigKeys.LENGTH);
+        if (this.length == 0)
+            this.length = this.sequence.length();
     }
 
     /**
@@ -72,6 +78,7 @@ public class Contig {
         this.id = contigId;
         this.sequence = sequence;
         this.geneticCode = code;
+        this.length = sequence.length();
     }
 
     /**
@@ -106,7 +113,7 @@ public class Contig {
      * @return the length of the contig
      */
     public int length() {
-        return this.sequence.length();
+        return this.length;
     }
 
     /**

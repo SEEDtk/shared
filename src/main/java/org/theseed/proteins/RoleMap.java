@@ -47,7 +47,7 @@ public class RoleMap extends MagicMap<Role> {
     }
 
     /**
-     * Save a role map to a file
+     * Save a role map to a file.  The file is 3 columns for compatability with the old system.
      *
      * @param saveFile	file to contain a text representation of the role map
      */
@@ -55,7 +55,7 @@ public class RoleMap extends MagicMap<Role> {
         try {
             PrintWriter printer = new PrintWriter(saveFile);
             for (Role role : this.values()) {
-                printer.format("%s\t%s%n", role.getId(), role.getName());
+                printer.format("%s\tx\t%s%n", role.getId(), role.getName());
             }
             printer.close();
         } catch (IOException e) {
@@ -64,7 +64,7 @@ public class RoleMap extends MagicMap<Role> {
     }
 
     /**
-     * @return the role map saved to the specified file
+     * @return the role map saved to the specified 3-column file
      *
      * @param loadFile	the role map file to load
      */
@@ -74,8 +74,8 @@ public class RoleMap extends MagicMap<Role> {
             Scanner reader = new Scanner(loadFile);
             while (reader.hasNext()) {
                 String myLine = reader.nextLine();
-                String[] fields = StringUtils.splitByWholeSeparator(myLine, "\t", 2);
-                Role newRole = new Role(fields[0], fields[1]);
+                String[] fields = StringUtils.splitByWholeSeparator(myLine, "\t", 3);
+                Role newRole = new Role(fields[0], fields[2]);
                 retVal.put(newRole);
             }
             reader.close();

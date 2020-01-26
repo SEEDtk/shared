@@ -31,6 +31,8 @@ public class Feature implements Comparable<Feature> {
     private String function;
     private String protein_translation;
     private Location location;
+    private String plfam;
+    private String pgfam;
 
     /** parsing pattern for feature type */
     private static final Pattern TYPE_PATTERN = Pattern.compile("fig\\|\\d+\\.\\d+\\.(\\w+)\\.\\d+");
@@ -67,6 +69,7 @@ public class Feature implements Comparable<Feature> {
         TYPE("CDS"),
         FUNCTION("hypothetical protein"),
         PROTEIN_TRANSLATION(""),
+        FAMILY_ASSIGNMENTS(null),
         LOCATION(null);
 
         private final Object m_value;
@@ -106,16 +109,30 @@ public class Feature implements Comparable<Feature> {
         this.location = null;
         JsonArray regions = feat.getCollectionOrDefault(FeatureKeys.LOCATION);
         // Only proceed if there is at least one region.  The regions are [contigId, begin, strand, length].
-        if (regions.size() > 0) {
+        if (regions != null && regions.size() > 0) {
             JsonArray first = (JsonArray) regions.get(0);
             this.location = Location.create((String) first.get(0), (String) first.get(2));
+            // Now loop through all the regions, adding them.
+            for (Object regionO : regions) {
+                JsonArray region = (JsonArray) regionO;
+                int begin = region.getInteger(1);
+                int length = region.getInteger(3);
+                this.location.addRegion(begin, length);
+            }
         }
-        // Now loop through all the regions, adding them.
-        for (Object regionO : regions) {
-            JsonArray region = (JsonArray) regionO;
-            int begin = region.getInteger(1);
-            int length = region.getInteger(3);
-            this.location.addRegion(begin, length);
+        // Finally, we look for the protein families.
+        JsonArray families = feat.getCollectionOrDefault(FeatureKeys.FAMILY_ASSIGNMENTS);
+        if (families != null && families.size() > 0) {
+            for (Object family0 : families) {
+                JsonArray family = (JsonArray) family0;
+                String type = family.getString(0);
+                String value = family.getString(1);
+                if (type.contentEquals("PGFAM")) {
+                    this.pgfam = value;
+                } else if (type.contentEquals("PLFAM")) {
+                    this.plfam = value;
+                }
+            }
         }
     }
 
@@ -314,6 +331,27 @@ public class Feature implements Comparable<Feature> {
             }
         }
         return retVal;
+    }
+
+    /**
+     * @return the local protein family ID (if any)
+     */
+    public String getPlfam() {
+        return this.plfam;
+    }
+
+    /**
+     * @return the global protein family ID (if any)
+     */
+    public String getPgfam() {
+        return this.pgfam;
+    }
+
+    /**
+     * @return TRUE if this is a protein-encoding feature
+     */
+    public boolean isCDS() {
+        return this.type.contentEquals("CDS");
     }
 
 
