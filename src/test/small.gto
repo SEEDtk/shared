@@ -1,0 +1,105 @@
+{
+   "taxonomy" : [
+      "cellular organisms",
+      "Bacteria",
+      "Spirochaetes",
+      "Spirochaetia",
+      "Spirochaetales",
+      "Spirochaetaceae",
+      "Treponema",
+      "Treponema pallidum",
+      "Treponema pallidum subsp. pallidum"
+   ],
+   "analysis_events" : [],
+   "ncbi_lineage" : [
+      [
+         "cellular organisms",
+         "131567",
+         "no rank"
+      ],
+      [
+         "Bacteria",
+         "2",
+         "superkingdom"
+      ],
+      [
+         "Spirochaetes",
+         "203691",
+         "phylum"
+      ],
+      [
+         "Spirochaetia",
+         "203692",
+         "class"
+      ],
+      [
+         "Spirochaetales",
+         "136",
+         "order"
+      ],
+      [
+         "Spirochaetaceae",
+         "137",
+         "family"
+      ],
+      [
+         "Treponema",
+         "157",
+         "genus"
+      ],
+      [
+         "Treponema pallidum",
+         "160",
+         "species"
+      ],
+      [
+         "Treponema pallidum subsp. pallidum",
+         "161",
+         "subspecies"
+      ]
+   ],
+   "close_genomes" : [],
+   "contigs" : [
+      {
+         "length" : 1139123,
+         "id" : "161.31.con.0001",
+         "genetic_code" : 11
+      }
+   ],
+   "id" : "161.31",
+   "genetic_code" : 11,
+   "features" : [
+{
+         "protein_translation" : "MLSGGSLPQLAVARVPPLLHTTGRAFMHVLTFLLPEAAARSLAAVSTAPSNSSTLVAILGTGLSAPLLLTYLLRRFEKTHAVEISYFSLFLCALNFEGVRLFLPILYTGTLTTYAGNVPMQIVMFFRSLALLALFASGIFAKKTLTRQEGAVVFVLCTVAFLISRYTTIHTIHAYRPSQSTQGAILLAQPISESGSIIDSTGEEKTLKVRSSAHRKTRILVTPQRNFTFYYGSHAWHRWFFWTTAVLSALSYGVLGHTLQISHYYIAAAALPFVIAGYRLLTHGLTWSACIVGLFLLNTASVFFIRSVHRVHIWQ",
+         "family_assignments" : [
+            [
+               "PGFAM",
+               "PGF_03798104"
+            ],
+            [
+               "PLFAM",
+               "PLF_157_00003322"
+            ]
+         ],
+         "id" : "fig|161.31.peg.985",
+         "location" : [
+            [
+               "161.31.con.0001",
+               "1092694",
+               "+",
+               948
+            ]
+         ],
+         "type" : "CDS",
+         "aliases" : [
+            "A8P40_04965"
+         ],
+         "function" : "hypothetical protein"
+      }       
+   ]
+   "scientific_name" : "Treponema pallidum subsp. pallidum strain PT_SIF1242",
+   "source_id" : "161.31",
+   "ncbi_taxonomy_id" : 161,
+   "domain" : "Bacteria",
+   "source" : "PATRIC"
+}
