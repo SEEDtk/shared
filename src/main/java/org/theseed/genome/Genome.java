@@ -7,6 +7,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -349,8 +350,11 @@ public class Genome  {
      * @throws IOException
      */
     public void update(File testFile) throws IOException {
+        String jsonString = Jsoner.serialize(this.gto);
         try (PrintWriter gtoStream = new PrintWriter(testFile)) {
-            Jsoner.serialize(this.gto, gtoStream);
+            Jsoner.prettyPrint(new StringReader(jsonString), gtoStream, "    ", "\n");
+        } catch (JsonException e) {
+            throw new RuntimeException("Error updating GTO: " + e.getMessage());
         }
     }
 
