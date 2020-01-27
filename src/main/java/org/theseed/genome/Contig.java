@@ -25,10 +25,16 @@ public class Contig {
     /** This enum defines the keys used and their default values.
      */
     private enum ContigKeys implements JsonKey {
-        ID("0"),
+        // GTO FIELDS
+        ID("con.001"),
         DNA(""),
+        GENETIC_CODE(11),
+        // SHARED FIELDS
         LENGTH(0),
-        GENETIC_CODE(11);
+        // PATRIC FIELDS
+        SEQUENCE_ID("con.001"),
+        SEQUENCE("")
+        ;
 
         private final Object m_value;
 
@@ -65,6 +71,23 @@ public class Contig {
         this.length = contigObj.getIntegerOrDefault(ContigKeys.LENGTH);
         if (this.length == 0)
             this.length = this.sequence.length();
+    }
+
+    /**
+     * Create the contig from a JsonObject retrieved from the PATRIC data API.
+     *
+     * @param contigObj		a JsonObject containing contig data from PATRIC
+     * @param gcode	the genetic code for this contig
+     */
+    public Contig(JsonObject contigObj, int code) {
+        this.id = contigObj.getStringOrDefault(ContigKeys.SEQUENCE_ID);
+        this.sequence = contigObj.getStringOrDefault(ContigKeys.SEQUENCE);
+        if (this.sequence.length() > 0) {
+            this.length = this.sequence.length();
+        } else {
+            this.length = contigObj.getIntegerOrDefault(ContigKeys.LENGTH);
+        }
+        this.geneticCode = code;
     }
 
     /**

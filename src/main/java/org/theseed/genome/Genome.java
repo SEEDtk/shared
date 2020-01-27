@@ -16,6 +16,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.theseed.locations.Location;
 import org.theseed.locations.Region;
 
+import com.github.cliftonlabs.json_simple.JsonArray;
 import com.github.cliftonlabs.json_simple.JsonException;
 import com.github.cliftonlabs.json_simple.JsonKey;
 import com.github.cliftonlabs.json_simple.JsonObject;
@@ -44,6 +45,7 @@ public class Genome  {
     private Map<String, Contig> contigs;
     private File inFile;
     private JsonObject gto;
+    private String[] lineage;
 
 
     /** This is an empty list to use as a default intermediate value for cases where the contigs or
@@ -55,13 +57,22 @@ public class Genome  {
     /** This enum defines the keys used and their default values.
      */
     public enum GenomeKeys implements JsonKey {
+        // GTO fields
         ID("0"),
         SCIENTIFIC_NAME("unknown organism"),
         NCBI_TAXONOMY_ID(2),
         GENETIC_CODE(11),
         DOMAIN("Bacteria"),
         CONTIGS(noEntries),
-        FEATURES(noEntries);
+        NCBI_LINEAGE(noEntries),
+        FEATURES(noEntries),
+        // PATRIC fields
+        GENOME_ID("0"),
+        GENOME_NAME("unknown organism"),
+        TAXON_LINEAGE_IDS(noEntries),
+        TAXON_ID(2),
+        KINGDOM("Bacteria")
+        ;
 
         private final Object m_value;
 
@@ -94,33 +105,35 @@ public class Genome  {
         // Save the input file name.
         this.inFile = inFile;
         // Get a reader for the named file.
-        FileReader reader = new FileReader(inFile);
-        // Read the genome from the file.
-         try {
-            this.gto = (JsonObject) Jsoner.deserialize(reader);
-        } catch (JsonException e) {
-            throw new IOException("Error reading JSON data.", e);
+        try (FileReader reader = new FileReader(inFile)) {
+            // Read the genome from the file.
+             try {
+                this.gto = (JsonObject) Jsoner.deserialize(reader);
+            } catch (JsonException e) {
+                throw new IOException("Error reading JSON data.", e);
+            }
+            id = this.gto.getStringOrDefault(GenomeKeys.ID);
+            name = this.gto.getStringOrDefault(GenomeKeys.SCIENTIFIC_NAME);
+            taxonomyId = this.gto.getIntegerOrDefault(GenomeKeys.NCBI_TAXONOMY_ID);
+            geneticCode = this.gto.getIntegerOrDefault(GenomeKeys.GENETIC_CODE);
+            domain = this.gto.getStringOrDefault(GenomeKeys.DOMAIN);
+            // Extract the lineage IDs.
+            Collection<JsonArray> lineageArray = this.gto.getCollectionOrDefault(GenomeKeys.NCBI_LINEAGE);
+            this.lineage = lineageArray.stream().map(x -> x.getString(1)).toArray(n -> new String[n]);
+            // Now we need to process the features and contigs.
+            Collection<JsonObject> featureList = this.gto.getCollectionOrDefault(GenomeKeys.FEATURES);
+            features = new HashMap<String, Feature>();
+            for (JsonObject feat : featureList) {
+                Feature feature = new Feature(feat);
+                features.put(feature.getId(), feature);
+            }
+            Collection<JsonObject> contigList = this.gto.getCollectionOrDefault(GenomeKeys.CONTIGS);
+            contigs = new HashMap<String, Contig>();
+            for (JsonObject contigObj : contigList) {
+                Contig contig = new Contig(contigObj);
+                contigs.put(contig.getId(), contig);
+            }
         }
-        id = this.gto.getStringOrDefault(GenomeKeys.ID);
-        name = this.gto.getStringOrDefault(GenomeKeys.SCIENTIFIC_NAME);
-        taxonomyId = this.gto.getIntegerOrDefault(GenomeKeys.NCBI_TAXONOMY_ID);
-        geneticCode = this.gto.getIntegerOrDefault(GenomeKeys.GENETIC_CODE);
-        domain = this.gto.getStringOrDefault(GenomeKeys.DOMAIN);
-
-        // Now we need to process the features and contigs.
-        Collection<JsonObject> featureList = this.gto.getCollectionOrDefault(GenomeKeys.FEATURES);
-        features = new HashMap<String, Feature>();
-        for (JsonObject feat : featureList) {
-            Feature feature = new Feature(feat);
-            features.put(feature.getId(), feature);
-        }
-        Collection<JsonObject> contigList = this.gto.getCollectionOrDefault(GenomeKeys.CONTIGS);
-        contigs = new HashMap<String, Contig>();
-        for (JsonObject contigObj : contigList) {
-            Contig contig = new Contig(contigObj);
-            contigs.put(contig.getId(), contig);
-        }
-        reader.close();
     }
 
     /**
@@ -139,6 +152,20 @@ public class Genome  {
         this.taxonomyId = Integer.parseInt(StringUtils.substringBefore(genomeId, "."));
         this.domain = domain;
         this.geneticCode = code;
+        // Create empty maps for features and contigs.
+        this.features = new HashMap<String, Feature>();
+        this.contigs = new HashMap<String, Contig>();
+        // Denote there is no input file.
+        this.inFile = null;
+    }
+
+    /**
+     * Initialize a bare-bones genome (used by super-classes only).
+     *
+     * @param genomeId	ID of this genome
+     */
+    protected Genome(String genomeId) {
+        this.id = genomeId;
         // Create empty maps for features and contigs.
         this.features = new HashMap<String, Feature>();
         this.contigs = new HashMap<String, Contig>();
@@ -250,6 +277,13 @@ public class Genome  {
         return this.contigs.get(contigId);
     }
 
+    /**
+     * @return the number of contigs in this genome
+     */
+    public int getContigCount() {
+        return this.contigs.size();
+    }
+
     @Override
     public String toString() {
         return this.id + " (" + this.name + ")";
@@ -300,6 +334,13 @@ public class Genome  {
     }
 
     /**
+     * @return the taxonomic lineage ids for this genome
+     */
+    public String[] getLineage() {
+        return this.lineage;
+    }
+
+    /**
      * Write the internal GTO to the specified file in JSON format.  This is useful
      * if the GTO has been updated.
      *
@@ -308,9 +349,50 @@ public class Genome  {
      * @throws IOException
      */
     public void update(File testFile) throws IOException {
-        PrintWriter gtoStream = new PrintWriter(testFile);
-        Jsoner.serialize(this.gto, gtoStream);
-        gtoStream.close();
+        try (PrintWriter gtoStream = new PrintWriter(testFile)) {
+            Jsoner.serialize(this.gto, gtoStream);
+        }
+    }
+
+    /**
+     * Store the genome-level data retrieved from the PATRIC API.
+     *
+     * @param genomeData	genome-level data retrieved from PATRIC
+     */
+    protected void p3Store(JsonObject genomeData) {
+        this.id = genomeData.getStringOrDefault(GenomeKeys.GENOME_ID);
+        this.name = genomeData.getStringOrDefault(GenomeKeys.GENOME_NAME);
+        this.taxonomyId = genomeData.getIntegerOrDefault(GenomeKeys.TAXON_ID);
+        // Store the lineage.
+        JsonArray taxonomy = genomeData.getCollectionOrDefault(GenomeKeys.TAXON_LINEAGE_IDS);
+        this.lineage = new String[taxonomy.size()];
+        for (int i = 0; i < this.lineage.length; i++) {
+            this.lineage[i] = taxonomy.getString(i);
+        }
+        // Compute the domain.
+        this.domain = genomeData.getStringOrDefault(GenomeKeys.KINGDOM);
+    }
+
+    /**
+     * Update the genetic code.
+     *
+     * @param code	code to store
+     */
+    protected void setGeneticCode(int code) {
+        this.geneticCode = code;
+    }
+
+    /**
+     * Store the contigs returned in the specified array/
+     *
+     * @param contigs	array of contigs read from the PATRIC API
+     */
+    protected void p3Contigs(Collection<JsonObject> contigs) {
+        for (JsonObject contigObj : contigs) {
+            Contig contig = new Contig(contigObj, this.geneticCode);
+            this.contigs.put(contig.getId(), contig);
+        }
+
     }
 
 }

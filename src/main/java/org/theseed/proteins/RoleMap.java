@@ -70,15 +70,13 @@ public class RoleMap extends MagicMap<Role> {
      */
     public static RoleMap load(File loadFile) {
         RoleMap retVal = new RoleMap();
-        try {
-            Scanner reader = new Scanner(loadFile);
+        try (Scanner reader = new Scanner(loadFile)) {
             while (reader.hasNext()) {
                 String myLine = reader.nextLine();
                 String[] fields = StringUtils.splitByWholeSeparator(myLine, "\t", 3);
                 Role newRole = new Role(fields[0], fields[2]);
                 retVal.put(newRole);
             }
-            reader.close();
         } catch (IOException e) {
             throw new RuntimeException("Error loading role map.", e);
         }

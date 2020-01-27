@@ -213,6 +213,7 @@ public class TestLibrary extends TestCase {
         assertEquals("Genome ID not correct.", "1313.7001", this.myGto.getId());
         assertEquals("Genome name not correct.", "Streptococcus pneumoniae P210774-233", this.myGto.getName());
         assertNull("Nonexistent feature found.", this.myGto.getFeature("fig|1313.7001.cds.75"));
+        assertEquals("Incorrect contig count.", this.myGto.getContigCount(), 52);
         // Now we need to pull out a PEG and ask about it.
         Feature myFeature = this.myGto.getFeature("fig|1313.7001.peg.758");
         assertNotNull("Sample feature not found.", myFeature);
@@ -1632,6 +1633,8 @@ public class TestLibrary extends TestCase {
         assertThat(features.size(), equalTo(1));
         Feature feat = smallGenome.getFeature("fig|161.31.peg.985");
         assertThat(feat.getPlfam(), equalTo("PLF_157_00003322"));
+        String[] lineage = smallGenome.getLineage();
+        assertThat(lineage, arrayContaining("131567", "2", "203691", "203692", "136", "137", "157", "160", "161"));
         // Now we will add a feature.  This is not something we intend to do in practice, but it is a good
         // way to test the ability to modify the internal JSON object.
         JsonObject gto = smallGenome.getJson();

@@ -102,7 +102,7 @@ public class Feature implements Comparable<Feature> {
      */
     public Feature(JsonObject feat) {
         this.id = feat.getStringOrDefault(FeatureKeys.ID);
-        this.type = feat.getStringOrDefault(FeatureKeys.TYPE);
+        this.type = fidType(this.id);
         this.function = feat.getStringOrDefault(FeatureKeys.FUNCTION);
         this.protein_translation = feat.getStringOrDefault(FeatureKeys.PROTEIN_TRANSLATION);
         // Now we need to do the location.  This will come back as a list of regions.
@@ -154,6 +154,7 @@ public class Feature implements Comparable<Feature> {
         this.function = function;
         Location loc = Location.create(contigId, strand, left, right);
         this.location = loc;
+        this.protein_translation = "";
     }
 
     /**
@@ -352,6 +353,25 @@ public class Feature implements Comparable<Feature> {
      */
     public boolean isCDS() {
         return this.type.contentEquals("CDS");
+    }
+
+    /**
+     * Store the protein translation for this feature.
+     *
+     * @param aa_sequence	protein translation to store
+     */
+    public void storeProtein(String aa_sequence) {
+        this.protein_translation = aa_sequence;
+    }
+
+    /**
+     * Store the local protein family for this feature.
+     *
+     * @param plfam		protein family ID to store
+     */
+    public void storeLocalFamily(String plfam) {
+        if (plfam != null && ! plfam.isEmpty())
+            this.plfam = plfam;
     }
 
 
