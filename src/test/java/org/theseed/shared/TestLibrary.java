@@ -40,6 +40,7 @@ import org.theseed.locations.Region;
 import org.theseed.magic.MagicMap;
 import org.theseed.proteins.Role;
 import org.theseed.proteins.RoleMap;
+import org.theseed.proteins.kmers.KmerCollectionGroup;
 import org.theseed.proteins.kmers.ProteinKmers;
 import org.theseed.sequence.FastaInputStream;
 import org.theseed.sequence.FastaOutputStream;
@@ -69,6 +70,46 @@ public class TestLibrary extends TestCase {
     }
 
     private Genome myGto = null;
+
+    /**
+     * test sequence group kmer distance
+     *
+     * @throws IOException
+     */
+    public void testKmerCollectionGroup() throws IOException {
+        ProteinKmers.setKmerSize(8);
+        KmerCollectionGroup kGroup = new KmerCollectionGroup();
+        File inFile = new File("src/test", "seq_list.fa");
+        FastaInputStream inStream = new FastaInputStream(inFile);
+        for (Sequence inSeq : inStream) {
+            String label = inSeq.getComment();
+            kGroup.addSequence(inSeq, label);
+        }
+        Collection<String> groups = kGroup.getKeys();
+        assertThat(groups, containsInAnyOrder("AntiHiga", "ToxiHigb"));
+        assertThat(kGroup.size(), equalTo(2));
+        inStream.close();
+        Sequence testSeq = new Sequence("test1", "", "MILLRRLLGDVLRRQRQRQGRTLREVSSSARVSLGYLSEVERGQKEASSELLSAICDALD" +
+                "VRMSELMREVSDELALAELARSAAATPSETVPAPVRPMLGSVSVTGVPPERVTIKAPAEA" +
+                "VDVVAA");
+        Sequence testSeq2 = new Sequence("test2", "", "MTIQTFLCQDTDIYEGKHPRRFRNIEAVAERKLQMLDAAVELKDLRSPPGNRLEALIGD" +
+                "RAGQHSIRINDQWRICFVWTGPDRVEIVDYH");
+        double dist = kGroup.getDistance(testSeq, "AntiHiga");
+        assertThat(dist, closeTo(0.4200, 0.0001));
+        dist = kGroup.getDistance(testSeq, "ToxiHigb");
+        assertThat(dist, closeTo(1.0, 0.0001));
+        dist = kGroup.getDistance(testSeq2, "AntiHiga");
+        assertThat(dist, closeTo(1.0, 0.0001));
+        dist = kGroup.getDistance(testSeq2, "ToxiHigb");
+        assertThat(dist, closeTo(0.2929, 0.0001));
+        KmerCollectionGroup.Result ret = kGroup.getBest(testSeq);
+        assertThat(ret.getDistance(), closeTo(0.4200, 0.0001));
+        assertThat(ret.getGroup(), equalTo("AntiHiga"));
+        ret = kGroup.getBest(testSeq2);
+        assertThat(ret.getDistance(), closeTo(0.2929, 0.0001));
+        assertThat(ret.getGroup(), equalTo("ToxiHigb"));
+    }
+
 
     /**
      * Test magic IDs.
