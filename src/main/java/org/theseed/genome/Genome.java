@@ -6,8 +6,13 @@ package org.theseed.genome;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.io.Reader;
 import java.io.StringReader;
+import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -99,41 +104,67 @@ public class Genome  {
 
     /**
      * Read a genome object from a file.
+     *
+     * @param inFile	the file containing the GTO
+     *
      * @throws IOException
-     * @throws NumberFormatException
      */
-    public Genome(File inFile) throws NumberFormatException, IOException {
+    public Genome(File inFile) throws IOException {
         // Save the input file name.
         this.inFile = inFile;
         // Get a reader for the named file.
         try (FileReader reader = new FileReader(inFile)) {
-            // Read the genome from the file.
-             try {
-                this.gto = (JsonObject) Jsoner.deserialize(reader);
-            } catch (JsonException e) {
-                throw new IOException("Error reading JSON data.", e);
-            }
-            id = this.gto.getStringOrDefault(GenomeKeys.ID);
-            name = this.gto.getStringOrDefault(GenomeKeys.SCIENTIFIC_NAME);
-            taxonomyId = this.gto.getIntegerOrDefault(GenomeKeys.NCBI_TAXONOMY_ID);
-            geneticCode = this.gto.getIntegerOrDefault(GenomeKeys.GENETIC_CODE);
-            domain = this.gto.getStringOrDefault(GenomeKeys.DOMAIN);
-            // Extract the lineage IDs.
-            Collection<JsonArray> lineageArray = this.gto.getCollectionOrDefault(GenomeKeys.NCBI_LINEAGE);
-            this.lineage = lineageArray.stream().map(x -> x.getString(1)).toArray(n -> new String[n]);
-            // Now we need to process the features and contigs.
-            Collection<JsonObject> featureList = this.gto.getCollectionOrDefault(GenomeKeys.FEATURES);
-            features = new HashMap<String, Feature>();
-            for (JsonObject feat : featureList) {
-                Feature feature = new Feature(feat);
-                features.put(feature.getId(), feature);
-            }
-            Collection<JsonObject> contigList = this.gto.getCollectionOrDefault(GenomeKeys.CONTIGS);
-            contigs = new HashMap<String, Contig>();
-            for (JsonObject contigObj : contigList) {
-                Contig contig = new Contig(contigObj);
-                contigs.put(contig.getId(), contig);
-            }
+            this.read(reader);
+        }
+    }
+
+    /**
+     * Read a genome object from a stream.
+     *
+     * @param stream	input stream containing the GTO
+     *
+     * @throws IOException
+     */
+    public Genome(InputStream stream) throws IOException {
+        try (InputStreamReader reader = new InputStreamReader(stream)) {
+            this.read(reader);
+        }
+    }
+
+    /**
+     * Read a genome into memory.
+     *
+     * @param reader	input stream containing the GTO.
+     *
+     * @throws IOException
+     */
+    private void read(Reader reader) throws IOException {
+        // Read the genome from the file.
+         try {
+            this.gto = (JsonObject) Jsoner.deserialize(reader);
+        } catch (JsonException e) {
+            throw new IOException("Error reading JSON data.", e);
+        }
+        id = this.gto.getStringOrDefault(GenomeKeys.ID);
+        name = this.gto.getStringOrDefault(GenomeKeys.SCIENTIFIC_NAME);
+        taxonomyId = this.gto.getIntegerOrDefault(GenomeKeys.NCBI_TAXONOMY_ID);
+        geneticCode = this.gto.getIntegerOrDefault(GenomeKeys.GENETIC_CODE);
+        domain = this.gto.getStringOrDefault(GenomeKeys.DOMAIN);
+        // Extract the lineage IDs.
+        Collection<JsonArray> lineageArray = this.gto.getCollectionOrDefault(GenomeKeys.NCBI_LINEAGE);
+        this.lineage = lineageArray.stream().map(x -> x.getString(1)).toArray(n -> new String[n]);
+        // Now we need to process the features and contigs.
+        Collection<JsonObject> featureList = this.gto.getCollectionOrDefault(GenomeKeys.FEATURES);
+        features = new HashMap<String, Feature>();
+        for (JsonObject feat : featureList) {
+            Feature feature = new Feature(feat);
+            features.put(feature.getId(), feature);
+        }
+        Collection<JsonObject> contigList = this.gto.getCollectionOrDefault(GenomeKeys.CONTIGS);
+        contigs = new HashMap<String, Contig>();
+        for (JsonObject contigObj : contigList) {
+            Contig contig = new Contig(contigObj);
+            contigs.put(contig.getId(), contig);
         }
     }
 
@@ -345,13 +376,40 @@ public class Genome  {
      * Write the internal GTO to the specified file in JSON format.  This is useful
      * if the GTO has been updated.
      *
-     * @param testFile	output file
+     * @param outFile	output file
      *
      * @throws IOException
      */
-    public void update(File testFile) throws IOException {
+    public void update(File outFile) throws IOException {
+        try (PrintWriter gtoStream = new PrintWriter(outFile)) {
+            updateToStream(gtoStream);
+        }
+    }
+
+    /**
+     * Write the internal GTO to the specified stream in JSON format.  This is useful
+     * if the GTO has been updated.
+     *
+     * @param outStream		output stream
+     *
+     * @throws IOException
+     */
+    public void update(OutputStream outStream) throws IOException {
+        try (PrintWriter gtoStream = new PrintWriter(outStream)) {
+            updateToStream(gtoStream);
+        }
+    }
+
+    /**
+     * Write the GTO to a stream in json format.
+     *
+     * @param gtoStream		output writer for the GTO
+     *
+     * @throws IOException
+     */
+    private void updateToStream(Writer gtoStream) throws IOException {
         String jsonString = Jsoner.serialize(this.gto);
-        try (PrintWriter gtoStream = new PrintWriter(testFile)) {
+        try {
             Jsoner.prettyPrint(new StringReader(jsonString), gtoStream, "    ", "\n");
         } catch (JsonException e) {
             throw new RuntimeException("Error updating GTO: " + e.getMessage());
