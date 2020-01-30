@@ -6,13 +6,15 @@ package org.theseed.counters;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
 /**
  *
- * This is a simple map from a random object to a number. It is used for simple counters.
+ * This is a simple map from objects of a specified type to numbers. It is used for simple counters.
  *
  * This class will fail if the string representations of two unequal objects are the same.
  *
@@ -242,19 +244,30 @@ public class CountMap<K> {
     /**
      * Erase all classes and counts from this map.
      */
-	public void deleteAll() {
-		this.map.clear();
-	}
+    public void deleteAll() {
+        this.map.clear();
+    }
 
-	/**
-	 * Set the count to a specific value.
-	 *
-	 * @param key		key whose count is to be set
-	 * @param newValue	value of the new count
-	 */
-	public void setCount(K key, int newValue) {
+    /**
+     * Set the count to a specific value.
+     *
+     * @param key		key whose count is to be set
+     * @param newValue	value of the new count
+     */
+    public void setCount(K key, int newValue) {
        Count myCount = this.getCounter(key);
        myCount.num = newValue;
-	}
+    }
+
+    /**
+     * @return a set of all the counts with a value of 1.
+     */
+    public Set<K> getSingletons() {
+        Set<K> retVal = new HashSet<K>(this.map.size());
+        for (Count counter : this.map.values())
+            if (counter.getCount() == 1)
+                retVal.add(counter.getKey());
+        return retVal;
+    }
 
 }

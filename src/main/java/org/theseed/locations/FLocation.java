@@ -49,6 +49,11 @@ public class FLocation extends Location {
     }
 
     @Override
+    public Frame getFrame() {
+        return Frame.plusFrames[this.getLeft() % 3];
+    }
+
+    @Override
     protected Location createEmpty() {
         FLocation retVal = new FLocation(this.contigId);
         return retVal;

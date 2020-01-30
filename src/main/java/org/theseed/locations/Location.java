@@ -257,6 +257,16 @@ public abstract class Location implements Comparable<Location>, Cloneable {
      */
     protected abstract Frame calcFrame(int pos, int end, Region region);
 
+    /**
+     * @return the probable frame of this location relative to the contig
+     *
+     * NOTE that this is measured from the beginning of the contig, not the end,
+     * so it can be used for comparison within a contig, but not between
+     * contigs.  (It turns out this is good enough for some applications,
+     * and it's cheap to compute.)
+     */
+    public abstract Frame getFrame();
+
     @Override
     public Object clone() {
         // Create a new copy of the location on the same contig strand.

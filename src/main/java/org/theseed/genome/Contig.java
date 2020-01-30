@@ -81,7 +81,7 @@ public class Contig {
      */
     public Contig(JsonObject contigObj, int code) {
         this.id = contigObj.getStringOrDefault(ContigKeys.SEQUENCE_ID);
-        this.sequence = contigObj.getStringOrDefault(ContigKeys.SEQUENCE);
+        this.sequence = contigObj.getStringOrDefault(ContigKeys.SEQUENCE).toLowerCase();
         if (this.sequence.length() > 0) {
             this.length = this.sequence.length();
         } else {

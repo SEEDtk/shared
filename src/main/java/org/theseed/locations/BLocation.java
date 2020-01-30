@@ -47,6 +47,12 @@ public class BLocation extends Location {
     }
 
     @Override
+    public Frame getFrame() {
+        return Frame.minusFrames[2 - this.getRight() % 3];
+    }
+
+
+    @Override
     protected Location createEmpty() {
         BLocation retVal = new BLocation(this.contigId);
         return retVal;
