@@ -537,4 +537,11 @@ public abstract class Location implements Comparable<Location>, Cloneable {
         // Return TRUE if we found the codon wholly inside the region.
         return (i + 3 < right);
     }
+
+    /**
+     * Update the begin point of this location.
+     *
+     * @param begin		proposed new begin point
+     */
+    public abstract void setBegin(int begin);
 }

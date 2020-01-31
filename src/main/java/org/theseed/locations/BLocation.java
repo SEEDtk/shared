@@ -116,5 +116,10 @@ public class BLocation extends Location {
         return Location.containsCodon(STOPS[gc], sequence, left, right);
     }
 
+    @Override
+    public void setBegin(int begin) {
+        this.setRight(begin);
+    }
+
 
 }

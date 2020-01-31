@@ -116,4 +116,12 @@ public class FLocation extends Location {
         return Location.containsCodon(STOPS[gc], sequence, left, right);
     }
 
+    @Override
+    public void setBegin(int begin) {
+        // TODO Auto-generated method stub
+        this.setLeft(begin);
+    }
+
+
+
 }

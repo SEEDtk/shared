@@ -442,6 +442,9 @@ public class TestLibrary extends TestCase {
         assertThat(loc2.getRight(), equalTo(250));
         assertThat(loc2.getBegin(), equalTo(100));
         assertThat(loc2.getEnd(), equalTo(250));
+        loc1.setBegin(50);
+        assertThat(loc1.getLeft(), equalTo(50));
+        assertThat(loc1.getBegin(), equalTo(50));
         loc2 = Location.create("MyContig", "-", 1000, 2000);
         loc1 = Location.create("MyContig", "-", 500, 2500);
         loc2.merge(loc1);
@@ -451,6 +454,9 @@ public class TestLibrary extends TestCase {
         assertThat(loc2.getRight(), equalTo(2500));
         assertThat(loc2.getBegin(), equalTo(2500));
         assertThat(loc2.getEnd(), equalTo(500));
+        loc1.setBegin(2000);
+        assertThat(loc1.getRight(), equalTo(2000));
+        assertThat(loc1.getBegin(), equalTo(2000));
     }
 
     /**
