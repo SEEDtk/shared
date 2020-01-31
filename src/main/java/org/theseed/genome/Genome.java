@@ -17,6 +17,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import org.apache.commons.lang3.StringUtils;
 import org.theseed.locations.Location;
@@ -52,6 +54,7 @@ public class Genome  {
     private File inFile;
     private JsonObject gto;
     private String[] lineage;
+    private TreeSet<CloseGenome> closeGenomes;
 
 
     /** This is an empty list to use as a default intermediate value for cases where the contigs or
@@ -72,6 +75,7 @@ public class Genome  {
         CONTIGS(noEntries),
         NCBI_LINEAGE(noEntries),
         FEATURES(noEntries),
+        CLOSE_GENOMES(noEntries),
         // PATRIC fields
         GENOME_ID("0"),
         GENOME_NAME("unknown organism"),
@@ -153,6 +157,11 @@ public class Genome  {
         // Extract the lineage IDs.
         Collection<JsonArray> lineageArray = this.gto.getCollectionOrDefault(GenomeKeys.NCBI_LINEAGE);
         this.lineage = lineageArray.stream().map(x -> x.getString(1)).toArray(n -> new String[n]);
+        // Pull in the close genomes.
+        this.closeGenomes = new TreeSet<CloseGenome>();
+        Collection<JsonObject> closeList = this.gto.getCollectionOrDefault(GenomeKeys.CLOSE_GENOMES);
+        for (JsonObject close : closeList)
+            this.closeGenomes.add(new CloseGenome(close));
         // Now we need to process the features and contigs.
         Collection<JsonObject> featureList = this.gto.getCollectionOrDefault(GenomeKeys.FEATURES);
         features = new HashMap<String, Feature>();
@@ -288,14 +297,25 @@ public class Genome  {
         if (feat != null) {
             Location loc = feat.getLocation();
             if (loc != null) {
-                Contig contig = this.getContig(loc.getContigId());
-                for (Region region : loc.getRegions()) {
-                    retVal += contig.getDna(region);
-                }
-                if (loc.getDir() == '-') {
-                    retVal = Contig.reverse(retVal);
-                }
+                retVal = getDna(loc);
             }
+        }
+        return retVal;
+    }
+
+    /**
+     * @return the DNA at the specified location.
+     *
+     * @param loc	location containing the DNA
+     */
+    public String getDna(Location loc) {
+        String retVal = "";
+        Contig contig = this.getContig(loc.getContigId());
+        for (Region region : loc.getRegions()) {
+            retVal += contig.getDna(region);
+        }
+        if (loc.getDir() == '-') {
+            retVal = Contig.reverse(retVal);
         }
         return retVal;
     }
@@ -455,6 +475,13 @@ public class Genome  {
             this.contigs.put(contig.getId(), contig);
         }
 
+    }
+
+    /**
+     * @return the close genomes, sorted from closest to furthest within each method
+     */
+    public SortedSet<CloseGenome> getCloseGenomes() {
+        return closeGenomes;
     }
 
 }

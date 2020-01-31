@@ -7,6 +7,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
 
+import org.theseed.genome.Genome;
+import org.theseed.proteins.CodonSet;
+
 /**
  * This class implements a location.  The location is bacterial, so it represents multiple places on a single
  * strand of a single contig.  It has two subclasses-- FLocation for the plus strand and BLocation for the minus
@@ -114,6 +117,19 @@ public abstract class Location implements Comparable<Location>, Cloneable {
         Location retVal = this.createEmpty();
         retVal.putRegion(this.getLeft(), this.getRight());
         return retVal;
+    }
+
+    /**
+     * Merge another location into this one.  The result will be
+     * single-region.
+     *
+     * @param other		other location to merge
+     */
+    public void merge(Location other) {
+        int left = Math.min(this.getLeft(), other.getLeft());
+        int right = Math.max(this.getRight(), other.getRight());
+        this.regions.clear();
+        this.putRegion(left, right);
     }
 
     /**
@@ -487,4 +503,38 @@ public abstract class Location implements Comparable<Location>, Cloneable {
         return retVal;
     }
 
+    /**
+     * Extend this location to a start at the beginning and a stop at the end.
+     *
+     * @param genome	genome containing this location
+     *
+     * @return the new location if the extension worked, else NULL
+     */
+    public abstract Location extend(Genome genome);
+
+    /**
+     * @return TRUE if a location has internal stops
+     *
+     * @param sequence	sequence of this location's contig
+     * @param gc		genetic code of this location's genome
+     * @param left		left edge of the location
+     * @param right		right edge of the location
+     */
+    protected abstract boolean internalStops(String sequence, int gc, int left, int right);
+
+    /**
+     * @return TRUE if the specified region has one of the codons in the codon set
+     *
+     * @param codonSet	set of codons for which to scan
+     * @param sequence	DNA sequence of interest
+     * @param left		left edge of region
+     * @param right		right edge of region
+     */
+    public static boolean containsCodon(CodonSet codonSet, String sequence, int left, int right) {
+        // Scan for the codon.
+        int i = left;
+        while (i < right && ! codonSet.contains(sequence, i)) i += 3;
+        // Return TRUE if we found the codon wholly inside the region.
+        return (i + 3 < right);
+    }
 }

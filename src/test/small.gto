@@ -58,7 +58,16 @@
          "subspecies"
       ]
    ],
-   "close_genomes" : [],
+   "close_genomes" : [
+        { "genome" : "160.24", "genome_name" : "Treponema pallidum strain UW-148B", "analysis_method" : "minHash", "closeness_measure" : 999 },
+        { "genome" : "161.12", "genome_name" : "Treponema pallidum subsp. pallidum strain 15df", "analysis_method" : "minHash", "closeness_measure" : 998 },
+        { "genome" : "161.26", "genome_name" : "Treponema pallidum subsp. pallidum strain PT_SIF1156", "analysis_method" : "minHash", "closeness_measure" : 997 },
+        { "genome" : "161.27", "genome_name" : "Treponema pallidum subsp. pallidum strain PT_SIF1167", "analysis_method" : "minHash", "closeness_measure" : 997 },
+        { "genome" : "161.5", "genome_name" : "Treponema pallidum subsp. pallidum strain Amoy", "analysis_method" : "minHash", "closeness_measure" : 996 },
+        { "genome" : "161.67", "genome_name" : "Treponema pallidum subsp. pallidum strain Haiti B", "analysis_method" : "minHash", "closeness_measure" : 995 },
+        { "genome" : "160.24", "genome_name" : "Treponema pallidum strain UW-148B", "analysis_method" : "repKmer", "closeness_measure" : 2130 },
+        { "genome" : "161.5", "genome_name" : "Treponema pallidum subsp. pallidum strain Amoy", "analysis_method" : "repKmer", "closeness_measure" : 998 }
+   ],
    "contigs" : [
       {
          "length" : 1139123,
@@ -95,8 +104,8 @@
             "A8P40_04965"
          ],
          "function" : "hypothetical protein"
-      }       
-   ]
+      }
+   ],
    "scientific_name" : "Treponema pallidum subsp. pallidum strain PT_SIF1242",
    "source_id" : "161.31",
    "ncbi_taxonomy_id" : 161,

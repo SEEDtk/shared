@@ -23,6 +23,7 @@ import org.theseed.counters.CountMap;
 import org.theseed.counters.KeyPair;
 import org.theseed.counters.PairCounter;
 import org.theseed.counters.QualityCountMap;
+import org.theseed.genome.CloseGenome;
 import org.theseed.genome.Contig;
 import org.theseed.genome.Feature;
 import org.theseed.genome.FeatureList;
@@ -39,6 +40,7 @@ import org.theseed.locations.LocationList;
 import org.theseed.locations.LocationList.Edge;
 import org.theseed.locations.Region;
 import org.theseed.magic.MagicMap;
+import org.theseed.proteins.CodonSet;
 import org.theseed.proteins.DnaTranslator;
 import org.theseed.proteins.Role;
 import org.theseed.proteins.RoleMap;
@@ -289,6 +291,7 @@ public class TestLibrary extends TestCase {
         assertEquals("Incorrect strand for segmented location.", '+', myLoc.getDir());
         assertTrue("Segmentation flag failure.", myLoc.isSegmented());
         assertFalse("Non-peg typed as CDS", myFeature.isCDS());
+        assertEquals("Incorrect DNA retrieval by location.", myDna2, this.myGto.getDna(myLoc));
         // Now iterate over the proteins.
         for (Feature feat : this.myGto.getPegs()) {
             assertEquals("Feature" + feat.getId() + " is not a PEG.", "CDS", feat.getType());
@@ -424,6 +427,30 @@ public class TestLibrary extends TestCase {
             assertThat(Location.create("Mycontig", "-", i-1, i+4).getFrame(), equalTo(Frame.M1));
             assertThat(Location.create("Mycontig", "-", i-2, i+3).getFrame(), equalTo(Frame.M2));
         }
+    }
+
+    /**
+     * Test location merging.
+     */
+    public void testLocationMerge() {
+        Location loc1 = Location.create("MyContig", "+", 100, 110, 200, 210);
+        Location loc2 = Location.create("MyContig", "+", 120, 130, 150, 250);
+        loc2.merge(loc1);
+        assertThat(loc2.getContigId(), equalTo("MyContig"));
+        assertThat(loc2.getDir(), equalTo('+'));
+        assertThat(loc2.getLeft(), equalTo(100));
+        assertThat(loc2.getRight(), equalTo(250));
+        assertThat(loc2.getBegin(), equalTo(100));
+        assertThat(loc2.getEnd(), equalTo(250));
+        loc2 = Location.create("MyContig", "-", 1000, 2000);
+        loc1 = Location.create("MyContig", "-", 500, 2500);
+        loc2.merge(loc1);
+        assertThat(loc2.getContigId(), equalTo("MyContig"));
+        assertThat(loc2.getDir(), equalTo('-'));
+        assertThat(loc2.getLeft(), equalTo(500));
+        assertThat(loc2.getRight(), equalTo(2500));
+        assertThat(loc2.getBegin(), equalTo(2500));
+        assertThat(loc2.getEnd(), equalTo(500));
     }
 
     /**
@@ -826,7 +853,7 @@ public class TestLibrary extends TestCase {
 
 
     /**
-     * Test roles IDs.
+     * Test role IDs.
      * @throws IOException
      */
     public void testRoleMagic() throws IOException {
@@ -1747,6 +1774,19 @@ public class TestLibrary extends TestCase {
         assertThat(feat.getPlfam(), equalTo("PLF_157_00003322"));
         String[] lineage = smallGenome.getLineage();
         assertThat(lineage, arrayContaining("131567", "2", "203691", "203692", "136", "137", "157", "160", "161"));
+        SortedSet<CloseGenome> closeGenomes = smallGenome.getCloseGenomes();
+        CloseGenome curr = closeGenomes.first();
+        assertThat(curr.getGenomeId(), equalTo("160.24"));
+        assertThat(curr.getCloseness(), equalTo(999.0));
+        assertThat(curr.getMethod(), equalTo("minHash"));
+        assertThat(curr.getGenomeName(), equalTo("Treponema pallidum strain UW-148B"));
+        assertThat(closeGenomes.size(), equalTo(8));
+        Iterator<CloseGenome> iter = closeGenomes.iterator();
+        curr = iter.next();
+        while (iter.hasNext()) {
+            CloseGenome next = iter.next();
+            assertTrue(curr.compareTo(next) < 0);
+        }
         // Now we will add a feature.  This is not something we intend to do in practice, but it is a good
         // way to test the ability to modify the internal JSON object.
         JsonObject gto = smallGenome.getJson();
@@ -1773,4 +1813,90 @@ public class TestLibrary extends TestCase {
         assertThat(loc.getLength(), equalTo(1000));
     }
 
+    /**
+     * test codon sets
+     */
+    public void testCodonSet() {
+        String myDna = "aaattgcaaggacaactgatggagcgctaatagtgactg";
+        CodonSet newSet = new CodonSet("ttg", "ctg", "atg");
+        assertFalse(newSet.contains(myDna, 1));
+        assertTrue(newSet.contains(myDna, 4));
+        assertFalse(newSet.contains(myDna, 7));
+        assertFalse(newSet.contains(myDna, 10));
+        assertFalse(newSet.contains(myDna, 13));
+        assertTrue(newSet.contains(myDna, 16));
+        assertTrue(newSet.contains(myDna, 19));
+        assertFalse(newSet.contains(myDna, 22));
+        assertFalse(newSet.contains(myDna, 25));
+        assertFalse(newSet.contains(myDna, 28));
+        assertFalse(newSet.contains(myDna, 31));
+        assertFalse(newSet.contains(myDna, 34));
+        assertTrue(newSet.contains(myDna, 37));
+    }
+
+    /**
+     * test location extension
+     * @throws IOException
+     */
+    public void testExtend() throws IOException {
+        // We need a fake genome to test the edge cases.
+        Genome fakeGenome = new Genome("12345.6", "Mycobacteria praestrigiae Narnia", "Bacteria", 4);
+        String seq = "aaaaaaaaatagaaaatgaaaaaataaaaaaaaaaataaaaaaaactgaaaaaaaaaaaa";
+        fakeGenome.addContig(new Contig("c2", seq, 4));
+        seq = "aaattaaaaaaaaaactaaaaaaaaaacataaattgaaaaaaaaataaaaaaaaaaatagaaaaaa";
+        fakeGenome.addContig(new Contig("c3", seq, 4));
+        seq = "aaaaaaaaaaaacagaaaaaattattgaaatgaaaaaaaaaatagttaaaaaaaaaaaaaaaa";
+        fakeGenome.addContig(new Contig("c1", seq, 4));
+        // Test codon scan.
+        assertFalse(Location.containsCodon(new CodonSet("caa", "cag", "cat"), seq, 16, 54));
+        assertTrue(Location.containsCodon(new CodonSet("cag", "acg"), seq, 1, 22));
+        assertFalse(Location.containsCodon(new CodonSet("cag", "acg"), seq, 1, 15));
+        assertFalse(Location.containsCodon(new CodonSet("cag", "acg"), seq, 2, 44));
+        // Test edge before stop on - strand.
+        Location loc = Location.create("c1", "-", 4, 15);
+        assertNull(loc.extend(fakeGenome));
+        // Insure that a GC 11 stop is not found in GC 4.
+        loc = Location.create("c1", "+", 37, 39);
+        Location loc2 = loc.extend(fakeGenome);
+        assertThat(loc2.getLeft(), equalTo(25));
+        assertThat(loc2.getRight(), equalTo(45));
+        // Test edge before start on - strand.
+        loc = Location.create("c1",  "-", 52, 54);
+        assertNull(loc.extend(fakeGenome));
+        // Test edge before stop on + strand.
+        loc = Location.create("c2", "+", 52, 54);
+        assertNull(loc.extend(fakeGenome));
+        // Test edge before start on + strand.
+        loc = Location.create("c2", "+", 10, 12);
+        // Test internal stops.
+        loc = Location.create("c3",  "+",  34, 63);
+        assertNull(loc.extend(fakeGenome));
+        loc = Location.create("c3", "-", 7, 27);
+        assertNull(loc.extend(fakeGenome));
+        // Stress test a real genome.
+        Genome gto = new Genome(new File("src/test", "testLocs.gto"));
+        // Test the plus strand.
+        loc = Location.create("1313.7001.con.0049", "+", 63492, 64652); /* peg 1978 */
+        loc2 = loc.extend(gto);
+        assertThat(loc2.getBegin(), equalTo(63480));
+        assertThat(loc2.getLength(), equalTo(1461));
+        // Confirm that plus extensions are stable.
+        Location loc3 = loc2.extend(gto);
+        assertThat(loc3.getBegin(), equalTo(63480));
+        assertThat(loc3.getLength(), equalTo(1461));
+        // Test the minus strand.
+        loc = Location.create("1313.7001.con.0034", "-", 32559, 33290); /* peg 1409 */
+        loc2 = loc.extend(gto);
+        assertThat(loc2.getBegin(), equalTo(33302));
+        assertThat(loc2.getLength(), equalTo(846));
+        // Confirm that minus extensions are stable.
+        loc3 = loc2.extend(gto);
+        assertThat(loc3.getBegin(), equalTo(33302));
+        assertThat(loc3.getLength(), equalTo(846));
+        loc = Location.create("1313.7001.con.0034", "-", 44250, 45737); /* peg 1423 */
+        loc2 = loc.extend(gto);
+        assertThat(loc2.getBegin(), equalTo(45749));
+        assertThat(loc2.getLength(), equalTo(1701));
+
+    }
 }

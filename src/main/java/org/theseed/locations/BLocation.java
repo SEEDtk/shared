@@ -3,12 +3,36 @@
  */
 package org.theseed.locations;
 
+import org.theseed.genome.Contig;
+import org.theseed.genome.Genome;
+import org.theseed.proteins.CodonSet;
+
 /** This represents a location on the minus strand.
  *
  * @author Bruce Parrello
  *
  */
 public class BLocation extends Location {
+
+    /** array of start codon sets by genetic code */
+    private static final CodonSet[] STARTS = new CodonSet[] { null,
+            /*  1 */ new CodonSet("caa", "cag", "cat"),
+            /*  2 */ new CodonSet("aat", "gat", "tat", "cat", "cac"),
+            /*  3 */ new CodonSet("tat", "cat", "cac"),
+            /*  4 */ new CodonSet("caa", "cag", "cat"),
+            null, null, null, null, null, null,
+            /* 11 */ new CodonSet("caa", "cag", "cat")
+            };
+
+    /** array of stop codon sets by genetic code */
+    private static final CodonSet[] STOPS = new CodonSet[] { null,
+            /*  1 */ new CodonSet("tta", "cta", "tca"),
+            /*  2 */ new CodonSet("tta", "cta", "tct", "cct"),
+            /*  3 */ new CodonSet("tta", "cta"),
+            /*  4 */ new CodonSet("tta", "cta"),
+            null, null, null, null, null, null,
+            /* 11 */ new CodonSet("tta", "cta", "tca")
+            };
 
     /** Create a new backward location.
      *
@@ -57,5 +81,40 @@ public class BLocation extends Location {
         BLocation retVal = new BLocation(this.contigId);
         return retVal;
     }
+
+    @Override
+    public Location extend(Genome genome) {
+        // Get the contig sequence for this location.
+        Contig contig = genome.getContig(this.contigId);
+        String sequence = contig.getSequence();
+        int contigEnd = contig.length();
+        int gc = genome.getGeneticCode();
+        // We will set this to the new location if we succeed.
+        Location retVal = null;
+        // First we find a stop, moving backward from the left edge.  If there already is one, we are good.
+        CodonSet stops = STOPS[gc];
+        int newLeft = this.getLeft();
+        while (newLeft > 0 && ! stops.contains(sequence, newLeft)) newLeft -= 3;
+        // Only proceed if we found a stop.
+        if (newLeft > 0) {
+            // Search for a start, moving forward from the right edge.  Again, if there already is one, we
+            // are good.
+            CodonSet starts = STARTS[gc];
+            int newRight = this.getRight();
+            while (newRight <= contigEnd && ! starts.contains(sequence, newRight - 2)) newRight += 3;
+            // Only proceed if we found a start. Also check for internal stops.
+            if (newRight <= contigEnd && ! this.internalStops(sequence, gc, newLeft + 3, newRight)) {
+                // We found what we want! Return the new location.
+                retVal = Location.create(this.contigId, "-", newLeft, newRight);
+            }
+        }
+        return retVal;
+    }
+
+    @Override
+    protected boolean internalStops(String sequence, int gc, int left, int right) {
+        return Location.containsCodon(STOPS[gc], sequence, left, right);
+    }
+
 
 }

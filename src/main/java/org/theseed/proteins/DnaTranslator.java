@@ -149,4 +149,15 @@ public class DnaTranslator {
         return aa(codon);
     }
 
+    /**
+     * Translate an entire DNA string.
+     *
+     * @param dna	DNA string to translate
+     *
+     * @return the protein translation of the whole DNA string
+     */
+    public Object translate(String dna) {
+        return this.translate(dna, 1, dna.length());
+    }
+
 }
