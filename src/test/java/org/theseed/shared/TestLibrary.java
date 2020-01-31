@@ -36,8 +36,8 @@ import org.theseed.io.TabbedLineReader.Line;
 import org.theseed.locations.FLocation;
 import org.theseed.locations.Frame;
 import org.theseed.locations.Location;
-import org.theseed.locations.LocationList;
-import org.theseed.locations.LocationList.Edge;
+import org.theseed.locations.DiscreteLocationList;
+import org.theseed.locations.DiscreteLocationList.Edge;
 import org.theseed.locations.Region;
 import org.theseed.magic.MagicMap;
 import org.theseed.proteins.CodonSet;
@@ -463,7 +463,7 @@ public class TestLibrary extends TestCase {
      * Main location list test
      */
     public void testLocationList() {
-        LocationList newList = new LocationList("myContig");
+        DiscreteLocationList newList = new DiscreteLocationList("myContig");
         Location[] locs = { Location.create("myContig", "+", 10, 99, 102, 199),
                             Location.create("myContig", "-", 100, 400),
                             Location.create("myContig", "-", 500, 999),
@@ -572,8 +572,8 @@ public class TestLibrary extends TestCase {
      * Basic test for location-list maps.
      */
     public void testContigMapping() {
-        Map<String, LocationList> gList = LocationList.createGenomeCodingMap(this.myGto);
-        LocationList contig0036 = gList.get("1313.7001.con.0036");
+        Map<String, DiscreteLocationList> gList = DiscreteLocationList.createGenomeCodingMap(this.myGto);
+        DiscreteLocationList contig0036 = gList.get("1313.7001.con.0036");
         assertNotNull("Contig 0036 not found.", contig0036);
         assertEquals("Incorrect strand found for test position 33996.", '+', contig0036.computeStrand(33996));
         assertEquals("Incorrect strand found for test position 30980.", '-', contig0036.computeStrand(30980));

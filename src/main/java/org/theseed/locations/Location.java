@@ -160,7 +160,7 @@ public abstract class Location implements Comparable<Location>, Cloneable {
                         retVal = this.regions.size() - arg0.regions.size();
                         if (retVal == 0) {
                             // Now we compare the individual regions by begin location.  Note that
-                            // even having more than one region is extremely rare in practice.
+                            // having more than one region is extremely rare in practice.
                             for (int i = 0; retVal == 0 && i < this.regions.size(); i++) {
                                 retVal = this.regions.get(i).compareTo(arg0.regions.get(i));
                             }
@@ -463,7 +463,9 @@ public abstract class Location implements Comparable<Location>, Cloneable {
      * @return the distance between this location and another location, or -1 if the locations
      * 		   overlap
      *
-     * This is a gap distance-- the whole number of base pairs between the two features.
+     * This is a gap distance-- the whole number of base pairs between the two features.  It is
+     * also an absolute value.  If the other location is to the left the distance is still
+     * positive.  The only negative distance occurs when we overlap.
      *
      * @param other		other location to measure against this one
      */

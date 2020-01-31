@@ -29,7 +29,7 @@ import org.theseed.genome.Genome;
  *
  * @author Bruce Parrello
  */
-public class LocationList implements Iterable<Location> {
+public class DiscreteLocationList implements Iterable<Location> {
 
 
     // FIELDS
@@ -64,7 +64,7 @@ public class LocationList implements Iterable<Location> {
      *
      * @param contigId	ID of the contig to which this location list is specific
      */
-    public LocationList(String contigId) {
+    public DiscreteLocationList(String contigId) {
         this.contigId = contigId;
         this.locations = new TreeSet<Location>(new Location.Sorter());
         this.searchLoc = Location.create(contigId, "+", 1, 1);
@@ -240,12 +240,12 @@ public class LocationList implements Iterable<Location> {
      *
      * @return a collection of location lists, one per contig, with the coding regions defined
      */
-    public static Map<String, LocationList> createGenomeCodingMap(Genome genome) {
+    public static Map<String, DiscreteLocationList> createGenomeCodingMap(Genome genome) {
         Collection<Contig> contigs = genome.getContigs();
-        Map<String, LocationList> retVal = new HashMap<String, LocationList>();
+        Map<String, DiscreteLocationList> retVal = new HashMap<String, DiscreteLocationList>();
         // Initialize the contig lists.
         for (Contig contig : contigs) {
-            LocationList newList = new LocationList(contig.getId());
+            DiscreteLocationList newList = new DiscreteLocationList(contig.getId());
             retVal.put(contig.getId(), newList);
         }
         // Now run through the CDS features, adding them to the location lists.
@@ -254,7 +254,7 @@ public class LocationList implements Iterable<Location> {
             Location loc = feat.getLocation();
             if (feat != null) {
                 String contigId = loc.getContigId();
-                LocationList contigList = retVal.get(contigId);
+                DiscreteLocationList contigList = retVal.get(contigId);
                 if (contigList != null) {
                     contigList.addLocation(loc);
                 }
