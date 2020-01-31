@@ -39,6 +39,7 @@ import org.theseed.locations.Location;
 import org.theseed.locations.DiscreteLocationList;
 import org.theseed.locations.DiscreteLocationList.Edge;
 import org.theseed.locations.Region;
+import org.theseed.locations.SortedLocationList;
 import org.theseed.magic.MagicMap;
 import org.theseed.proteins.CodonSet;
 import org.theseed.proteins.DnaTranslator;
@@ -460,9 +461,9 @@ public class TestLibrary extends TestCase {
     }
 
     /**
-     * Main location list test
+     * Main discrete location list test
      */
-    public void testLocationList() {
+    public void testDiscreteLocationList() {
         DiscreteLocationList newList = new DiscreteLocationList("myContig");
         Location[] locs = { Location.create("myContig", "+", 10, 99, 102, 199),
                             Location.create("myContig", "-", 100, 400),
@@ -1903,6 +1904,63 @@ public class TestLibrary extends TestCase {
         loc2 = loc.extend(gto);
         assertThat(loc2.getBegin(), equalTo(45749));
         assertThat(loc2.getLength(), equalTo(1701));
+    }
 
+    /**
+     * test the sorted location list
+     */
+    public void testSortedLocations() {
+        // Create some test locations.
+        Location loc1 = Location.create("c1", "+", 100, 200);
+        Location loc2 = Location.create("c1", "-", 150, 250);
+        Location loc3 = Location.create("c1", "+", 1000, 2000);
+        Location loc4 = Location.create("c1", "+", 1100, 1500);
+        Location loc5 = Location.create("c1", "-", 1100, 1500);
+        Location loc6 = Location.create("c2", "+", 600, 700);
+        Location loc7 = Location.create("c2", "-", 600, 800);
+        // Start building the list.
+        SortedLocationList locList = new SortedLocationList(loc7, loc2, loc3, loc4, loc1);
+        assertThat(locList.get(0), sameInstance(loc1));
+        assertThat(locList.get(1), sameInstance(loc2));
+        assertThat(locList.get(2), sameInstance(loc3));
+        assertThat(locList.get(3), sameInstance(loc4));
+        assertThat(locList.get(4), sameInstance(loc7));
+        assertNull(locList.get(5));
+        locList.addAll(loc5, loc6, loc3);
+        assertThat(locList.get(0), sameInstance(loc1));
+        assertThat(locList.get(1), sameInstance(loc2));
+        assertThat(locList.get(2), sameInstance(loc3));
+        assertThat(locList.get(3), sameInstance(loc3));
+        assertThat(locList.get(4), sameInstance(loc4));
+        assertThat(locList.get(5), sameInstance(loc5));
+        assertThat(locList.get(6), sameInstance(loc6));
+        assertThat(locList.get(7), sameInstance(loc7));
+        Iterator<Location> iter = locList.iterator();
+        Location old = iter.next();
+        while (iter.hasNext()) {
+            Location loc = iter.next();
+            assertTrue(old.compareTo(loc) <= 0);
+            old = loc;
+        }
+        // Test contains.  This is a dup of loc1.
+        old = Location.create("c1", "+", 100, 200);
+        assertTrue(locList.contains(old));
+        assertThat(locList.size(), equalTo(8));
+        Location[] locs = locList.toArray();
+        assertThat(locs[0], sameInstance(loc1));
+        assertThat(locs[1], sameInstance(loc2));
+        assertThat(locs[2], sameInstance(loc3));
+        assertThat(locs[3], sameInstance(loc3));
+        assertThat(locs[4], sameInstance(loc4));
+        assertThat(locs[5], sameInstance(loc5));
+        assertThat(locs[6], sameInstance(loc6));
+        assertThat(locs[7], sameInstance(loc7));
+        locList.clear();
+        assertThat(locList.size(), equalTo(0));
+        iter = locList.iterator();
+        assertFalse(iter.hasNext());
+        locList.add(loc4);
+        assertThat(locList.size(), equalTo(1));
+        assertThat(locList.get(0), equalTo(loc4));
     }
 }
