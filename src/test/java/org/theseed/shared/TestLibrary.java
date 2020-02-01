@@ -1973,7 +1973,12 @@ public class TestLibrary extends TestCase {
             assertTrue(old.compareTo(loc) <= 0);
             old = loc;
         }
-        // Test contains.  This is a dup of loc1.
+        // Test sublists.
+        List<Location> subList = locList.contigRange(3);
+        assertThat(subList, contains(loc3, loc4, loc5));
+        subList = locList.contigRange(6);
+        assertThat(subList, contains(loc6, loc7));
+        // Test contains.  This location is a dup of loc1.
         old = Location.create("c1", "+", 100, 200);
         assertTrue(locList.contains(old));
         assertThat(locList.size(), equalTo(8));

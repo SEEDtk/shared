@@ -6,6 +6,7 @@ package org.theseed.locations;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
+import java.util.List;
 
 /**
  * This is a sorted list of locations based on an array list.
@@ -109,6 +110,21 @@ public class SortedLocationList implements Iterable<Location> {
     public Location[] toArray() {
         Location[] retVal = new Location[this.list.size()];
         return this.list.toArray(retVal);
+    }
+
+    /**
+     * @return 	a collection of the locations in the list at index i or greater than have
+     * 			the same contig ID
+     *
+     * @param i	start point for the collection returned
+     */
+    public List<Location> contigRange(int i) {
+        // Find the end of the contig range.
+        String contig = this.get(i).getContigId();
+        int j = i + 1;
+        while (j < this.size() && contig.contentEquals(this.get(j).getContigId())) j++;
+        // Return everything from i through j exclusive.
+        return this.list.subList(i, j);
     }
 
 }
