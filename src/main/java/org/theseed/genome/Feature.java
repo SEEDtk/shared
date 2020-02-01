@@ -384,25 +384,6 @@ public class Feature implements Comparable<Feature> {
     }
 
     /**
-     * Store the protein translation for this feature.
-     *
-     * @param aa_sequence	protein translation to store
-     */
-    public void storeProtein(String aa_sequence) {
-        this.protein_translation = aa_sequence;
-    }
-
-    /**
-     * Store the local protein family for this feature.
-     *
-     * @param plfam		protein family ID to store
-     */
-    public void storeLocalFamily(String plfam) {
-        if (plfam != null && ! plfam.isEmpty())
-            this.plfam = plfam;
-    }
-
-    /**
      * @return a json object for this feature
      */
     public JsonObject toJson() {
@@ -469,7 +450,10 @@ public class Feature implements Comparable<Feature> {
      * @param plfam 	the plfam to set
      */
     public void setPlfam(String plfam) {
-        this.plfam = plfam;
+        if (plfam != null && ! plfam.isEmpty())
+            this.plfam = plfam;
+        else
+            this.plfam = null;
     }
 
     /**
@@ -478,7 +462,19 @@ public class Feature implements Comparable<Feature> {
      * @param pgfam 	the pgfam to set
      */
     public void setPgfam(String pgfam) {
-        this.pgfam = pgfam;
+        if (pgfam != null && ! pgfam.isEmpty())
+            this.pgfam = pgfam;
+        else
+            this.pgfam = null;
+    }
+
+    /**
+     * Store this feature's protein translation.
+     *
+     * @param protein	the protein string to store
+     */
+    public void setProteinTranslation(String protein) {
+        this.protein_translation = protein;
     }
 
 

@@ -1058,6 +1058,29 @@ public class TestLibrary extends TestCase {
     }
 
     /**
+     * test custom features
+     */
+    public void testFeature() {
+        Feature feat = new Feature("fig|161.31.peg.1", "hypothetical function", "c1", "+", 100, 200);
+        Location loc = feat.getLocation();
+        assertThat(loc.getContigId(), equalTo("c1"));
+        assertThat(loc.getDir(), equalTo('+'));
+        assertThat(loc.getLeft(), equalTo(100));
+        assertThat(loc.getRight(), equalTo(200));
+        feat.setProteinTranslation("MABCDEFG");
+        assertThat(feat.getProteinTranslation(), equalTo("MABCDEFG"));
+        assertThat(feat.getProteinLength(), equalTo(8));
+        feat.setPgfam("");
+        assertNull(feat.getPgfam());
+        feat.setPlfam("");
+        assertNull(feat.getPlfam());
+        feat.setPgfam("PG1");
+        feat.setPlfam("PG2");
+        assertThat(feat.getPlfam(), equalTo("PG2"));
+        assertThat(feat.getPgfam(), equalTo("PG1"));
+    }
+
+    /**
      * test roles-of-function
      */
 
