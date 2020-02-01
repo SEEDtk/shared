@@ -24,7 +24,7 @@ public class Contig {
 
     /** This enum defines the keys used and their default values.
      */
-    private enum ContigKeys implements JsonKey {
+    public static enum ContigKeys implements JsonKey {
         // GTO FIELDS
         ID("con.001"),
         DNA(""),
@@ -187,6 +187,18 @@ public class Contig {
             retVal.append(rev);
         }
         return retVal.toString();
+    }
+
+    /**
+     * @return a json object for this contig
+     */
+    public JsonObject toJson() {
+        JsonObject retVal = new JsonObject();
+        retVal.put(ContigKeys.ID.getKey(), this.id);
+        retVal.put(ContigKeys.GENETIC_CODE.getKey(), this.geneticCode);
+        retVal.put(ContigKeys.DNA.getKey(), this.sequence);
+        retVal.put(ContigKeys.LENGTH.getKey(), this.length);
+        return retVal;
     }
 
 }

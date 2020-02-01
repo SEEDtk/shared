@@ -103,7 +103,22 @@
          "aliases" : [
             "A8P40_04965"
          ],
-         "function" : "hypothetical protein"
+         "function" : "hypothetical protein",
+         "annotations" : [
+            [
+               "Add feature from PATRIC",
+               "PATRIC",
+               1500218027.5,
+               ""
+            ],
+            [
+               "Set function to hypothetical protein",
+               "RAST",
+               1500218027.75,
+               ""
+            ]
+         ]
+
       }
    ],
    "scientific_name" : "Treponema pallidum subsp. pallidum strain PT_SIF1242",

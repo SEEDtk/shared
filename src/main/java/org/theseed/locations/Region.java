@@ -124,4 +124,20 @@ public class Region implements Comparable<Region> {
         return true;
     }
 
+    /**
+     * @return the begin point for this region with respect to the given strand
+     *
+     * @param dir	strand (+ or -)
+     */
+    public int getBegin(String dir) {
+        return (dir.contentEquals("+") ? this.left : this.right);
+    }
+
+    /**
+     * @return the length of this region
+     */
+    public int getLength() {
+        return (this.right - this.left + 1);
+    }
+
 }

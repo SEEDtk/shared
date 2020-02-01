@@ -13,12 +13,16 @@ import java.io.PrintWriter;
 import java.io.Reader;
 import java.io.StringReader;
 import java.io.Writer;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.SortedSet;
 import java.util.TreeSet;
+import java.util.UUID;
 
 import org.apache.commons.lang3.StringUtils;
 import org.theseed.locations.Location;
@@ -53,7 +57,7 @@ public class Genome  {
     private Map<String, Contig> contigs;
     private File inFile;
     private JsonObject gto;
-    private String[] lineage;
+    private TaxItem[] lineage;
     private TreeSet<CloseGenome> closeGenomes;
 
 
@@ -65,7 +69,7 @@ public class Genome  {
 
     /** This enum defines the keys used and their default values.
      */
-    public enum GenomeKeys implements JsonKey {
+    public static enum GenomeKeys implements JsonKey {
         // GTO fields
         ID("0"),
         SCIENTIFIC_NAME("unknown organism"),
@@ -81,7 +85,7 @@ public class Genome  {
         GENOME_NAME("unknown organism"),
         TAXON_LINEAGE_IDS(noEntries),
         TAXON_ID(2),
-        KINGDOM("Bacteria")
+        KINGDOM("Bacteria"),
         ;
 
         private final Object m_value;
@@ -156,7 +160,7 @@ public class Genome  {
         domain = this.gto.getStringOrDefault(GenomeKeys.DOMAIN);
         // Extract the lineage IDs.
         Collection<JsonArray> lineageArray = this.gto.getCollectionOrDefault(GenomeKeys.NCBI_LINEAGE);
-        this.lineage = lineageArray.stream().map(x -> x.getString(1)).toArray(n -> new String[n]);
+        this.lineage = lineageArray.stream().map(x -> new TaxItem(x)).toArray(n -> new TaxItem[n]);
         // Pull in the close genomes.
         this.closeGenomes = new TreeSet<CloseGenome>();
         Collection<JsonObject> closeList = this.gto.getCollectionOrDefault(GenomeKeys.CLOSE_GENOMES);
@@ -379,17 +383,78 @@ public class Genome  {
     }
 
     /**
-     * @return the original json object containing the full gto
+     * @return a json object containing the full gto
      */
-    public JsonObject getJson() {
-        return this.gto;
+    public JsonObject toJson() {
+        // In case there is old data that we don't support, we start with the original
+        // json object we read it.  If there is none, we create it.
+        JsonObject retVal = this.gto;
+        if (retVal == null) {
+            retVal = new JsonObject();
+            this.gto = retVal;
+        }
+        // Start with the scalars.
+        retVal.put(GenomeKeys.ID.getKey(), this.id);
+        retVal.put(GenomeKeys.SCIENTIFIC_NAME.getKey(), this.name);
+        retVal.put(GenomeKeys.DOMAIN.getKey(), this.domain);
+        retVal.put(GenomeKeys.GENETIC_CODE.getKey(), this.geneticCode);
+        retVal.put(GenomeKeys.NCBI_TAXONOMY_ID.getKey(), this.taxonomyId);
+        // Add the lineage.
+        JsonArray jtaxonomy = new JsonArray();
+        for (TaxItem taxon : this.lineage) jtaxonomy.add(taxon.toJson());
+        retVal.put(GenomeKeys.NCBI_LINEAGE.getKey(), jtaxonomy);
+        // Add the contigs.
+        JsonArray jcontigs = new JsonArray();
+        for (Contig contig : this.getContigs()) jcontigs.add(contig.toJson());
+        retVal.put(GenomeKeys.CONTIGS.getKey(), jcontigs);
+        // Add the features.
+        JsonArray jfeatures = new JsonArray();
+        for (Feature feat : this.getFeatures()) jfeatures.add(feat.toJson());
+        retVal.put(GenomeKeys.FEATURES.getKey(), jfeatures);
+        // Add the close genomes.
+        JsonArray jclose = new JsonArray();
+        for (CloseGenome close : this.closeGenomes) jclose.add(close.toJson());
+        retVal.put(GenomeKeys.CLOSE_GENOMES.getKey(), jclose);
+        // Return the rebuilt GTO.
+        return retVal;
     }
 
+    /**
+     * Record an analysis event in the GTO.
+     *
+     * @param tool			name of the tool used
+     * @param parameters	array of command-line parameters
+     */
+    public void recordEvent(String tool, String... parameters) {
+        // Record this as an analysis event.
+        JsonObject gto = this.toJson();
+        // Get the events array.
+        JsonArray events = (JsonArray) gto.get("analysis_events");
+        if (events == null) {
+            events = new JsonArray();
+            gto.put("analysis_events", events);
+        }
+        // Build the parameters.
+        JsonArray parms = new JsonArray();
+        for (String parm : parameters) parms.add(parm);
+        // Build the event.
+        JsonObject thisEvent = new JsonObject().putChain("id", UUID.randomUUID().toString())
+                .putChain("tool_name", tool)
+                .putChain("parameters", parms)
+                .putChain("execute_time", System.currentTimeMillis() / 1000.0);
+        try {
+            thisEvent.put("hostname", InetAddress.getLocalHost().getCanonicalHostName());
+        } catch (UnknownHostException e) { }
+        events.add(thisEvent);
+
+    }
     /**
      * @return the taxonomic lineage ids for this genome
      */
     public String[] getLineage() {
-        return this.lineage;
+        String[] retVal = new String[this.lineage.length];
+        for (int i = 0; i < this.lineage.length; i++) retVal[i] = this.lineage[i].getId();
+        return retVal;
     }
 
     /**
@@ -428,7 +493,7 @@ public class Genome  {
      * @throws IOException
      */
     private void updateToStream(Writer gtoStream) throws IOException {
-        String jsonString = Jsoner.serialize(this.gto);
+        String jsonString = Jsoner.serialize(this.toJson());
         try {
             Jsoner.prettyPrint(new StringReader(jsonString), gtoStream, "    ", "\n");
         } catch (JsonException e) {
@@ -441,15 +506,14 @@ public class Genome  {
      *
      * @param genomeData	genome-level data retrieved from PATRIC
      */
-    protected void p3Store(JsonObject genomeData) {
+    protected void p3Store(JsonObject genomeData, List<TaxItem> taxRecords) {
         this.id = genomeData.getStringOrDefault(GenomeKeys.GENOME_ID);
         this.name = genomeData.getStringOrDefault(GenomeKeys.GENOME_NAME);
         this.taxonomyId = genomeData.getIntegerOrDefault(GenomeKeys.TAXON_ID);
         // Store the lineage.
-        JsonArray taxonomy = genomeData.getCollectionOrDefault(GenomeKeys.TAXON_LINEAGE_IDS);
-        this.lineage = new String[taxonomy.size()];
+        this.lineage = new TaxItem[taxRecords.size()];
         for (int i = 0; i < this.lineage.length; i++) {
-            this.lineage[i] = taxonomy.getString(i);
+             this.lineage[i] = taxRecords.get(i);
         }
         // Compute the domain.
         this.domain = genomeData.getStringOrDefault(GenomeKeys.KINGDOM);
@@ -483,5 +547,6 @@ public class Genome  {
     public SortedSet<CloseGenome> getCloseGenomes() {
         return closeGenomes;
     }
+
 
 }

@@ -9,6 +9,7 @@ import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.RegExUtils;
 import org.theseed.locations.Location;
+import org.theseed.locations.Region;
 import org.theseed.proteins.Role;
 import org.theseed.proteins.RoleMap;
 
@@ -33,6 +34,7 @@ public class Feature implements Comparable<Feature> {
     private Location location;
     private String plfam;
     private String pgfam;
+    private List<Annotation> annotations;
 
     /** parsing pattern for feature type */
     private static final Pattern TYPE_PATTERN = Pattern.compile("fig\\|\\d+\\.\\d+\\.(\\w+)\\.\\d+");
@@ -64,13 +66,14 @@ public class Feature implements Comparable<Feature> {
 
     /** This enum defines the keys used and their default values.
      */
-    private enum FeatureKeys implements JsonKey {
+    public static enum FeatureKeys implements JsonKey {
         ID("missing"),
         TYPE("CDS"),
         FUNCTION("hypothetical protein"),
         PROTEIN_TRANSLATION(""),
         FAMILY_ASSIGNMENTS(null),
-        LOCATION(null);
+        LOCATION(null),
+        ANNOTATIONS(null);
 
         private final Object m_value;
 
@@ -120,6 +123,15 @@ public class Feature implements Comparable<Feature> {
                 this.location.addRegion(begin, length);
             }
         }
+        // Get the annotations.
+        JsonArray annotationList = feat.getCollectionOrDefault(FeatureKeys.ANNOTATIONS);
+        this.annotations = new ArrayList<Annotation>();
+        if (annotationList != null) {
+            for (Object annotationItem : annotationList) {
+                Annotation annotation = new Annotation((JsonArray) annotationItem);
+                this.annotations.add(annotation);
+            }
+        }
         // Finally, we look for the protein families.
         JsonArray families = feat.getCollectionOrDefault(FeatureKeys.FAMILY_ASSIGNMENTS);
         if (families != null && families.size() > 0) {
@@ -155,6 +167,7 @@ public class Feature implements Comparable<Feature> {
         Location loc = Location.create(contigId, strand, left, right);
         this.location = loc;
         this.protein_translation = "";
+        this.annotations = new ArrayList<Annotation>(3);
     }
 
     /**
@@ -372,6 +385,84 @@ public class Feature implements Comparable<Feature> {
     public void storeLocalFamily(String plfam) {
         if (plfam != null && ! plfam.isEmpty())
             this.plfam = plfam;
+    }
+
+    /**
+     * @return a json object for this feature
+     */
+    public JsonObject toJson() {
+        JsonObject retVal = new JsonObject();
+        retVal.put(FeatureKeys.ID.getKey(), this.id);
+        retVal.put(FeatureKeys.TYPE.getKey(), this.type);
+        retVal.put(FeatureKeys.FUNCTION.getKey(), this.function);
+        retVal.put(FeatureKeys.PROTEIN_TRANSLATION.getKey(), this.protein_translation);
+        // The location is an array of arrays.  This will be the master.
+        JsonArray locs = new JsonArray();
+        if (this.location != null) {
+            String contig = this.location.getContigId();
+            String dir = this.location.getStrand();
+            for (Region region : this.location.getRegions()) {
+                JsonArray loc = new JsonArray().addChain(contig).addChain(region.getBegin(dir)).addChain(dir).addChain(region.getLength());
+                locs.add(loc);
+            }
+        }
+        retVal.put(FeatureKeys.LOCATION.getKey(), locs);
+        // Store the annotations.  These are also an array of arrays.
+        JsonArray annoList = new JsonArray();
+        for (Annotation anno : this.annotations) {
+            JsonArray anno0 = new JsonArray().addChain(anno.getComment()).addChain(anno.getAnnotator()).addChain(anno.getAnnotationTime());
+            annoList.add(anno0);
+        }
+        retVal.put(FeatureKeys.ANNOTATIONS.getKey(), annoList);
+        // Finally, store the protein families.
+        JsonArray famList = new JsonArray();
+        if (this.plfam != null) {
+            JsonArray lfam = new JsonArray().addChain("PLFAM").addChain(this.plfam);
+            famList.add(lfam);
+        }
+        if (this.pgfam != null) {
+            JsonArray gfam = new JsonArray().addChain("PGFAM").addChain(this.pgfam);
+            famList.add(gfam);
+        }
+        retVal.put(FeatureKeys.FAMILY_ASSIGNMENTS.getKey(), famList);
+        return retVal;
+    }
+
+    /**
+     * @return the annotations
+     */
+    public List<Annotation> getAnnotations() {
+        return annotations;
+    }
+
+    /**
+     * Add an annotation.
+     *
+     * @param comment		annotation comment
+     * @param annotator		annotator name
+     *
+     */
+    public void addAnnotation(String comment, String annotator) {
+        Annotation newAnno = new Annotation(comment, annotator);
+        this.annotations.add(newAnno);
+    }
+
+    /**
+     * Store the local protein family ID
+     *
+     * @param plfam 	the plfam to set
+     */
+    public void setPlfam(String plfam) {
+        this.plfam = plfam;
+    }
+
+    /**
+     * Store the global protein family ID
+     *
+     * @param pgfam 	the pgfam to set
+     */
+    public void setPgfam(String pgfam) {
+        this.pgfam = pgfam;
     }
 
 

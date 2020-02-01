@@ -57,6 +57,13 @@ public abstract class Location implements Comparable<Location>, Cloneable {
     public abstract char getDir();
 
     /**
+     * @return the strand as a string (for convenience)
+     */
+    public String getStrand() {
+        return (this.getDir() == '+' ? "+" : "-");
+    }
+
+    /**
      * Add a new region to this location.
      */
     public abstract void addRegion(int begin, int length);

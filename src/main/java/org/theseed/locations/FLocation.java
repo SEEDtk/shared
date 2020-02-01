@@ -118,7 +118,6 @@ public class FLocation extends Location {
 
     @Override
     public void setBegin(int begin) {
-        // TODO Auto-generated method stub
         this.setLeft(begin);
     }
 

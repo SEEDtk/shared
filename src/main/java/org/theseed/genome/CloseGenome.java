@@ -28,7 +28,7 @@ public class CloseGenome implements Comparable<CloseGenome> {
 
     /** This enum defines the keys used and their default values.
      */
-    private enum CloseGenomeKeys implements JsonKey {
+    public static enum CloseGenomeKeys implements JsonKey {
         GENOME(""),
         GENOME_NAME("<unknown>"),
         CLOSENESS_MEASURE(0.0),
@@ -158,6 +158,17 @@ public class CloseGenome implements Comparable<CloseGenome> {
         return true;
     }
 
+    /**
+     * @return a JsonObject for this close genome descriptor
+     */
+    public JsonObject toJson() {
+        JsonObject retVal = new JsonObject();
+        retVal.put(CloseGenomeKeys.ANALYSIS_METHOD.getKey(), this.method);
+        retVal.put(CloseGenomeKeys.CLOSENESS_MEASURE.getKey(), this.closeness);
+        retVal.put(CloseGenomeKeys.GENOME.getKey(), this.genomeId);
+        retVal.put(CloseGenomeKeys.GENOME_NAME.getKey(), this.genomeName);
+        return retVal;
+    }
 
 
 

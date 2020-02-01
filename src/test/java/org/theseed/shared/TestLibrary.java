@@ -23,8 +23,10 @@ import org.theseed.counters.CountMap;
 import org.theseed.counters.KeyPair;
 import org.theseed.counters.PairCounter;
 import org.theseed.counters.QualityCountMap;
+import org.theseed.genome.Annotation;
 import org.theseed.genome.CloseGenome;
 import org.theseed.genome.Contig;
+import org.theseed.genome.Contig.ContigKeys;
 import org.theseed.genome.Feature;
 import org.theseed.genome.FeatureList;
 import org.theseed.genome.Genome;
@@ -54,7 +56,6 @@ import org.theseed.utils.FloatList;
 import org.theseed.utils.IntegerList;
 import org.theseed.utils.Parms;
 
-import com.github.cliftonlabs.json_simple.JsonArray;
 import com.github.cliftonlabs.json_simple.JsonObject;
 import junit.framework.TestCase;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -398,6 +399,9 @@ public class TestLibrary extends TestCase {
         assertFalse("region1 equal to region 3.", region1.equals(region3));
         assertTrue("Region equals is not commutative.", region2.equals(region1));
         assertEquals("Equal regions have different hash codes.", region1.hashCode(), region2.hashCode());
+        assertThat(region1.getBegin("+"), equalTo(1000));
+        assertThat(region1.getBegin("-"), equalTo(2000));
+        assertThat(region1.getLength(), equalTo(1001));
         Location loc1 = Location.create("myContig", "+", 1000, 1999);
         Location loc2 = Location.create("myContig", "-", 1100, 1199);
         Location loc3 = Location.create("myContig", "-", 1150, 1249);
@@ -1779,6 +1783,16 @@ public class TestLibrary extends TestCase {
         assertThat(features.size(), equalTo(1));
         Feature feat = smallGenome.getFeature("fig|161.31.peg.985");
         assertThat(feat.getPlfam(), equalTo("PLF_157_00003322"));
+        feat.addAnnotation("Analyze json", "TestLibrary");
+        List<Annotation> annotations = feat.getAnnotations();
+        assertThat(annotations.get(0).getComment(), equalTo("Add feature from PATRIC"));
+        assertThat(annotations.get(0).getAnnotator(), equalTo("PATRIC"));
+        assertThat(annotations.get(0).getAnnotationTime(), equalTo(1500218027.5));
+        assertThat(annotations.get(1).getComment(), equalTo("Set function to hypothetical protein"));
+        assertThat(annotations.get(1).getAnnotator(), equalTo("RAST"));
+        assertThat(annotations.get(1).getAnnotationTime(), equalTo(1500218027.75));
+        assertThat(annotations.get(2).getComment(), equalTo("Analyze json"));
+        assertThat(annotations.get(2).getAnnotator(), equalTo("TestLibrary"));
         String[] lineage = smallGenome.getLineage();
         assertThat(lineage, arrayContaining("131567", "2", "203691", "203692", "136", "137", "157", "160", "161"));
         SortedSet<CloseGenome> closeGenomes = smallGenome.getCloseGenomes();
@@ -1794,30 +1808,46 @@ public class TestLibrary extends TestCase {
             CloseGenome next = iter.next();
             assertTrue(curr.compareTo(next) < 0);
         }
-        // Now we will add a feature.  This is not something we intend to do in practice, but it is a good
-        // way to test the ability to modify the internal JSON object.
-        JsonObject gto = smallGenome.getJson();
-        JsonObject newFeat = new JsonObject();
-        newFeat.put("id", "fig|161.31.rna.1");
-        JsonArray segment = new JsonArray().addChain("161.31.con.0001").addChain(90100).addChain("-").addChain(1000);
-        JsonArray location = new JsonArray().addChain(segment);
-        newFeat.put("location", location);
-        JsonArray fto = (JsonArray) gto.get("features");
-        fto.add(newFeat);
+        // Now we will add a feature and a contig.
+        Feature rna = new Feature("fig|161.31.rna.1", "brand new RNA", "161.31.con.0001", "-", 89101, 90100);
+        rna.setPgfam("PGF_RNA1");
+        smallGenome.addFeature(rna);
+        Contig fakeContig = new Contig("161.31.con.0002", "aaaccctttggg", 11);
+        smallGenome.addContig(fakeContig);
         File testFile = new File("src/test", "gto.ser");
         smallGenome.update(testFile);
         Genome testGenome = new Genome(testFile);
         features = testGenome.getFeatures();
         assertThat(features.size(), equalTo(2));
         assertThat(testGenome.getId(), equalTo(smallGenome.getId()));
+        assertThat(testGenome.getName(), equalTo(smallGenome.getName()));
         Contig contig2 = testGenome.getContig("161.31.con.0001");
         assertThat(contig2.length(), equalTo(contig.length()));
+        contig2 = testGenome.getContig("161.31.con.0002");
+        assertThat(contig2.length(), equalTo(12));
+        assertThat(contig2.getSequence(), equalTo("aaaccctttggg"));
         feat = testGenome.getFeature("fig|161.31.rna.1");
+        assertThat(feat.getPgfam(), equalTo("PGF_RNA1"));
+        assertNull(feat.getPlfam());
         Location loc = feat.getLocation();
         assertThat(loc.getContigId(), equalTo("161.31.con.0001"));
         assertThat(loc.getBegin(), equalTo(90100));
         assertThat(loc.getDir(), equalTo('-'));
         assertThat(loc.getLength(), equalTo(1000));
+        // Now we test our ability to create other json objects.
+        for (CloseGenome close : closeGenomes) {
+            JsonObject json = close.toJson();
+            assertThat(json.getString(CloseGenome.CloseGenomeKeys.GENOME), equalTo(close.getGenomeId()));
+            assertThat(json.getString(CloseGenome.CloseGenomeKeys.GENOME_NAME), equalTo(close.getGenomeName()));
+            assertThat(json.getString(CloseGenome.CloseGenomeKeys.ANALYSIS_METHOD), equalTo(close.getMethod()));
+            assertThat(json.getDouble(CloseGenome.CloseGenomeKeys.CLOSENESS_MEASURE), equalTo(close.getCloseness()));
+        }
+        contig2 = new Contig("161.31.con.A", "aaaccctttggg", 11);
+        JsonObject contigJson = contig2.toJson();
+        assertThat(contigJson.getString(ContigKeys.ID), equalTo("161.31.con.A"));
+        assertThat(contigJson.getInteger(ContigKeys.GENETIC_CODE), equalTo(11));
+        assertThat(contigJson.getString(ContigKeys.DNA), equalTo("aaaccctttggg"));
+        assertThat(contigJson.getInteger(ContigKeys.LENGTH), equalTo(12));
     }
 
     /**
