@@ -91,6 +91,7 @@
             ]
          ],
          "id" : "fig|161.31.peg.985",
+         "test_extra": "extra datum",
          "location" : [
             [
                "161.31.con.0001",

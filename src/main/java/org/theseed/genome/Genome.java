@@ -55,7 +55,6 @@ public class Genome  {
     private int taxonomyId;
     private Map<String, Feature> features;
     private Map<String, Contig> contigs;
-    private File inFile;
     private JsonObject gto;
     private TaxItem[] lineage;
     private TreeSet<CloseGenome> closeGenomes;
@@ -118,8 +117,6 @@ public class Genome  {
      * @throws IOException
      */
     public Genome(File inFile) throws IOException {
-        // Save the input file name.
-        this.inFile = inFile;
         // Get a reader for the named file.
         try (FileReader reader = new FileReader(inFile)) {
             this.read(reader);
@@ -200,8 +197,8 @@ public class Genome  {
         // Create empty maps for features and contigs.
         this.features = new HashMap<String, Feature>();
         this.contigs = new HashMap<String, Contig>();
-        // Denote there is no input file.
-        this.inFile = null;
+        // Create a blank original GTO.
+        this.gto = new JsonObject();
     }
 
     /**
@@ -214,8 +211,8 @@ public class Genome  {
         // Create empty maps for features and contigs.
         this.features = new HashMap<String, Feature>();
         this.contigs = new HashMap<String, Contig>();
-        // Denote there is no input file.
-        this.inFile = null;
+        // Create a blank original GTO.
+        this.gto = new JsonObject();
     }
 
     /**
@@ -373,13 +370,6 @@ public class Genome  {
      */
     public void addContig(Contig contig) {
         this.contigs.put(contig.getId(), contig);
-    }
-
-    /**
-     * @return the name of the file from which the genome was read
-     */
-    public File getFile() {
-        return this.inFile;
     }
 
     /**

@@ -598,8 +598,6 @@ public class TestLibrary extends TestCase {
         int i = 0;
         for (Genome genome : gDir) {
             assertEquals("Incorrect result for genome at position " + i + ".", expected[i], genome.getId());
-            File expectedFile = new File("src/test/gto_test", expected[i] + ".gto");
-            assertEquals("Incorrect file name for genome at position " + i + ".", expectedFile.getPath(), genome.getFile().getPath());
             i++;
         }
     }
@@ -1783,6 +1781,7 @@ public class TestLibrary extends TestCase {
         assertThat(features.size(), equalTo(1));
         Feature feat = smallGenome.getFeature("fig|161.31.peg.985");
         assertThat(feat.getPlfam(), equalTo("PLF_157_00003322"));
+        assertThat(feat.getJsonField("test_extra"), equalTo("extra datum"));
         feat.addAnnotation("Analyze json", "TestLibrary");
         List<Annotation> annotations = feat.getAnnotations();
         assertThat(annotations.get(0).getComment(), equalTo("Add feature from PATRIC"));
@@ -1834,6 +1833,8 @@ public class TestLibrary extends TestCase {
         assertThat(loc.getBegin(), equalTo(90100));
         assertThat(loc.getDir(), equalTo('-'));
         assertThat(loc.getLength(), equalTo(1000));
+        feat = testGenome.getFeature("fig|161.31.peg.985");
+        assertThat(feat.getJsonField("test_extra"), equalTo("extra datum"));
         // Now we test our ability to create other json objects.
         for (CloseGenome close : closeGenomes) {
             JsonObject json = close.toJson();

@@ -35,6 +35,7 @@ public class Feature implements Comparable<Feature> {
     private String plfam;
     private String pgfam;
     private List<Annotation> annotations;
+    private JsonObject original;
 
     /** parsing pattern for feature type */
     private static final Pattern TYPE_PATTERN = Pattern.compile("fig\\|\\d+\\.\\d+\\.(\\w+)\\.\\d+");
@@ -104,6 +105,9 @@ public class Feature implements Comparable<Feature> {
      * @param feat	JsonObject read in for this feature
      */
     public Feature(JsonObject feat) {
+        // Save the original object.
+        this.original = feat;
+        // Extract the scalar fields.
         this.id = feat.getStringOrDefault(FeatureKeys.ID);
         this.type = fidType(this.id);
         this.function = feat.getStringOrDefault(FeatureKeys.FUNCTION);
@@ -168,6 +172,8 @@ public class Feature implements Comparable<Feature> {
         this.location = loc;
         this.protein_translation = "";
         this.annotations = new ArrayList<Annotation>(3);
+        // Save a blank JSON object as the original.
+        this.original = new JsonObject();
     }
 
     /**
@@ -266,6 +272,15 @@ public class Feature implements Comparable<Feature> {
      */
     public String[] getRoles() {
         return rolesOfFunction(this.function);
+    }
+
+    /**
+     * @return the content of the specified JSON field
+     *
+     * @param name	name of the field to retrieve
+     */
+    public Object getJsonField(String name) {
+        return this.original.get(name);
     }
 
     /**
@@ -391,7 +406,8 @@ public class Feature implements Comparable<Feature> {
      * @return a json object for this feature
      */
     public JsonObject toJson() {
-        JsonObject retVal = new JsonObject();
+        // Get the original json object.
+        JsonObject retVal = this.original;
         retVal.put(FeatureKeys.ID.getKey(), this.id);
         retVal.put(FeatureKeys.TYPE.getKey(), this.type);
         retVal.put(FeatureKeys.FUNCTION.getKey(), this.function);
