@@ -18,6 +18,7 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.SortedSet;
@@ -445,6 +446,13 @@ public class Genome  {
         String[] retVal = new String[this.lineage.length];
         for (int i = 0; i < this.lineage.length; i++) retVal[i] = this.lineage[i].getId();
         return retVal;
+    }
+
+    /**
+     * @return an iterator through the taxonomic lineage, in order from smallest to largest
+     */
+    public Iterator<TaxItem> taxonomy() {
+        return new TaxItem.TaxIterator(this.lineage);
     }
 
     /**

@@ -31,6 +31,7 @@ import org.theseed.genome.Feature;
 import org.theseed.genome.FeatureList;
 import org.theseed.genome.Genome;
 import org.theseed.genome.GenomeDirectory;
+import org.theseed.genome.TaxItem;
 import org.theseed.io.BalancedOutputStream;
 import org.theseed.io.Shuffler;
 import org.theseed.io.TabbedLineReader;
@@ -299,6 +300,16 @@ public class TestLibrary extends TestCase {
         for (Feature feat : this.myGto.getPegs()) {
             assertEquals("Feature" + feat.getId() + " is not a PEG.", "CDS", feat.getType());
         }
+        String[] taxonomy = new String[] {"1313", "1301", "1300", "186826", "91061",
+                                          "1239", "1783272", "2", "131567"};
+        int i = 0;
+        Iterator<TaxItem> iter = this.myGto.taxonomy();
+        while (iter.hasNext()) {
+            TaxItem item = iter.next();
+            assertThat(item.getId(), equalTo(taxonomy[i]));
+            i++;
+        }
+        assertThat(i, equalTo(taxonomy.length));
     }
 
     /**

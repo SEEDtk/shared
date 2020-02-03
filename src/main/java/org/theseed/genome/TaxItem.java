@@ -3,6 +3,8 @@
  */
 package org.theseed.genome;
 
+import java.util.Iterator;
+
 import com.github.cliftonlabs.json_simple.JsonArray;
 import com.github.cliftonlabs.json_simple.JsonKey;
 import com.github.cliftonlabs.json_simple.JsonObject;
@@ -46,6 +48,34 @@ public class TaxItem {
         @Override
         public Object getValue() {
             return this.m_value;
+        }
+
+    }
+
+    /**
+     * Iterator through a taxonomy array, from smallest group to largest
+     */
+    public static class TaxIterator implements Iterator<TaxItem> {
+
+        /** lineage from the genome */
+        private TaxItem[] lineage;
+        /** last item returned */
+        private int pos;
+
+        public TaxIterator(TaxItem[] lineage) {
+            this.lineage = lineage;
+            this.pos = lineage.length;
+        }
+
+        @Override
+        public boolean hasNext() {
+            return (this.pos > 0);
+        }
+
+        @Override
+        public TaxItem next() {
+            this.pos--;
+            return this.lineage[this.pos];
         }
 
     }
