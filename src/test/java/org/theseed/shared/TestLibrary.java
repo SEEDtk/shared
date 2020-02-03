@@ -260,7 +260,8 @@ public class TestLibrary extends TestCase {
         assertEquals("Genome ID not correct.", "1313.7001", this.myGto.getId());
         assertEquals("Genome name not correct.", "Streptococcus pneumoniae P210774-233", this.myGto.getName());
         assertNull("Nonexistent feature found.", this.myGto.getFeature("fig|1313.7001.cds.75"));
-        assertEquals("Incorrect contig count.", this.myGto.getContigCount(), 52);
+        assertEquals("Incorrect contig count.", 52, this.myGto.getContigCount());
+        assertEquals("Incorrect length.", 2101113, this.myGto.getLength());
         // Now we need to pull out a PEG and ask about it.
         Feature myFeature = this.myGto.getFeature("fig|1313.7001.peg.758");
         assertNotNull("Sample feature not found.", myFeature);

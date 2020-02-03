@@ -22,7 +22,7 @@ public class FLocation extends Location {
             /*  3 */ new CodonSet("ata", "atg", "gtg"),
             /*  4 */ new CodonSet("ttg", "ctg", "atg"),
             null, null, null, null, null, null,
-            /* 11 */ new CodonSet("ttg", "ctg", "atg")
+            /* 11 */ new CodonSet("ttg", "gtg", "atg")
             };
 
     /** array of stop codon sets by genetic code */

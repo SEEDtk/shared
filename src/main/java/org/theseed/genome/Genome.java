@@ -538,5 +538,15 @@ public class Genome  {
         return closeGenomes;
     }
 
+    /**
+     * @return the length of the genome in base pairs
+     */
+    public int getLength() {
+        int retVal = 0;
+        for (Contig contig : this.contigs.values())
+            retVal += contig.length();
+        return retVal;
+    }
+
 
 }

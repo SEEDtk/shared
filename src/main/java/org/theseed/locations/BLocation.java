@@ -21,7 +21,7 @@ public class BLocation extends Location {
             /*  3 */ new CodonSet("tat", "cat", "cac"),
             /*  4 */ new CodonSet("caa", "cag", "cat"),
             null, null, null, null, null, null,
-            /* 11 */ new CodonSet("caa", "cag", "cat")
+            /* 11 */ new CodonSet("caa", "cac", "cat")
             };
 
     /** array of stop codon sets by genetic code */
