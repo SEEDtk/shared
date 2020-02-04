@@ -556,5 +556,13 @@ public class Genome  {
         return retVal;
     }
 
+    /**
+     * Remove all annotations from this genome.
+     */
+    public void deAnnotate() {
+        // Delete the features.
+        this.features.clear();
+    }
+
 
 }
