@@ -1073,7 +1073,7 @@ public class TestLibrary extends TestCase {
      * test custom features
      */
     public void testFeature() {
-        Feature feat = new Feature("fig|161.31.peg.1", "hypothetical function", "c1", "+", 100, 200);
+        Feature feat = new Feature("fig|161.31.peg.10", "hypothetical function", "c1", "+", 100, 200);
         Location loc = feat.getLocation();
         assertThat(loc.getContigId(), equalTo("c1"));
         assertThat(loc.getDir(), equalTo('+'));
@@ -1090,6 +1090,12 @@ public class TestLibrary extends TestCase {
         feat.setPlfam("PG2");
         assertThat(feat.getPlfam(), equalTo("PG2"));
         assertThat(feat.getPgfam(), equalTo("PG1"));
+        Feature f2 = new Feature("fig|161.31.peg.10", "more hypothetical function", "c2", "+", 110, 220);
+        assertThat(feat.compareTo(f2), equalTo(0));
+        f2 = new Feature("fig|161.31.peg.2", "less hypothetical function", "c2", "+", 120, 240);
+        assertThat(feat.compareTo(f2), greaterThan(0));
+        f2 = new Feature("fig|161.31.peg.20", "strange hypothetical function", "c2", "-", 220, 540);
+        assertThat(feat.compareTo(f2), lessThan(0));
     }
 
     /**
@@ -1130,6 +1136,13 @@ public class TestLibrary extends TestCase {
         testFeat = myGto.getFeature("fig|1313.7001.peg.1190");
         found = testFeat.getUsefulRoles(goodRoles);
         assertEquals("Useful role found in useless peg.", 0, found.size());
+        // Test hypotheticals
+        assertTrue(Feature.isHypothetical("hypothetical protein"));
+        assertTrue(Feature.isHypothetical(null));
+        assertTrue(Feature.isHypothetical("  # comment only"));
+        assertTrue(Feature.isHypothetical("Hypothetical protein # with comment"));
+        assertFalse(Feature.isHypothetical("Normal function # hypothetical protein"));
+        assertFalse(Feature.isHypothetical("May some day be a putative function"));
     }
 
     /**

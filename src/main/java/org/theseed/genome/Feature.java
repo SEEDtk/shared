@@ -8,6 +8,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.RegExUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.theseed.locations.Location;
 import org.theseed.locations.Region;
 import org.theseed.proteins.Role;
@@ -64,6 +65,19 @@ public class Feature implements Comparable<Feature> {
         return retVal;
     }
 
+    /**
+     * @return TRUE if a function is hypothetical
+     *
+     * @param function	the functional assignment of interest
+     */
+    public static boolean isHypothetical(String function) {
+        boolean retVal = (function == null);
+        if (! retVal) {
+            String normalized = StringUtils.substringBefore(function, "#").trim().toLowerCase();
+            retVal = (normalized.contains("hypothetical") || normalized.isEmpty());
+        }
+        return retVal;
+    }
 
     /** This enum defines the keys used and their default values.
      */
@@ -98,6 +112,35 @@ public class Feature implements Comparable<Feature> {
 
     }
 
+    /**
+     * Comparator for sorting by function.  Hypotheticals go at the end.
+     */
+    public static class ByFunction implements Comparator<Feature> {
+
+        @Override
+        public int compare(Feature arg0, Feature arg1) {
+            int retVal;
+            String function0 = arg0.getFunction();
+            String function1 = arg1.getFunction();
+            boolean hypo0 = isHypothetical(function0);
+            boolean hypo1 = isHypothetical(function1);
+            if (hypo0 && hypo1) {
+                retVal = StringUtils.compare(function0, function1);
+            } else if (hypo0) {
+                retVal = 1;
+            } else if (hypo1) {
+                retVal = -1;
+            } else {
+                retVal = StringUtils.compare(function0, function1);
+            }
+            if (retVal == 0) {
+                // If the functions are the same, compare the feature IDs.
+                retVal = arg0.compareTo(arg1);
+            }
+            return retVal;
+        }
+
+    }
 
     /**
      * Create this feature from its JsonObject.
@@ -236,7 +279,7 @@ public class Feature implements Comparable<Feature> {
             int otherIdx = other.getIndexNum();
             retVal = idx - otherIdx;
         }
-        return 0;
+        return retVal;
     }
 
     /**
