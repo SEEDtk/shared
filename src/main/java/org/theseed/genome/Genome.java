@@ -58,7 +58,7 @@ public class Genome  {
     private Map<String, Contig> contigs;
     private JsonObject gto;
     private TaxItem[] lineage;
-    private TreeSet<CloseGenome> closeGenomes;
+    private SortedSet<CloseGenome> closeGenomes;
 
 
     /** This is an empty list to use as a default intermediate value for cases where the contigs or
@@ -195,9 +195,17 @@ public class Genome  {
         this.taxonomyId = Integer.parseInt(StringUtils.substringBefore(genomeId, "."));
         this.domain = domain;
         this.geneticCode = code;
-        // Create empty maps for features and contigs.
+        setup();
+    }
+
+    /**
+     * Set up the attached structures.
+     */
+    protected void setup() {
+        // Create empty maps for features, close genomes, and contigs.
         this.features = new HashMap<String, Feature>();
         this.contigs = new HashMap<String, Contig>();
+        this.closeGenomes = new TreeSet<CloseGenome>();
         // Create a blank original GTO.
         this.gto = new JsonObject();
     }
@@ -209,11 +217,7 @@ public class Genome  {
      */
     protected Genome(String genomeId) {
         this.id = genomeId;
-        // Create empty maps for features and contigs.
-        this.features = new HashMap<String, Feature>();
-        this.contigs = new HashMap<String, Contig>();
-        // Create a blank original GTO.
-        this.gto = new JsonObject();
+        setup();
     }
 
     /**
