@@ -263,6 +263,36 @@ public class TestLibrary extends TestCase {
         assertNull("Nonexistent feature found.", this.myGto.getFeature("fig|1313.7001.cds.75"));
         assertEquals("Incorrect contig count.", 52, this.myGto.getContigCount());
         assertEquals("Incorrect length.", 2101113, this.myGto.getLength());
+        assertEquals("Genome home not correct", "PATRIC", this.myGto.getHome());
+        String testLink = this.myGto.genomeLink().render();
+        assertThat(testLink, containsString("patricbrc"));
+        assertThat(testLink, containsString("1313.7001"));
+        testLink = this.myGto.featureLink("fig|1313.7001.peg.758").render();
+        assertThat(testLink, containsString("patricbrc"));
+        assertThat(testLink, containsString("fig|1313.7001.peg.758"));
+        testLink = this.myGto.featureRegionLink("fig|1313.7001.peg.758").render();
+        assertThat(testLink, containsString("patricbrc"));
+        assertThat(testLink, containsString("fig|1313.7001.peg.758"));
+        this.myGto.setHome("CORE");
+        testLink = this.myGto.genomeLink().render();
+        assertThat(testLink, containsString("core.theseed"));
+        assertThat(testLink, containsString("1313.7001"));
+        testLink = this.myGto.featureLink("fig|1313.7001.peg.758").render();
+        assertThat(testLink, containsString("core.theseed"));
+        assertThat(testLink, containsString("fig|1313.7001.peg.758"));
+        testLink = this.myGto.featureRegionLink("fig|1313.7001.peg.758").render();
+        assertThat(testLink, containsString("core.theseed"));
+        assertThat(testLink, containsString("fig|1313.7001.peg.758"));
+        this.myGto.setHome("none");
+        testLink = this.myGto.genomeLink().render();
+        assertThat(testLink, not(containsString("<a")));
+        assertThat(testLink, containsString("1313.7001"));
+        testLink = this.myGto.featureLink("fig|1313.7001.peg.758").render();
+        assertThat(testLink, not(containsString("<a")));
+        assertThat(testLink, containsString("fig|1313.7001.peg.758"));
+        testLink = this.myGto.featureRegionLink("fig|1313.7001.peg.758").render();
+        assertThat(testLink, not(containsString("<a")));
+        assertThat(testLink, containsString("fig|1313.7001.peg.758"));
         // Now we need to pull out a PEG and ask about it.
         Feature myFeature = this.myGto.getFeature("fig|1313.7001.peg.758");
         assertNotNull("Sample feature not found.", myFeature);
@@ -604,9 +634,9 @@ public class TestLibrary extends TestCase {
      */
     public void testGenomeDir() throws IOException {
         GenomeDirectory gDir = new GenomeDirectory("src/test/gto_test");
-        assertEquals("Wrong number of genomes found.", 4, gDir.size());
+        assertEquals("Wrong number of genomes found.", 5, gDir.size());
         // Run through an iterator.  We know the genome IDs, we just need to find them in order.
-        String[] expected = new String[] { "1005394.4", "1313.7001", "1313.7002", "1313.7016" };
+        String[] expected = new String[] { "1005394.4", "1313.7001", "1313.7002", "1313.7016", "221988.1" };
         int i = 0;
         for (Genome genome : gDir) {
             assertEquals("Incorrect result for genome at position " + i + ".", expected[i], genome.getId());

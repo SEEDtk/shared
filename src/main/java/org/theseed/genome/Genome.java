@@ -28,12 +28,15 @@ import java.util.UUID;
 import org.apache.commons.lang3.StringUtils;
 import org.theseed.locations.Location;
 import org.theseed.locations.Region;
+import org.theseed.reports.LinkObject;
 
 import com.github.cliftonlabs.json_simple.JsonArray;
 import com.github.cliftonlabs.json_simple.JsonException;
 import com.github.cliftonlabs.json_simple.JsonKey;
 import com.github.cliftonlabs.json_simple.JsonObject;
 import com.github.cliftonlabs.json_simple.Jsoner;
+
+import j2html.tags.DomContent;
 
 /**
  * GenomeTypeObject for Java
@@ -59,6 +62,9 @@ public class Genome  {
     private JsonObject gto;
     private TaxItem[] lineage;
     private SortedSet<CloseGenome> closeGenomes;
+    private String home;
+    private LinkObject linker;
+
 
 
     /** This is an empty list to use as a default intermediate value for cases where the contigs or
@@ -86,6 +92,7 @@ public class Genome  {
         TAXON_LINEAGE_IDS(noEntries),
         TAXON_ID(2),
         KINGDOM("Bacteria"),
+        HOME("none")
         ;
 
         private final Object m_value;
@@ -177,6 +184,8 @@ public class Genome  {
             Contig contig = new Contig(contigObj);
             contigs.put(contig.getId(), contig);
         }
+        // Determine the Genome's home database.
+        this.setHome(this.gto.getStringOrDefault(GenomeKeys.HOME));
     }
 
     /**
@@ -208,6 +217,28 @@ public class Genome  {
         this.closeGenomes = new TreeSet<CloseGenome>();
         // Create a blank original GTO.
         this.gto = new JsonObject();
+        // Denote the genome has no home.
+        this.setHome("none");
+    }
+
+    /**
+     * Specify the home location of this genome.
+     *
+     * @param string	a string indicating the home location-- PATRIC, CORE, or none.
+     */
+    public void setHome(String string) {
+        this.home = string;
+        // Determine the type of links to generate.
+        switch (string) {
+        case "PATRIC" :
+            this.linker = new LinkObject.Patric();
+            break;
+        case "CORE" :
+            this.linker = new LinkObject.Core();
+            break;
+        default:
+            this.linker = new LinkObject.None();
+        }
     }
 
     /**
@@ -394,6 +425,7 @@ public class Genome  {
         retVal.put(GenomeKeys.DOMAIN.getKey(), this.domain);
         retVal.put(GenomeKeys.GENETIC_CODE.getKey(), this.geneticCode);
         retVal.put(GenomeKeys.NCBI_TAXONOMY_ID.getKey(), this.taxonomyId);
+        retVal.put(GenomeKeys.HOME.getKey(), this.home);
         // Add the lineage.
         JsonArray jtaxonomy = new JsonArray();
         for (TaxItem taxon : this.lineage) jtaxonomy.add(taxon.toJson());
@@ -519,6 +551,8 @@ public class Genome  {
         }
         // Compute the domain.
         this.domain = genomeData.getStringOrDefault(GenomeKeys.KINGDOM);
+        // Denote this is a PATRIC genome.
+        this.setHome("PATRIC");
     }
 
     /**
@@ -566,6 +600,47 @@ public class Genome  {
     public void deAnnotate() {
         // Delete the features.
         this.features.clear();
+    }
+
+    /**
+     * @return a link to a feature in this genome
+     *
+     * @param fid	feature to link to
+     */
+    public DomContent featureLink(String fid) {
+        return this.linker.featureLink(fid);
+    }
+
+    /**
+     * @return a link to a list of features from this genome
+     *
+     * @param fidList	list of the feature IDs to link to
+     */
+    public DomContent featureListLink(Collection<String> fidList) {
+        return this.linker.featureListLink(fidList);
+    }
+
+    /**
+     * @return a link to the context view of a feature in this genome
+     *
+     * @param fid	feature to link to
+     */
+    public DomContent featureRegionLink(String fid) {
+        return this.linker.featureRegionLink(fid);
+    }
+
+    /**
+     * @return a link to this genome's overview page
+     */
+    public DomContent genomeLink() {
+        return this.linker.genomeLink(this.id);
+    }
+
+    /**
+     * @return the home
+     */
+    public String getHome() {
+        return home;
     }
 
 
