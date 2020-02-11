@@ -40,8 +40,8 @@ public class IntegerList implements Iterable<Integer> {
      *
      * @param integers	array of integers to use
      */
-    public IntegerList(int[] integers) {
-    	this.values = ArrayUtils.clone(integers);
+    public IntegerList(int... integers) {
+        this.values = ArrayUtils.clone(integers);
     }
 
     /**
@@ -105,7 +105,7 @@ public class IntegerList implements Iterable<Integer> {
      * 			case we return the last
      */
     public int softNext() {
-    	return (this.hasNext() ? this.next() : this.last());
+        return (this.hasNext() ? this.next() : this.last());
     }
 
     /**

@@ -38,9 +38,9 @@ public class FloatList implements Iterable<Double> {
     /**
      * Construct a number list from an array.
      *
-     * @param integers	array of integers to use
+     * @param integers	array of numbers to use
      */
-    public FloatList(double[] doubles) {
+    public FloatList(double... doubles) {
         this.values = ArrayUtils.clone(doubles);
         this.pos = 0;
     }

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+    <appender name="STDLOG" class="ch.qos.logback.core.ConsoleAppender">
+        <target>System.out</target>
+        <encoder>
+            <pattern>%date [%thread] %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <logger name="org.theseed" level="trace">
+        <appender-ref ref="STDLOG"/>
+    </logger>
+
+</configuration>
