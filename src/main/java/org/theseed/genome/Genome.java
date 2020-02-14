@@ -643,5 +643,31 @@ public class Genome  {
         return home;
     }
 
+    /**
+     * @return the ID of the reference genome used to create this one from a metagenome, or NULL
+     * 		   if there is none
+     */
+    public String getBinRefGenomeId() {
+        String retVal = null;
+        for (CloseGenome closeSpec : this.closeGenomes) {
+            if (closeSpec.getMethod().contentEquals("bins_generate"))
+                retVal = closeSpec.genomeId;
+        }
+        return retVal;
+    }
+
+    /**
+     * @return the weighted coverage of this genome, if it was generated from a metagenome, else 0
+     */
+    public double getBinCoverage() {
+        double retVal = 0.0;
+        for (CloseGenome closeSpec : this.closeGenomes) {
+            if (closeSpec.getMethod().contentEquals("bins_generate"))
+                retVal = closeSpec.getCloseness();
+        }
+        return retVal;
+
+    }
+
 
 }

@@ -1927,12 +1927,18 @@ public class TestLibrary extends TestCase {
         assertThat(contigJson.getInteger(ContigKeys.GENETIC_CODE), equalTo(11));
         assertThat(contigJson.getString(ContigKeys.DNA), equalTo("aaaccctttggg"));
         assertThat(contigJson.getInteger(ContigKeys.LENGTH), equalTo(12));
-        // Finally test feature deletion.
+        // Test feature deletion.
         testGenome.deAnnotate();
         assertThat(testGenome.getFeatureCount(), equalTo(0));
         int fCount = 0;
         for (@SuppressWarnings("unused") Feature f : testGenome.getFeatures()) fCount++;
         assertThat(fCount, equalTo(0));
+        // Test metagenome binning properties.
+        assertNull(testGenome.getBinRefGenomeId());
+        assertThat(testGenome.getBinCoverage(), equalTo(0.0));
+        testGenome = new Genome(new File("src/test", "bin3.gto"));
+        assertThat(testGenome.getBinRefGenomeId(), equalTo("43675.15"));
+        assertThat(testGenome.getBinCoverage(), closeTo(173.920, 0.0005));
     }
 
     /**
