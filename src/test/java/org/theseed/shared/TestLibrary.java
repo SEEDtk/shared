@@ -6,6 +6,7 @@ package org.theseed.shared;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -52,6 +53,7 @@ import org.theseed.proteins.kmers.KmerCollectionGroup;
 import org.theseed.proteins.kmers.ProteinKmers;
 import org.theseed.sequence.FastaInputStream;
 import org.theseed.sequence.FastaOutputStream;
+import org.theseed.sequence.MD5Hex;
 import org.theseed.sequence.Sequence;
 import org.theseed.utils.FloatList;
 import org.theseed.utils.IntegerList;
@@ -2089,4 +2091,23 @@ public class TestLibrary extends TestCase {
         assertThat(locList.size(), equalTo(1));
         assertThat(locList.get(0), equalTo(loc4));
     }
+
+    /**
+     * Compare PERL MD5 to java
+     *
+     * @throws NoSuchAlgorithmException
+     * @throws IOException
+     */
+    public void testMD5() throws NoSuchAlgorithmException, IOException {
+        MD5Hex mdComputer = new MD5Hex();
+        String prot = "MLHIKPYLVNQKTLHEIEKAIKKAKPNVTINSKDSELICSIPEPTAEIREEKIKNSKQVVEETRIALRTKRQDLLKKFKS";
+        assertThat(mdComputer.checksum(prot), equalTo("54ce0e56c20f6eee543f1995ae7d7dcc"));
+        prot = "MEHTFPEILALAFVGGLVLNLMPCVFPILSLKVLSIVRKSSKSRWSTAVDGVYYTAGVMSSMLLLSLVLILLRSAGHFLGWGFQMQSPALVIGLLHVTFLVGMSFSGFLDLSIKVPFVDAMTAHNVGSFFAGVLSALIGTPCSAPFMVSAVSFALLQPGLRSVAIFQVMGLGMALPYLIISCSPGLTRLLPKPGRWMEYLKQFLAFPMYATSAWLLHVLVSQKGTHVLLPTVLSIVAVSLGVWFLRVMSNVKMQASKALAVLLPLFVVGTAIYIGRFRGHDHAYGELAVVEFSEARLARLLRKDKTVFLSVGAEWCLTCKVNEKVLESASVQSFLRTHGVIYMKADWTNMDSTIAEYLSEHGGGGVPFYELYVNGKSVGPMPQIFSEKTLLEILGKHLNANPSSKASPE";
+        assertThat(mdComputer.checksum(prot), equalTo("a5b29797d99fceda08c5bb913473529f"));
+        prot = "MITHNPVIATVTDRVIRIDGGKIVEDYRNPNPVSIDSLTNL";
+        assertThat(mdComputer.checksum(prot), equalTo("9e36013f41acf2443643cdcf178bda67"));
+        Genome coreGenome = new Genome(new File("src/test", "360106.5.gto"));
+        assertThat(mdComputer.sequenceMD5(coreGenome), equalTo("9606255e9c598c259f96a74083d87a35"));
+    }
+
 }

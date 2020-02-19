@@ -127,7 +127,7 @@ public class TabbedLineReader implements Closeable, AutoCloseable, Iterable<Tabb
         }
 
         /**
-         * @return the original input line
+         * @return the original input line (without the line-end character)
          */
         public String getAll() {
             return this.lineText;
