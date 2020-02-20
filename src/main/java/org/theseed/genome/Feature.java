@@ -47,6 +47,9 @@ public class Feature implements Comparable<Feature> {
     /** parsing pattern for removing function comments */
     private static final Pattern COMMENT_PATTERN = Pattern.compile("\\s*[#!].+");
 
+    /** pattern for extracting genome ID from feature ID */
+    public static final Pattern FID_PARSER = Pattern.compile("fig\\|(\\d+\\.\\d+)\\.\\w+\\.\\d+");
+
     /**
      * @return the feature type of a feature ID.
      *
@@ -60,6 +63,26 @@ public class Feature implements Comparable<Feature> {
             // For historical reasons, CDS features have a name of "peg".
             if (retVal.contentEquals("peg")) {
                 retVal = "CDS";
+            }
+        }
+        return retVal;
+    }
+
+    /**
+     * @return the genome ID portion of a feature ID
+     *
+     * @param fid	feature ID to parse for a genome ID
+     */
+    public static String genomeOf(String fid) {
+        String retVal;
+        if (fid == null) {
+            retVal = "<none>";
+        } else {
+            Matcher m = FID_PARSER.matcher(fid);
+            if (! m.matches()) {
+                throw new IllegalArgumentException("Invalid feature ID" + fid);
+            } else {
+                retVal = m.group(1);
             }
         }
         return retVal;
