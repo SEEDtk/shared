@@ -225,8 +225,6 @@ public class TabbedLineReader implements Closeable, AutoCloseable, Iterable<Tabb
             } else {
                 // Parse the header line into labels and normalize them to lower case.
                 this.labels = StringUtils.split(headerLine, '\t');
-                for (int i = 0; i < this.labels.length; i++)
-                    this.labels[i] = this.labels[i].toLowerCase();
                 // Set up to return the first data line.
                 this.readAhead();
             }
@@ -285,8 +283,9 @@ public class TabbedLineReader implements Closeable, AutoCloseable, Iterable<Tabb
                 // First look for a named field.
                 boolean found = false;
                 while (! found && retVal >= 0) {
-                    if (normalized.contentEquals(this.labels[retVal]) ||
-                            normalized.contentEquals(StringUtils.substringAfterLast(this.labels[retVal], "."))) {
+                    String label = this.labels[retVal].toLowerCase();
+                    if (normalized.contentEquals(label) ||
+                            normalized.contentEquals(StringUtils.substringAfterLast(label, "."))) {
                         found = true;
                     } else {
                         retVal--;
