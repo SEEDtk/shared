@@ -642,6 +642,7 @@ public class TestLibrary extends TestCase {
         int i = 0;
         for (Genome genome : gDir) {
             assertEquals("Incorrect result for genome at position " + i + ".", expected[i], genome.getId());
+            assertEquals("Incorrect file for genome at position " + i + ".", expected[i] + ".gto", gDir.currFile().getName());
             i++;
         }
     }
@@ -1824,6 +1825,13 @@ public class TestLibrary extends TestCase {
         assertThat(test1.get(103), equalTo(203));
         assertThat(test1.get(104), equalTo(204));
         assertThat(test1.size(), equalTo(105));
+        test1 = new Shuffler<Integer>(array1);
+        assertThat(test1.get(0), equalTo(200));
+        assertThat(test1.get(1), equalTo(201));
+        assertThat(test1.get(2), equalTo(202));
+        assertThat(test1.get(3), equalTo(203));
+        assertThat(test1.get(4), equalTo(204));
+        assertThat(test1.size(), equalTo(5));
     }
 
     /**
@@ -1941,6 +1949,11 @@ public class TestLibrary extends TestCase {
         testGenome = new Genome(new File("src/test", "bin3.gto"));
         assertThat(testGenome.getBinRefGenomeId(), equalTo("43675.15"));
         assertThat(testGenome.getBinCoverage(), closeTo(173.920, 0.0005));
+        Genome testOther = new Genome(new File("src/test", "bin3a.gto"));
+        assertTrue(testGenome.identical(testGenome));
+        assertFalse(testGenome.identical(null));
+        assertFalse(testGenome.identical(testOther));
+        assertFalse(testGenome.identical(smallGenome));
     }
 
     /**
@@ -2110,4 +2123,25 @@ public class TestLibrary extends TestCase {
         assertThat(mdComputer.sequenceMD5(coreGenome), equalTo("9606255e9c598c259f96a74083d87a35"));
     }
 
+    /**
+     * Test contig update.
+     *
+     * @throws IOException
+     */
+
+    private static final String OLD_CONTIG = "NODE_199_length_26254_cov_134.112";
+    private static final String NEW_CONTIG = "NODE_NEW";
+    private static final String OFF_PEG_ID = "fig|43675.763.peg.443";
+    private static final String OFF_CONTIG = "NODE_291_length_19898_cov_244.229";
+
+    public void testContigUpdate() throws IOException {
+        Genome myGenome = new Genome(new File("src/test", "bin3.gto"));
+        FeatureList contigFeatures = myGenome.getContigFeatures(OLD_CONTIG);
+        Contig contig = myGenome.getContig(OLD_CONTIG);
+        myGenome.updateContigId(contig, NEW_CONTIG);
+        assertThat(myGenome.getFeature(OFF_PEG_ID).getLocation().getContigId(), equalTo(OFF_CONTIG));
+        for (Feature feat : contigFeatures)
+            assertThat(feat.getLocation().getContigId(), equalTo(NEW_CONTIG));
+        assertThat(contig.getId(), equalTo(NEW_CONTIG));
+    }
 }

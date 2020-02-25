@@ -669,5 +669,30 @@ public class Genome  {
 
     }
 
+    /**
+     * @return TRUE if the other genome has the same ID and home
+     *
+     * @param other		other genome to compare
+     */
+    public boolean identical(Genome other) {
+        return (other != null && this.id.contentEquals(other.id) && this.home.contentEquals(other.home));
+    }
+
+    /**
+     * Change the ID of a contig.  This also updates all the feature locations.
+     *
+     * @param contig	contig to update
+     * @param contig2Id	new ID for the contig
+     */
+    public void updateContigId(Contig contig, String contig2Id) {
+        String contigId = contig.getId();
+        contig.setId(contig2Id);
+        for (Feature feat : this.getFeatures()) {
+            Location loc = feat.getLocation();
+            if (loc.getContigId().contentEquals(contigId))
+                feat.getLocation().setContigId(contig2Id);
+        }
+    }
+
 
 }

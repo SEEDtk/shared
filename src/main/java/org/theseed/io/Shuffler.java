@@ -30,6 +30,16 @@ public class Shuffler<T> extends ArrayList<T> {
         super(cap);
     }
 
+    /** Construct a shuffling-arraylist from an iterator.
+     *
+     * @param source	an iterable object for initializing the list
+     */
+    public Shuffler(Iterable<T> source) {
+        super();
+        for (T item : source)
+            this.add(item);
+    }
+
     /**
      * Shuffle the array to randomize the content of the first N positions.
      *

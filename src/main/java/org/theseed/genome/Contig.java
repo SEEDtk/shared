@@ -201,4 +201,13 @@ public class Contig {
         return retVal;
     }
 
+    /**
+     * Update the ID of this contig.
+     *
+     * @param contig2Id		new ID to store.
+     */
+    protected void setId(String contig2Id) {
+        this.id = contig2Id;
+    }
+
 }

@@ -10,6 +10,9 @@ import java.io.IOException;
 import java.util.Iterator;
 import java.util.TreeSet;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  *
  * This class manages a directory of GTO files and allows simple iterator through the genomes.
@@ -21,11 +24,17 @@ public class GenomeDirectory implements Iterable<Genome> {
 
     // FIELDS
 
+    /** logging facility */
+    protected static Logger log = LoggerFactory.getLogger(GenomeDirectory.class);
+
     /** name of this directory */
     private File dirName;
 
     /** list of the genome IDs */
     private TreeSet<String> genomeIDs;
+
+    /** last file name read */
+    private File gtoFile;
 
     /** Filter for GTO files */
     private class GtoFilter implements FilenameFilter {
@@ -72,11 +81,12 @@ public class GenomeDirectory implements Iterable<Genome> {
         public Genome next() {
             String nextID = this.treePos.next();
             // Build the genome file name.
-            File gtoFile = new File(dirName, nextID + ".gto");
+            GenomeDirectory.this.gtoFile = new File(dirName, nextID + ".gto");
             // Read the genome.  Note we have to percolate some checked exceptions.
             Genome retVal;
             try {
-                retVal = new Genome(gtoFile);
+                log.debug("Reading genome from {}.", GenomeDirectory.this.gtoFile);
+                retVal = new Genome(GenomeDirectory.this.gtoFile);
             } catch (NumberFormatException | IOException e) {
                 throw new RuntimeException("Error processing genomes.", e);
             }
@@ -102,9 +112,9 @@ public class GenomeDirectory implements Iterable<Genome> {
      *
      * @throws IOException
      */
-	private void setup() throws IOException {
-		// Verify that the directory exists.
-		if (! this.dirName.isDirectory())
+    private void setup() throws IOException {
+        // Verify that the directory exists.
+        if (! this.dirName.isDirectory())
             throw new FileNotFoundException(dirName + " is not found or not a directory.");
         // Get the list of genome files.
         GtoFilter filter = new GtoFilter();
@@ -117,22 +127,22 @@ public class GenomeDirectory implements Iterable<Genome> {
             String genomeId = filter.genomeId(genomeFile);
             this.genomeIDs.add(genomeId);
         }
-	}
+    }
 
-	/**
-	 * Construct a new genome directory (file parameter).
-	 *
-	 * @param inDir		directory containing the GTOs
-	 *
-	 * @throws IOException
-	 */
+    /**
+     * Construct a new genome directory (file parameter).
+     *
+     * @param inDir		directory containing the GTOs
+     *
+     * @throws IOException
+     */
     public GenomeDirectory(File inDir) throws IOException {
-    	this.dirName = inDir;
-    	setup();
-	}
+        this.dirName = inDir;
+        setup();
+    }
 
 
-	@Override
+    @Override
     public Iterator<Genome> iterator() {
         return new GenomeIterator();
     }
@@ -150,6 +160,12 @@ public class GenomeDirectory implements Iterable<Genome> {
         return retVal;
     }
 
+    /**
+     * @return the name of the last file read using an iterator
+     */
+    public File currFile() {
+        return this.gtoFile;
+    }
 
 
 }
