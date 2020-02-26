@@ -666,7 +666,19 @@ public class Genome  {
                 retVal = closeSpec.getCloseness();
         }
         return retVal;
+    }
 
+    /**
+     * @return TRUE if contig DNA is present, else FALSE
+     */
+    public boolean hasContigs() {
+        boolean retVal = true;
+        for (Contig contig : this.contigs.values()) {
+            // If this is a nonempty contig but it has no DNA, then DNA is not present.
+            if (contig.length() > 0 && contig.getSequence().length() == 0)
+                retVal = false;
+        }
+        return retVal;
     }
 
     /**

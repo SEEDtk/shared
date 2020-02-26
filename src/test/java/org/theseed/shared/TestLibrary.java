@@ -342,6 +342,7 @@ public class TestLibrary extends TestCase {
             i++;
         }
         assertThat(i, equalTo(taxonomy.length));
+        assertTrue(myGto.hasContigs());
     }
 
     /**
