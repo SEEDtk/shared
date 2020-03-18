@@ -242,12 +242,26 @@ public class Genome  {
     }
 
     /**
-     * Initialize a bare-bones genome (used by super-classes only).
+     * Initialize a bare-bones genome by ID (used by super-classes only).
      *
      * @param genomeId	ID of this genome
      */
     protected Genome(String genomeId) {
         this.id = genomeId;
+        setup();
+    }
+
+    /**
+     * Initialize a bare-bones genome by name (used by super-classes only).
+     *
+     * @param name		name of this genome
+     * @param domain	domain of this genome
+     * @param code		genetic code of this genome
+     */
+    protected Genome(String name, String domain, int code) {
+        this.name = name;
+        this.domain = domain;
+        this.geneticCode = code;
         setup();
     }
 
