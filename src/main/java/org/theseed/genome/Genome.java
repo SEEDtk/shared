@@ -64,6 +64,8 @@ public class Genome  {
     private SortedSet<CloseGenome> closeGenomes;
     private String home;
     private LinkObject linker;
+    private String source;
+    private String sourceId;
 
 
 
@@ -92,6 +94,8 @@ public class Genome  {
         TAXON_LINEAGE_IDS(noEntries),
         TAXON_ID(2),
         KINGDOM("Bacteria"),
+        SOURCE(null),
+        SOURCE_ID(null),
         HOME("none")
         ;
 
@@ -163,6 +167,8 @@ public class Genome  {
         taxonomyId = this.gto.getIntegerOrDefault(GenomeKeys.NCBI_TAXONOMY_ID);
         geneticCode = this.gto.getIntegerOrDefault(GenomeKeys.GENETIC_CODE);
         domain = this.gto.getStringOrDefault(GenomeKeys.DOMAIN);
+        source = this.gto.getStringOrDefault(GenomeKeys.SOURCE);
+        sourceId = this.gto.getStringOrDefault(GenomeKeys.SOURCE_ID);
         // Extract the lineage IDs.
         Collection<JsonArray> lineageArray = this.gto.getCollectionOrDefault(GenomeKeys.NCBI_LINEAGE);
         this.lineage = lineageArray.stream().map(x -> new TaxItem(x)).toArray(n -> new TaxItem[n]);
@@ -259,6 +265,7 @@ public class Genome  {
      * @param code		genetic code of this genome
      */
     protected Genome(String name, String domain, int code) {
+        this.id = null;
         this.name = name;
         this.domain = domain;
         this.geneticCode = code;
@@ -440,6 +447,11 @@ public class Genome  {
         retVal.put(GenomeKeys.GENETIC_CODE.getKey(), this.geneticCode);
         retVal.put(GenomeKeys.NCBI_TAXONOMY_ID.getKey(), this.taxonomyId);
         retVal.put(GenomeKeys.HOME.getKey(), this.home);
+        // If we have source data, include it.
+        if (this.source != null) {
+            retVal.put(GenomeKeys.SOURCE.getKey(), this.source);
+            retVal.put(GenomeKeys.SOURCE_ID.getKey(), this.sourceId);
+        }
         // Add the lineage.
         JsonArray jtaxonomy = new JsonArray();
         for (TaxItem taxon : this.lineage) jtaxonomy.add(taxon.toJson());
@@ -718,6 +730,34 @@ public class Genome  {
             if (loc.getContigId().contentEquals(contigId))
                 feat.getLocation().setContigId(contig2Id);
         }
+    }
+
+    /**
+     * @return the source of the genome (i.e. "GenBank")
+     */
+    public String getSource() {
+        return source;
+    }
+
+    /**
+     * @param source 	the source of the genome (i.e. "GenBank")
+     */
+    public void setSource(String source) {
+        this.source = source;
+    }
+
+    /**
+     * @return the ID of the genome in its original source
+     */
+    public String getSourceId() {
+        return sourceId;
+    }
+
+    /**
+     * @param sourceId 	the ID of the genome in its original source
+     */
+    public void setSourceId(String sourceId) {
+        this.sourceId = sourceId;
     }
 
 

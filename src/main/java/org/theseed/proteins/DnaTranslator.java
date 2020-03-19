@@ -128,6 +128,18 @@ public class DnaTranslator {
     }
 
     /**
+     * Translate the specified coding region string.  Since this is a coding region, the
+     * start will be modified.
+     *
+     * @param dna		dna sequence to translate (must be lower case)
+     *
+     * @return the translated protein string
+     */
+    public String pegTranslate(String dna) {
+        return this.pegTranslate(dna, 1, dna.length());
+    }
+
+    /**
      * @return the amino acid for a single codon
      *
      * @param codon		triplet to translate
@@ -156,7 +168,7 @@ public class DnaTranslator {
      *
      * @return the protein translation of the whole DNA string
      */
-    public Object translate(String dna) {
+    public String translate(String dna) {
         return this.translate(dna, 1, dna.length());
     }
 

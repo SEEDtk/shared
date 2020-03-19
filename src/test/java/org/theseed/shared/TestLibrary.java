@@ -32,6 +32,7 @@ import org.theseed.genome.Feature;
 import org.theseed.genome.FeatureList;
 import org.theseed.genome.Genome;
 import org.theseed.genome.GenomeDirectory;
+import org.theseed.genome.GoTerm;
 import org.theseed.genome.TaxItem;
 import org.theseed.io.BalancedOutputStream;
 import org.theseed.io.Shuffler;
@@ -69,6 +70,8 @@ import static org.hamcrest.Matchers.*;
  *
  */
 public class TestLibrary extends TestCase {
+
+    private static final String GO_STRING = "GO:0033925|mannosyl-glycoprotein endo-beta-N-acetylglucosaminidase activity";
 
     /**
      * @param name
@@ -266,6 +269,8 @@ public class TestLibrary extends TestCase {
         assertEquals("Incorrect contig count.", 52, this.myGto.getContigCount());
         assertEquals("Incorrect length.", 2101113, this.myGto.getLength());
         assertEquals("Genome home not correct", "PATRIC", this.myGto.getHome());
+        assertEquals("Incorrect source.", "PATRIC", this.myGto.getSource());
+        assertEquals("Incorrect source ID.", "1313.7001", this.myGto.getSourceId());
         String testLink = this.myGto.genomeLink().render();
         assertThat(testLink, containsString("patricbrc"));
         assertThat(testLink, containsString("1313.7001"));
@@ -2144,5 +2149,21 @@ public class TestLibrary extends TestCase {
         for (Feature feat : contigFeatures)
             assertThat(feat.getLocation().getContigId(), equalTo(NEW_CONTIG));
         assertThat(contig.getId(), equalTo(NEW_CONTIG));
+    }
+
+    /**
+     * Test GO terms.
+     */
+    public void testGoTerms() {
+        GoTerm go = new GoTerm(33925);
+        assertThat(go.toString(), equalTo("GO:0033925"));
+        assertThat(go.getNumber(), equalTo(33925));
+        assertNull(go.getDescription());
+        GoTerm goBig = new GoTerm(GO_STRING);
+        assertThat(goBig.toString(), equalTo(GO_STRING));
+        assertThat(goBig.getDescription(), equalTo("mannosyl-glycoprotein endo-beta-N-acetylglucosaminidase activity"));
+        assertThat(goBig, equalTo(go));
+        goBig.setDescription("fake description");
+        assertThat(goBig.getDescription(), equalTo("fake description"));
     }
 }
