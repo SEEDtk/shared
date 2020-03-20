@@ -2,6 +2,7 @@ package org.theseed.genome;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -37,6 +38,7 @@ public class Feature implements Comparable<Feature> {
     private String pgfam;
     private List<Annotation> annotations;
     private JsonObject original;
+    private ArrayList<GoTerm> goTerms;
 
     /** parsing pattern for feature type */
     private static final Pattern TYPE_PATTERN = Pattern.compile("fig\\|\\d+\\.\\d+\\.(\\w+)\\.\\d+");
@@ -111,6 +113,7 @@ public class Feature implements Comparable<Feature> {
         PROTEIN_TRANSLATION(""),
         FAMILY_ASSIGNMENTS(null),
         LOCATION(null),
+        GO_TERMS(null),
         ANNOTATIONS(null);
 
         private final Object m_value;
@@ -202,6 +205,15 @@ public class Feature implements Comparable<Feature> {
                 this.annotations.add(annotation);
             }
         }
+        // Get the GO terms.
+        JsonArray goTermList = feat.getCollectionOrDefault(FeatureKeys.GO_TERMS);
+        this.goTerms = new ArrayList<GoTerm>();
+        if (goTermList != null) {
+            for (Object goTermObj : goTermList) {
+                GoTerm goTerm = new GoTerm((JsonArray) goTermObj);
+                this.goTerms.add(goTerm);
+            }
+        }
         // Finally, we look for the protein families.
         JsonArray families = feat.getCollectionOrDefault(FeatureKeys.FAMILY_ASSIGNMENTS);
         if (families != null && families.size() > 0) {
@@ -238,6 +250,7 @@ public class Feature implements Comparable<Feature> {
         this.location = loc;
         this.protein_translation = "";
         this.annotations = new ArrayList<Annotation>(3);
+        this.goTerms = new ArrayList<GoTerm>(2);
         // Save a blank JSON object as the original.
         this.original = new JsonObject();
     }
@@ -477,6 +490,16 @@ public class Feature implements Comparable<Feature> {
             annoList.add(anno0);
         }
         retVal.put(FeatureKeys.ANNOTATIONS.getKey(), annoList);
+        // Another array of arrays:  GO terms.
+        JsonArray goList = new JsonArray();
+        for (GoTerm goTerm : this.goTerms) {
+            JsonArray goTerm0 = new JsonArray().addChain(String.format("GO:%07d", goTerm.getNumber()));
+            if (goTerm.getDescription() != null)
+                goTerm0.addChain(goTerm.getDescription());
+            goList.add(goTerm0);
+        }
+        if (goList.size() > 0)
+            retVal.put(FeatureKeys.GO_TERMS.getKey(), goList);
         // Finally, store the protein families.
         JsonArray famList = new JsonArray();
         if (this.plfam != null) {
@@ -541,6 +564,24 @@ public class Feature implements Comparable<Feature> {
      */
     public void setProteinTranslation(String protein) {
         this.protein_translation = protein;
+    }
+
+    /**
+     * @return this feature's gene ontology terms
+     */
+    public Collection<GoTerm> getGoTerms() {
+        return this.goTerms;
+    }
+
+    /**
+     * Add a GO term to this feature.
+     *
+     * @param goString	a GO term string, containing "GO:" followed by the GO number and optionally a bar ("|")
+     * 					followed by the description
+     */
+    public void addGoTerm(String goString) {
+        GoTerm newGoTerm = new GoTerm(goString);
+        this.goTerms.add(newGoTerm);
     }
 
 

@@ -68,5 +68,41 @@ public class Annotation {
         return annotationTime;
     }
 
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        long temp;
+        temp = Double.doubleToLongBits(annotationTime);
+        result = prime * result + (int) (temp ^ (temp >>> 32));
+        result = prime * result + ((annotator == null) ? 0 : annotator.hashCode());
+        result = prime * result + ((comment == null) ? 0 : comment.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        Annotation other = (Annotation) obj;
+        if (Double.doubleToLongBits(annotationTime) != Double.doubleToLongBits(other.annotationTime))
+            return false;
+        if (annotator == null) {
+            if (other.annotator != null)
+                return false;
+        } else if (!annotator.equals(other.annotator))
+            return false;
+        if (comment == null) {
+            if (other.comment != null)
+                return false;
+        } else if (!comment.equals(other.comment))
+            return false;
+        return true;
+    }
+
 
 }

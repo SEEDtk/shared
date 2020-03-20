@@ -311,6 +311,7 @@ public class TestLibrary extends TestCase {
         assertEquals("Incorrect local family for sample feature.", "PLF_1301_00010583", myFeature.getPlfam());
         assertEquals("Incorrect global family for sample feature.", "PGF_07475842", myFeature.getPgfam());
         assertTrue("PEG not a CDS", myFeature.isCDS());
+        assertThat(myFeature.getGoTerms().size(), equalTo(0));
         // Next the location.
         Location myLoc = myFeature.getLocation();
         assertEquals("Incorrect contig for feature.", "1313.7001.con.0017", myLoc.getContigId());
@@ -333,6 +334,15 @@ public class TestLibrary extends TestCase {
         assertTrue("Segmentation flag failure.", myLoc.isSegmented());
         assertFalse("Non-peg typed as CDS", myFeature.isCDS());
         assertEquals("Incorrect DNA retrieval by location.", myDna2, this.myGto.getDna(myLoc));
+        // For fun, we check a feature with GO terms.
+        myFeature = this.myGto.getFeature("fig|1313.7001.peg.975");
+        GoTerm[] goTerms = new GoTerm[2];
+        assertThat(myFeature.getGoTerms().size(), equalTo(2));
+        goTerms = myFeature.getGoTerms().toArray(goTerms);
+        assertThat(goTerms[0].getNumber(), equalTo(46820));
+        assertThat(goTerms[0].getDescription(), equalTo("4-amino-4-deoxychorismate synthase activity"));
+        assertThat(goTerms[1].getNumber(), equalTo(8696));
+        assertThat(goTerms[1].getDescription(), equalTo("4-amino-4-deoxychorismate lyase activity"));
         // Now iterate over the proteins.
         for (Feature feat : this.myGto.getPegs()) {
             assertEquals("Feature" + feat.getId() + " is not a PEG.", "CDS", feat.getType());
@@ -1129,6 +1139,16 @@ public class TestLibrary extends TestCase {
         feat.setPlfam("PG2");
         assertThat(feat.getPlfam(), equalTo("PG2"));
         assertThat(feat.getPgfam(), equalTo("PG1"));
+        assertThat(feat.getGoTerms().size(), equalTo(0));
+        feat.addGoTerm("GO:0008696");
+        feat.addGoTerm("GO:0046820|4-amino-4-deoxychorismate synthase activity");
+        assertThat(feat.getGoTerms().size(), equalTo(2));
+        GoTerm[] goTerms = new GoTerm[2];
+        goTerms = feat.getGoTerms().toArray(goTerms);
+        assertThat(goTerms[0].getNumber(), equalTo(8696));
+        assertNull(goTerms[0].getDescription());
+        assertThat(goTerms[1].getNumber(), equalTo(46820));
+        assertThat(goTerms[1].getDescription(), equalTo("4-amino-4-deoxychorismate synthase activity"));
         Feature f2 = new Feature("fig|161.31.peg.10", "more hypothetical function", "c2", "+", 110, 220);
         assertThat(feat.compareTo(f2), equalTo(0));
         f2 = new Feature("fig|161.31.peg.2", "less hypothetical function", "c2", "+", 120, 240);
@@ -2160,10 +2180,59 @@ public class TestLibrary extends TestCase {
         assertThat(go.getNumber(), equalTo(33925));
         assertNull(go.getDescription());
         GoTerm goBig = new GoTerm(GO_STRING);
+        GoTerm goBig2 = new GoTerm(GO_STRING);
         assertThat(goBig.toString(), equalTo(GO_STRING));
         assertThat(goBig.getDescription(), equalTo("mannosyl-glycoprotein endo-beta-N-acetylglucosaminidase activity"));
-        assertThat(goBig, equalTo(go));
+        assertThat(goBig, not(equalTo(go)));
+        assertThat(goBig, equalTo(goBig2));
         goBig.setDescription("fake description");
         assertThat(goBig.getDescription(), equalTo("fake description"));
+        assertThat(goBig, not(equalTo(goBig2)));
+    }
+
+    /**
+     * Test GTO save/load
+     * @throws IOException
+     */
+    public void testSave() throws IOException {
+        File gtoFile = new File("src/test", "gto2.ser");
+        Genome gto = new Genome(new File("src/test/gto_test", "1313.7001.gto"));
+        gto.purify();
+        gto.update(gtoFile);
+        Genome diskGenome = new Genome(gtoFile);
+        assertThat(diskGenome.getId(), equalTo(gto.getId()));
+        assertThat(diskGenome.getName(), equalTo(gto.getName()));
+        assertThat(diskGenome.getDomain(), equalTo(gto.getDomain()));
+        assertThat(diskGenome.getLineage(), arrayContaining(gto.getLineage()));
+        assertThat(diskGenome.getGeneticCode(), equalTo(gto.getGeneticCode()));
+        assertThat(diskGenome.getTaxonomyId(), equalTo(gto.getTaxonomyId()));
+        assertThat(diskGenome.getFeatureCount(), equalTo(gto.getFeatureCount()));
+        assertThat(diskGenome.getContigCount(), equalTo(gto.getContigCount()));
+        Collection<Feature> fids = gto.getFeatures();
+        for (Feature fid : fids) {
+            Feature diskFid = diskGenome.getFeature(fid.getId());
+            assertThat(diskFid.getFunction(), equalTo(fid.getFunction()));
+            assertThat(diskFid.getLocation(), equalTo(fid.getLocation()));
+            assertThat(diskFid.getPlfam(), equalTo(fid.getPlfam()));
+            assertThat(diskFid.getType(), equalTo(fid.getType()));
+            assertThat(diskFid.getProteinTranslation(), equalTo(fid.getProteinTranslation()));
+            Collection<GoTerm> fidGoTerms = fid.getGoTerms();
+            assertThat(diskFid.getGoTerms().size(), equalTo(fidGoTerms.size()));
+            for (GoTerm diskGoTerm : diskFid.getGoTerms()) {
+                assertThat(fidGoTerms, hasItem(diskGoTerm));
+            }
+            Collection<Annotation> fidAnnotations = fid.getAnnotations();
+            assertThat(diskFid.getAnnotations().size(), equalTo(fidAnnotations.size()));
+            for (Annotation diskAnnotation : diskFid.getAnnotations()) {
+                assertThat(fidAnnotations, hasItem(diskAnnotation));
+            }
+        }
+        Collection<Contig> contigs = gto.getContigs();
+        for (Contig contig : contigs) {
+            Contig diskContig = diskGenome.getContig(contig.getId());
+            assertThat(diskContig.length(), equalTo(contig.length()));
+            assertThat(diskContig.getSequence(), equalTo(contig.getSequence()));
+        }
+
     }
 }

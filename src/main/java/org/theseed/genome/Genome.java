@@ -760,5 +760,12 @@ public class Genome  {
         this.sourceId = sourceId;
     }
 
+    /**
+     * Erase the original GTO so that only the in-memory data is saved.
+     */
+    public void purify() {
+        this.gto = new JsonObject();
+    }
+
 
 }
