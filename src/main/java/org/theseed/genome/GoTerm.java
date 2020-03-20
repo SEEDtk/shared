@@ -103,7 +103,11 @@ public class GoTerm {
 
     @Override
     public int hashCode() {
-        return number;
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((description == null) ? 0 : description.hashCode());
+        result = prime * result + number;
+        return result;
     }
 
     @Override
@@ -125,4 +129,5 @@ public class GoTerm {
         }
         return retVal;
     }
+
 }
