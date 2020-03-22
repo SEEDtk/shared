@@ -19,7 +19,7 @@ public class TaxItem {
 
     // FIELDS
     /** taxonomic ID */
-    private String id;
+    private int id;
     /** rank level */
     private String rank;
     /** taxonomy name */
@@ -87,7 +87,7 @@ public class TaxItem {
      */
     public TaxItem(JsonArray json) {
         this.name = json.getString(0);
-        this.id = json.getString(1);
+        this.id = json.getInteger(1);
         this.rank = json.getString(2);
     }
 
@@ -98,8 +98,21 @@ public class TaxItem {
      */
     public TaxItem(JsonObject json) {
         this.name = json.getStringOrDefault(TaxItemKeys.TAXON_NAME);
-        this.id = json.getStringOrDefault(TaxItemKeys.TAXON_ID);
+        this.id = json.getIntegerOrDefault(TaxItemKeys.TAXON_ID);
         this.rank = json.getStringOrDefault(TaxItemKeys.TAXON_RANK);
+    }
+
+    /**
+     * Create the taxon from the name, ID, and rank.
+     *
+     * @param id		taxonomic group ID
+     * @param name		taxonomic group name
+     * @param rank		taxonomic group rank
+     */
+    public TaxItem(int id, String name, String rank) {
+        this.name = name;
+        this.id = id;
+        this.rank = rank;
     }
 
     /**
@@ -112,7 +125,7 @@ public class TaxItem {
     /**
      * @return the id
      */
-    public String getId() {
+    public int getId() {
         return id;
     }
 

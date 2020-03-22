@@ -19,6 +19,7 @@ import java.util.Set;
 import java.util.SortedSet;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.theseed.counters.CountMap;
 import org.theseed.counters.KeyPair;
@@ -310,7 +311,7 @@ public class TestLibrary extends TestCase {
         assertEquals("Incorrect DNA for sample feature.", myDna1, this.myGto.getDna("fig|1313.7001.peg.758"));
         assertEquals("Incorrect local family for sample feature.", "PLF_1301_00010583", myFeature.getPlfam());
         assertEquals("Incorrect global family for sample feature.", "PGF_07475842", myFeature.getPgfam());
-        assertTrue("PEG not a CDS", myFeature.isCDS());
+        assertTrue("PEG not a CDS", myFeature.isProtein());
         assertThat(myFeature.getGoTerms().size(), equalTo(0));
         // Next the location.
         Location myLoc = myFeature.getLocation();
@@ -332,7 +333,7 @@ public class TestLibrary extends TestCase {
         assertEquals("Incorrect length for feature.", 209, myLoc.getLength());
         assertEquals("Incorrect strand for segmented location.", '+', myLoc.getDir());
         assertTrue("Segmentation flag failure.", myLoc.isSegmented());
-        assertFalse("Non-peg typed as CDS", myFeature.isCDS());
+        assertFalse("Non-peg typed as CDS", myFeature.isProtein());
         assertEquals("Incorrect DNA retrieval by location.", myDna2, this.myGto.getDna(myLoc));
         // For fun, we check a feature with GO terms.
         myFeature = this.myGto.getFeature("fig|1313.7001.peg.975");
@@ -345,10 +346,10 @@ public class TestLibrary extends TestCase {
         assertThat(goTerms[1].getDescription(), equalTo("4-amino-4-deoxychorismate lyase activity"));
         // Now iterate over the proteins.
         for (Feature feat : this.myGto.getPegs()) {
-            assertEquals("Feature" + feat.getId() + " is not a PEG.", "CDS", feat.getType());
+            assertTrue("Feature" + feat.getId() + " is not a PEG.", feat.isProtein());
         }
-        String[] taxonomy = new String[] {"1313", "1301", "1300", "186826", "91061",
-                                          "1239", "1783272", "2", "131567"};
+        int[] taxonomy = new int[] {1313, 1301, 1300, 186826, 91061,
+                                       1239, 1783272, 2, 131567};
         int i = 0;
         Iterator<TaxItem> iter = this.myGto.taxonomy();
         while (iter.hasNext()) {
@@ -654,7 +655,7 @@ public class TestLibrary extends TestCase {
         GenomeDirectory gDir = new GenomeDirectory("src/test/gto_test");
         assertEquals("Wrong number of genomes found.", 5, gDir.size());
         // Run through an iterator.  We know the genome IDs, we just need to find them in order.
-        String[] expected = new String[] { "1005394.4", "1313.7001", "1313.7002", "1313.7016", "221988.1" };
+        String[] expected = new String[] { "1005394.4", "1313.7001", "1313.7002", "1313.7016", "243277.26" };
         int i = 0;
         for (Genome genome : gDir) {
             assertEquals("Incorrect result for genome at position " + i + ".", expected[i], genome.getId());
@@ -1143,6 +1144,17 @@ public class TestLibrary extends TestCase {
         feat.addGoTerm("GO:0008696");
         feat.addGoTerm("GO:0046820|4-amino-4-deoxychorismate synthase activity");
         assertThat(feat.getGoTerms().size(), equalTo(2));
+        feat.formAlias("gi|", "");
+        assertThat(feat.getAliases().size(), equalTo(0));
+        feat.formAlias("gi|", "1234");
+        feat.addAlias("geneAlias");
+        feat.formAlias("", "swissThing");
+        assertThat(feat.getAliases().size(), equalTo(3));
+        String[] aliases = new String[3];
+        aliases = feat.getAliases().toArray(aliases);
+        assertThat(aliases[0], equalTo("gi|1234"));
+        assertThat(aliases[1], equalTo("geneAlias"));
+        assertThat(aliases[2], equalTo("swissThing"));
         GoTerm[] goTerms = new GoTerm[2];
         goTerms = feat.getGoTerms().toArray(goTerms);
         assertThat(goTerms[0].getNumber(), equalTo(8696));
@@ -1155,6 +1167,8 @@ public class TestLibrary extends TestCase {
         assertThat(feat.compareTo(f2), greaterThan(0));
         f2 = new Feature("fig|161.31.peg.20", "strange hypothetical function", "c2", "-", 220, 540);
         assertThat(feat.compareTo(f2), lessThan(0));
+        feat.setFunction("totally new function");
+        assertThat(feat.getFunction(), equalTo("totally new function"));
     }
 
     /**
@@ -1906,8 +1920,8 @@ public class TestLibrary extends TestCase {
         assertThat(annotations.get(1).getAnnotationTime(), equalTo(1500218027.75));
         assertThat(annotations.get(2).getComment(), equalTo("Analyze json"));
         assertThat(annotations.get(2).getAnnotator(), equalTo("TestLibrary"));
-        String[] lineage = smallGenome.getLineage();
-        assertThat(lineage, arrayContaining("131567", "2", "203691", "203692", "136", "137", "157", "160", "161"));
+        Integer[] lineage = ArrayUtils.toObject(smallGenome.getLineage());
+        assertThat(lineage, arrayContaining(131567, 2, 203691, 203692, 136, 137, 157, 160, 161));
         SortedSet<CloseGenome> closeGenomes = smallGenome.getCloseGenomes();
         CloseGenome curr = closeGenomes.first();
         assertThat(curr.getGenomeId(), equalTo("160.24"));
@@ -2196,14 +2210,14 @@ public class TestLibrary extends TestCase {
      */
     public void testSave() throws IOException {
         File gtoFile = new File("src/test", "gto2.ser");
-        Genome gto = new Genome(new File("src/test/gto_test", "1313.7001.gto"));
+        Genome gto = new Genome(new File("src/test/gto_test", "243277.26.gto"));
         gto.purify();
         gto.update(gtoFile);
         Genome diskGenome = new Genome(gtoFile);
         assertThat(diskGenome.getId(), equalTo(gto.getId()));
         assertThat(diskGenome.getName(), equalTo(gto.getName()));
         assertThat(diskGenome.getDomain(), equalTo(gto.getDomain()));
-        assertThat(diskGenome.getLineage(), arrayContaining(gto.getLineage()));
+        assertThat(ArrayUtils.toObject(diskGenome.getLineage()), arrayContaining(ArrayUtils.toObject(gto.getLineage())));
         assertThat(diskGenome.getGeneticCode(), equalTo(gto.getGeneticCode()));
         assertThat(diskGenome.getTaxonomyId(), equalTo(gto.getTaxonomyId()));
         assertThat(diskGenome.getFeatureCount(), equalTo(gto.getFeatureCount()));
@@ -2226,6 +2240,11 @@ public class TestLibrary extends TestCase {
             for (Annotation diskAnnotation : diskFid.getAnnotations()) {
                 assertThat(fidAnnotations, hasItem(diskAnnotation));
             }
+            Collection<String> fidAliases = fid.getAliases();
+            assertThat(diskFid.getAliases().size(), equalTo(fidAliases.size()));
+            for (String diskAlias : diskFid.getAliases()) {
+                assertThat(fidAliases, hasItem(diskAlias));
+            }
         }
         Collection<Contig> contigs = gto.getContigs();
         for (Contig contig : contigs) {
@@ -2235,4 +2254,37 @@ public class TestLibrary extends TestCase {
         }
 
     }
+
+    /**
+     * Test ad hoc genome creation.
+     */
+    public void testGtoCreation() {
+        Genome testGto = new Genome("1.1", "small test genome", "Virus", 1);
+        assertThat(testGto.getId(), equalTo("1.1"));
+        assertThat(testGto.getName(), equalTo("small test genome"));
+        assertThat(testGto.getDomain(), equalTo("Virus"));
+        assertThat(testGto.getGeneticCode(), equalTo(1));
+        assertThat(testGto.getFeatureCount(), equalTo(0));
+        assertThat(testGto.getContigCount(), equalTo(0));
+        testGto.setId("2.2");
+        assertThat(testGto.getId(), equalTo("2.2"));
+        TaxItem[] dummyLineage = new TaxItem[] { new TaxItem(10239, "Virus", "superkingdom"), new TaxItem(2559587, "Riboviria", "no rank"),
+                new TaxItem(76804, "Nidovirales", "order") };
+        testGto.setLineage(dummyLineage);
+        assertThat(testGto.getTaxonomyId(), equalTo(76804));
+        Iterator<TaxItem> taxonomy = testGto.taxonomy();
+        TaxItem taxon = taxonomy.next();
+        assertThat(taxon.getId(), equalTo(76804));
+        assertThat(taxon.getName(), equalTo("Nidovirales"));
+        assertThat(taxon.getRank(), equalTo("order"));
+        taxon = taxonomy.next();
+        assertThat(taxon.getId(), equalTo(2559587));
+        assertThat(taxon.getName(), equalTo("Riboviria"));
+        assertThat(taxon.getRank(), equalTo("no rank"));
+        taxon = taxonomy.next();
+        assertThat(taxon.getId(), equalTo(10239));
+        assertThat(taxon.getName(), equalTo("Virus"));
+        assertThat(taxon.getRank(), equalTo("superkingdom"));
+    }
+
 }

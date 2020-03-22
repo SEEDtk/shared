@@ -79,19 +79,21 @@ public class TabbedLineReader implements Closeable, AutoCloseable, Iterable<Tabb
         }
 
         /**
-         * @return the number in the indexed column
+         * @return the number in the indexed column, or 0 if the column is empty
          *
          * An invalid numeric value throws a RunTimeException.
          *
          * @param idx	index (0-based) of the column in question, as returned by findField
          */
         public int getInt(int idx) {
-            int retVal;
+            int retVal = 0;
             String colValue = this.fields[idx];
-            try {
-                retVal = Integer.parseInt(colValue);
-            } catch (NumberFormatException e) {
-                throw new RuntimeException("Invalid value \"" + colValue + "\" in numeric input column.");
+            if (colValue != null && ! colValue.isEmpty()) {
+                try {
+                    retVal = Integer.parseInt(colValue);
+                } catch (NumberFormatException e) {
+                    throw new RuntimeException("Invalid value \"" + colValue + "\" in numeric input column.");
+                }
             }
             return retVal;
         }

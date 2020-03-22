@@ -321,7 +321,7 @@ public class Genome  {
         Collection<Feature> featList = this.getFeatures();
         ArrayList<Feature> retVal = new ArrayList<Feature>(featList.size());
         for (Feature feat : featList) {
-            if (feat.getType().equals("CDS")) {
+            if (feat.isProtein()) {
                 retVal.add(feat);
             }
         }
@@ -504,8 +504,8 @@ public class Genome  {
     /**
      * @return the taxonomic lineage ids for this genome
      */
-    public String[] getLineage() {
-        String[] retVal = new String[this.lineage.length];
+    public int[] getLineage() {
+        int[] retVal = new int[this.lineage.length];
         for (int i = 0; i < this.lineage.length; i++) retVal[i] = this.lineage[i].getId();
         return retVal;
     }
@@ -765,6 +765,23 @@ public class Genome  {
      */
     public void purify() {
         this.gto = new JsonObject();
+    }
+
+    /**
+     * Specify the genome ID.  This does not fix feature IDs, so the genome should be basically empty.
+     *
+     * @param id 	the id of this genome
+     */
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    /**
+     * @param lineage 	the taxonomic lineage for this genome
+     */
+    public void setLineage(TaxItem[] lineage) {
+        this.lineage = lineage;
+        this.taxonomyId = lineage[lineage.length - 1].getId();
     }
 
 

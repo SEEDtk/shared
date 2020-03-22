@@ -38,7 +38,8 @@ public class Feature implements Comparable<Feature> {
     private String pgfam;
     private List<Annotation> annotations;
     private JsonObject original;
-    private ArrayList<GoTerm> goTerms;
+    private Collection<GoTerm> goTerms;
+    private Collection<String> aliases;
 
     /** parsing pattern for feature type */
     private static final Pattern TYPE_PATTERN = Pattern.compile("fig\\|\\d+\\.\\d+\\.(\\w+)\\.\\d+");
@@ -65,6 +66,8 @@ public class Feature implements Comparable<Feature> {
             // For historical reasons, CDS features have a name of "peg".
             if (retVal.contentEquals("peg")) {
                 retVal = "CDS";
+            } else if (retVal.contentEquals("mp")) {
+                retVal = "mat_peptide";
             }
         }
         return retVal;
@@ -109,11 +112,12 @@ public class Feature implements Comparable<Feature> {
     public static enum FeatureKeys implements JsonKey {
         ID("missing"),
         TYPE("CDS"),
-        FUNCTION("hypothetical protein"),
+        FUNCTION(""),
         PROTEIN_TRANSLATION(""),
         FAMILY_ASSIGNMENTS(null),
         LOCATION(null),
         GO_TERMS(null),
+        ALIASES(null),
         ANNOTATIONS(null);
 
         private final Object m_value;
@@ -214,6 +218,13 @@ public class Feature implements Comparable<Feature> {
                 this.goTerms.add(goTerm);
             }
         }
+        // Get the aliases.
+        JsonArray aliasList = feat.getCollectionOrDefault(FeatureKeys.ALIASES);
+        this.aliases = new ArrayList<String>();
+        if (aliasList != null) {
+            for (int i = 0; i < aliasList.size(); i++)
+                this.aliases.add(aliasList.getString(i));
+        }
         // Finally, we look for the protein families.
         JsonArray families = feat.getCollectionOrDefault(FeatureKeys.FAMILY_ASSIGNMENTS);
         if (families != null && families.size() > 0) {
@@ -251,6 +262,7 @@ public class Feature implements Comparable<Feature> {
         this.protein_translation = "";
         this.annotations = new ArrayList<Annotation>(3);
         this.goTerms = new ArrayList<GoTerm>(2);
+        this.aliases = new ArrayList<String>(4);
         // Save a blank JSON object as the original.
         this.original = new JsonObject();
     }
@@ -458,8 +470,8 @@ public class Feature implements Comparable<Feature> {
     /**
      * @return TRUE if this is a protein-encoding feature
      */
-    public boolean isCDS() {
-        return this.type.contentEquals("CDS");
+    public boolean isProtein() {
+        return this.type.contentEquals("CDS")  || this.type.contentEquals("mat_peptide");
     }
 
     /**
@@ -584,5 +596,46 @@ public class Feature implements Comparable<Feature> {
         this.goTerms.add(newGoTerm);
     }
 
+    /**
+     * If the specified alias string is nonempty, add it as an alias with the specified prefix.
+     *
+     * @param prefix	prefix to identifiy the alias type
+     * @param alias		possible alias ID for this feature
+     */
+    public void formAlias(String prefix, String alias) {
+        if (alias != null && alias.length() > 0)
+            this.addAlias(prefix + alias);
+        }
+
+    /**
+     * Add a new alias ID for this feature.
+     *
+     * @param aliasId	alias (with prefix)
+     */
+    public void addAlias(String aliasId) {
+        this.aliases.add(aliasId);
+    }
+
+    /**
+     * @return this feature's list of aliases.
+     */
+    public Collection<String> getAliases() {
+        return this.aliases;
+    }
+
+    @Override
+    public String toString() {
+        return "Feature [" + (id != null ? id : "") + (function != null ? ", " + function : "")
+                + "]";
+    }
+
+    /**
+     * Specify a new functional assignment for this feature.
+     *
+     * @param function		new function to assign
+     */
+    public void setFunction(String function) {
+        this.function = function;
+    }
 
 }
