@@ -37,6 +37,7 @@ public class DnaTranslator {
 
     // FIELDS
     private Map<String, String> translationMap;
+    private int geneticCode;
 
 
     /**
@@ -45,6 +46,7 @@ public class DnaTranslator {
      * @param gc	genetic code to use
      */
     public DnaTranslator(int gc) {
+        this.geneticCode = gc;
         if (gc == 1 || gc == 11) {
             // Use the default map.
             this.translationMap = GENETIC_CODE_11;
@@ -170,6 +172,13 @@ public class DnaTranslator {
      */
     public String translate(String dna) {
         return this.translate(dna, 1, dna.length());
+    }
+
+    /**
+     * @return the genetic code for this translator
+     */
+    public int getGeneticCode() {
+        return geneticCode;
     }
 
 }

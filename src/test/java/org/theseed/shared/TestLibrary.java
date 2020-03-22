@@ -345,9 +345,12 @@ public class TestLibrary extends TestCase {
         assertThat(goTerms[1].getNumber(), equalTo(8696));
         assertThat(goTerms[1].getDescription(), equalTo("4-amino-4-deoxychorismate lyase activity"));
         // Now iterate over the proteins.
-        for (Feature feat : this.myGto.getPegs()) {
+        for (Feature feat : this.myGto.getPegs())
             assertTrue("Feature" + feat.getId() + " is not a PEG.", feat.isProtein());
-        }
+        // Iterate over all features to make sure they have the correct parent.
+        for (Feature feat : this.myGto.getFeatures())
+            assertThat("Feature " + feat + " does not have the correct parent.", feat.getParent(), equalTo(myGto));
+        // Test the taxonomy.
         int[] taxonomy = new int[] {1313, 1301, 1300, 186826, 91061,
                                        1239, 1783272, 2, 131567};
         int i = 0;
@@ -1413,8 +1416,10 @@ public class TestLibrary extends TestCase {
                 "TLATAGAARPGLARAHRRKRSESGVGIRGYRDEFLDATATVDAATDVPAPANAAGSQGAG" +
                 "TLGFAGTAPTTSGAAAGMVQLSSHSTSTTVPLLPTTWTTDAEQW";
         assertThat(xlator.pegTranslate(dna1, 1, dna1.length()), equalTo(prot1));
+        assertThat(xlator.getGeneticCode(), equalTo(4));
         // Verify that we can switch to 11.
         xlator = new DnaTranslator(11);
+        assertThat(xlator.getGeneticCode(), equalTo(11));
         String prot2 = StringUtils.chop(prot1) + "*";
         assertThat(xlator.pegTranslate(dna1, 1, dna1.length()), equalTo(prot2));
         // Try a bad character.
@@ -1939,6 +1944,7 @@ public class TestLibrary extends TestCase {
         Feature rna = new Feature("fig|161.31.rna.1", "brand new RNA", "161.31.con.0001", "-", 89101, 90100);
         rna.setPgfam("PGF_RNA1");
         smallGenome.addFeature(rna);
+        assertThat(rna.getParent(), equalTo(smallGenome));
         Contig fakeContig = new Contig("161.31.con.0002", "aaaccctttggg", 11);
         smallGenome.addContig(fakeContig);
         File testFile = new File("src/test", "gto.ser");

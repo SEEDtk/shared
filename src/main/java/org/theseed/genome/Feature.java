@@ -40,6 +40,7 @@ public class Feature implements Comparable<Feature> {
     private JsonObject original;
     private Collection<GoTerm> goTerms;
     private Collection<String> aliases;
+    private Genome parent;
 
     /** parsing pattern for feature type */
     private static final Pattern TYPE_PATTERN = Pattern.compile("fig\\|\\d+\\.\\d+\\.(\\w+)\\.\\d+");
@@ -636,6 +637,20 @@ public class Feature implements Comparable<Feature> {
      */
     public void setFunction(String function) {
         this.function = function;
+    }
+
+    /**
+     * @return the parent genome
+     */
+    public Genome getParent() {
+        return parent;
+    }
+
+    /**
+     * @param parent 	attach this feature to a parent genome
+     */
+    public void setParent(Genome parent) {
+        this.parent = parent;
     }
 
 }

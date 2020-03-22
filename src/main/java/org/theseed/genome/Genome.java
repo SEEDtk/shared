@@ -179,10 +179,10 @@ public class Genome  {
             this.closeGenomes.add(new CloseGenome(close));
         // Now we need to process the features and contigs.
         Collection<JsonObject> featureList = this.gto.getCollectionOrDefault(GenomeKeys.FEATURES);
-        features = new HashMap<String, Feature>();
+        this.features = new HashMap<String, Feature>();
         for (JsonObject feat : featureList) {
             Feature feature = new Feature(feat);
-            features.put(feature.getId(), feature);
+            this.addFeature(feature);
         }
         Collection<JsonObject> contigList = this.gto.getCollectionOrDefault(GenomeKeys.CONTIGS);
         contigs = new HashMap<String, Contig>();
@@ -262,13 +262,11 @@ public class Genome  {
      *
      * @param name		name of this genome
      * @param domain	domain of this genome
-     * @param code		genetic code of this genome
      */
-    protected Genome(String name, String domain, int code) {
+    protected Genome(String name, String domain) {
         this.id = null;
         this.name = name;
         this.domain = domain;
-        this.geneticCode = code;
         setup();
     }
 
@@ -418,6 +416,7 @@ public class Genome  {
      */
     public void addFeature(Feature feat) {
         this.features.put(feat.getId(), feat);
+        feat.setParent(this);
     }
 
     /**
