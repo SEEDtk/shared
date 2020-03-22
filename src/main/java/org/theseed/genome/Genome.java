@@ -585,8 +585,10 @@ public class Genome  {
      *
      * @param code	code to store
      */
-    protected void setGeneticCode(int code) {
+    public void setGeneticCode(int code) {
         this.geneticCode = code;
+        for (Contig contig : this.contigs.values())
+            contig.setGeneticCode(code);
     }
 
     /**
@@ -781,6 +783,13 @@ public class Genome  {
     public void setLineage(TaxItem[] lineage) {
         this.lineage = lineage;
         this.taxonomyId = lineage[lineage.length - 1].getId();
+    }
+
+    /**
+     * @param name		the scientific name for this genome
+     */
+    public void setName(String name) {
+        this.name = name;
     }
 
 

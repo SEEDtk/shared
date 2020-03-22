@@ -2272,6 +2272,8 @@ public class TestLibrary extends TestCase {
         assertThat(testGto.getGeneticCode(), equalTo(1));
         assertThat(testGto.getFeatureCount(), equalTo(0));
         assertThat(testGto.getContigCount(), equalTo(0));
+        testGto.setName("New test name");
+        assertThat(testGto.getName(), equalTo("New test name"));
         testGto.setId("2.2");
         assertThat(testGto.getId(), equalTo("2.2"));
         TaxItem[] dummyLineage = new TaxItem[] { new TaxItem(10239, "Virus", "superkingdom"), new TaxItem(2559587, "Riboviria", "no rank"),
@@ -2291,6 +2293,17 @@ public class TestLibrary extends TestCase {
         assertThat(taxon.getId(), equalTo(10239));
         assertThat(taxon.getName(), equalTo("Virus"));
         assertThat(taxon.getRank(), equalTo("superkingdom"));
+        Contig contig = new Contig("contig1", "AAAAAGGGGGCCCCCTTTTT", 1);
+        testGto.addContig(contig);
+        contig = new Contig("contig2", "AAAACCCCGGGGTTTT", 1);
+        testGto.addContig(contig);
+        testGto.setGeneticCode(11);
+        assertThat(testGto.getGeneticCode(), equalTo(11));
+        for (Contig contig0 : testGto.getContigs()) {
+            assertThat(contig0.getGeneticCode(), equalTo(11));
+            String seq = contig0.getSequence();
+            assertThat(seq.toLowerCase(), equalTo(seq));
+        }
     }
 
 }

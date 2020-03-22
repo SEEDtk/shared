@@ -99,7 +99,7 @@ public class Contig {
      */
     public Contig(String contigId, String sequence, int code) {
         this.id = contigId;
-        this.sequence = sequence;
+        this.sequence = sequence.toLowerCase();
         this.geneticCode = code;
         this.length = sequence.length();
     }
@@ -208,6 +208,15 @@ public class Contig {
      */
     protected void setId(String contig2Id) {
         this.id = contig2Id;
+    }
+
+    /**
+     * Update the genetic code stored in this contig.
+     *
+     * @param code	new genetic code
+     */
+    public void setGeneticCode(int code) {
+        this.geneticCode = code;
     }
 
 }
