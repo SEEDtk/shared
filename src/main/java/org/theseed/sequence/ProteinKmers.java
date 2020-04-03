@@ -30,7 +30,7 @@ public class ProteinKmers extends SequenceKmers {
     }
 
     /**
-     * Specify a new global sequence kmer size.
+     * Specify a new global protein kmer size.
      *
      * @param kSize	proposed new kmer size
      */
@@ -39,7 +39,7 @@ public class ProteinKmers extends SequenceKmers {
     }
 
     /**
-     * @return the current sequence kmer size
+     * @return the current protein kmer size
      */
     public static int kmerSize() {
         return K;

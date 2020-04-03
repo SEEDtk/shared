@@ -55,6 +55,7 @@ import org.theseed.proteins.kmers.KmerCollectionGroup;
 import org.theseed.sequence.DnaKmers;
 import org.theseed.sequence.FastaInputStream;
 import org.theseed.sequence.FastaOutputStream;
+import org.theseed.sequence.GenomeKmers;
 import org.theseed.sequence.MD5Hex;
 import org.theseed.sequence.ProteinKmers;
 import org.theseed.sequence.Sequence;
@@ -2337,4 +2338,29 @@ public class TestLibrary extends TestCase {
         }
     }
 
+    /**
+     * test genome kmers
+     *
+     * @throws IOException
+     * @throws NoSuchAlgorithmException
+     */
+    public void testGenomeKmers() throws IOException, NoSuchAlgorithmException {
+        Genome g = new Genome(new File("src/test/gto_test", "1005394.4.gto"));
+        GenomeKmers kmer1 = new GenomeKmers(g);
+        g = new Genome(new File("src/test/gto_test", "1313.7001.gto"));
+        GenomeKmers kmer2 = new GenomeKmers(g);
+        g = new Genome(new File("src/test/gto_test", "1313.7002.gto"));
+        GenomeKmers kmer3 = new GenomeKmers(g);
+        g = null;
+        assertFalse(kmer1.equals(kmer2));
+        assertFalse(kmer2.equals(kmer3));
+        assertThat(kmer1.getGenomeId(), equalTo("1005394.4"));
+        assertThat(kmer2.getGenomeId(), equalTo("1313.7001"));
+        assertThat(kmer1.similarity(kmer2), equalTo(440));
+        assertThat(kmer2.similarity(kmer3), equalTo(3109486));
+        assertThat(kmer3.similarity(kmer2), equalTo(3109486));
+        assertThat(kmer1.distance(kmer2), closeTo(1.0, 0.001));
+        assertThat(kmer2.distance(kmer3), closeTo(0.386, 0.001));
+        assertThat(kmer2.distance(kmer3), equalTo(kmer3.distance(kmer2)));
+    }
 }

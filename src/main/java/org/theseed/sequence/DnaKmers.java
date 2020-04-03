@@ -27,6 +27,11 @@ public class DnaKmers extends SequenceKmers {
     /** original DNA sequence */
     private String original;
 
+    /**
+     * Create kmers for a single DNA sequence.
+     *
+     * @param dna	dna sequence to process
+     */
     public DnaKmers(String dna) {
         // Get the reverse complement.
         this.original = dna.toLowerCase();
@@ -41,8 +46,9 @@ public class DnaKmers extends SequenceKmers {
         }
     }
 
+
     /**
-     * Specify a new global sequence kmer size.
+     * Specify a new global DNA kmer size.
      *
      * @param kSize	proposed new kmer size
      */
@@ -51,7 +57,7 @@ public class DnaKmers extends SequenceKmers {
     }
 
     /**
-     * @return the current sequence kmer size
+     * @return the current DNA kmer size
      */
     public static int kmerSize() {
         return K;

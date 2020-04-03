@@ -101,11 +101,4 @@ public abstract class SequenceKmers {
         return this.sequence.contentEquals(otherSeq);
     }
 
-    /**
-     * @return the sequence from which the kmers were generated
-     */
-    public String getSequence() {
-        return this.sequence;
-    }
-
 }
