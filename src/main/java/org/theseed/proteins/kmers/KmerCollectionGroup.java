@@ -8,7 +8,9 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.theseed.sequence.ProteinKmers;
 import org.theseed.sequence.Sequence;
+import org.theseed.sequence.SequenceKmers;
 
 /**
  * This class loads a list of sequences into a named sequence collection.  The sequences can then be used to
@@ -88,7 +90,7 @@ public class KmerCollectionGroup {
             // Create kmers for the sequence.
             ProteinKmers kmers = new ProteinKmers(seqProt);
             // Search for the best distance.
-            for (ProteinKmers protein : target) {
+            for (SequenceKmers protein : target) {
                 double dist = protein.distance(kmers);
                 if (dist < retVal) retVal = dist;
             }

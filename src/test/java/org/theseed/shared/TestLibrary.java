@@ -52,10 +52,11 @@ import org.theseed.proteins.DnaTranslator;
 import org.theseed.proteins.Role;
 import org.theseed.proteins.RoleMap;
 import org.theseed.proteins.kmers.KmerCollectionGroup;
-import org.theseed.proteins.kmers.ProteinKmers;
+import org.theseed.sequence.DnaKmers;
 import org.theseed.sequence.FastaInputStream;
 import org.theseed.sequence.FastaOutputStream;
 import org.theseed.sequence.MD5Hex;
+import org.theseed.sequence.ProteinKmers;
 import org.theseed.sequence.Sequence;
 import org.theseed.utils.FloatList;
 import org.theseed.utils.IntegerList;
@@ -1882,7 +1883,7 @@ public class TestLibrary extends TestCase {
     /**
      * test protein kmers
      */
-    public void testKmers() {
+    public void testProtKmers() {
         ProteinKmers.setKmerSize(10);
         String myProt1 = "MGMLVPLISKISDLSEEAKACVAACSSVEELDEVRGRYIGRAGALTALLA"; // 50 AA
         String myProt2 = "MDINLFKEELEELAKKAKHMLNETASKNDLEQVKVSLLGKKGLLTLQSAA";
@@ -1896,6 +1897,36 @@ public class TestLibrary extends TestCase {
         assertEquals("Similarity not commutative.", 3, kmer3.similarity(kmer2));
         assertEquals("Kmer1 too close to kmer2.", 1.0, kmer1.distance(kmer2), 0.0);
         assertEquals("Kmer1 too close to kmer3.", 0.95, kmer2.distance(kmer3), 0.005);
+    }
+
+    /**
+     * test DNA kmers
+     */
+    public void testDnaKmers() {
+        DnaKmers.setKmerSize(12);
+        String myDna1 = "ATGTTTGTTTTTCTTGTTTTATTGCCACTAGTCTCTATAACACTGCTGAC"; // 50 bp
+        String myDna2 = "atgtttgtaatcgttgttttattgccagtagtagtagtcagcagtgttaa";
+        String myDna2r = "TTAACACTGCTGACTACTACTACTGGCAATAAAACAACGATTACAAACAT"; // rev of 2
+        String myDna3 = "ATGTTTGTTTTTCTTGTTTTATTGCCACTA"; // 30 bp
+        DnaKmers kmer1 = new DnaKmers(myDna1);
+        DnaKmers kmer2 = new DnaKmers(myDna2);
+        DnaKmers kmer2r = new DnaKmers(myDna2r);
+        DnaKmers kmer3 = new DnaKmers(myDna3);
+        assertThat(myDna1.toLowerCase(), equalTo(kmer1.getDna()));
+        assertThat(myDna2.toLowerCase(), equalTo(kmer2.getDna()));
+        assertThat(myDna3.toLowerCase(), equalTo(kmer3.getDna()));
+        assertFalse(kmer1.equals(kmer2));
+        assertFalse(kmer2.equals(kmer1));
+        assertTrue(kmer2.equals(kmer2r));
+        assertTrue(kmer2r.equals(kmer2));
+        assertThat(kmer2.hashCode(), equalTo(kmer2r.hashCode()));
+        assertThat(kmer2.distance(kmer2r), equalTo(0.0));
+        assertThat(kmer1.similarity(kmer2), equalTo(10));
+        assertThat(kmer1.similarity(kmer2r), equalTo(10));
+        assertThat(kmer1.similarity(kmer3), equalTo(38));
+        assertThat(kmer3.similarity(kmer1), equalTo(38));
+        assertThat(kmer1.distance(kmer2), closeTo(0.932, 0.001));
+        assertThat(kmer1.distance(kmer3), closeTo(0.513, 0.001));
     }
 
     /**
