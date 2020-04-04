@@ -2356,6 +2356,7 @@ public class TestLibrary extends TestCase {
      * @throws NoSuchAlgorithmException
      */
     public void testGenomeKmers() throws IOException, NoSuchAlgorithmException {
+        GenomeKmers.setKmerSize(24);
         Genome g = new Genome(new File("src/test/gto_test", "1005394.4.gto"));
         GenomeKmers kmer1 = new GenomeKmers(g);
         g = new Genome(new File("src/test/gto_test", "1313.7001.gto"));
@@ -2368,9 +2369,9 @@ public class TestLibrary extends TestCase {
         assertThat(kmer1.getGenomeId(), equalTo("1005394.4"));
         assertThat(kmer2.getGenomeId(), equalTo("1313.7001"));
         assertThat(kmer3.getGenomeName(), equalTo("Streptococcus pneumoniae P210824-213"));
-        assertThat(kmer1.similarity(kmer2), equalTo(440));
-        assertThat(kmer2.similarity(kmer3), equalTo(3109486));
-        assertThat(kmer3.similarity(kmer2), equalTo(3109486));
+        assertThat(kmer1.similarity(kmer2), equalTo(220));
+        assertThat(kmer2.similarity(kmer3), equalTo(1554743));
+        assertThat(kmer3.similarity(kmer2), equalTo(1554743));
         assertThat(kmer1.distance(kmer2), closeTo(1.0, 0.001));
         assertThat(kmer2.distance(kmer3), closeTo(0.386, 0.001));
         assertThat(kmer2.distance(kmer3), equalTo(kmer3.distance(kmer2)));

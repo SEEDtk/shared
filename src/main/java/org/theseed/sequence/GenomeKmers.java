@@ -53,11 +53,12 @@ public class GenomeKmers extends SequenceKmers {
         // Process the contigs.
         for (Contig contig : genome.getContigs()) {
             String seq = contig.getSequence();
-            String rev = contig.getRSequence();
             int n = seq.length() - K;
             for (int i = 0; i < n; i++) {
-                this.kmerSet.add(seq.substring(i, i + K));
-                this.kmerSet.add(rev.substring(i, i + K));
+                String plus = seq.substring(i, i + K);
+                String minus = Contig.reverse(plus);
+                if (plus.compareTo(minus) > 0) plus = minus;
+                this.kmerSet.add(plus);
             }
         }
     }
