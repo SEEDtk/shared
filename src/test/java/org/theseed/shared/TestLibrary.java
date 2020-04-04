@@ -10,6 +10,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -59,6 +60,7 @@ import org.theseed.sequence.GenomeKmers;
 import org.theseed.sequence.MD5Hex;
 import org.theseed.sequence.ProteinKmers;
 import org.theseed.sequence.Sequence;
+import org.theseed.sequence.SequenceKmers;
 import org.theseed.utils.FloatList;
 import org.theseed.utils.IntegerList;
 import org.theseed.utils.Parms;
@@ -1898,6 +1900,15 @@ public class TestLibrary extends TestCase {
         assertEquals("Similarity not commutative.", 3, kmer3.similarity(kmer2));
         assertEquals("Kmer1 too close to kmer2.", 1.0, kmer1.distance(kmer2), 0.0);
         assertEquals("Kmer1 too close to kmer3.", 0.95, kmer2.distance(kmer3), 0.005);
+        Set<Integer> hash1 = kmer1.hashSet();
+        Set<Integer> hash2 = kmer2.hashSet();
+        Set<Integer> hash3 = kmer3.hashSet();
+        assertThat(hash1.size() / (double) kmer1.size(), greaterThan(0.99));
+        assertThat(hash2.size() / (double) kmer2.size(), greaterThan(0.99));
+        assertThat(hash3.size() / (double) kmer3.size(), greaterThan(0.99));
+        assertThat(Collections.max(hash1), lessThan(SequenceKmers.DICT_SIZE));
+        assertThat(Collections.max(hash2), lessThan(SequenceKmers.DICT_SIZE));
+        assertThat(Collections.max(hash3), lessThan(SequenceKmers.DICT_SIZE));
     }
 
     /**
@@ -2363,5 +2374,14 @@ public class TestLibrary extends TestCase {
         assertThat(kmer1.distance(kmer2), closeTo(1.0, 0.001));
         assertThat(kmer2.distance(kmer3), closeTo(0.386, 0.001));
         assertThat(kmer2.distance(kmer3), equalTo(kmer3.distance(kmer2)));
+        Set<Integer> hash1 = kmer1.hashSet();
+        Set<Integer> hash2 = kmer2.hashSet();
+        Set<Integer> hash3 = kmer3.hashSet();
+        assertThat(hash1.size() / (double) kmer1.size(), greaterThan(0.99));
+        assertThat(hash2.size() / (double) kmer2.size(), greaterThan(0.99));
+        assertThat(hash3.size() / (double) kmer3.size(), greaterThan(0.99));
+        assertThat(Collections.max(hash1), lessThan(SequenceKmers.DICT_SIZE));
+        assertThat(Collections.max(hash2), lessThan(SequenceKmers.DICT_SIZE));
+        assertThat(Collections.max(hash3), lessThan(SequenceKmers.DICT_SIZE));
     }
 }

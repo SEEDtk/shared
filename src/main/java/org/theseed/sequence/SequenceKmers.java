@@ -1,6 +1,7 @@
 package org.theseed.sequence;
 
 import java.util.HashSet;
+import java.util.Set;
 
 public abstract class SequenceKmers {
 
@@ -8,6 +9,13 @@ public abstract class SequenceKmers {
 
     /** similarity score for identical proteins */
     public static final int INFINITY = 9999;
+
+    /** hashing mask for individual kmers */
+    private static final int HASH_MASK = 0x3FFFFFFF;
+    /** dictionary size for kmer hashes */
+    public static final int DICT_SIZE = HASH_MASK + 1;
+    /** lowest possible upper-case letter */
+    private static final int MIN_CODE = (int) 'A' - 1;
 
     /** initial sequence string */
     protected String sequence;
@@ -99,6 +107,21 @@ public abstract class SequenceKmers {
      */
     protected boolean sameSequence(String otherSeq) {
         return this.sequence.contentEquals(otherSeq);
+    }
+
+    /**
+     * @return a set of integers representing the kmers in this object
+     */
+    public Set<Integer> hashSet() {
+        HashSet<Integer> retVal = new HashSet<Integer>(this.size());
+        for (String kmer : this.kmerSet) {
+            int hash = 0;
+            for (char letter : kmer.toCharArray()) {
+                hash = hash * 23 + Math.max(0, letter - MIN_CODE);
+            }
+            retVal.add(hash & HASH_MASK);
+        }
+        return retVal;
     }
 
 }
