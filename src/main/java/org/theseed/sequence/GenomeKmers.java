@@ -29,6 +29,9 @@ public class GenomeKmers extends SequenceKmers {
     /** ID of the genome represented */
     private String genomeId;
 
+    /** name of the genome represented */
+    private String genomeName;
+
     /**
      * Create a kmer object for a genome.  This can be used to determine genome
      * similarity.
@@ -42,8 +45,9 @@ public class GenomeKmers extends SequenceKmers {
         // Store the genome MD5 as the identifying sequence.
         MD5Hex md5Computer = new MD5Hex();
         this.sequence = md5Computer.sequenceMD5(genome);
-        // Save the genome ID.
+        // Save the genome ID and name.
         this.genomeId = genome.getId();
+        this.genomeName = genome.getName();
         // Create the kmer hash.
         this.kmerSet = new HashSet<String>();
         // Process the contigs.
@@ -79,6 +83,13 @@ public class GenomeKmers extends SequenceKmers {
      */
     public String getGenomeId() {
         return this.genomeId;
+    }
+
+    /**
+     * @return the name of the genome used to create this kmer set
+     */
+    public String getGenomeName() {
+        return this.genomeName;
     }
 
 }

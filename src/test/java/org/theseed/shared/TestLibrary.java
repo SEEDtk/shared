@@ -2356,6 +2356,7 @@ public class TestLibrary extends TestCase {
         assertFalse(kmer2.equals(kmer3));
         assertThat(kmer1.getGenomeId(), equalTo("1005394.4"));
         assertThat(kmer2.getGenomeId(), equalTo("1313.7001"));
+        assertThat(kmer3.getGenomeName(), equalTo("Streptococcus pneumoniae P210824-213"));
         assertThat(kmer1.similarity(kmer2), equalTo(440));
         assertThat(kmer2.similarity(kmer3), equalTo(3109486));
         assertThat(kmer3.similarity(kmer2), equalTo(3109486));
