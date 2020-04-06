@@ -56,6 +56,9 @@ public abstract class BaseProcessor implements ICommand {
                     LoggerContext loggerContext = (LoggerContext) LoggerFactory.getILoggerFactory();
                     ch.qos.logback.classic.Logger logger = loggerContext.getLogger("org.theseed");
                     logger.setLevel(Level.toLevel("TRACE"));
+                    log.info("Debug logging ON.");
+                } else {
+                    log.info("Normal logging selected.");
                 }
             }
         } catch (CmdLineException e) {
