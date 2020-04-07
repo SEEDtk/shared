@@ -2,6 +2,7 @@ package org.theseed.sequence;
 
 import java.util.HashSet;
 import java.util.TreeSet;
+import murmur3.MurmurHash3;
 
 public abstract class SequenceKmers {
 
@@ -10,12 +11,8 @@ public abstract class SequenceKmers {
     /** similarity score for identical proteins */
     public static final int INFINITY = 9999;
 
-    /** hashing mask for individual kmers */
-    private static final int HASH_MASK = 0x3FFFFFFF;
-    /** dictionary size for kmer hashes */
-    public static final int DICT_SIZE = HASH_MASK + 1;
-    /** lowest possible upper-case letter */
-    private static final int MIN_CODE = (int) 'A' - 1;
+    /** default seed */
+    private static final int SEED = 1842724469;
 
     /** initial sequence string */
     protected String sequence;
@@ -117,19 +114,26 @@ public abstract class SequenceKmers {
     public int[] hashSet(int size) {
         TreeSet<Integer> buffer = new TreeSet<Integer>();
         for (String kmer : this.kmerSet) {
-            int hash = 0;
-            for (char letter : kmer.toCharArray()) {
-                hash = hash * 23 + Math.max(0, letter - MIN_CODE);
-            }
-            hash = hash & HASH_MASK;
+            int shortHash = hashKmer(kmer);
             if (buffer.size() < size)
-                buffer.add(hash);
-            else if (hash < buffer.last()) {
+                buffer.add(shortHash);
+            else if (shortHash < buffer.last()) {
                 buffer.remove(buffer.last());
-                buffer.add(hash);
+                buffer.add(shortHash);
             }
         }
         int[] retVal = buffer.stream().mapToInt(Integer::intValue).toArray();
+        return retVal;
+    }
+
+    /**
+     * @return the hash code for a kmer string
+     *
+     * @param kmer	kmer string to hash
+     */
+    public static int hashKmer(String kmer) {
+        int retVal = MurmurHash3.murmurhash3_x86_32(kmer, 0, kmer.length(), SEED);
+        if (retVal < 0) retVal = -retVal;
         return retVal;
     }
 
