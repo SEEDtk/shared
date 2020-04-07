@@ -10,7 +10,6 @@ import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -1900,15 +1899,17 @@ public class TestLibrary extends TestCase {
         assertEquals("Similarity not commutative.", 3, kmer3.similarity(kmer2));
         assertEquals("Kmer1 too close to kmer2.", 1.0, kmer1.distance(kmer2), 0.0);
         assertEquals("Kmer1 too close to kmer3.", 0.95, kmer2.distance(kmer3), 0.005);
-        Set<Integer> hash1 = kmer1.hashSet();
-        Set<Integer> hash2 = kmer2.hashSet();
-        Set<Integer> hash3 = kmer3.hashSet();
-        assertThat(hash1.size() / (double) kmer1.size(), greaterThan(0.99));
-        assertThat(hash2.size() / (double) kmer2.size(), greaterThan(0.99));
-        assertThat(hash3.size() / (double) kmer3.size(), greaterThan(0.99));
-        assertThat(Collections.max(hash1), lessThan(SequenceKmers.DICT_SIZE));
-        assertThat(Collections.max(hash2), lessThan(SequenceKmers.DICT_SIZE));
-        assertThat(Collections.max(hash3), lessThan(SequenceKmers.DICT_SIZE));
+        int[] hash1 = kmer1.hashSet(200);
+        int[] hash2 = kmer2.hashSet(200);
+        int[] hash3 = kmer3.hashSet(200);
+        assertThat(hash1.length, lessThanOrEqualTo(200));
+        assertThat(hash2.length, lessThanOrEqualTo(200));
+        assertThat(hash3.length, lessThanOrEqualTo(200));
+        validateSignature("hash1", hash1);
+        validateSignature("hash2", hash2);
+        validateSignature("hash3", hash3);
+        assertThat(SequenceKmers.signatureDistance(hash1, hash2), closeTo(1.000, 0.05));
+        assertThat(SequenceKmers.signatureDistance(hash2, hash3), closeTo(0.950, 0.05));
     }
 
     /**
@@ -2372,17 +2373,41 @@ public class TestLibrary extends TestCase {
         assertThat(kmer1.similarity(kmer2), equalTo(220));
         assertThat(kmer2.similarity(kmer3), equalTo(1554743));
         assertThat(kmer3.similarity(kmer2), equalTo(1554743));
-        assertThat(kmer1.distance(kmer2), closeTo(1.0, 0.001));
+        assertThat(kmer1.distance(kmer2), closeTo(1.000, 0.001));
         assertThat(kmer2.distance(kmer3), closeTo(0.386, 0.001));
         assertThat(kmer2.distance(kmer3), equalTo(kmer3.distance(kmer2)));
-        Set<Integer> hash1 = kmer1.hashSet();
-        Set<Integer> hash2 = kmer2.hashSet();
-        Set<Integer> hash3 = kmer3.hashSet();
-        assertThat(hash1.size() / (double) kmer1.size(), greaterThan(0.99));
-        assertThat(hash2.size() / (double) kmer2.size(), greaterThan(0.99));
-        assertThat(hash3.size() / (double) kmer3.size(), greaterThan(0.99));
-        assertThat(Collections.max(hash1), lessThan(SequenceKmers.DICT_SIZE));
-        assertThat(Collections.max(hash2), lessThan(SequenceKmers.DICT_SIZE));
-        assertThat(Collections.max(hash3), lessThan(SequenceKmers.DICT_SIZE));
+        int[] hash1 = kmer1.hashSet(2000);
+        int[] hash2 = kmer2.hashSet(2000);
+        int[] hash3 = kmer3.hashSet(2000);
+        assertThat(hash1.length, lessThanOrEqualTo(2000));
+        assertThat(hash2.length, lessThanOrEqualTo(2000));
+        assertThat(hash3.length, lessThanOrEqualTo(2000));
+        validateSignature("hash1", hash1);
+        validateSignature("hash2", hash2);
+        validateSignature("hash3", hash3);
+        assertThat(SequenceKmers.signatureDistance(hash1, hash2), closeTo(1.000, 0.05));
+        assertThat(SequenceKmers.signatureDistance(hash2, hash3), closeTo(0.386, 0.05));
+    }
+
+    /**
+     * test signature distances
+     */
+    public void testSignatures() {
+        int[] hash1 = new int[] { 1, 3, 5, 7, 9};
+        int[] hash2 = new int[] { 2, 3, 4, 6, 7, 8, 9};
+        assertThat(SequenceKmers.signatureDistance(hash1, hash2), closeTo(0.666, 0.001));
+        hash1 = new int[] { 3, 4, 5, 6, 7 };
+        assertThat(SequenceKmers.signatureDistance(hash1, hash2), closeTo(0.500, 0.001));
+        hash1 = new int[] { 0, 1, 2, 9, 10 };
+        assertThat(SequenceKmers.signatureDistance(hash1, hash2), closeTo(0.800, 0.001));
+    }
+
+    /**
+     * Verify that a signature array is sorted and all its elements are in range.
+     */
+    private void validateSignature(String name, int[] hash) {
+        for (int i = 1; i < hash.length; i++)
+            assertThat(name + "[" + i + "]", hash[i-1], lessThan(hash[i]));
+        assertThat(name, hash[hash.length - 1], lessThan(SequenceKmers.DICT_SIZE));
     }
 }

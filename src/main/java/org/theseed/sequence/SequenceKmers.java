@@ -1,7 +1,7 @@
 package org.theseed.sequence;
 
 import java.util.HashSet;
-import java.util.Set;
+import java.util.TreeSet;
 
 public abstract class SequenceKmers {
 
@@ -110,18 +110,53 @@ public abstract class SequenceKmers {
     }
 
     /**
-     * @return a set of integers representing the kmers in this object
+     * @return a sorted set of integers representing the kmers in this object
+     *
+     * @param size	number of integers to return
      */
-    public Set<Integer> hashSet() {
-        HashSet<Integer> retVal = new HashSet<Integer>(this.size());
+    public int[] hashSet(int size) {
+        TreeSet<Integer> buffer = new TreeSet<Integer>();
         for (String kmer : this.kmerSet) {
             int hash = 0;
             for (char letter : kmer.toCharArray()) {
                 hash = hash * 23 + Math.max(0, letter - MIN_CODE);
             }
-            retVal.add(hash & HASH_MASK);
+            hash = hash & HASH_MASK;
+            if (buffer.size() < size)
+                buffer.add(hash);
+            else if (hash < buffer.last()) {
+                buffer.remove(buffer.last());
+                buffer.add(hash);
+            }
         }
+        int[] retVal = buffer.stream().mapToInt(Integer::intValue).toArray();
         return retVal;
+    }
+
+    /**
+     * This computes the Jaccard distance between two signature arrays.  The arrays must
+     * both be sorted in ascending order.
+     *
+     * @param hash1		first signature array
+     * @param hash2		second signature array
+     *
+     * @return the Jaccard distance between the two signature arrays
+     */
+    public static double signatureDistance(int[] hash1, int[] hash2) {
+        int i1 = 0;
+        int i2 = 0;
+        int found = 0;
+        while (i1 < hash1.length && i2 < hash2.length) {
+            if (hash1[i1] == hash2[i2]) {
+                found++;
+                i1++;
+                i2++;
+            } else if (hash1[i1] < hash2[i2])
+                i1++;
+            else
+                i2++;
+        }
+        return 1 - ((double) found) / (hash1.length + hash2.length - found);
     }
 
 }
