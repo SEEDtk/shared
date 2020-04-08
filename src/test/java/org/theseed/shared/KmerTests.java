@@ -165,4 +165,5 @@ public class KmerTests extends TestCase {
         }
         assertTrue(ups > 0 && downs > 0);
     }
+
 }
