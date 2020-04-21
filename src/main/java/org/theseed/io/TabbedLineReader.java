@@ -3,14 +3,10 @@
  */
 package org.theseed.io;
 
-import java.io.BufferedReader;
 import java.io.Closeable;
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.UncheckedIOException;
 import java.util.Arrays;
 import java.util.Iterator;
 
@@ -141,7 +137,7 @@ public class TabbedLineReader implements Closeable, AutoCloseable, Iterable<Tabb
     /** array of field names from the header */
     String[] labels;
     /** underlying reader object */
-    BufferedReader reader;
+    LineReader reader;
     /** text of next line to return */
     String nextLine;
     /** text of header line */
@@ -157,8 +153,7 @@ public class TabbedLineReader implements Closeable, AutoCloseable, Iterable<Tabb
      * @throws IOException
      */
     public TabbedLineReader(File inFile) throws IOException {
-        FileReader fileStream = new FileReader(inFile);
-        this.reader = new BufferedReader(fileStream);
+        this.reader = new LineReader(inFile);
         this.readHeader();
     }
 
@@ -171,8 +166,7 @@ public class TabbedLineReader implements Closeable, AutoCloseable, Iterable<Tabb
      * @throws IOException
      */
     public TabbedLineReader(File inFile, int fields) throws IOException {
-        FileReader fileStream = new FileReader(inFile);
-        this.reader = new BufferedReader(fileStream);
+        this.reader = new LineReader(inFile);
         this.clearLabels(fields);
         this.readAhead();
     }
@@ -186,8 +180,7 @@ public class TabbedLineReader implements Closeable, AutoCloseable, Iterable<Tabb
      * @throws IOException
      */
     public TabbedLineReader(InputStream inStream, int fields) throws IOException {
-        InputStreamReader inStreamer = new InputStreamReader(inStream);
-        this.reader = new BufferedReader(inStreamer);
+        this.reader = new LineReader(inStream);
         this.clearLabels(fields);
         this.readAhead();
     }
@@ -199,8 +192,7 @@ public class TabbedLineReader implements Closeable, AutoCloseable, Iterable<Tabb
      * @throws IOException
      */
     public TabbedLineReader(InputStream inStream) throws IOException {
-        InputStreamReader inStreamer = new InputStreamReader(inStream);
-        this.reader = new BufferedReader(inStreamer);
+        this.reader = new LineReader(inStream);
         this.readHeader();
     }
 
@@ -215,23 +207,19 @@ public class TabbedLineReader implements Closeable, AutoCloseable, Iterable<Tabb
      *
      * @throws IOException
      */
-    protected void readHeader() throws IOException {
-        try {
-            // Denote no lines have been read.
-            this.lineCount = 0;
-            // Read the header.
-            this.headerLine = this.reader.readLine();
-            if (headerLine == null) {
-                // Here the entire file is empty.  Insure we get EOF on the first read.
-                this.nextLine = null;
-            } else {
-                // Parse the header line into labels and normalize them to lower case.
-                this.labels = StringUtils.split(headerLine, '\t');
-                // Set up to return the first data line.
-                this.readAhead();
-            }
-        } catch (IOException e) {
-            throw new IOException("Error in header of tabbed input file.", e);
+    protected void readHeader() {
+        // Denote no lines have been read.
+        this.lineCount = 0;
+        // Read the header.
+        this.headerLine = this.reader.next();
+        if (headerLine == null) {
+            // Here the entire file is empty.  Insure we get EOF on the first read.
+            this.nextLine = null;
+        } else {
+            // Parse the header line into labels and normalize them to lower case.
+            this.labels = StringUtils.split(headerLine, '\t');
+            // Set up to return the first data line.
+            this.readAhead();
         }
     }
 
@@ -309,7 +297,7 @@ public class TabbedLineReader implements Closeable, AutoCloseable, Iterable<Tabb
     public void close() {
         try {
             reader.close();
-        } catch (IOException e) {
+        } catch (Exception e) {
             // Just ignore an error in close.
         }
     }
@@ -347,13 +335,9 @@ public class TabbedLineReader implements Closeable, AutoCloseable, Iterable<Tabb
      * Prepare the line buffer with the next line of data.  Note we skip blank lines.
      */
     protected void readAhead() {
-        try {
-            this.nextLine = reader.readLine();
-            while (this.nextLine != null && this.nextLine.isEmpty())
-                this.nextLine = reader.readLine();
-        } catch (IOException e) {
-            throw new UncheckedIOException("Error in tabbed input file", e);
-        }
+        this.nextLine = reader.next();
+        while (this.nextLine != null && this.nextLine.isEmpty())
+            this.nextLine = reader.next();
     }
 
     /**
