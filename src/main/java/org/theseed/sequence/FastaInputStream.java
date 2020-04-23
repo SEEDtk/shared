@@ -6,8 +6,11 @@ package org.theseed.sequence;
 import java.io.Closeable;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Scanner;
 import java.util.regex.Pattern;
 
@@ -103,6 +106,23 @@ public class FastaInputStream implements Iterable<Sequence>, Closeable, AutoClos
             retVal = new Sequence(label, comment, sequence.toString());
         } catch (NullPointerException e) {
             // The file is already closed.  We will return NULL.
+        }
+        return retVal;
+    }
+
+    /**
+     * @return a list of all the sequences in a FASTA file
+     *
+     * @param fastaFile FASTA file to read
+     *
+     * @throws IOException
+     */
+    public static List<Sequence> readAll(File fastaFile) throws IOException {
+        List<Sequence> retVal = new ArrayList<Sequence>((int) (fastaFile.length()) / 5000);
+        try (FastaInputStream fastaStream = new FastaInputStream(fastaFile)) {
+            for (Sequence fastaRecord : fastaStream) {
+                retVal.add(fastaRecord);
+            }
         }
         return retVal;
     }
