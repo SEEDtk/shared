@@ -6,33 +6,49 @@ package org.theseed.utils;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Iterator;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
+import java.util.SortedMap;
+import java.util.SortedSet;
+import java.util.TreeMap;
+import java.util.TreeSet;
 
 import org.apache.commons.lang3.StringUtils;
 
 /**
- * This class reads a parameter files and converts them into String arrays.
- *
- * In the simple case, each line of the file should consist of a command-line option
- * (with the preceding hyphen or hyphens), one or more spaces, and then the parameter
- * value (if any).  Anything after a pound sign (#) in the value area is treated as a
- * comment.  A pound sign in the first column also counts as a comment.
- *
- * In the more complex case, multiple parameter configurations can be specified in a single file.
- * For this, the multiple values should be delimited by a comma followed by a single space.
- * Again, a pound sign indicates a comment.  An instance of this object will be passed back that
- * functions as an iterator which transmits the individual option arrays.
- *
- *
+ * This is a utility class for managing parameter lists.  It provides methods to load
+ * them from a file and fluent methods for building a list.
  *
  * @author Bruce Parrello
  *
  */
-public class Parms implements Iterator<List<String>> {
+public class Parms {
+
+    // FIELDS
+    /** map of parameters to values */
+    private SortedMap<String, String> binary;
+    /** set of options */
+    private SortedSet<String> unary;
+
+    /**
+     * This is a special comparator that sorts single-hyphen parameters in front of double-hyphen ones.
+     */
+    private class Compare implements Comparator<String> {
+
+        @Override
+        public int compare(String o1, String o2) {
+            int retVal = o1.compareTo(o2);
+            if (o1.charAt(1) == '-' || o1.length() > 2) {
+                if (o2.charAt(1) != '-' && o2.length() == 2)
+                    retVal = 1;
+            } else if (o2.charAt(1) != '-' || o2.length() > 2)
+                retVal = -1;
+            return retVal;
+        }
+
+    }
 
     /**
      * @return 	a list of strings that can be fed to a command parser to interpret the
@@ -43,186 +59,161 @@ public class Parms implements Iterator<List<String>> {
      * @throws IOException
      */
     public static List<String> fromFile(File inFile) throws IOException {
-        // Get a scanner for the file.
-        Scanner inStream = new Scanner(inFile);
-        // Build the string array in here.
-        ArrayList<String> retVal = new ArrayList<String>(20);
-        while (inStream.hasNext()) {
-            // Get the option name.
-            String option = inStream.next();
-            // Get the option value.  This may be an empty string.  Nextline gives us the
-            // separating whitespace as well as the rest of the line, so we will need to
-            // strip it.
-            String value = inStream.nextLine();
-            // Only proceed if this is not a comment.
-            if (option.charAt(0) != '#') {
-                retVal.add(option);
-                // We need to check the value.  Strip off the comment (if any), and
-                // trim the leading and trailing whitespace.
-                value = StringUtils.trimToEmpty(StringUtils.substringBefore(value,  "#"));
-                // If the value is nonempty, add it.
-                if (! value.isEmpty()) retVal.add(value);
-            }
-        }
-        inStream.close();
-        // Return the list.
-        return retVal;
+        Parms parms = new Parms(inFile);
+        return parms.get();
     }
 
-    // FIELDS
-
-    /** array of boolean options */
-    private ArrayList<String> switches;
-    /** TRUE if we are done iterating */
-    private boolean done;
-    /** map of variable parameters to current values */
-    private HashMap<String, String> varMap;
-
-    // All of these arrays run in parallel
-
-    /** array of option names */
-    private ArrayList<String> parmNames;
-    /** array of permissible value lists */
-    private ArrayList<String[]> parmValues;
-    /** array of current positions; this is the next position to return, and we increment afterward */
-    private int[] positions;
+    /**
+     * Construct a blank parameter list.
+     */
+    public Parms() {
+        init();
+        setDefaults();
+    }
 
     /**
-     * Construct an iterator through the parameter combinations encoded in a parameter file.  Note
-     * this is similar to fromFile above, but there are subtle differences.
+     * Initialize the object fields.
+     */
+    private void init() {
+        Comparator<String> compare = new Compare();
+        this.binary = new TreeMap<String, String>(compare);
+        this.unary = new TreeSet<String>(compare);
+    }
+
+    /**
+     * Read a parameter list from a file.
      *
-     * @param inFile	input file containing the parameters, with multiple options tab-delimited
+     * @param inFile	file containing the parameters
      *
      * @throws IOException
      */
     public Parms(File inFile) throws IOException {
-        // Initialize the fields.
-        this.parmNames = new ArrayList<String>(20);
-        this.parmValues = new ArrayList<String[]>(20);
-        this.switches = new ArrayList<String>(20);
-        this.varMap = new HashMap<String, String>(20);
+        init();
+        setDefaults();
+        readFromFile(inFile);
+    }
+
+    /**
+     * Set the default values of parameters.
+     */
+    protected void setDefaults() { }
+
+    /**
+     * Read a parameter list from a file.
+     *
+     * @param inFile	file containing the parameters
+     *
+     * @throws IOException
+     */
+    protected void readFromFile(File inFile) throws IOException {
         // Get a scanner for the file.
-        Scanner inStream = new Scanner(inFile);
-        try {
-            // Now we loop through the list, storing the string lists and the option names.
+        try (Scanner inStream = new Scanner(inFile)) {
             while (inStream.hasNext()) {
                 // Get the option name.
                 String option = inStream.next();
                 // Get the option value.  This may be an empty string.  Nextline gives us the
                 // separating whitespace as well as the rest of the line, so we will need to
-                // strip it later.
+                // strip it.
                 String value = inStream.nextLine();
                 // Only proceed if this is not a comment.
                 if (option.charAt(0) != '#') {
-                    // Verify that we have a real option.
-                    if (option.charAt(0) != '-')
-                        throw new IllegalArgumentException("Positional parameters are not allowed in multi-parameter files.");
                     // We need to check the value.  Strip off the comment (if any), and
                     // trim the leading and trailing whitespace.
-                    value = StringUtils.trimToEmpty(StringUtils.substringBefore(value, "#"));
-                    // If the value is empty, this is a switch.
-                    if (value.isEmpty()) {
-                        this.switches.add(option);
-                    } else {
-                        // Here we have an option with one or more values.
-                        String[] possibilities = StringUtils.splitByWholeSeparator(value, ", ");
-                        this.parmNames.add(option);
-                        this.parmValues.add(possibilities);
-                        // If this is a varying parameter, remember its name.
-                        if (possibilities.length > 1)
-                            this.varMap.put(option, "");
-                    }
+                    value = StringUtils.trimToEmpty(StringUtils.substringBefore(value,  "#"));
+                    // If the value is nonempty, we have a value parameter.
+                    if (! value.isEmpty())
+                        this.set(option, value);
+                    else
+                        this.set(option);
                 }
             }
-        } finally {
-            inStream.close();
         }
-        // Now initialize the current position.
-        this.done = false;
-        this.positions = new int[this.parmNames.size()];
-        Arrays.fill(this.positions, 0);
     }
 
-    @Override
-    public boolean hasNext() {
-        return ! this.done;
+    /**
+     * Add an option parameter.
+     *
+     * @param name	parameter name
+     */
+    public Parms set(String option) {
+        this.unary.add(option);
+        return this;
     }
 
-    @Override
-    public List<String> next() {
-        List<String> retVal = null;
-        if (! this.done) {
-            retVal = new ArrayList<String>(this.parmNames.size() * 2 + this.switches.size() + 5);
-            // Accumulate the current values, remembering the varying ones.
-            for (int i = 0; i < this.parmNames.size(); i++) {
-                String option = this.parmNames.get(i);
-                String value = this.parmValues.get(i)[this.positions[i]];
-                retVal.add(option);
-                retVal.add(value);
-                if (this.varMap.containsKey(option))
-                    this.varMap.put(option, value);
-            }
-            // Add the switches.
-            retVal.addAll(this.switches);
-            // Now we position for the next round.
-            this.done = true;
-            int currentIdx = this.parmNames.size() - 1;
-            while (this.done && currentIdx >= 0) {
-                this.positions[currentIdx]++;
-                if (this.positions[currentIdx] >= parmValues.get(currentIdx).length) {
-                    this.positions[currentIdx] = 0;
-                    currentIdx--;
-                } else {
-                    this.done = false;
-                }
-            }
+    /**
+     * Add a string parameter.
+     *
+     * @param name		parameter name
+     * @param value		parameter value
+     */
+    public Parms set(String option, String value) {
+        this.binary.put(option, value);
+        return this;
+    }
+
+    /**
+     * Add a floating-point parameter.
+     *
+     * @param name		parameter name
+     * @param value		parameter value
+     */
+    public Parms set(String option, double value) {
+        this.binary.put(option, Double.toString(value));
+        return this;
+    }
+
+    /**
+     * Add an integer parameter.
+     *
+     * @param name		parameter name
+     * @param value		parameter value
+     */
+    public Parms set(String option, int value) {
+        this.binary.put(option, Integer.toString(value));
+        return this;
+    }
+
+    /**
+     * @return the parameters as a string list.
+     */
+    public List<String> get() {
+        List<String> retVal = new ArrayList<String>(this.binary.size() * 2 + this.unary.size());
+        for (String option : this.unary)
+            retVal.add(option);
+        for (Map.Entry<String, String> parm : this.binary.entrySet()) {
+            retVal.add(parm.getKey());
+            retVal.add(parm.getValue());
         }
         return retVal;
     }
 
     /**
-     * @return the number of strings expected from this iterator
-     */
-    public int size() {
-        return this.parmNames.size() * 2 + this.switches.size();
-    }
-
-    /**
-     * @return a map of the varying-option names to their current values
-     */
-    public HashMap<String,String> getVariables() {
-        return this.varMap;
-    }
-
-    /**
-     * @return a representation of this iteration
+     * @return a string representation of the parameters
      */
     @Override
     public String toString() {
-        ArrayList<String> retVal = new ArrayList<String>(20);
-        // To insure the option names are in the correct order, we iterate through
-        // the parmNames array.
-        for (String option : parmNames)
-            if (this.varMap.containsKey(option))
-                retVal.add(option + " " + this.varMap.get(option));
-        return StringUtils.join(retVal, "; ");
-    }
-
-    /**
-     * @return an array of the varying-option names
-     */
-    public String[] getOptions() {
-        // Copy the option names in presentation order into an output array.
-        String[] retVal = new String[this.varMap.size()];
-        int i = 0;
-        for (String option : parmNames)
-            if (this.varMap.containsKey(option)) {
-                retVal[i] = option;
-                i++;
+        StringBuilder retVal = new StringBuilder(this.binary.size() * 30 + this.unary.size() * 10);
+        if (! this.unary.isEmpty()) {
+            retVal.append(StringUtils.join(this.unary, ' '));
+            if (! this.binary.isEmpty())
+                retVal.append(' ');
+        }
+        if (! this.binary.isEmpty()) {
+            for (Map.Entry<String, String> parm : this.binary.entrySet()) {
+                retVal.append(parm.getKey());
+                retVal.append(' ');
+                String value = parm.getValue();
+                if (StringUtils.containsAny(value, ' ', '<', '>', '|')) {
+                    // Here we have an internal special character so we have to quote the string.
+                    value = "\"" + StringUtils.replace(value, "\"", "\\\"") + "\"";
+                }
+                retVal.append(value);
+                retVal.append(' ');
             }
-        return retVal;
+            // Remove the trailing space.
+            retVal.deleteCharAt(retVal.length() - 1);
+        }
+        return retVal.toString();
     }
-
-
 
 }

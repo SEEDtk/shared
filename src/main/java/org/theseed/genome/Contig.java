@@ -21,6 +21,8 @@ public class Contig {
     private String sequence;
     private int geneticCode;
     private int length;
+    private String accession;
+    private String description;
 
     /** This enum defines the keys used and their default values.
      */
@@ -29,11 +31,16 @@ public class Contig {
         ID("con.001"),
         DNA(""),
         GENETIC_CODE(11),
+        GENBANK_LOCUS(null),
         // SHARED FIELDS
         LENGTH(0),
+        ACCESSION(""),
         // PATRIC FIELDS
         SEQUENCE_ID("con.001"),
-        SEQUENCE("")
+        SEQUENCE(""),
+        DESCRIPTION(""),
+        // GENBANK_LOCUS FIELDS
+        COMMENT("")
         ;
 
         private final Object m_value;
@@ -71,6 +78,14 @@ public class Contig {
         this.length = contigObj.getIntegerOrDefault(ContigKeys.LENGTH);
         if (this.length == 0)
             this.length = this.sequence.length();
+        JsonObject locusObj = contigObj.getMapOrDefault(ContigKeys.GENBANK_LOCUS);
+        if (locusObj != null) {
+            this.accession = locusObj.getStringOrDefault(ContigKeys.ACCESSION);
+            this.description = locusObj.getStringOrDefault(ContigKeys.COMMENT);
+        } else {
+            this.accession = "";
+            this.description = "";
+        }
     }
 
     /**
@@ -88,6 +103,8 @@ public class Contig {
             this.length = contigObj.getIntegerOrDefault(ContigKeys.LENGTH);
         }
         this.geneticCode = code;
+        this.accession = contigObj.getString(ContigKeys.ACCESSION);
+        this.description = contigObj.getString(ContigKeys.DESCRIPTION);
     }
 
     /**
@@ -102,6 +119,8 @@ public class Contig {
         this.sequence = sequence.toLowerCase();
         this.geneticCode = code;
         this.length = sequence.length();
+        this.accession = "";
+        this.description = "";
     }
 
     /**
@@ -198,6 +217,12 @@ public class Contig {
         retVal.put(ContigKeys.GENETIC_CODE.getKey(), this.geneticCode);
         retVal.put(ContigKeys.DNA.getKey(), this.sequence);
         retVal.put(ContigKeys.LENGTH.getKey(), this.length);
+        if (! this.accession.isEmpty() || ! this.description.isEmpty()) {
+            JsonObject genbank_locus = new JsonObject();
+            genbank_locus.put(ContigKeys.ACCESSION.getKey(), this.accession);
+            genbank_locus.put(ContigKeys.COMMENT.getKey(), this.description);
+            retVal.put(ContigKeys.GENBANK_LOCUS.getKey(), genbank_locus);
+        }
         return retVal;
     }
 
@@ -217,6 +242,34 @@ public class Contig {
      */
     public void setGeneticCode(int code) {
         this.geneticCode = code;
+    }
+
+    /**
+     * @return the accession ID
+     */
+    public String getAccession() {
+        return accession;
+    }
+
+    /**
+     * @param accession 	new accession ID
+     */
+    public void setAccession(String accession) {
+        this.accession = accession;
+    }
+
+    /**
+     * @return the description of the contig
+     */
+    public String getDescription() {
+        return description;
+    }
+
+    /**
+     * @param description 	new contig description
+     */
+    public void setDescription(String description) {
+        this.description = description;
     }
 
 }

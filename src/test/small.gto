@@ -72,7 +72,11 @@
       {
          "length" : 1139123,
          "id" : "161.31.con.0001",
-         "genetic_code" : 11
+         "genetic_code" : 11,
+         "genbank_locus": {
+             "accession" : "CP016063",
+             "comment" : "Treponema pallidum subsp. pallidum strain PT_SIF1242 genome."
+         }
       }
    ],
    "id" : "161.31",

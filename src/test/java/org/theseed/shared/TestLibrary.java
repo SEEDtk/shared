@@ -9,7 +9,6 @@ import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -48,8 +47,6 @@ import org.theseed.sequence.FastaOutputStream;
 import org.theseed.sequence.MD5Hex;
 import org.theseed.sequence.ProteinKmers;
 import org.theseed.sequence.Sequence;
-import org.theseed.utils.Parms;
-
 import com.github.cliftonlabs.json_simple.JsonObject;
 import junit.framework.TestCase;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -411,6 +408,26 @@ public class TestLibrary extends TestCase {
         for (Region region :minusRegions) {
             assertTrue("Region " + region + " not found in clone.", region.containedIn(cloneRegions));
         }
+    }
+
+    /**
+     * Test of simple locations
+     */
+    public void testSimpleLocations() {
+        Location loc1 = Location.create("contig1", 100, 200);
+        assertThat(loc1.getDir(), equalTo('+'));
+        assertThat(loc1.getContigId(), equalTo("contig1"));
+        assertThat(loc1.getBegin(), equalTo(100));
+        assertThat(loc1.getEnd(), equalTo(200));
+        assertThat(loc1.getLeft(), equalTo(100));
+        assertThat(loc1.getRight(), equalTo(200));
+        loc1 = Location.create("contig2", 200, 100);
+        assertThat(loc1.getContigId(), equalTo("contig2"));
+        assertThat(loc1.getDir(), equalTo('-'));
+        assertThat(loc1.getBegin(), equalTo(200));
+        assertThat(loc1.getEnd(), equalTo(100));
+        assertThat(loc1.getLeft(), equalTo(100));
+        assertThat(loc1.getRight(), equalTo(200));
     }
 
     /**
@@ -1176,61 +1193,6 @@ public class TestLibrary extends TestCase {
     }
 
     /**
-     * test parm reader
-     *
-     * @throws IOException
-     */
-    public void testParms() throws IOException {
-        File parmFile = new File("src/test", "parms.tbl");
-        List<String> parms = Parms.fromFile(parmFile);
-        assertThat("Invalid parms result.", parms, contains("-z", "--bins", "this is a long string",
-                "-t", "10", "-tab", "used here"));
-    }
-
-    /**
-     * test parm iterator
-     *
-     * @throws IOException
-     */
-    public void testParms2() throws IOException {
-        File parmFile = new File("src/test", "parms2.tbl");
-        Parms parmIterator = new Parms(parmFile);
-        List<String> parms = parmIterator.next();
-        assertThat(parms, contains("--digits", "1", "--constant", "X", "--letters", "a", "--batch"));
-        assertTrue(parmIterator.hasNext());
-        parms = parmIterator.next();
-        assertThat(parms, contains("--digits", "1", "--constant", "X", "--letters", "b", "--batch"));
-        assertTrue(parmIterator.hasNext());
-        parms = parmIterator.next();
-        assertThat(parms, contains("--digits", "1", "--constant", "X", "--letters", "c", "--batch"));
-        assertTrue(parmIterator.hasNext());
-        assertThat(parmIterator.toString(), equalTo("--digits 1; --letters c"));
-        HashMap<String, String> varMap = parmIterator.getVariables();
-        assertThat(varMap.get("--digits"), equalTo("1"));
-        assertThat(varMap.get("--letters"), equalTo("c"));
-        assertThat(varMap.size(), equalTo(2));
-        assertThat(parmIterator.getOptions(), arrayContaining("--digits", "--letters"));
-        parms = parmIterator.next();
-        assertThat(parms, contains("--digits", "2", "--constant", "X", "--letters", "a", "--batch"));
-        assertTrue(parmIterator.hasNext());
-        parms = parmIterator.next();
-        assertThat(parms, contains("--digits", "2", "--constant", "X", "--letters", "b", "--batch"));
-        assertTrue(parmIterator.hasNext());
-        parms = parmIterator.next();
-        assertThat(parms, contains("--digits", "2", "--constant", "X", "--letters", "c", "--batch"));
-        assertTrue(parmIterator.hasNext());
-        parms = parmIterator.next();
-        assertThat(parms, contains("--digits", "3", "--constant", "X", "--letters", "a", "--batch"));
-        assertTrue(parmIterator.hasNext());
-        parms = parmIterator.next();
-        assertThat(parms, contains("--digits", "3", "--constant", "X", "--letters", "b", "--batch"));
-        assertTrue(parmIterator.hasNext());
-        parms = parmIterator.next();
-        assertThat(parms, contains("--digits", "3", "--constant", "X", "--letters", "c", "--batch"));
-        assertFalse(parmIterator.hasNext());
-    }
-
-    /**
      * test GTO updating
      *
      * @throws IOException
@@ -1278,6 +1240,10 @@ public class TestLibrary extends TestCase {
         smallGenome.addFeature(rna);
         assertThat(rna.getParent(), equalTo(smallGenome));
         Contig fakeContig = new Contig("161.31.con.0002", "aaaccctttggg", 11);
+        fakeContig.setAccession("fakeAcc");
+        fakeContig.setDescription("fake description");
+        assertThat(fakeContig.getAccession(), equalTo("fakeAcc"));
+        assertThat(fakeContig.getDescription(), equalTo("fake description"));
         smallGenome.addContig(fakeContig);
         File testFile = new File("src/test", "gto.ser");
         smallGenome.update(testFile);
@@ -1291,6 +1257,8 @@ public class TestLibrary extends TestCase {
         contig2 = testGenome.getContig("161.31.con.0002");
         assertThat(contig2.length(), equalTo(12));
         assertThat(contig2.getSequence(), equalTo("aaaccctttggg"));
+        assertThat(contig2.getAccession(), equalTo("fakeAcc"));
+        assertThat(contig2.getDescription(), equalTo("fake description"));
         feat = testGenome.getFeature("fig|161.31.rna.1");
         assertThat(feat.getPgfam(), equalTo("PGF_RNA1"));
         assertNull(feat.getPlfam());
@@ -1635,6 +1603,37 @@ public class TestLibrary extends TestCase {
             assertThat(contig0.getGeneticCode(), equalTo(11));
             String seq = contig0.getSequence();
             assertThat(seq.toLowerCase(), equalTo(seq));
+        }
+    }
+
+    /*
+     * test FASTA saving
+     */
+    public void testFastas() throws IOException {
+        File fastaTemp = new File("src/test", "fasta.ser");
+        myGto.saveDna(fastaTemp);
+        int counter = 0;
+        try (FastaInputStream fastaStream = new FastaInputStream(fastaTemp)) {
+            for (Sequence contigSeq : fastaStream) {
+                Contig genomeContig = myGto.getContig(contigSeq.getLabel());
+                assertThat(contigSeq.getLabel(), genomeContig, not(nullValue()));
+                assertThat(contigSeq.getLabel(), contigSeq.getSequence(), equalTo(genomeContig.getSequence()));
+                assertThat(contigSeq.getLabel(), contigSeq.getComment(), equalTo(genomeContig.getDescription()));
+                counter++;
+            }
+            assertThat(counter, equalTo(myGto.getContigCount()));
+        }
+        myGto.savePegs(fastaTemp);
+        counter = 0;
+        try (FastaInputStream fastaStream = new FastaInputStream(fastaTemp)) {
+            for (Sequence pegSeq : fastaStream) {
+                Feature genomePeg = myGto.getFeature(pegSeq.getLabel());
+                assertThat(pegSeq.getLabel(), genomePeg, not(nullValue()));
+                assertThat(pegSeq.getLabel(), pegSeq.getComment(), equalTo(genomePeg.getFunction()));
+                assertThat(pegSeq.getLabel(), pegSeq.getSequence(), equalTo(genomePeg.getProteinTranslation()));
+                counter++;
+            }
+            assertThat(counter, equalTo(myGto.getPegs().size()));
         }
     }
 

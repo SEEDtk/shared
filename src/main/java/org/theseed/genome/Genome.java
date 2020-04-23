@@ -29,6 +29,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.theseed.locations.Location;
 import org.theseed.locations.Region;
 import org.theseed.reports.LinkObject;
+import org.theseed.sequence.FastaOutputStream;
+import org.theseed.sequence.Sequence;
 
 import com.github.cliftonlabs.json_simple.JsonArray;
 import com.github.cliftonlabs.json_simple.JsonException;
@@ -792,5 +794,42 @@ public class Genome  {
         this.name = name;
     }
 
+    /**
+     * Save this genome's DNA contigs to the specified file.
+     *
+     * @param fastaFile		output file
+     *
+     * @throws IOException
+     */
+    public void saveDna(File fastaFile) throws IOException {
+        try (FastaOutputStream outStream = new FastaOutputStream(fastaFile)) {
+            Sequence contigSeq = new Sequence();
+            for (Contig contig : this.getContigs()) {
+                contigSeq.setLabel(contig.getId());
+                contigSeq.setComment(contig.getDescription());
+                contigSeq.setSequence(contig.getSequence());
+                outStream.write(contigSeq);
+            }
+        }
+    }
+
+    /**
+     * Save this genome's proteins to the specified file.
+     *
+     * @param fastaFile		output file
+     *
+     * @throws IOException
+     */
+    public void savePegs(File fastaFile) throws IOException {
+        try (FastaOutputStream outStream = new FastaOutputStream(fastaFile)) {
+            Sequence pegSeq = new Sequence();
+            for (Feature peg : this.getPegs()) {
+                pegSeq.setLabel(peg.getId());
+                pegSeq.setComment(peg.getFunction());
+                pegSeq.setSequence(peg.getProteinTranslation());
+                outStream.write(pegSeq);
+            }
+        }
+    }
 
 }

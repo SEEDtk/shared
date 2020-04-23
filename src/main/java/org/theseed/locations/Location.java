@@ -553,4 +553,26 @@ public abstract class Location implements Comparable<Location>, Cloneable {
      * @param begin		proposed new begin point
      */
     public abstract void setBegin(int begin);
+
+    /**
+     * Create a location given the begin and end points.  The direction is indicated by whether
+     * the begin is less than or greater than the end.
+     *
+     * @param contigId	ID of the contig
+     * @param begin		position (1-based) at which the location begins
+     * @param end		position (1-based) at which the location ends
+     *
+     * @return the computed location
+     */
+    public static Location create(String contigId, int begin, int end) {
+        Location retVal;
+        if (begin <= end) {
+            retVal = new FLocation(contigId);
+            retVal.putRegion(begin, end);
+        } else {
+            retVal = new BLocation(contigId);
+            retVal.putRegion(end, begin);
+        }
+        return retVal;
+    }
 }
