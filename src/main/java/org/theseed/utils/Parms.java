@@ -35,7 +35,7 @@ public class Parms {
     /**
      * This is a special comparator that sorts single-hyphen parameters in front of double-hyphen ones.
      */
-    private class Compare implements Comparator<String> {
+    private class Compare implements Comparator<String>, Cloneable {
 
         @Override
         public int compare(String o1, String o2) {
@@ -214,6 +214,26 @@ public class Parms {
             retVal.deleteCharAt(retVal.length() - 1);
         }
         return retVal.toString();
+    }
+
+    /**
+     * @return a safe copy of this object
+     */
+    @Override
+    public Parms clone() {
+        Parms retVal = new Parms();
+        copyValues(retVal);
+        return retVal;
+    }
+
+    /**
+     * @param retVal
+     */
+    protected void copyValues(Parms retVal) {
+        for (Map.Entry<String,String> entry : this.binary.entrySet())
+            retVal.binary.put(entry.getKey(), entry.getValue());
+        for (String parm : this.unary)
+            retVal.unary.add(parm);
     }
 
 }

@@ -103,6 +103,19 @@ public class ParmsTest extends TestCase {
                         "--long2 \"this has <less than\" " +
                         "--long3 \"this has >greater than\" " +
                         "--maxE 1.0E-10"));
+        Parms parms2 = newParms.clone();
+        parmString = parms2.toString();
+        assertThat(parmString,
+                equalTo("-v --batch --digits 12 --fid \"fig|83333.1.peg.4\" " +
+                        "--long \"this has \\\"spaces\\\"\" " +
+                        "--long2 \"this has <less than\" " +
+                        "--long3 \"this has >greater than\" " +
+                        "--maxE 1.0E-10"));
+        parms2.set("--input", "frog");
+        parmList = newParms.get();
+        assertThat(parmList, not(hasItem("--input")));
+        parmList = parms2.get();
+        assertThat(parmList, hasItem("--input"));
     }
 
 }

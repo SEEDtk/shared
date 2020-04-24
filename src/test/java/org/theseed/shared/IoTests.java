@@ -18,6 +18,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.theseed.counters.CountMap;
 import org.theseed.io.BalancedOutputStream;
 import org.theseed.io.LineReader;
+import org.theseed.io.MarkerFile;
 import org.theseed.io.Shuffler;
 import org.theseed.io.TabbedLineReader;
 import org.theseed.io.TabbedLineReader.Line;
@@ -334,6 +335,17 @@ public class IoTests extends TestCase {
         } catch (IOException e) {
             assertTrue(true);
         }
+    }
+
+    /**
+     * test marker files
+     */
+    public void testMarkers() {
+        File marker = new File("src/test", "marker.ser");
+        MarkerFile.write(marker, "abc");
+        assertThat(MarkerFile.read(marker), equalTo("abc"));
+        MarkerFile.write(marker, 1024);
+        assertThat(MarkerFile.readInt(marker), equalTo(1024));
     }
 
 
