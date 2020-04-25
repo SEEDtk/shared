@@ -3,6 +3,7 @@
  */
 package org.theseed.sequence;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 
@@ -26,9 +27,42 @@ public class ProteinDataStream extends ProteinStream {
         this.sequences = sequences;
     }
 
+    /**
+     * Create an empty protein data stream for a specified batch size.
+     *
+     * @param batchSize		batch size to use
+     */
+    public ProteinDataStream(int batchSize) {
+        this.sequences = new ArrayList<Sequence>(batchSize);
+    }
+
     @Override
     public Iterator<Sequence> iterator() {
         return sequences.iterator();
+    }
+
+    /**
+     * Clear the data stream.
+     */
+    public void clear() {
+        this.sequences.clear();
+    }
+
+    /**
+     * Add a sequence to the stream.
+     *
+     * @param seq	sequence to add
+     */
+    public ProteinDataStream add(Sequence seq) {
+        this.sequences.add(seq);
+        return this;
+    }
+
+    /**
+     * @return the number of sequences in the stream
+     */
+    public int size() {
+        return this.sequences.size();
     }
 
 }

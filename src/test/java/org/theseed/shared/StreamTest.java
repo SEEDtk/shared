@@ -56,6 +56,18 @@ public class StreamTest extends TestCase {
             count++;
         }
         assertThat(count, equalTo(gto.getContigCount()));
+        DnaDataStream batchStream = new DnaDataStream(10);
+        assertThat(batchStream.size(), equalTo(0));
+        for (Sequence contigSeq : seqs)
+            batchStream.add(contigSeq);
+        assertThat(seqs.size(), equalTo(gto.getContigCount()));
+        int i = 0;
+        for (Sequence contigSeq : batchStream) {
+            assertThat(Integer.toString(i), contigSeq, equalTo(seqs.get(i)));
+            i++;
+        }
+        batchStream.clear();
+        assertThat(batchStream.size(), equalTo(0));
     }
 
     public void testProteinStreams() throws IOException {
@@ -83,6 +95,18 @@ public class StreamTest extends TestCase {
             count++;
         }
         assertThat(count, equalTo(pegCount));
+        ProteinDataStream batchStream = new ProteinDataStream(10);
+        assertThat(batchStream.size(), equalTo(0));
+        for (Sequence protSeq : seqs)
+            batchStream.add(protSeq);
+        assertThat(seqs.size(), equalTo(pegCount));
+        int i = 0;
+        for (Sequence pegSeq : batchStream) {
+            assertThat(Integer.toString(i), pegSeq, equalTo(seqs.get(i)));
+            i++;
+        }
+        batchStream.clear();
+        assertThat(batchStream.size(), equalTo(0));
     }
 
 }
