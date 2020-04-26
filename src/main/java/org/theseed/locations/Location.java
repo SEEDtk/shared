@@ -575,4 +575,19 @@ public abstract class Location implements Comparable<Location>, Cloneable {
         }
         return retVal;
     }
+
+    /**
+     * @return TRUE if this location overlaps the specified other location
+     *
+     * @param loc	other location to check
+     */
+    public boolean isOverlapping(Location loc) {
+        boolean retVal = this.contigId.contentEquals(loc.contigId);
+        if (retVal) {
+            // Here we are on the same contig, so we need to check extents.
+            retVal = (this.getLeft() <= loc.getRight() &&
+                    loc.getLeft() <= this.getRight());
+        }
+        return retVal;
+    }
 }

@@ -616,6 +616,33 @@ public class TestLibrary extends TestCase {
     }
 
     /**
+     * Test overlap testing
+     */
+    public void testLocOverlap() {
+        Location loc1 = Location.create("c1", 100, 200);
+        Location loc2 = Location.create("c2", 50, 150);
+        Location loc3 = Location.create("c1", 400, 200);
+        Location loc4 = Location.create("c1", 50, 150);
+        Location loc5 = Location.create("c1", 90, 10);
+        Location loc6 = Location.create("c1", 210, 300);
+        assertFalse(loc1.isOverlapping(loc2));
+        assertTrue(loc1.isOverlapping(loc3));
+        assertTrue(loc1.isOverlapping(loc4));
+        assertFalse(loc1.isOverlapping(loc5));
+        assertFalse(loc1.isOverlapping(loc6));
+        assertFalse(loc2.isOverlapping(loc1));
+        assertFalse(loc2.isOverlapping(loc3));
+        assertFalse(loc2.isOverlapping(loc4));
+        assertFalse(loc2.isOverlapping(loc5));
+        assertFalse(loc2.isOverlapping(loc6));
+        assertTrue(loc3.isOverlapping(loc1));
+        assertFalse(loc3.isOverlapping(loc2));
+        assertFalse(loc3.isOverlapping(loc4));
+        assertFalse(loc3.isOverlapping(loc5));
+        assertTrue(loc3.isOverlapping(loc6));
+    }
+
+    /**
      * Basic test for location-list maps.
      */
     public void testContigMapping() {

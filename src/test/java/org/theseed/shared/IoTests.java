@@ -222,6 +222,10 @@ public class IoTests extends TestCase {
         assertThat(test1.get(3), equalTo(203));
         assertThat(test1.get(4), equalTo(204));
         assertThat(test1.size(), equalTo(5));
+        Shuffler<Integer> test3 = test1.add1(300);
+        assertThat(test3.size(), equalTo(6));
+        assertThat(test3.get(5), equalTo(300));
+        assertTrue(test3 == test1);
     }
 
     /**

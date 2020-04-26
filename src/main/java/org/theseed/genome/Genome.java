@@ -832,4 +832,11 @@ public class Genome  {
         }
     }
 
+    /**
+     * @return this genome's link object
+     */
+    public LinkObject getLinker() {
+        return this.linker;
+    }
+
 }

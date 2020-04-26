@@ -32,7 +32,17 @@ public abstract class LinkObject {
      *
      * @param fid	ID of the feature to view
      */
-    public abstract DomContent featureLink(String fid);
+    public DomContent featureLink(String fid) {
+        return featureLink(fid, text(fid));
+    }
+
+    /**
+     * @return a hyperlink to the specified feature's overview page
+     *
+     * @param fid		ID of the feature to view
+     * @param element	element to hyperlink
+     */
+    public abstract DomContent featureLink(String fid, DomContent element);
 
     /**
      * @return a hyperlink to the specified feature's context page
@@ -68,8 +78,8 @@ public abstract class LinkObject {
         }
 
         @Override
-        public DomContent featureLink(String fid) {
-            return a(fid).withHref(String.format(FEATURE_VIEW_LINK, fid))
+        public DomContent featureLink(String fid, DomContent element) {
+            return a(element).withHref(String.format(FEATURE_VIEW_LINK, fid))
                     .withTarget("_blank");
         }
 
@@ -117,8 +127,8 @@ public abstract class LinkObject {
         }
 
         @Override
-        public DomContent featureLink(String fid) {
-            return a(fid).withHref(String.format(FEATURE_VIEW_LINK, fid))
+        public DomContent featureLink(String fid, DomContent element) {
+            return a(element).withHref(String.format(FEATURE_VIEW_LINK, fid))
                     .withTarget("_blank");
         }
 
@@ -152,8 +162,8 @@ public abstract class LinkObject {
         }
 
         @Override
-        public DomContent featureLink(String fid) {
-            return text(fid);
+        public DomContent featureLink(String fid, DomContent element) {
+            return element;
         }
 
         @Override

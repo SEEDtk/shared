@@ -86,6 +86,17 @@ public class Shuffler<T> extends ArrayList<T> {
     }
 
     /**
+     * This is a simple utility that adds a single member to the array list in a
+     * fluent manner.
+     *
+     * @param member	new member to add
+     */
+    public Shuffler<T> add1(T member) {
+        this.add(member);
+        return this;
+    }
+
+    /**
      * This class iterates through the array but stops after a
      * certain number of elements.
      */
