@@ -814,7 +814,7 @@ public class Genome  {
     }
 
     /**
-     * Save this genome's proteins to the specified file.
+     * Save this genome's proteins to the specified protein FASTA file.
      *
      * @param fastaFile		output file
      *
@@ -828,6 +828,25 @@ public class Genome  {
                 pegSeq.setComment(peg.getFunction());
                 pegSeq.setSequence(peg.getProteinTranslation());
                 outStream.write(pegSeq);
+            }
+        }
+    }
+
+    /**
+     * Save this genome's features to the specified DNA FASTA file.
+     *
+     * @param fastaFile		output file
+     *
+     * @throws IOException
+     */
+    public void saveFeatures(File fastaFile) throws IOException {
+        try (FastaOutputStream outStream = new FastaOutputStream(fastaFile)) {
+            Sequence fidSeq = new Sequence();
+            for (Feature fid : this.getFeatures()) {
+                fidSeq.setLabel(fid.getId());
+                fidSeq.setComment(fid.getFunction());
+                fidSeq.setSequence(this.getDna(fid.getLocation()));
+                outStream.write(fidSeq);
             }
         }
     }

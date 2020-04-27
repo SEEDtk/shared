@@ -10,13 +10,14 @@ import j2html.tags.ContainerTag;
 import j2html.tags.DomContent;
 
 /**
- * This represents a feature on an HTML contig.  For each feature we need to know the color,
- * location, ID, and label.  The comparison is by location.
+ * This represents a an HTML hit sequence.  That is, it is a small sequence that is
+ * plotted against a larger one.  For each sequence we need to know the color,
+ * location on the matching large sequence, ID, and label.  The comparison is by location.
  *
  * @author Bruce Parrello
  *
  */
-public class HtmlFeature implements Comparable<HtmlFeature> {
+public class HtmlHitSequence implements Comparable<HtmlHitSequence> {
 
     // FIELDS
     /** ID of this feature */
@@ -40,7 +41,7 @@ public class HtmlFeature implements Comparable<HtmlFeature> {
      * @param loc		location of the feature on the contig
      * @param color		fill color for this feature
      */
-    public HtmlFeature(String id, String label, Location loc, Color color) {
+    public HtmlHitSequence(String id, String label, Location loc, Color color) {
         this.id = id;
         this.label = label;
         this.loc = loc;
@@ -53,7 +54,7 @@ public class HtmlFeature implements Comparable<HtmlFeature> {
      * @param parent	parent contig canvas
      * @param linker
      */
-    public DomContent draw(HtmlContig parent, LinkObject linker) {
+    public DomContent draw(HtmlFullSequence parent, LinkObject linker) {
         int left = parent.xPos(this.loc.getLeft());
         int right = parent.xPos(this.loc.getRight());
         int top = parent.getMargin() * 2 + (parent.getMargin() + parent.getArrowHeight()) * this.level;
@@ -78,7 +79,7 @@ public class HtmlFeature implements Comparable<HtmlFeature> {
 
 
     @Override
-    public int compareTo(HtmlFeature o) {
+    public int compareTo(HtmlHitSequence o) {
         int retVal = this.loc.compareTo(o.loc);
         if (retVal == 0)
             retVal = this.id.compareTo(o.id);
@@ -106,7 +107,7 @@ public class HtmlFeature implements Comparable<HtmlFeature> {
      *
      * @param o		other feature to compare
      */
-    public boolean isOverlapping(HtmlFeature o) {
+    public boolean isOverlapping(HtmlHitSequence o) {
         return this.loc.isOverlapping(o.loc);
     }
 

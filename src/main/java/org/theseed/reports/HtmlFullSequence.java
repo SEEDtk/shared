@@ -15,7 +15,7 @@ import j2html.tags.ContainerTag;
 import static j2html.TagCreator.*;
 
 /**
- * This class returns a J2HTML container tag for displaying a portion of a contig in HTML as an SVG object.
+ * This class returns a J2HTML container tag for displaying a portion of a large sequence in HTML as an SVG object.
  * The object consists of an SVG tag containing a title, a reference line, and then arrows representing
  * the features.  The caller includes a color and opacity.
  *
@@ -28,7 +28,7 @@ import static j2html.TagCreator.*;
  * @author Bruce Parrello
  *
  */
-public class HtmlContig implements Iterable<HtmlFeature> {
+public class HtmlFullSequence implements Iterable<HtmlHitSequence> {
 
     // FIELDS
     /** canvas width */
@@ -44,7 +44,7 @@ public class HtmlContig implements Iterable<HtmlFeature> {
     /** right display position of contig */
     private int contigRight;
     /** list of features to display, sorted by location */
-    private SortedSet<HtmlFeature> features;
+    private SortedSet<HtmlHitSequence> features;
     /** scale factor for coordinates */
     private double scaleFactor;
     /** title for this contig */
@@ -57,7 +57,7 @@ public class HtmlContig implements Iterable<HtmlFeature> {
      * @param right		right position to show on contig
      * @param title		title to display above contig
      */
-    public HtmlContig(int left, int right, String title) {
+    public HtmlFullSequence(int left, int right, String title) {
         this.title = title;
         this.contigLeft = left;
         this.contigRight = right;
@@ -68,7 +68,7 @@ public class HtmlContig implements Iterable<HtmlFeature> {
         this.headWidth = 10;
         computeScale();
         // Initialize the feature list.
-        this.features = new TreeSet<HtmlFeature>();
+        this.features = new TreeSet<HtmlHitSequence>();
     }
 
     /**
@@ -76,7 +76,7 @@ public class HtmlContig implements Iterable<HtmlFeature> {
      *
      * @param feat	feature to add
      */
-    public HtmlContig add(HtmlFeature feat) {
+    public HtmlFullSequence add(HtmlHitSequence feat) {
         this.features.add(feat);
         return this;
     }
@@ -100,7 +100,7 @@ public class HtmlContig implements Iterable<HtmlFeature> {
      *
      * @param width the width to set
      */
-    public HtmlContig setWidth(int width) {
+    public HtmlFullSequence setWidth(int width) {
         this.width = width;
         computeScale();
         return this;
@@ -118,7 +118,7 @@ public class HtmlContig implements Iterable<HtmlFeature> {
      *
      * @param margin the margin to set
      */
-    public HtmlContig setMargin(int margin) {
+    public HtmlFullSequence setMargin(int margin) {
         this.margin = margin;
         computeScale();
         return this;
@@ -136,7 +136,7 @@ public class HtmlContig implements Iterable<HtmlFeature> {
      *
      * @param arrowHeight the arrow height to set
      */
-    public HtmlContig setArrowHeight(int arrowHeight) {
+    public HtmlFullSequence setArrowHeight(int arrowHeight) {
         this.arrowHeight = arrowHeight;
         return this;
     }
@@ -171,20 +171,20 @@ public class HtmlContig implements Iterable<HtmlFeature> {
      * @return the number of levels assigned
      */
     protected int assignLevels() {
-        List<List<HtmlFeature>> levels = new ArrayList<List<HtmlFeature>>();
+        List<List<HtmlHitSequence>> levels = new ArrayList<List<HtmlHitSequence>>();
         // Assign the first level to the first feature.
-        Iterator<HtmlFeature> iter = this.features.iterator();
+        Iterator<HtmlHitSequence> iter = this.features.iterator();
         if (iter.hasNext()) {
-            HtmlFeature feat = iter.next();
+            HtmlHitSequence feat = iter.next();
             feat.setLevel(0);
-            levels.add(new Shuffler<HtmlFeature>(this.features.size()).add1(feat));
+            levels.add(new Shuffler<HtmlHitSequence>(this.features.size()).add1(feat));
             // Loop through the rest of the features.
             while (iter.hasNext()) {
-                final HtmlFeature f = iter.next();
+                final HtmlHitSequence f = iter.next();
                 // Find a safe level to contain this feature.
                 boolean found = false;
                 for (int i = 0; ! found && i < levels.size(); i++) {
-                    List<HtmlFeature> level = levels.get(i);
+                    List<HtmlHitSequence> level = levels.get(i);
                     found = level.stream().allMatch(x -> ! x.isOverlapping(f));
                     if (found) {
                         // The feature belongs here.
@@ -195,7 +195,7 @@ public class HtmlContig implements Iterable<HtmlFeature> {
                 if (! found) {
                     // The feature belongs on a new level.
                     f.setLevel(levels.size());
-                    levels.add(new Shuffler<HtmlFeature>(5).add1(f));
+                    levels.add(new Shuffler<HtmlHitSequence>(5).add1(f));
                 }
             }
         }
@@ -218,7 +218,7 @@ public class HtmlContig implements Iterable<HtmlFeature> {
                 .attr("x2", this.width - this.margin).attr("y2", this.margin)
                 .withStyle("stroke:black;stroke-width:4"));
         // Add the features.
-        for (HtmlFeature feat : this)
+        for (HtmlHitSequence feat : this)
             canvas.with(feat.draw(this, linker));
         // Return the whole thing with the title.
         ContainerTag retVal = p(text(this.title), br(), canvas)
@@ -227,7 +227,7 @@ public class HtmlContig implements Iterable<HtmlFeature> {
     }
 
     @Override
-    public Iterator<HtmlFeature> iterator() {
+    public Iterator<HtmlHitSequence> iterator() {
         return this.features.iterator();
     }
 
