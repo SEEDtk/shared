@@ -19,20 +19,23 @@ public class DnaDataStream extends DnaStream {
     private Collection<Sequence> sequences;
 
     /**
-     * Create a DNA stream from an in-memory list.
+     * Create a DNA stream from an in-memory list with a specified genetic code.
      *
      * @param sequences		collection of sequences to use
+     * @param gc			genetic code of the DNA in the sequeneces
      */
-    public DnaDataStream(Collection<Sequence> sequences) {
+    public DnaDataStream(Collection<Sequence> sequences, int gc) {
         this.sequences = sequences;
+        this.setGeneticCode(gc);
     }
 
     /**
      * Create an empty DNA data stream for batches of a specific size.
      *
-     * @param batchSize
+     * @param batchSize		number of sequences per batch
+     * @param gc			genetic code of the DNA in the sequeneces
      */
-    public DnaDataStream(int batchSize) {
+    public DnaDataStream(int batchSize, int gc) {
         this.sequences = new ArrayList<Sequence>(batchSize);
     }
 

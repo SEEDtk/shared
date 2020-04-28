@@ -36,7 +36,8 @@ public class StreamTest extends TestCase {
         Genome gto = new Genome(new File("src/test", "360106.5.gto"));
         File testFile = new File("src/test", "fasta.ser");
         gto.saveDna(testFile);
-        DnaStream dnaStream = new DnaInputStream(testFile);
+        DnaStream dnaStream = new DnaInputStream(testFile, 4);
+        assertThat(dnaStream.getGeneticCode(), equalTo(4));
         int count = 0;
         List<Sequence> seqs = new ArrayList<Sequence>(gto.getContigCount());
         for (Sequence contigSeq : dnaStream) {
@@ -50,14 +51,16 @@ public class StreamTest extends TestCase {
         }
         assertThat(count, equalTo(gto.getContigCount()));
         count = 0;
-        dnaStream = new DnaDataStream(seqs);
+        dnaStream = new DnaDataStream(seqs, 1);
         for (Sequence contigSeq : dnaStream) {
             assertThat(contigSeq, equalTo(seqs.get(count)));
             count++;
         }
         assertThat(count, equalTo(gto.getContigCount()));
-        DnaDataStream batchStream = new DnaDataStream(10);
+        assertThat(dnaStream.getGeneticCode(), equalTo(1));
+        DnaDataStream batchStream = new DnaDataStream(10, 11);
         assertThat(batchStream.size(), equalTo(0));
+        assertThat(batchStream.getGeneticCode(), equalTo(11));
         for (Sequence contigSeq : seqs)
             batchStream.add(contigSeq);
         assertThat(seqs.size(), equalTo(gto.getContigCount()));
@@ -68,6 +71,8 @@ public class StreamTest extends TestCase {
         }
         batchStream.clear();
         assertThat(batchStream.size(), equalTo(0));
+        batchStream.setGeneticCode(5);
+        assertThat(batchStream.getGeneticCode(), equalTo(5));
     }
 
     public void testProteinStreams() throws IOException {

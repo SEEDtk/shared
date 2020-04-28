@@ -21,23 +21,27 @@ public class DnaInputStream extends DnaStream {
     private FastaInputStream inStream;
 
     /**
-     * Create a DNA input stream from a normal input stream.
-     *
-     * @param dnaInput	stream of input containing DNA sequences in FASTA form
-     */
-    public DnaInputStream(InputStream dnaInput) {
-        this.inStream = new FastaInputStream(dnaInput);
-    }
-
-    /**
-     * Create a DNA input stream from a FASTA file
+     * Create a DNA input stream with a specific genetic code from a FASTA file.
      *
      * @param dnaInput	FASTA file containing DNA
+     * @param gc		the genetic code of the DNA
      *
      * @throws IOException
      */
-    public DnaInputStream(File dnaFile) throws IOException {
+    public DnaInputStream(File dnaFile, int gc) throws IOException {
         this.inStream = new FastaInputStream(dnaFile);
+        this.setGeneticCode(gc);
+    }
+
+    /**
+     * Create a DNA input stream with a specific genetic code from a normal input stream.
+     *
+     * @param dnaInput	stream of input containing DNA sequences in FASTA form
+     * @param gc		the genetic code of the DNA
+     */
+    public DnaInputStream(InputStream dnaInput, int gc) {
+        this.inStream = new FastaInputStream(dnaInput);
+        this.setGeneticCode(gc);
     }
 
     @Override
