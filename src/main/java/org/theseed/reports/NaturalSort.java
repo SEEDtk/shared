@@ -4,49 +4,61 @@
 package org.theseed.reports;
 
 import java.util.Comparator;
-import org.apache.commons.lang3.StringUtils;
 
 /**
- * This comparator performs a natural sort of strings that end in digits.
+ * This comparator performs a natural sort of strings that contain digits.  The string is broken into string parts and
+ * digit parts, and each digit part is converted to an integer for comparison purposes.
  *
  * @author Bruce Parrello
  *
  */
 public class NaturalSort implements Comparator<String> {
 
-    private String[] p = new String[2];
-    private String[] n = new String[2];
+    private int[] n = new int[2];
 
     @Override
     public int compare(String o1, String o2) {
-        this.separate(o1, 0);
-        this.separate(o2, 1);
-        int retVal = p[0].compareTo(p[1]);
+        int retVal = 0;
+        // These are the current position in each string.
+        int i1 = 0;
+        int i2 = 0;
+        while (retVal == 0 && i1 < o1.length() && i2 < o2.length()) {
+            if (Character.isDigit(o1.charAt(i1)) && Character.isDigit(o2.charAt(i2))) {
+                i1 = this.consume(o1, 0, i1);
+                i2 = this.consume(o2, 1, i2);
+                retVal = n[0] - n[1];
+            } else {
+                retVal = o1.charAt(i1) - o2.charAt(i2);
+                i1++;
+                i2++;
+            }
+        }
         if (retVal == 0) {
-            if (n[0].isEmpty()) {
-                if (! n[1].isEmpty())
-                    retVal = -1;
-        } else if (n[1].isEmpty()) {
-            retVal = 1;
-        } else
-            retVal = Integer.valueOf(n[0]) - Integer.valueOf(n[1]);
+            if (i1 < o1.length())
+                retVal = o1.charAt(i1);
+            else if (i2 < o2.length())
+                retVal = -o2.charAt(i2);
         }
         return retVal;
     }
 
     /**
-     * Separate a string into its char and number parts.
+     * Accumulate the number at the current position in the specified string.
+     * The current character must be a digit.
      *
      * @param o		string to separate
      * @param idx	array index for storing result
+     * @param i		current position in the string
      */
-    private void separate(String o, int idx) {
-        int i = o.length() - 1;
-        while (i >= 0 && Character.isDigit(o.charAt(i))) i--;
-        i++;
-        // Now "i" points to the first digit in the tail.
-        p[idx] = StringUtils.substring(o, 0, i);
-        n[idx] = StringUtils.substring(o, i);
+    private int consume(String o, int idx, int i) {
+        int retVal = i + 1;
+        int accum = (o.charAt(i) - '0');
+        while (retVal < o.length() && Character.isDigit(o.charAt(retVal))) {
+            accum = accum * 10 + (o.charAt(retVal) - '0');
+            retVal++;
+        }
+        this.n[idx] = accum;
+        return retVal;
     }
 
 }

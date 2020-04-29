@@ -128,6 +128,12 @@ public class ParmsTest extends TestCase {
         NaturalSort comparator = new NaturalSort();
         assertThat(comparator.compare("abs1_10", "abs1_2"), greaterThan(0));
         assertThat(comparator.compare("abc1_10", "abs1_2"), lessThan(0));
+        assertThat(comparator.compare("fig|8333.2.peg,12", "fig|8333.10.peg.10"), lessThan(0));
+        assertThat(comparator.compare("NODE_10_covg_32", "NODE_2_covg_12"), greaterThan(0));
+        assertThat(comparator.compare("abcde", "abcee"), lessThan(0));
+        assertThat(comparator.compare("abcdf", "abcd"), greaterThan(0));
+        assertThat(comparator.compare("abc10", "abc10"), equalTo(0));
+        assertThat(comparator.compare("abc10", "abc100"), lessThan(0));
         String[] sortArray = new String[] { "abcdefg1", "absdefg2", "abcdefg2", "abcdefg10", "abcdefg20", "abs1_10", "abs1_2",
                 "1004", "", "abcdef", "200" };
         Shuffler<String> sortTest = new Shuffler<String>(Arrays.asList(sortArray));
