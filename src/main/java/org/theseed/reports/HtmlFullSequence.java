@@ -189,7 +189,7 @@ public class HtmlFullSequence implements Iterable<HtmlHitSequence> {
                     if (found) {
                         // The feature belongs here.
                         level.add(f);
-                        feat.setLevel(i);
+                        f.setLevel(i);
                     }
                 }
                 if (! found) {

@@ -833,6 +833,28 @@ public class Genome  {
     }
 
     /**
+     * Save this genome's features of the specified type to the specified DNA FASTA file.
+     *
+     * @param fastaFile		output file
+     * @param type			type of feature to save
+     *
+     * @throws IOException
+     */
+    public void saveFeatures(File fastaFile, String type) throws IOException {
+        try (FastaOutputStream outStream = new FastaOutputStream(fastaFile)) {
+            Sequence fidSeq = new Sequence();
+            for (Feature fid : this.getFeatures()) {
+                if (fid.getType().contentEquals(type)) {
+                    fidSeq.setLabel(fid.getId());
+                    fidSeq.setComment(fid.getFunction());
+                    fidSeq.setSequence(this.getDna(fid.getLocation()));
+                    outStream.write(fidSeq);
+                }
+            }
+        }
+    }
+
+    /**
      * Save this genome's features to the specified DNA FASTA file.
      *
      * @param fastaFile		output file

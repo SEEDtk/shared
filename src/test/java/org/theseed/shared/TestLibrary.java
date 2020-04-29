@@ -1671,7 +1671,23 @@ public class TestLibrary extends TestCase {
                 assertThat(fidSeq.getLabel(), fidSeq.getComment(), equalTo(genomeFid.getFunction()));
                 String dna = myGto.getDna(genomeFid.getLocation());
                 assertThat(fidSeq.getLabel(), fidSeq.getSequence(), equalTo(dna));
+                counter++;
             }
+            assertThat(counter, equalTo(myGto.getFeatures().size()));
+        }
+        myGto.saveFeatures(fastaTemp, "CDS");
+        counter = 0;
+        try (FastaInputStream fastaStream = new FastaInputStream(fastaTemp)) {
+            for (Sequence fidSeq : fastaStream) {
+                Feature genomeFid = myGto.getFeature(fidSeq.getLabel());
+                assertThat(genomeFid.getType(), equalTo("CDS"));
+                assertThat(fidSeq.getLabel(), genomeFid, not(nullValue()));
+                assertThat(fidSeq.getLabel(), fidSeq.getComment(), equalTo(genomeFid.getFunction()));
+                String dna = myGto.getDna(genomeFid.getLocation());
+                assertThat(fidSeq.getLabel(), fidSeq.getSequence(), equalTo(dna));
+                counter++;
+            }
+            assertThat(counter, equalTo(myGto.getPegs().size()));
         }
     }
 

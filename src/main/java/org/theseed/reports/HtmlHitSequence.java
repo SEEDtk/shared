@@ -28,6 +28,8 @@ public class HtmlHitSequence implements Comparable<HtmlHitSequence> {
     private Location loc;
     /** color to give to this feature */
     private Color color;
+    /** direction to give to this feature */
+    char dir;
     /** vertical level of this feature */
     private int level;
     /** format for arrow points */
@@ -39,12 +41,14 @@ public class HtmlHitSequence implements Comparable<HtmlHitSequence> {
      * @param id		ID of this feature
      * @param label		label to display when hovering over the feature
      * @param loc		location of the feature on the contig
+     * @param dir		direction of this feature
      * @param color		fill color for this feature
      */
-    public HtmlHitSequence(String id, String label, Location loc, Color color) {
+    public HtmlHitSequence(String id, String label, Location loc, char dir, Color color) {
         this.id = id;
         this.label = label;
         this.loc = loc;
+        this.dir = dir;
         this.color = color;
     }
 
@@ -55,13 +59,13 @@ public class HtmlHitSequence implements Comparable<HtmlHitSequence> {
      * @param linker
      */
     public DomContent draw(HtmlFullSequence parent, LinkObject linker) {
-        int left = parent.xPos(this.loc.getLeft());
-        int right = parent.xPos(this.loc.getRight());
+        int left = parent.xPos(this.loc.getLeft()) + parent.getMargin();
+        int right = parent.xPos(this.loc.getRight()) + parent.getMargin();
         int top = parent.getMargin() * 2 + (parent.getMargin() + parent.getArrowHeight()) * this.level;
         int bottom = top + parent.getArrowHeight();
         int pointY = (top + bottom) / 2;
         String points;
-        if (this.loc.getDir() == '+') {
+        if (this.dir == '+') {
             int headLeft = Math.max(left, right - parent.getHeadWidth());
             points = String.format(POINT_FMT, left, top, headLeft, top, right, pointY,
                 headLeft, bottom, left, bottom);
