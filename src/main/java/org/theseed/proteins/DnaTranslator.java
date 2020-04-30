@@ -35,9 +35,32 @@ public class DnaTranslator {
         put("tta","L"); put("ttc","F"); put("ttg","L"); put("ttt","F");
     }};
 
+    /** array of start codon sets by genetic code */
+    public static final CodonSet[] STARTS = new CodonSet[] { null,
+            /*  1 */ new CodonSet("ttg", "ctg", "atg"),
+            /*  2 */ new CodonSet("att", "atc", "ata", "atg", "gtg"),
+            /*  3 */ new CodonSet("ata", "atg", "gtg"),
+            /*  4 */ new CodonSet("ttg", "ctg", "atg"),
+            null, null, null, null, null, null,
+            /* 11 */ new CodonSet("ttg", "gtg", "atg")
+            };
+
+    /** array of stop codon sets by genetic code */
+    public static final CodonSet[] STOPS = new CodonSet[] { null,
+            /*  1 */ new CodonSet("taa", "tag", "tga"),
+            /*  2 */ new CodonSet("taa", "tag", "aga", "agg"),
+            /*  3 */ new CodonSet("taa", "tag"),
+            /*  4 */ new CodonSet("taa", "tag"),
+            null, null, null, null, null, null,
+            /* 11 */ new CodonSet("taa", "tag", "tga")
+            };
+
+
     // FIELDS
     private Map<String, String> translationMap;
     private int geneticCode;
+    private CodonSet starts;
+    private CodonSet stops;
 
 
     /**
@@ -75,6 +98,8 @@ public class DnaTranslator {
                 throw new IllegalArgumentException("Unsupported genetic code " + gc + ".");
             }
         }
+        this.starts = STARTS[gc];
+        this.stops = STOPS[gc];
     }
 
     /**
@@ -179,6 +204,26 @@ public class DnaTranslator {
      */
     public int getGeneticCode() {
         return geneticCode;
+    }
+
+    /**
+     * @return TRUE if the codon at the specified position in the DNA string is a start
+     *
+     * @param dna	dna string (must be lower-case)
+     * @param pos	position (1-based) in the string
+     */
+    public boolean isStart(String dna, int pos) {
+        return this.starts.contains(dna, pos);
+    }
+
+    /**
+     * @return TRUE if the codon at the specified position in the DNA string is a stop
+     *
+     * @param dna	dna string (must be lower-case)
+     * @param pos	position (1-based) in the string
+     */
+    public boolean isStop(String dna, int pos) {
+        return this.stops.contains(dna, pos);
     }
 
 }
