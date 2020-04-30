@@ -1205,6 +1205,10 @@ public class TestLibrary extends TestCase {
         assertThat(xlator.getGeneticCode(), equalTo(11));
         String prot2 = StringUtils.chop(prot1) + "*";
         assertThat(xlator.pegTranslate(dna1, 1, dna1.length()), equalTo(prot2));
+        assertTrue(xlator.isStart(dna1, 1));
+        assertTrue(xlator.isStop(dna1, dna1.length() - 2));
+        assertFalse(xlator.isStart(dna1, 2));
+        assertFalse(xlator.isStop(dna1, 4));
         // Try a bad character.
         dna1 = "angcggatggcttggtcgaccgtgggggcgcacatcgggcagcgaccgggccaggccgca" +
                 "taccagatgctggagacccgccgccgtggcagcgtgctgcgactcggcaatcccaagcgg" +
