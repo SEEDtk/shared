@@ -367,6 +367,20 @@ public abstract class Location implements Comparable<Location>, Cloneable {
     }
 
     /**
+     * Expand this location by the specified distance in each direction.
+     *
+     * @param xLeft			distance to increase on the left
+     * @param xRight		distance to increase on the right
+     * @param contigLen		length of the contig containing the location
+     */
+    public void expand(int xLeft, int xRight, int contigLen) {
+        int newLeft = Math.max(this.getLeft() - xLeft, 1);
+        this.setLeft(newLeft);
+        int newRight = Math.min(this.getRight() + xRight, contigLen);
+        this.setRight(newRight);
+    }
+
+    /**
      * @return the last region in this location
      */
     private Region lastRegion() {
@@ -589,6 +603,17 @@ public abstract class Location implements Comparable<Location>, Cloneable {
                     loc.getLeft() <= this.getRight());
         }
         return retVal;
+    }
+
+    /**
+     * Create a new location by copying the extent of an old one.
+     *
+     * @param oldLoc	location to copy
+     *
+     * @return a new single-seqment location that has the same begin and end as the old one
+     */
+    public static Location copy(Location oldLoc) {
+        return Location.create(oldLoc.getContigId(), oldLoc.getBegin(), oldLoc.getEnd());
     }
 
 }

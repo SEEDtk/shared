@@ -17,7 +17,6 @@ import java.util.SortedSet;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.ArrayUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.theseed.counters.KeyPair;
 import org.theseed.genome.Annotation;
 import org.theseed.genome.CloseGenome;
@@ -38,7 +37,6 @@ import org.theseed.locations.Region;
 import org.theseed.locations.SortedLocationList;
 import org.theseed.magic.MagicMap;
 import org.theseed.proteins.CodonSet;
-import org.theseed.proteins.DnaTranslator;
 import org.theseed.proteins.Role;
 import org.theseed.proteins.RoleMap;
 import org.theseed.proteins.kmers.KmerCollectionGroup;
@@ -465,6 +463,22 @@ public class TestLibrary extends TestCase {
         assertFalse("Different strands compare equal.", loc5.equals(loc8));
         assertFalse("Different region counts compare equal.", loc5.equals(loc1));
         assertFalse("Different region extents compare equal.", loc5.equals(loc9));
+        Location locA = Location.copy(loc1);
+        assertThat(locA.getContigId(), equalTo("myContig"));
+        assertThat(locA.getBegin(), equalTo(1000));
+        assertThat(locA.getEnd(), equalTo(1999));
+        locA.expand(100, 101, 3000);
+        assertThat(locA.getContigId(), equalTo("myContig"));
+        assertThat(locA.getBegin(), equalTo(900));
+        assertThat(locA.getEnd(), equalTo(2100));
+        locA.expand(1000, 500, 3000);
+        assertThat(locA.getContigId(), equalTo("myContig"));
+        assertThat(locA.getBegin(), equalTo(1));
+        assertThat(locA.getEnd(), equalTo(2600));
+        locA.expand(0, 500, 3000);
+        assertThat(locA.getContigId(), equalTo("myContig"));
+        assertThat(locA.getBegin(), equalTo(1));
+        assertThat(locA.getEnd(), equalTo(3000));
         // Test frames
         for (int i = 0; i < 200; i += 3) {
             assertThat(Location.create("Mycontig", "+", i, i+5).getFrame(), equalTo(Frame.P0));
@@ -1158,69 +1172,6 @@ public class TestLibrary extends TestCase {
         assertFalse("P0 negative fail.", Frame.P0.negative());
         assertFalse("P1 negative fail.", Frame.P1.negative());
         assertFalse("P2 negative fail.", Frame.P2.negative());
-    }
-
-    /**
-     * test protein translation
-     */
-    public void testDnaTranslator() {
-        // Start with GC 4.
-        DnaTranslator xlator = new DnaTranslator(4);
-        String dna1 = "atggctataccaccggaggtgcactcgggcctgttgagcgccgggtgcggtccgggatca" +
-                "ttgcttgttgccgcgcagcagtggcaagaacttagtgatcagtacgcactcgcatgcgcc" +
-                "gagttgggccaattgttgggcgaggttcaggccagcagctggcagggaaccgccgccacc" +
-                "cagtacgtggctgcccatggcccctatctggcctggcttgagcaaaccgcgatcaacagc" +
-                "gccgtcaccgccgcacagcacgtagcggctgccgctgcctactgcagcgccctggccgcg" +
-                "atgcccaccccagcagagctggccgccaaccacgccattcatggcgttctgatcgccacc" +
-                "aacttcttcgggatcaacaccgttccgatcgcgctcaacgaagccgattatgtccgcatg" +
-                "tggctgcaagccgccgacaccatggccgcctaccaggccgtcgccgatgcggccacggtg" +
-                "gccgtaccgtccacccaaccggcgccaccgatccgcgcgcccggcggcgatgccgcagat" +
-                "acctggctagacgtattgagttcaattggtcagctcatccgggatatcttggatttcatt" +
-                "gccaacccgtacaagtattttctggagtttttcgagcaattcggcttcagcccggccgta" +
-                "acggtcgtccttgcccttgttgccctgcagctgtacgactttctttggtatccctattac" +
-                "gcctcgtacggcctgctcctgcttccgttcttcactcccaccttgagcgcgttgaccgcc" +
-                "ctaagcgcgctgatccatttgctgaacctgcccccggctggactgcttcctatcgccgca" +
-                "gcgctcggtcccggcgaccaatggggcgcaaacttggctgtggctgtcacgccggccacg" +
-                "gcggccgtgcccggcggaagcccgcccaccagcaaccccgcgcccgccgctcccagctcg" +
-                "aactcggttggcagcgcttcggctgcacccggcatcagctatgccgtgccaggcctggcg" +
-                "ccacccggggttagctctggccctaaagccggcaccaaatcacctgacaccgccgccgac" +
-                "acccttgcaaccgcgggcgcagcacgaccgggcctcgcccgagcccaccgaagaaagcgc" +
-                "agcgaaagcggcgtcgggatacgcggttaccgcgacgaatttttggacgcgaccgccacg" +
-                "gtggacgccgctacggatgtgcccgctcccgccaacgcggctggcagtcaaggtgccggc" +
-                "actctcggctttgccggtaccgcaccgacaaccagcggcgccgcggccggaatggttcaa" +
-                "ctgtcgtcgcacagcacaagcactacagtcccgttgctgcccactacctggacaaccgac" +
-                "gccgaacaatga";
-        String prot1 = "MAIPPEVHSGLLSAGCGPGSLLVAAQQWQELSDQYALACAELGQLLGEVQASSWQGTAAT" +
-                "QYVAAHGPYLAWLEQTAINSAVTAAQHVAAAAAYCSALAAMPTPAELAANHAIHGVLIAT" +
-                "NFFGINTVPIALNEADYVRMWLQAADTMAAYQAVADAATVAVPSTQPAPPIRAPGGDAAD" +
-                "TWLDVLSSIGQLIRDILDFIANPYKYFLEFFEQFGFSPAVTVVLALVALQLYDFLWYPYY" +
-                "ASYGLLLLPFFTPTLSALTALSALIHLLNLPPAGLLPIAAALGPGDQWGANLAVAVTPAT" +
-                "AAVPGGSPPTSNPAPAAPSSNSVGSASAAPGISYAVPGLAPPGVSSGPKAGTKSPDTAAD" +
-                "TLATAGAARPGLARAHRRKRSESGVGIRGYRDEFLDATATVDAATDVPAPANAAGSQGAG" +
-                "TLGFAGTAPTTSGAAAGMVQLSSHSTSTTVPLLPTTWTTDAEQW";
-        assertThat(xlator.pegTranslate(dna1, 1, dna1.length()), equalTo(prot1));
-        assertThat(xlator.getGeneticCode(), equalTo(4));
-        // Verify that we can switch to 11.
-        xlator = new DnaTranslator(11);
-        assertThat(xlator.getGeneticCode(), equalTo(11));
-        String prot2 = StringUtils.chop(prot1) + "*";
-        assertThat(xlator.pegTranslate(dna1, 1, dna1.length()), equalTo(prot2));
-        assertTrue(xlator.isStart(dna1, 1));
-        assertTrue(xlator.isStop(dna1, dna1.length() - 2));
-        assertFalse(xlator.isStart(dna1, 2));
-        assertFalse(xlator.isStop(dna1, 4));
-        // Try a bad character.
-        dna1 = "angcggatggcttggtcgaccgtgggggcgcacatcgggcagcgaccgggccaggccgca" +
-                "taccagatgctggagacccgccgccgtggcagcgtgctgcgactcggcaatcccaagcgg" +
-                "ggcatcgtcagccgccgccggtatcacaccctgaggggcgcccgaccaacccgcccgccg" +
-                "ccgccgatgctcggctga";
-        int len = dna1.length();
-        prot1 = "XRMAWSTVGAHIGQRPGQAAYQMLETRRRGSVLRLGNPKRGIVSRRRYHTLRGARPTRPPPPMLG*";
-        assertThat(xlator.pegTranslate(dna1, 1, len), equalTo(prot1));
-        // Check the substring pathologies.
-        dna1 = "abcd" + dna1;
-        assertThat(xlator.pegTranslate(dna1, 5, len), equalTo(prot1));
-        assertThat(xlator.pegTranslate(dna1, 5, len + 2), equalTo(prot1));
     }
 
     /**

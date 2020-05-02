@@ -3,7 +3,9 @@
  */
 package org.theseed.proteins;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
@@ -141,7 +143,7 @@ public class DnaTranslator {
      */
     public String pegTranslate(String dna, int start, int len) {
         String first;
-        String codon = StringUtils.substring(dna, 0, 3);
+        String codon = StringUtils.substring(dna, start - 1, start + 2);
         switch (codon) {
         case "gtg" :
         case "ttg" :
@@ -224,6 +226,48 @@ public class DnaTranslator {
      */
     public boolean isStop(String dna, int pos) {
         return this.stops.contains(dna, pos);
+    }
+
+
+    /**
+     * Build a protein operon from a DNA sequence.  We will begin from the last stop and
+     * work our way backward.
+     *
+     * @param dnaString	DNA string to separate into operons
+     *
+     * @return a list of protein strings representing the operon
+     */
+    public List<String> operonFrom(String dnaString) {
+        // Estimate the number of proteins and create the output list.
+        int size = dnaString.length() / 1000 + 1;
+        List<String> retVal = new ArrayList<String>(size);
+        // Start at the last codon.
+        int p = dnaString.length() - 3;
+        while (p >= 0) {
+            // Find the last stop from this position.
+            while (p >= 0 && ! this.isStop(dnaString, p)) p--;
+            // If we found the stop, search for the first start in the ORF.
+            if (p >= 0) {
+                int stop = p;
+                p -= 3;
+                int start = 0;
+                while (p >= 0 && ! this.isStop(dnaString, p)) {
+                    if (this.isStart(dnaString, p)) start = p;
+                    p -= 3;
+                }
+                if (start == 0) {
+                    // This is not a coding ORF.  Keep searching for a stop.
+                    p = stop - 1;
+                } else {
+                    // This is a coding ORF.  compute the protein and then
+                    // search for the next ORF.
+                    String protein = this.pegTranslate(dnaString, start, stop - start);
+                    retVal.add(protein);
+                    p = start - 3;
+                }
+            }
+        }
+        return retVal;
     }
 
 }
