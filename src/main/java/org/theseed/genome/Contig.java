@@ -124,6 +124,21 @@ public class Contig {
     }
 
     /**
+     * Create a simple contig from and ID and length.
+     *
+     * @param contigId	the ID of the contig
+     * @param len		the length of the contig
+     * @param code		the genetic code of the contig
+     */
+    public Contig(String contigId, int len, int code) {
+        this.id = contigId;
+        this.geneticCode = code;
+        this.length = len;
+        this.accession = "";
+        this.description = "";
+    }
+
+    /**
      * @return the id
      */
     public String getId() {
@@ -270,6 +285,14 @@ public class Contig {
      */
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    /**
+     * @param sequence 	new DNA sequence to store
+     */
+    public void setSequence(String sequence) {
+        this.sequence = sequence;
+        this.length = sequence.length();
     }
 
 }

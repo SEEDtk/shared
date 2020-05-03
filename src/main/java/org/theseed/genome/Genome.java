@@ -308,6 +308,19 @@ public class Genome  {
     }
 
     /**
+     * @return the taxonomy name
+     */
+    protected String getTaxonomyName() {
+        String retVal;
+        if (this.lineage == null || this.lineage.length == 0) {
+            retVal = String.format("Unknown organism with taxonomic ID %d.", this.taxonomyId);
+        } else {
+            retVal = this.lineage[this.lineage.length - 1].getName();
+        }
+        return retVal;
+    }
+
+    /**
      * @return a collection of the features in this genome
      */
     public Collection<Feature> getFeatures() {
