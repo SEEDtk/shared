@@ -39,7 +39,7 @@ public class DnaTranslator {
 
     /** array of start codon sets by genetic code */
     public static final CodonSet[] STARTS = new CodonSet[] { null,
-            /*  1 */ new CodonSet("ttg", "ctg", "atg"),
+            /*  1 */ new CodonSet("atg"),
             /*  2 */ new CodonSet("att", "atc", "ata", "atg", "gtg"),
             /*  3 */ new CodonSet("ata", "atg", "gtg"),
             /*  4 */ new CodonSet("ttg", "ctg", "atg"),
@@ -241,18 +241,20 @@ public class DnaTranslator {
         // Estimate the number of proteins and create the output list.
         int size = dnaString.length() / 1000 + 1;
         List<String> retVal = new ArrayList<String>(size);
+        // Insure the sequence is lower case.
+        String dna = dnaString.toLowerCase();
         // Start at the last codon.
-        int p = dnaString.length() - 3;
+        int p = dna.length() - 3;
         while (p >= 0) {
             // Find the last stop from this position.
-            while (p >= 0 && ! this.isStop(dnaString, p)) p--;
+            while (p >= 0 && ! this.isStop(dna, p)) p--;
             // If we found the stop, search for the first start in the ORF.
             if (p >= 0) {
                 int stop = p;
                 p -= 3;
                 int start = 0;
-                while (p >= 0 && ! this.isStop(dnaString, p)) {
-                    if (this.isStart(dnaString, p)) start = p;
+                while (p >= 0 && ! this.isStop(dna, p)) {
+                    if (this.isStart(dna, p)) start = p;
                     p -= 3;
                 }
                 if (start == 0) {
@@ -261,7 +263,7 @@ public class DnaTranslator {
                 } else {
                     // This is a coding ORF.  compute the protein and then
                     // search for the next ORF.
-                    String protein = this.pegTranslate(dnaString, start, stop - start);
+                    String protein = this.pegTranslate(dna, start, stop - start);
                     retVal.add(protein);
                     p = start - 3;
                 }
