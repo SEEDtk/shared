@@ -39,6 +39,11 @@ public class FastaOutputStream implements Closeable, AutoCloseable, Flushable {
         writer = new PrintWriter(outFile);
     }
 
+    // TODO remove this
+    public void blank() {
+        writer.println();
+    }
+
     /**
      * Write a sequence to the output stream.
      *
@@ -47,11 +52,13 @@ public class FastaOutputStream implements Closeable, AutoCloseable, Flushable {
     public void write(Sequence seq) throws IOException {
         // Write the label and comment.
         String comment = seq.getComment();
+        String header;
         if (comment != null && ! comment.isEmpty()) {
-            writer.format(">%s %s%n", seq.getLabel(), comment);
+            header = String.format(">%s %s", seq.getLabel(), comment);
         } else {
-            writer.format(">%s%n", seq.getLabel());
+            header = String.format(">%s", seq.getLabel());
         }
+        writer.println(header);
         // Write the sequence in chunks.
         String sequence = seq.getSequence();
         if (! sequence.isEmpty()) {

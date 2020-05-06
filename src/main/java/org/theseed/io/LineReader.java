@@ -24,7 +24,9 @@ public class LineReader implements Iterable<String>, Iterator<String>, Closeable
 
     /** underlying buffered reader */
     private BufferedReader reader;
-    /** next input line */
+    /** TRUE if end-of-file has been read */
+    private boolean eof;
+    /** next line to produce */
     private String nextLine;
 
     /**
@@ -59,7 +61,8 @@ public class LineReader implements Iterable<String>, Iterator<String>, Closeable
      */
     private void setup(Reader streamReader) throws IOException {
         this.reader = new BufferedReader(streamReader);
-        this.nextLine = this.reader.readLine();
+        this.eof = false;
+        this.nextLine = null;
     }
 
     @Override
@@ -72,21 +75,48 @@ public class LineReader implements Iterable<String>, Iterator<String>, Closeable
      */
     @Override
     public boolean hasNext() {
-        return (this.nextLine != null);
+        boolean retVal = false;
+        if (this.nextLine != null) {
+            // Here we have a next line and it has not been consumed.
+            retVal = true;
+        } else if (! this.eof) {
+            // Here we need to check for a next line.
+            this.readAhead();
+            if (this.nextLine == null) {
+                this.eof = true;
+            } else {
+                retVal = true;
+            }
+        }
+        return retVal;
     }
 
+    /**
+     * Get the next line of input into the next-line buffer.
+     */
+    private void readAhead() {
+        try {
+            this.nextLine = this.reader.readLine();
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        }
+    }
     /**
      * @return the next line in the file
      */
     @Override
     public String next() {
         String retVal = this.nextLine;
-        if (retVal != null)
-            try {
-                this.nextLine = this.reader.readLine();
-            } catch (IOException e) {
-                throw new UncheckedIOException(e);
-            }
+        if (retVal != null) {
+            // Denote the next line has been consumed.
+            this.nextLine = null;
+        } else if (! this.eof) {
+            // Here we do not have an available next line, but there may be another one.  We read it and consume it
+            // in one operation.
+            this.readAhead();
+            retVal = this.nextLine;
+            this.nextLine = null;
+        }
         return retVal;
     }
 
