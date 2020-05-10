@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
+import org.theseed.sequence.Sequence;
 
 /**
  * This object is used to translate DNA into proteins.  The constructor specifies a genetic code, and the
@@ -56,7 +57,6 @@ public class DnaTranslator {
             null, null, null, null, null, null,
             /* 11 */ new CodonSet("taa", "tag", "tga")
             };
-
 
     // FIELDS
     private Map<String, String> translationMap;
@@ -245,9 +245,10 @@ public class DnaTranslator {
         String dna = dnaString.toLowerCase();
         // Start at the last codon.
         int p = dna.length() - 3;
+        // Find the last stop from this position.
+        while (p >= 0 && ! this.isStop(dna, p)) p--;
+        // Build the operon using this frame.
         while (p >= 0) {
-            // Find the last stop from this position.
-            while (p >= 0 && ! this.isStop(dna, p)) p--;
             // If we found the stop, search for the first start in the ORF.
             if (p >= 0) {
                 int stop = p;
@@ -257,19 +258,107 @@ public class DnaTranslator {
                     if (this.isStart(dna, p)) start = p;
                     p -= 3;
                 }
-                if (start == 0) {
-                    // This is not a coding ORF.  Keep searching for a stop.
-                    p = stop - 1;
-                } else {
-                    // This is a coding ORF.  compute the protein and then
-                    // search for the next ORF.
+                if (start != 0) {
+                    // This is a coding ORF.  Compute the protein.  "p" is
+                    // either 0 at this point or on a stop.
                     String protein = this.pegTranslate(dna, start, stop - start);
                     retVal.add(protein);
-                    p = start - 3;
                 }
             }
         }
         return retVal;
+    }
+
+    /**
+     * Translate a potential operon.  The first start codon in an ORF will be converted to M.
+     * The output is a list of sequences representing potential PEGs.  The label indicates the
+     * frame, position, and source.  The comment contains upstream DNA.
+     *
+     * @param dna		dna string to translate
+     * @param start		starting position
+     * @param end		last position to translate
+     * @param label		label prefix
+     * @param upstream	upstream DNA length
+     *
+     * @return a translated DNA string with possible PEGs highlighted
+     */
+    public List<Sequence> opTranslate(String dna, int start, int end, String label, int upstream) {
+        // Correct the endpoint.
+        if (end > dna.length()) end = dna.length();
+        end -= 2;
+        // Create the output list.
+        List<Sequence> retVal = new ArrayList<Sequence>(end / 1000 + 1);
+        // Create a buffer for building the translation.
+        StringBuilder buffer = new StringBuilder(1000);
+        // Loop through the frames.
+        for (int frm = 1; frm <= 3; frm++) {
+            // This will be used to remember starts.
+            int idx = 1;
+            // Loop through the codons.  We start in EXTRON mode (between pegs).
+            boolean intron = false;
+            for (int i = start + frm - 1; i < end; i += 3) {
+                if (this.isStart(dna, i) && ! intron) {
+                    // Here we have the start of a peg.
+                    buffer.setLength(1);
+                    buffer.setCharAt(0, 'M');
+                    intron = true;
+                    idx = i;
+                } else if (this.isStop(dna, i) && intron) {
+                    // Here we have the end of a peg.  Note that we include the first three codons at the end of the
+                    // upstream sequence.
+                    int up = idx - upstream - 1;
+                    String upstring = "";
+                    if (up < 0) {
+                        upstring = StringUtils.repeat('-', -up);
+                        up = 0;
+                    }
+                    upstring += StringUtils.substring(dna, up, idx + 9);
+                    Sequence seq = new Sequence(String.format("%s.p%d.F%d", label, idx, start),
+                            upstring, buffer.toString());
+                    retVal.add(seq);
+                    intron = false;
+                } else if (intron) {
+                    // Here we have a normal codon.
+                    buffer.append(this.aa(dna, i));
+                }
+            }
+        }
+        return retVal;
+    }
+
+    /**
+     * Translate a frame.  The first start codon in an ORF will be converted to M, and extrons will
+     * be shown in lower case.
+     *
+     * @param dna	DNA string to translate
+     * @param frm	frame number-- 1, 2, or 3
+     *
+     * @return a translated amino acid string showing the potential pegs
+     */
+    public String frameTranslate(String dna, int frm) {
+        // Compute the endpoint.
+        int end = dna.length() - 2;
+        // Create a buffer for building the translation.
+        StringBuilder retVal = new StringBuilder(dna.length() / 3 + 1);
+        // Loop through the codons.  We start in EXTRON mode (between pegs).
+        boolean intron = false;
+        for (int i = frm; i <= end; i += 3) {
+            if (this.isStart(dna, i) && ! intron) {
+                // Here we have the start of a peg.
+                retVal.append('M');
+                intron = true;
+            } else if (this.isStop(dna, i) && intron) {
+                // Here we have the end of a peg.
+                retVal.append('*');
+                intron = false;
+            } else {
+                // Here we have a normal codon.
+                String aa = this.aa(dna, i);
+                if (! intron) aa = aa.toLowerCase();
+                retVal.append(aa);
+            }
+        }
+        return retVal.toString();
     }
 
 }
