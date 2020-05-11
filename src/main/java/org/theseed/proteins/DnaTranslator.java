@@ -313,7 +313,7 @@ public class DnaTranslator {
                         up = 0;
                     }
                     upstring += StringUtils.substring(dna, up, idx + 9);
-                    Sequence seq = new Sequence(String.format("%s.p%d.F%d", label, idx, start),
+                    Sequence seq = new Sequence(String.format("%s.p%d.F%d", label, idx, frm),
                             upstring, buffer.toString());
                     retVal.add(seq);
                     intron = false;
