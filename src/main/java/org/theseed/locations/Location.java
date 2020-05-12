@@ -325,7 +325,7 @@ public abstract class Location implements Comparable<Location>, Cloneable {
      * @param other	other location to check
      */
     public boolean contains(Location other) {
-        return (this.getContigId() == other.getContigId() &&
+        return (this.getContigId().contentEquals(other.getContigId()) &&
                 this.getLeft() <= other.getLeft() && this.getRight() >= other.getRight());
     }
 
