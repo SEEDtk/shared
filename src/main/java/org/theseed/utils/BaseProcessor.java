@@ -65,9 +65,21 @@ public abstract class BaseProcessor implements ICommand {
             System.err.println(e.getMessage());
             parser.printUsage(System.err);
         } catch (IOException e) {
-            e.printStackTrace(System.err);
+            log.error("PARAMETER ERROR.", e);
         }
         return retVal;
+    }
+
+    /**
+     * Run the command.
+     */
+    @Override
+    public void run() {
+        try {
+            this.runCommand();
+        } catch (Exception e) {
+            log.error("EXECUTION ERROR.", e);
+        }
     }
 
     /**
@@ -80,7 +92,6 @@ public abstract class BaseProcessor implements ICommand {
      */
     protected abstract boolean validateParms() throws IOException;
 
-    @Override
-    public abstract void run();
+    protected abstract void runCommand() throws Exception;
 
 }
