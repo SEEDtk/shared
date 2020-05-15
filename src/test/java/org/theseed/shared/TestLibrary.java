@@ -13,6 +13,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
+import java.util.Set;
 import java.util.SortedSet;
 import java.util.stream.Collectors;
 
@@ -112,6 +113,7 @@ public class TestLibrary extends TestCase {
      * Test magic IDs.
      * @throws IOException
      */
+    @SuppressWarnings("unlikely-arg-type")
     public void testMagic() throws IOException {
         File inFile = new File("src/test", "words.txt");
         Scanner thingScanner = new Scanner(inFile);
@@ -130,7 +132,7 @@ public class TestLibrary extends TestCase {
         while (thingScanner.hasNext()) {
             String thingId = thingScanner.next();
             thingScanner.next();
-            assertNull("Wrong ID found", magicTable.get(thingId));
+            assertNull("Wrong ID found", magicTable.getItem(thingId));
             String thingDesc = thingScanner.next();
             Thing newThing = new Thing(thingId, thingDesc);
             magicTable.register(newThing);
@@ -142,22 +144,22 @@ public class TestLibrary extends TestCase {
         String modifiedThing = "3-keto-L-gulonate-6-phosphate decarboxylase UlaK putative (L-ascorbate utilization protein D) (EC 4.1.1.85)";
         Thing newThing = magicTable.findOrInsert(modifiedThing);
         assertEquals("Wrong ID assigned for modified thing.", "3KetoLGulo6PhosDeca6", newThing.getId());
-        assertSame("Modified thing did not read back.", newThing, magicTable.get("3KetoLGulo6PhosDeca6"));
+        assertSame("Modified thing did not read back.", newThing, magicTable.getItem("3KetoLGulo6PhosDeca6"));
         modifiedThing = "Unique (new) thing string without numbers";
         newThing = magicTable.findOrInsert(modifiedThing);
         assertEquals("Wrong ID assigned for unique thing.", "UniqThinStriWith", newThing.getId());
-        assertSame("Unique thing did not read back.", newThing, magicTable.get("UniqThinStriWith"));
+        assertSame("Unique thing did not read back.", newThing, magicTable.getItem("UniqThinStriWith"));
         Thing findThing = magicTable.findOrInsert(modifiedThing);
         assertSame("Unique thing was re-inserted.", newThing, findThing);
         modifiedThing = "Unique (old) thing string without numbers";
         findThing = magicTable.findOrInsert(modifiedThing);
         assertTrue("Parenthetical did not change thing ID.", findThing != newThing);
         assertEquals("Wrong ID assigned for parenthetical thing.", "UniqThinStriWith2", findThing.getId());
-        assertSame("Parenthetical thing did not read back.", findThing, magicTable.get("UniqThinStriWith2"));
+        assertSame("Parenthetical thing did not read back.", findThing, magicTable.getItem("UniqThinStriWith2"));
         modifiedThing = "Unique (newer) thing string without numbers";
         newThing = magicTable.findOrInsert(modifiedThing);
         assertEquals("Wrong ID assigned for newer thing.", "UniqThinStriWith3", newThing.getId());
-        assertSame("Parenthetical thing did not read back.", newThing, magicTable.get("UniqThinStriWith3"));
+        assertSame("Parenthetical thing did not read back.", newThing, magicTable.getItem("UniqThinStriWith3"));
         modifiedThing = "Unique thing string 12345 with numbers";
         newThing = magicTable.findOrInsert(modifiedThing);
         assertEquals("Name not stored in thing.", modifiedThing, newThing.getName());
@@ -186,8 +188,8 @@ public class TestLibrary extends TestCase {
         File saveFile = new File("src/test", "things.ser");
         magicTable.save(saveFile);
         ThingMap newTable = ThingMap.load(saveFile);
-        for (Thing oldThing : magicTable.values()) {
-            newThing = newTable.get(oldThing.getId());
+        for (Thing oldThing : magicTable.objectValues()) {
+            newThing = newTable.getItem(oldThing.getId());
             assertNotNull("Could not find thing in loaded table.", newThing);
             if (! oldThing.getName().startsWith("alias")) {
                 assertEquals("Loaded table has wrong thing name.", oldThing.getName(), newThing.getName());
@@ -206,6 +208,35 @@ public class TestLibrary extends TestCase {
         newThing = newTable.findOrInsert(modifiedThing);
         assertSame("Alias 2 string did not work.", newThing, myThing);
 
+        // Test map interface
+        Map<String, String> thingMap = magicTable;
+        assertFalse(thingMap.containsKey(myThing));
+        assertTrue(thingMap.containsKey("PhenTrnaSyntAlph"));
+        assertFalse(thingMap.containsKey("FrogsAndToads"));
+        assertFalse(thingMap.containsValue(myThing));
+        assertTrue(thingMap.containsValue("Unique thing string 12345 with more numbers"));
+        assertFalse(thingMap.containsValue("Obviously fake role name"));
+        assertThat(thingMap.get("PhenTrnaSyntAlph"), equalTo("Phenylalanyl-tRNA synthetase alpha chain (EC 6.1.1.20)"));
+        assertNull(thingMap.get("FrogsAndToads"));
+        assertNull(thingMap.get(myThing));
+        thingMap.remove("PhenTrnaSyntAlph");
+        assertFalse(thingMap.containsKey("PhenTrnaSyntAlph"));
+        assertNull(thingMap.remove("FrogsAndToads"));
+        Collection<String> values = thingMap.values();
+        for (String value : values)
+            assertNotNull(value, magicTable.getByName(value));
+        for (String key : magicTable.keySet()) {
+            Thing target = magicTable.getItem(key);
+            assertTrue(key, values.contains(target.getName()));
+        }
+        Set<Map.Entry<String, String>> entries = thingMap.entrySet();
+        assertThat(entries.size(), equalTo(magicTable.size()));
+        for (Map.Entry<String, String> entry : entries) {
+            String key = entry.getKey();
+            Thing target = magicTable.getItem(key);
+            assertNotNull(key, target);
+            assertThat(entry.getValue(), equalTo(target.getName()));
+        }
     }
 
     private static final String myProtein = "MNERYQCLKTKEYQALLSSKGRQIFAKRKIDMKSVFGQIKVCLGYKRCHLRGKRQVRIDMGFILMANNLLKYNKRKRQN";
@@ -826,7 +857,7 @@ public class TestLibrary extends TestCase {
         while (roleScanner.hasNext()) {
             String roleId = roleScanner.next();
             roleScanner.next();
-            assertNull("Wrong ID found", magicTable.get(roleId));
+            assertNull("Wrong ID found", magicTable.getItem(roleId));
             String roleDesc = roleScanner.next();
             Role newRole = new Role(roleId, roleDesc);
             magicTable.register(newRole);
@@ -838,22 +869,22 @@ public class TestLibrary extends TestCase {
         String modifiedRole = "3-keto-L-gulonate-6-phosphate decarboxylase UlaK putative (L-ascorbate utilization protein D) (EC 4.1.1.85)";
         Role newRole = magicTable.findOrInsert(modifiedRole);
         assertEquals("Wrong ID assigned for modified role.", "3KetoLGulo6PhosDeca6", newRole.getId());
-        assertSame("Modified role did not read back.", newRole, magicTable.get("3KetoLGulo6PhosDeca6"));
+        assertSame("Modified role did not read back.", newRole, magicTable.getItem("3KetoLGulo6PhosDeca6"));
         modifiedRole = "Unique (new) role string without numbers";
         newRole = magicTable.findOrInsert(modifiedRole);
         assertEquals("Wrong ID assigned for unique role.", "UniqRoleStriWith", newRole.getId());
-        assertSame("Unique role did not read back.", newRole, magicTable.get("UniqRoleStriWith"));
+        assertSame("Unique role did not read back.", newRole, magicTable.getItem("UniqRoleStriWith"));
         Role findRole = magicTable.findOrInsert(modifiedRole);
         assertSame("Unique role was re-inserted.", newRole, findRole);
         modifiedRole = "Unique (old) role string without numbers";
         findRole = magicTable.findOrInsert(modifiedRole);
         assertTrue("Parenthetical did not change role ID.", findRole != newRole);
         assertEquals("Wrong ID assigned for parenthetical role.", "UniqRoleStriWith2", findRole.getId());
-        assertSame("Parenthetical role did not read back.", findRole, magicTable.get("UniqRoleStriWith2"));
+        assertSame("Parenthetical role did not read back.", findRole, magicTable.getItem("UniqRoleStriWith2"));
         modifiedRole = "Unique (newer) role string without numbers";
         newRole = magicTable.findOrInsert(modifiedRole);
         assertEquals("Wrong ID assigned for newer role.", "UniqRoleStriWith3", newRole.getId());
-        assertSame("Parenthetical role did not read back.", newRole, magicTable.get("UniqRoleStriWith3"));
+        assertSame("Parenthetical role did not read back.", newRole, magicTable.getItem("UniqRoleStriWith3"));
         modifiedRole = "Unique role string 12345 with numbers";
         newRole = magicTable.findOrInsert(modifiedRole);
         assertEquals("Name not stored in role.", modifiedRole, newRole.getName());
@@ -865,8 +896,8 @@ public class TestLibrary extends TestCase {
         File saveFile = new File("src/test", "roles.ser");
         magicTable.save(saveFile);
         RoleMap newTable = RoleMap.load(saveFile);
-        for (Role oldRole : magicTable.values()) {
-            newRole = newTable.get(oldRole.getId());
+        for (Role oldRole : magicTable.objectValues()) {
+            newRole = newTable.getItem(oldRole.getId());
             assertNotNull("Could not find role in loaded table.", newRole);
             assertEquals("Loaded table has wrong role name.", newRole.getName(), oldRole.getName());
             assertEquals("Loaded role has wrong checksum.", newRole, oldRole);

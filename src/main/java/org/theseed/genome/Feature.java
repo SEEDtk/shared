@@ -443,8 +443,18 @@ public class Feature implements Comparable<Feature> {
      * @param map	map containing the roles considered useful
      */
     public List<Role> getUsefulRoles(RoleMap map) {
-        String[] roleNames = this.getRoles();
-        ArrayList<Role> retVal = new ArrayList<Role>(roleNames.length);
+        return usefulRoles(map, this.function);
+    }
+
+    /**
+     * @return a list of the useful roles in a functional assignment
+     *
+     * @param map		role map containing all useful roles
+     * @param function	array of role descriptions to scan
+     */
+    public static List<Role> usefulRoles(RoleMap map, String function) {
+        String[] roleNames = rolesOfFunction(function);
+        List<Role> retVal = new ArrayList<Role>(roleNames.length);
         for (String roleName : roleNames) {
             Role role = map.getByName(roleName);
             if (role != null) {

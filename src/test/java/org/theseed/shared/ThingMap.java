@@ -44,7 +44,7 @@ public class ThingMap extends MagicMap<Thing> {
     public void save(File saveFile) {
         try {
             PrintWriter printer = new PrintWriter(saveFile);
-            for (Thing thing : this.values()) {
+            for (Thing thing : this.objectValues()) {
                 printer.format("%s\t%s%n", thing.getId(), thing.getName());
             }
             printer.close();

@@ -54,7 +54,7 @@ public class RoleMap extends MagicMap<Role> {
     public void save(File saveFile) {
         try {
             PrintWriter printer = new PrintWriter(saveFile);
-            for (Role role : this.values()) {
+            for (Role role : this.objectValues()) {
                 printer.format("%s\tx\t%s%n", role.getId(), role.getName());
             }
             printer.close();
