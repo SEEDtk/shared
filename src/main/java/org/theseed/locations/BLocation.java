@@ -121,5 +121,23 @@ public class BLocation extends Location {
         this.setRight(begin);
     }
 
+    @Override
+    public Location converse(int seqLen) {
+        Location retVal = new FLocation(this.contigId);
+        for (Region region : this.regions)
+            retVal.addRegion(seqLen + 1 - region.getRight(), region.getLength());
+        return retVal;
+    }
+
+    @Override
+    public String getDna(String dna) {
+        StringBuilder retVal = new StringBuilder(this.getLength());
+        for (int i = this.getRegions().size() - 1; i >= 0; i--) {
+            Region region = this.getRegions().get(i);
+            retVal.append(dna.subSequence(region.getLeft() - 1, region.getRight()));
+        }
+        return Contig.reverse(retVal.toString());
+    }
+
 
 }

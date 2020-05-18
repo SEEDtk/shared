@@ -103,6 +103,22 @@ public class FLocation extends Location {
         this.setLeft(begin);
     }
 
+    @Override
+    public Location converse(int seqLen) {
+        Location retVal = new BLocation(this.contigId);
+        for (Region region : this.regions)
+            retVal.addRegion(seqLen + 1 - region.getLeft(), region.getLength());
+        return retVal;
+    }
+
+    @Override
+    public String getDna(String dna) {
+        StringBuilder retVal = new StringBuilder(this.getLength());
+        for (Region region : this.regions)
+            retVal.append(dna.subSequence(region.getLeft() - 1, region.getRight()));
+        return retVal.toString();
+    }
+
 
 
 }

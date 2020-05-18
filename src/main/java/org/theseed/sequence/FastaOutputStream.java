@@ -39,11 +39,6 @@ public class FastaOutputStream implements Closeable, AutoCloseable, Flushable {
         writer = new PrintWriter(outFile);
     }
 
-    // TODO remove this
-    public void blank() {
-        writer.println();
-    }
-
     /**
      * Write a sequence to the output stream.
      *

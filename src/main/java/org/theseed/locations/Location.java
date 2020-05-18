@@ -4,8 +4,8 @@
 package org.theseed.locations;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Comparator;
+import java.util.List;
 
 import org.theseed.genome.Genome;
 import org.theseed.proteins.CodonSet;
@@ -232,9 +232,9 @@ public abstract class Location implements Comparable<Location>, Cloneable {
     protected abstract Location createEmpty();
 
     /**
-     * @return the collection of regions in this location
+     * @return the list of regions in this location
      */
-    public Collection<Region> getRegions() {
+    public List<Region> getRegions() {
         return this.regions;
     }
 
@@ -615,5 +615,20 @@ public abstract class Location implements Comparable<Location>, Cloneable {
     public static Location copy(Location oldLoc) {
         return Location.create(oldLoc.getContigId(), oldLoc.getBegin(), oldLoc.getEnd());
     }
+
+    /**
+     * @return a version of this location that would apply to the reverse complement of the original sequence
+     *
+     * @param seqLen	length of the sequence being reverse-complimented
+     */
+    public abstract Location converse(int seqLen);
+
+    /**
+     * @return the DNA from the specified sequence implied by this location
+     *
+     * @param dna	dna sequence containing the location
+     */
+    public abstract String getDna(String dna);
+
 
 }

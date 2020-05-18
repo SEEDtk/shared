@@ -522,6 +522,27 @@ public class TestLibrary extends TestCase {
     }
 
     /**
+     * Test location DNA fetch
+     */
+    public void testLocationDna() {
+        String dna = myGto.getContig("1313.7001.con.0001").getSequence();
+        Location loc = myGto.getFeature("fig|1313.7001.peg.1").getLocation();
+        String locDna = loc.getDna(dna);
+        assertThat(locDna, equalTo("ttggttgcaggtctaacaaatggtgaattaatcgctccaatgacttacgaagagacgatg" +
+                "acgagcgacttttttgaagtatggtttcagaaatttctcttaccaacattaaccacacca" +
+                "tcggttattattatggataatgcaagattccatagaatgggtaagctagaactcttgtgt" +
+                "gaagagtttgggcataaacttttacctcttcctccctactcacctgagtacaatcctatt" +
+                "gagaaaacaggctctttgtcaactgtagtgggttga"));
+        String dnaR = Contig.reverse(dna);
+        Location loc2 = loc.converse(dna.length());
+        assertThat(loc2.getDna(dnaR), equalTo(locDna));
+        Location loc3 = loc2.converse(dna.length());
+        assertThat(loc3.getDna(dna), equalTo(locDna));
+        assertThat(loc3, equalTo(loc));
+
+    }
+
+    /**
      * Test location merging.
      */
     public void testLocationMerge() {
