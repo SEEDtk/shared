@@ -69,10 +69,23 @@ public class FLocation extends Location {
         // Get the contig sequence for this location.
         Contig contig = genome.getContig(this.contigId);
         String sequence = contig.getSequence();
-        int contigEnd = contig.length();
         int gc = genome.getGeneticCode();
+        return extend(sequence, gc);
+    }
+
+    /**
+     * Extend this location to a start and a stop.
+     *
+     * @param sequence		DNA sequence containing the location
+     * @param gc			genetic code of the sequence
+     *
+     * @return a new location that includes a start and a stop, or NULL if that is not possible
+     */
+    public FLocation extend(String sequence, int gc) {
+        // Compute the length of the sequence.
+        int contigEnd = sequence.length();
         // We will set this to the new location if we succeed.
-        Location retVal = null;
+        FLocation retVal = null;
         // First, we find a stop, moving forward from the right edge.  If we already have one, it's ok.
         CodonSet stops = DnaTranslator.STOPS[gc];
         int newRight = this.getRight();
@@ -87,7 +100,7 @@ public class FLocation extends Location {
             // Insure we found a start and there are no internal stops.
             if (newLeft > 0 && ! this.internalStops(sequence, gc, newLeft, newRight - 3)) {
                 // Here it worked.  We can return the location.
-                retVal = Location.create(this.contigId, "+", newLeft, newRight);
+                retVal = (FLocation) Location.create(this.contigId, "+", newLeft, newRight);
             }
         }
         return retVal;

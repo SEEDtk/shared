@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import java.util.stream.Stream;
 
 /**
  * This is a sorted list of locations based on an array list.
@@ -125,6 +126,23 @@ public class SortedLocationList implements Iterable<Location> {
         while (j < this.size() && contig.contentEquals(this.get(j).getContigId())) j++;
         // Return everything from i through j exclusive.
         return this.list.subList(i, j);
+    }
+
+    /** Delete a location from the list.
+     *
+     * @param loc	location to delete
+     */
+    public void remove(Location loc) {
+        int i = Collections.binarySearch(this.list, loc);
+        if (i >= 0)
+            this.list.remove(i);
+    }
+
+    /**
+     * @return this location list as a stream of locations
+     */
+    public Stream<Location> stream() {
+        return this.list.stream();
     }
 
 }

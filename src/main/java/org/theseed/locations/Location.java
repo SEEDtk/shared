@@ -481,6 +481,19 @@ public abstract class Location implements Comparable<Location>, Cloneable {
     }
 
     /**
+     * This nested class provides a comparator that is based solely on right position.
+     */
+    public static class OrfSorter implements Comparator<Location> {
+
+        public OrfSorter() { }
+
+        @Override
+        public int compare(Location o1, Location o2) {
+            return o1.getRight() - o2.getRight();
+        }
+    }
+
+    /**
      * @return the distance between this location and another location, or -1 if the locations
      * 		   overlap
      *
