@@ -1504,6 +1504,7 @@ public class TestLibrary extends TestCase {
         assertThat(md5, equalTo("9606255e9c598c259f96a74083d87a35"));
         File testFile = File.createTempFile("test", ".fasta", new File("src/test"));
         coreGenome.saveDna(testFile);
+        testFile.deleteOnExit();
         FastaInputStream gDnaStream = new FastaInputStream(testFile);
         assertThat(mdComputer.sequenceMD5(gDnaStream), equalTo(md5));
     }
