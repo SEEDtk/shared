@@ -4,6 +4,7 @@ import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Collection;
+import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
@@ -47,6 +48,7 @@ public class MD5Hex {
      * @param sequence	incoming sequence to convert
      *
      * @return the hexadecimal MD5 checksum
+     *
      * @throws UnsupportedEncodingException
      */
     public String sequenceMD5(String sequence) throws UnsupportedEncodingException {
@@ -94,9 +96,24 @@ public class MD5Hex {
      */
     protected String sequenceMD5(Collection<Contig> contigs) throws UnsupportedEncodingException {
         // Loop through the contigs, accumulating the MD5s in lexical order.
+        List<Sequence> seqs = contigs.stream().map(x -> new Sequence(x.getId(), "", x.getSequence())).collect(Collectors.toList());
+        return this.sequenceMD5(seqs);
+    }
+
+    /**
+     * Compute the MD5 of a stream of DNA sequences.
+     *
+     * @param seqs		sequences to process
+     *
+     * @return the MD5 of the DNA in the sequences
+     *
+     * @throws UnsupportedEncodingException
+     */
+    public String sequenceMD5(Iterable<Sequence> seqs) throws UnsupportedEncodingException {
+        // Loop through the sequences, accumulating the MD5s in lexical order.
         SortedSet<String> md5s = new TreeSet<String>();
-        for (Contig contig : contigs) {
-            String md5 = this.sequenceMD5(contig.getSequence());
+        for (Sequence seq : seqs) {
+            String md5 = this.sequenceMD5(seq.getSequence());
             md5s.add(md5);
         }
         // Join the MD5s with commas and return the checksum.

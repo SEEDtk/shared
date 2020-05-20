@@ -1500,7 +1500,12 @@ public class TestLibrary extends TestCase {
         prot = "MITHNPVIATVTDRVIRIDGGKIVEDYRNPNPVSIDSLTNL";
         assertThat(mdComputer.checksum(prot), equalTo("9e36013f41acf2443643cdcf178bda67"));
         Genome coreGenome = new Genome(new File("src/test", "360106.5.gto"));
-        assertThat(mdComputer.sequenceMD5(coreGenome), equalTo("9606255e9c598c259f96a74083d87a35"));
+        String md5 = mdComputer.sequenceMD5(coreGenome);
+        assertThat(md5, equalTo("9606255e9c598c259f96a74083d87a35"));
+        File testFile = File.createTempFile("test", ".fasta", new File("src/test"));
+        coreGenome.saveDna(testFile);
+        FastaInputStream gDnaStream = new FastaInputStream(testFile);
+        assertThat(mdComputer.sequenceMD5(gDnaStream), equalTo(md5));
     }
 
     /**
