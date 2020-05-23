@@ -12,7 +12,9 @@ import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 import org.theseed.genome.Genome;
+import org.theseed.locations.FLocation;
 import org.theseed.proteins.DnaTranslator;
+import org.theseed.proteins.LocationFixer;
 
 import junit.framework.TestCase;
 
@@ -85,6 +87,11 @@ public class TestDnaTranslate extends TestCase {
         assertThat(xlator.pegTranslate(dna1, 5, len + 2), equalTo(prot1));
     }
 
+    /**
+     * Test the operon utilities.
+     *
+     * @throws IOException
+     */
     public void testOperon() throws IOException {
         Genome myGto = new Genome(new File("src/test/gto_test", "1313.7016.gto"));
         String myDna = myGto.getContig("1313.7016.con.0058").getSequence().substring(3900, 5920);
@@ -94,6 +101,43 @@ public class TestDnaTranslate extends TestCase {
                 "MRMNGGFQMKEFYKKRFALTDGGARNLSKATLASFFVYCINMLPAILLMIFAQEVLENMGKSNGFYIVFSVLTLIAMYILLSIEYDKLYNTTYQESADLRIRTAENLSKLPLSYFSKHDISDISQTIMADIEGIEHAMSHSIPKVGGMVLFFPLISVMMPAGNVKMGLAVIIPSILNFIFIPLSKKYQVNGQNRYYDVLRKNSESFQENIEMQMEIKAYNLSKDIKDDLYKKMEDSERVHLKAEVTTILTLSISSIFSFISLAVVIFVGVNLIINKEINSLYLIGYLLAAMKIKDSLDASKEGLMEIFYLSPKIERLKEIQNQDLQEGDDYSLKKFDIDLKDVEFAYNKDAKVLNGVSFKAKQGEVTALVGASGCGKTTILKLISRLYDYDKGQILIDGKDIKEISTESLFDKVSIVFQDVVLFNQSVMENIRIGKQDASDEEVKRAAKLANCTDFIEKMDKGFDTVIGENGAELSGGERQRLSIARAFLKEAPILILDEITASLDVNNEKKIQESLNNLVKDKTVVIISHRMKSIENADKIVVLQNGRVESEGKHEELLQKSKIYKNLIEKTKMAEEFIY",
                 "MHTGYLQLKTLMKLLSWIVEKL",
                 "MKHQHLLTQITSLNCKKLLKIL"));
+    }
+
+    /**
+     * Test the location fixer.
+     */
+    public void testLocationFixer() {
+        String dna = "ccacccccgcctttgcgacgccggtaacgtgtgctactcatgctggaagactaggatttggcagcc";
+        FLocation loc1a = new FLocation("contig1", 10, 24);
+        FLocation loc2a = new FLocation("contig1", 19, 21);
+        FLocation loc3a = new FLocation("contig1", 46, 51);
+        FLocation loc4a = new FLocation("contig1", 58, 63);
+        FLocation loc1b = new FLocation("contig1", 10, 24);
+        FLocation loc2b = new FLocation("contig1", 19, 21);
+        FLocation loc3b = new FLocation("contig1", 46, 51);
+        FLocation loc4b = new FLocation("contig1", 58, 63);
+        LocationFixer fixer = LocationFixer.Type.LONGEST.create(11);
+        assertFalse(fixer.fix(loc1a, dna));
+        assertThat(loc1a, equalTo(loc1b));
+        assertTrue(fixer.fix(loc2a, dna));
+        assertThat(loc2a.getLeft(), equalTo(13));
+        assertThat(loc2a.getRight(), equalTo(27));
+        assertTrue(fixer.fix(loc3a, dna));
+        assertThat(loc3a.getLeft(), equalTo(31));
+        assertThat(loc3a.getRight(), equalTo(54));
+        assertFalse(fixer.fix(loc4a, dna));
+        assertThat(loc4a, equalTo(loc4b));
+        fixer = LocationFixer.Type.NEAREST.create(11);
+        assertFalse(fixer.fix(loc1b, dna));
+        assertThat(loc1b, equalTo(loc1a));
+        assertTrue(fixer.fix(loc2b,  dna));
+        assertThat(loc2b, equalTo(loc2a));
+        assertTrue(fixer.fix(loc3b, dna));
+        assertThat(loc3b.getLeft(), equalTo(40));
+        assertThat(loc3b.getRight(), equalTo(54));
+        assertFalse(fixer.fix(loc4b, dna));
+        assertThat(loc4b, equalTo(loc4a));
+
     }
 
 }

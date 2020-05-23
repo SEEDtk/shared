@@ -17,6 +17,7 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.theseed.counters.CountMap;
+import org.theseed.counters.EnumCounter;
 import org.theseed.counters.PairCounter;
 import org.theseed.counters.QualityCountMap;
 import org.theseed.utils.FloatList;
@@ -404,5 +405,36 @@ public class CounterTest extends TestCase {
         assertThat(ArrayUtils.toObject(sizes), arrayContaining(10, 20, 30, 40, 50, 60, 70, 80, 90, 99));
         sizes = SizeList.getSizes(10, 100, 10);
         assertThat(ArrayUtils.toObject(sizes), arrayContaining(10, 20, 30, 40, 50, 60, 70, 80, 90, 100));
+    }
+
+    /**
+     * Test enum counters
+     */
+    private enum Cats { A, B, C; }
+
+    public void testEnumCounts() {
+        EnumCounter<Cats> counters = new EnumCounter<Cats>(Cats.class);
+        for (Cats cat : Cats.values())
+            assertThat(cat.toString(), counters.getCount(cat), equalTo(0));
+        counters.count(Cats.A);
+        assertThat(counters.getCount(Cats.A), equalTo(1));
+        assertThat(counters.getCount(Cats.B), equalTo(0));
+        assertThat(counters.getCount(Cats.C), equalTo(0));
+        counters.count(Cats.A);
+        assertThat(counters.getCount(Cats.A), equalTo(2));
+        assertThat(counters.getCount(Cats.B), equalTo(0));
+        assertThat(counters.getCount(Cats.C), equalTo(0));
+        counters.count(Cats.B);
+        assertThat(counters.getCount(Cats.A), equalTo(2));
+        assertThat(counters.getCount(Cats.B), equalTo(1));
+        assertThat(counters.getCount(Cats.C), equalTo(0));
+        counters.clear();
+        for (Cats cat : Cats.values())
+            assertThat(cat.toString(), counters.getCount(cat), equalTo(0));
+        counters.count(Cats.C);
+        assertThat(counters.getCount(Cats.A), equalTo(0));
+        assertThat(counters.getCount(Cats.B), equalTo(0));
+        assertThat(counters.getCount(Cats.C), equalTo(1));
+
     }
 }

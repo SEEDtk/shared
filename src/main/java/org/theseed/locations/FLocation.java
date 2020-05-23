@@ -25,6 +25,18 @@ public class FLocation extends Location {
         super(contigId);
     }
 
+    /**
+     * Create a new forward strand location at a specific place.
+     *
+     * @param contigId	ID of the contig containing location
+     * @param begin		start position (1-based)
+     * @param end		end position (1-based)
+     */
+    public FLocation(String contigId, int begin, int end) {
+        super(contigId);
+        this.putRegion(begin, end);
+    }
+
     @Override
     public int getBegin() {
         return this.getLeft();
@@ -81,7 +93,7 @@ public class FLocation extends Location {
      *
      * @return a new location that includes a start and a stop, or NULL if that is not possible
      */
-    public FLocation extend(String sequence, int gc) {
+    protected FLocation extend(String sequence, int gc) {
         // Compute the length of the sequence.
         int contigEnd = sequence.length();
         // We will set this to the new location if we succeed.
