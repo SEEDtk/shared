@@ -11,12 +11,14 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 import org.theseed.counters.CountMap;
 import org.theseed.io.BalancedOutputStream;
+import org.theseed.io.GtoFilter;
 import org.theseed.io.LineReader;
 import org.theseed.io.MarkerFile;
 import org.theseed.io.Shuffler;
@@ -350,6 +352,21 @@ public class IoTests extends TestCase {
         assertThat(MarkerFile.read(marker), equalTo("abc"));
         MarkerFile.write(marker, 1024);
         assertThat(MarkerFile.readInt(marker), equalTo(1024));
+    }
+
+    /**
+     * test gto file filter
+     */
+    public void testGtoFilter() {
+        File gtoDir = new File("src/test", "gto_test");
+        File[] files = GtoFilter.getAll(gtoDir);
+        assertThat(files.length, equalTo(5));
+        List<File> list = Arrays.asList(files);
+        assertThat(list, containsInAnyOrder(new File("src/test/gto_test", "1005394.4.gto"),
+                new File("src/test/gto_test", "1313.7001.gto"),
+                new File("src/test/gto_test", "1313.7002.gto"),
+                new File("src/test/gto_test", "1313.7016.gto"),
+                new File("src/test/gto_test", "243277.26.gto")));
     }
 
 
