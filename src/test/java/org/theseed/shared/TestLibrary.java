@@ -494,6 +494,19 @@ public class TestLibrary extends TestCase {
         assertFalse("Different strands compare equal.", loc5.equals(loc8));
         assertFalse("Different region counts compare equal.", loc5.equals(loc1));
         assertFalse("Different region extents compare equal.", loc5.equals(loc9));
+        Location[] locArray = new Location[] { loc1, loc2, loc3, loc4, loc5, loc6, loc7, loc8, loc9 };
+        for (Location loc : locArray) {
+            String locString = loc.toString();
+            Location locRecurse = Location.fromString(locString);
+            assertThat(locString, locRecurse.getContigId(), equalTo(loc.getContigId()));
+            assertThat(locString, locRecurse.getDir(), equalTo(loc.getDir()));
+            assertThat(locString, locRecurse.getLeft(), equalTo(loc.getLeft()));
+            assertThat(locString, locRecurse.getRight(), equalTo(loc.getRight()));
+            assertThat(locString, locRecurse.getLength(), equalTo(loc.getLength()));
+            assertTrue(locString, locRecurse.equals(loc));
+            String locString2 = locRecurse.toString();
+            assertThat(locString2, equalTo(locString));
+        }
         Location locA = Location.copy(loc1);
         assertThat(locA.getContigId(), equalTo("myContig"));
         assertThat(locA.getBegin(), equalTo(1000));

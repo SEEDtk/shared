@@ -6,7 +6,10 @@ package org.theseed.locations;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
+import org.apache.commons.lang3.StringUtils;
 import org.theseed.genome.Genome;
 import org.theseed.proteins.CodonSet;
 
@@ -28,6 +31,8 @@ public abstract class Location implements Comparable<Location>, Cloneable {
     protected ArrayList<Region> regions;
     /** TRUE if this location is valid, else FALSE */
     protected boolean valid;
+    /** pattern for parsing location strings */
+    private static Pattern LOCATION_STRING = Pattern.compile("([^+\\-]+)([+\\-])\\[(.+)\\]");
 
 
     /**
@@ -221,6 +226,32 @@ public abstract class Location implements Comparable<Location>, Cloneable {
         } else {
             for (int i = 0; i < segments.length; i += 2) {
                 retVal.putRegion(segments[i], segments[i+1]);
+            }
+        }
+        return retVal;
+    }
+
+    /**
+     * @return the location corresponding to a location string
+     *
+     * @param string	a location string produced by this object's "toString" method
+     */
+    public static Location fromString(String string) {
+        Location retVal = null;
+        // Get the contig ID, the direction, and the region list.
+        Matcher m = LOCATION_STRING.matcher(string);
+        if (! m.matches())
+            throw new IllegalArgumentException("Invalid location string: " + string);
+        else {
+            String contigId = m.group(1);
+            String dir = m.group(2);
+            String[] regions = StringUtils.splitByWholeSeparator(m.group(3), "][");
+            // Create the location.
+            retVal = Location.create(contigId, dir);
+            // Loop through the regions, adding them.
+            for (String region : regions) {
+                String[] edges = StringUtils.splitByWholeSeparator(region, ", ");
+                retVal.putRegion(Integer.valueOf(edges[0]), Integer.valueOf(edges[1]));
             }
         }
         return retVal;
