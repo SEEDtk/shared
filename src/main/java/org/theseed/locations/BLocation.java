@@ -112,6 +112,25 @@ public class BLocation extends Location {
     }
 
     @Override
+    public Location extendToOrf(Genome genome) {
+        // Get the contig sequence for this location.
+        Contig contig = genome.getContig(this.contigId);
+        String sequence = contig.getSequence();
+        int contigEnd = contig.length();
+        int gc = genome.getGeneticCode();
+        // Get the stops for this genetic code.
+        CodonSet stops = STOPS[gc];
+        int newRight = this.getRight();
+        while (newRight <= contigEnd && ! stops.contains(sequence, newRight - 2)) newRight += 3;
+        // Move back before the stop.
+        newRight -= 3;
+        // Create the new location.
+        BLocation retVal = (BLocation) this.clone();
+        retVal.setRight(newRight);
+        return retVal;
+    }
+
+    @Override
     protected boolean internalStops(String sequence, int gc, int left, int right) {
         return Location.containsCodon(STOPS[gc], sequence, left, right);
     }

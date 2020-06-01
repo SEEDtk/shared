@@ -54,5 +54,15 @@ public class EnumCounter<K extends Enum<K>> {
         return this.counts[key.ordinal()];
     }
 
+    /**
+     * Accumulate a second set of counters in these counters.
+     *
+     * @param counters	second set of counters to add to these
+     */
+    public void sum(EnumCounter<K> counters) {
+        for (int i = 0; i < this.counts.length; i++)
+            this.counts[i] += counters.counts[i];
+    }
+
 
 }

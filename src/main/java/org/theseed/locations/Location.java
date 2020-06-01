@@ -580,6 +580,16 @@ public abstract class Location implements Comparable<Location>, Cloneable {
     public abstract Location extend(Genome genome);
 
     /**
+     * Extend this location to a stop at the beginning (or the edge of the contig).  The
+     * stop found will not be included.
+     *
+     * @param genome	genome containing this location
+     *
+     * @return the new location
+     */
+    public abstract Location extendToOrf(Genome genome);
+
+    /**
      * @return TRUE if a location has internal stops
      *
      * @param sequence	sequence of this location's contig

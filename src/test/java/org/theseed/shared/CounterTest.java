@@ -435,6 +435,17 @@ public class CounterTest extends TestCase {
         assertThat(counters.getCount(Cats.A), equalTo(0));
         assertThat(counters.getCount(Cats.B), equalTo(0));
         assertThat(counters.getCount(Cats.C), equalTo(1));
-
+        EnumCounter<Cats> count2 = new EnumCounter<Cats>(Cats.class);
+        count2.count(Cats.A);
+        counters.count(Cats.B);
+        counters.count(Cats.B);
+        count2.count(Cats.C);
+        count2.count(Cats.C);
+        count2.count(Cats.C);
+        count2.count(Cats.C);
+        counters.sum(count2);
+        assertThat(counters.getCount(Cats.A), equalTo(1));
+        assertThat(counters.getCount(Cats.B), equalTo(2));
+        assertThat(counters.getCount(Cats.C), equalTo(5));
     }
 }

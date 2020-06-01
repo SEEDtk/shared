@@ -748,6 +748,31 @@ public class Genome  {
         }
     }
 
+    /***
+     * This method computes the DNA in the ORF containing the specified protein feature.  The portion of the
+     * DNA that has been translated into the protein is shown in upper case, and the remainder in lower case.
+     * The stop codons are not included.  The DNA is reverse-complemented before being returned.
+     *
+     * @param fid	ID of the feature of interest
+     *
+     * @return the desired DNA sequence with the translated portion in upper case
+     */
+    public String getProteinOrf(String fid) {
+        String retVal = null;
+        // Get the location of the feature.
+        Feature feat = this.getFeature(fid);
+        Location protLoc = feat.getLocation();
+        Location orfLoc = protLoc.extendToOrf(this);
+        // Get the ORF DNA
+        retVal = this.getDna(orfLoc).toUpperCase();
+        // Compute the prefix length.
+        int extra = orfLoc.getLength() - protLoc.getLength();
+        // Convert the prefix to lower case.
+        if (extra > 0)
+            retVal = retVal.substring(0, extra).toLowerCase() + retVal.substring(extra);
+        return retVal;
+    }
+
     /**
      * @return the source of the genome (i.e. "GenBank")
      */

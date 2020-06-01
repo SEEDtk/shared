@@ -116,6 +116,10 @@ public class TestDnaTranslate extends TestCase {
         FLocation loc2b = new FLocation("contig1", 19, 21);
         FLocation loc3b = new FLocation("contig1", 46, 51);
         FLocation loc4b = new FLocation("contig1", 58, 63);
+        FLocation loc1c = new FLocation("contig1", 10, 24);
+        FLocation loc2c = new FLocation("contig1", 19, 21);
+        FLocation loc3c = new FLocation("contig1", 46, 51);
+        FLocation loc4c = new FLocation("contig1", 58, 63);
         LocationFixer fixer = LocationFixer.Type.LONGEST.create(11);
         assertFalse(fixer.fix(loc1a, dna));
         assertThat(loc1a, equalTo(loc1b));
@@ -137,6 +141,23 @@ public class TestDnaTranslate extends TestCase {
         assertThat(loc3b.getRight(), equalTo(54));
         assertFalse(fixer.fix(loc4b, dna));
         assertThat(loc4b, equalTo(loc4a));
+        fixer = LocationFixer.Type.LIKELIEST.create(11);
+        assertFalse(fixer.fix(loc1c, dna));
+        assertThat(loc1c, equalTo(loc1b));
+        assertTrue(fixer.fix(loc2c, dna));
+        assertThat(loc2c.getLeft(), equalTo(13));
+        assertThat(loc2c.getRight(), equalTo(27));
+        assertTrue(fixer.fix(loc3c, dna));
+        assertThat(loc3c.getLeft(), equalTo(40));
+        assertThat(loc3c.getRight(), equalTo(54));
+        assertFalse(fixer.fix(loc4c, dna));
+        assertThat(loc4c, equalTo(loc4b));
+        dna = "ccctagcccatgccccccatgccccccgtgcccccctagccctag";
+        loc1a = new FLocation("contig1", 28, 36);
+        assertTrue(fixer.fix(loc1a, dna));
+        assertThat(loc1a.getLeft(), equalTo(10));
+        assertThat(loc1a.getRight(), equalTo(39));
+
 
     }
 
