@@ -94,6 +94,34 @@ public abstract class LocationFixer extends DnaTranslator {
     }
 
     /**
+     * This method finds the nearest start location for a fix operation.
+     *
+     * @param loc		location to be extended
+     * @param sequence	sequence in which the location occurs
+     *
+     * @return the position of the nearest start, or 0 if one could not be found
+     */
+    protected int nearestStart(FLocation loc, String sequence) {
+        // Find a start before we find a stop.
+        int retVal = loc.getLeft();
+        while (retVal > 0 && ! this.isStop(sequence, retVal) && ! this.isStart(sequence, retVal)) retVal -= 3;
+        // If we failed, return 0.
+        if (retVal <= 0 || this.isStop(sequence, retVal))
+            retVal = 0;
+        return retVal;
+    }
+
+    /**
+     * @return TRUE if an ATG code is at the specified position, else FALSE
+     *
+     * @param sequence	sequence of interest
+     * @param pos		position (1-based) to check in the sequence
+     */
+    protected static boolean atgCode(String sequence, int pos) {
+        return sequence.substring(pos - 1, pos + 2).contentEquals("atg");
+    }
+
+    /**
      * Fixing algorithm types.
      */
     public static enum Type {
@@ -101,7 +129,9 @@ public abstract class LocationFixer extends DnaTranslator {
         LONGEST,
         /** find nearest protein */
         NEAREST,
-        /** find likeliest protein */
+        /** find nearest protein, biased toward ATG */
+        BIASED,
+        /** find longest protein, biased toward ATG */
         LIKELIEST;
 
         /**
@@ -122,6 +152,9 @@ public abstract class LocationFixer extends DnaTranslator {
                 break;
             case LIKELIEST :
                 retVal = new LocationFixer.Smart(gc);
+                break;
+            case BIASED :
+                retVal = new LocationFixer.Biased(gc);
             }
             return retVal;
         }
@@ -149,9 +182,31 @@ public abstract class LocationFixer extends DnaTranslator {
         }
 
     }
+    /**
+     * Location fixer biased toward short proteins with ATG starts.
+     */
+    public static class Biased extends LocationFixer {
+
+        protected Biased(int gc) {
+            super(gc);
+        }
+
+        @Override
+        protected int findStart(FLocation loc, String sequence) {
+            // Find the nearest ATG in the ORF.
+            int retVal = loc.getLeft();
+            while (retVal > 0 && ! this.isStop(sequence, retVal) &&
+                    ! atgCode(sequence, retVal)) retVal -= 3;
+            // If we failed, look for any start.
+            if (retVal <= 0 || this.isStop(sequence, retVal))
+                retVal = this.nearestStart(loc, sequence);
+            return retVal;
+        }
+
+    }
 
     /**
-     * Location fixer biased toward ATG starts.
+     * Location fixer biased toward long proteins with ATG starts.
      */
     public static class Smart extends LocationFixer {
 
@@ -165,14 +220,14 @@ public abstract class LocationFixer extends DnaTranslator {
             int orfStart = backToStop(loc, sequence);
             // Find the first ATG in the ORF.
             int retVal = orfStart;
-            while (retVal <= loc.getLeft() && ! sequence.substring(retVal - 1, retVal + 2).contentEquals("atg"))
+            while (retVal <= loc.getLeft() && ! atgCode(sequence, retVal))
                 retVal += 3;
             // We didn't find an ATG.  Try again looking for any start.
             if (retVal > loc.getLeft()) {
-                retVal -= 3;
-                while (retVal >= orfStart && ! this.isStart(sequence, retVal)) retVal -= 3;
+                retVal = orfStart;
+                while (retVal <= loc.getLeft() && ! this.isStart(sequence, retVal)) retVal += 3;
                 // Return a 0 if no start was found.
-                if (retVal < orfStart) retVal = 0;
+                if (retVal > loc.getLeft()) retVal = 0;
             }
             return retVal;
         }
@@ -190,12 +245,7 @@ public abstract class LocationFixer extends DnaTranslator {
 
         @Override
         protected int findStart(FLocation loc, String sequence) {
-            // Find a start before we find a stop.
-            int retVal = loc.getLeft();
-            while (retVal > 0 && ! this.isStop(sequence, retVal) && ! this.isStart(sequence, retVal)) retVal -= 3;
-            // If we failed, return 0.
-            if (retVal <= 0 || this.isStop(sequence, retVal))
-                retVal = 0;
+            int retVal = nearestStart(loc, sequence);
             return retVal;
         }
 

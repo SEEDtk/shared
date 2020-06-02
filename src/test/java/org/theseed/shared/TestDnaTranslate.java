@@ -157,6 +157,17 @@ public class TestDnaTranslate extends TestCase {
         assertTrue(fixer.fix(loc1a, dna));
         assertThat(loc1a.getLeft(), equalTo(10));
         assertThat(loc1a.getRight(), equalTo(39));
+        fixer = LocationFixer.Type.BIASED.create(11);
+        loc1a = new FLocation("contig1", 28, 36);
+        assertTrue(fixer.fix(loc1a, dna));
+        assertThat(loc1a.getLeft(), equalTo(19));
+        assertThat(loc1a.getRight(), equalTo(39));
+        dna = "acccgtgcccgtgccccccatgcccccctagccc";
+        loc1a = new FLocation("contig1", 23, 28);
+        loc1b = (FLocation) loc1a.clone();
+        assertTrue(fixer.fix(loc1b, dna));
+        assertThat(loc1b.getLeft(), equalTo(20));
+        assertThat(loc1b.getRight(), equalTo(31));
 
 
     }
