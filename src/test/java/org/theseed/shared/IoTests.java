@@ -21,6 +21,7 @@ import org.theseed.io.BalancedOutputStream;
 import org.theseed.io.GtoFilter;
 import org.theseed.io.LineReader;
 import org.theseed.io.MarkerFile;
+import org.theseed.io.ShuffledOutputStream;
 import org.theseed.io.Shuffler;
 import org.theseed.io.TabbedLineReader;
 import org.theseed.io.TabbedLineReader.Line;
@@ -367,6 +368,83 @@ public class IoTests extends TestCase {
                 new File("src/test/gto_test", "1313.7002.gto"),
                 new File("src/test/gto_test", "1313.7016.gto"),
                 new File("src/test/gto_test", "243277.26.gto")));
+    }
+
+    /**
+     * Test shuffled stream.
+     *
+     * @throws IOException
+     */
+    public void testShuffleStream() throws IOException {
+        File testFile = new File("src/test", "balanced.ser");
+        try (ShuffledOutputStream outStream = new ShuffledOutputStream(4.5, "yes", "no", testFile)) {
+            outStream.writeImmediate("type", "value");
+            outStream.write("no", "1");
+            outStream.write("no", "2");
+            outStream.write("yes", "3");
+            outStream.write("yes", "4");
+            outStream.write("yes", "5");
+            outStream.write("yes", "6");
+            outStream.write("yes", "7");
+            outStream.write("yes", "8");
+            outStream.write("no", "9");
+            outStream.write("no", "10");
+            outStream.write("no", "11");
+            outStream.write("no", "12");
+            outStream.write("no", "13");
+            outStream.write("no", "14");
+            outStream.write("no", "15");
+            outStream.write("no", "16");
+            outStream.write("no", "17");
+            outStream.write("no", "18");
+            outStream.write("no", "19");
+            outStream.write("no", "20");
+            outStream.write("no", "21");
+            outStream.write("no", "22");
+            outStream.write("no", "23");
+            outStream.write("no", "24");
+            outStream.write("no", "25");
+            outStream.write("no", "26");
+            outStream.write("no", "27");
+            outStream.write("no", "28");
+            outStream.write("no", "29");
+            outStream.write("no", "30");
+            outStream.write("no", "31");
+            outStream.write("no", "32");
+            outStream.write("no", "0");
+        }
+        // Re-open the file and test the read.
+        try (TabbedLineReader inStream = new TabbedLineReader(testFile)) {
+            boolean[] found = new boolean[33];
+            for (int i = 0; i < 33; i++) found[i] = false;
+            Iterator<TabbedLineReader.Line> inIter = inStream.iterator();
+            assertThat("Start of file.", inIter.hasNext());
+            TabbedLineReader.Line line = inIter.next();
+            assertThat(line.get(0), equalTo("yes"));
+            found[line.getInt(1)] = true;
+            double smallCount = 1.0;
+            double largeCount = 0.0;
+            while (inIter.hasNext()) {
+                line = inIter.next();
+                int idx = line.getInt(1);
+                assertThat(Integer.toString(idx), ! found[idx]);
+                found[idx] = true;
+                switch (line.get(0)) {
+                case "yes" :
+                    smallCount++;
+                    break;
+                case "no" :
+                    largeCount++;
+                    break;
+                default :
+                    assertThat("Invalid label: " + line.get(0), false);
+                }
+                assertThat(Integer.toString(idx), largeCount / smallCount, lessThanOrEqualTo(4.5));
+            }
+            // Verify we read back everything.
+            for (int i = 0; i < 33; i++)
+                assertThat(Integer.toString(i), found[i]);
+        }
     }
 
 

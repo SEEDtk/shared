@@ -26,6 +26,7 @@ import java.util.TreeSet;
 import java.util.UUID;
 
 import org.apache.commons.lang3.StringUtils;
+import org.theseed.io.Shuffler;
 import org.theseed.locations.Location;
 import org.theseed.locations.Region;
 import org.theseed.reports.LinkObject;
@@ -328,11 +329,11 @@ public class Genome  {
     }
 
     /**
-     * @return a collection of the protein features in this genome
+     * @return a shuffle-capable list of the protein features in this genome
      */
-    public Collection<Feature> getPegs() {
+    public Shuffler<Feature> getPegs() {
         Collection<Feature> featList = this.getFeatures();
-        ArrayList<Feature> retVal = new ArrayList<Feature>(featList.size());
+        Shuffler<Feature> retVal = new Shuffler<Feature>(featList.size());
         for (Feature feat : featList) {
             if (feat.isProtein()) {
                 retVal.add(feat);

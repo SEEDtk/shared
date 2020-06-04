@@ -10,6 +10,7 @@ import java.io.PrintStream;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 import org.theseed.counters.CountMap;
@@ -31,19 +32,19 @@ public class BalancedOutputStream implements Closeable, AutoCloseable {
 
     // FIELDS
     /** proportion of the smallest class's size to be allowed for output */
-    double fuzzFactor;
+    private double fuzzFactor;
     /** hash mapping each class to a list of data lines */
-    HashMap<String, Shuffler<String>> classLines;
+    private Map<String, Shuffler<String>> classLines;
     /** number of lines in each class */
-    CountMap<String> classCounts;
+    private CountMap<String> classCounts;
     /** target output stream */
-    PrintStream outputStream;
+    private PrintStream outputStream;
     /** random number generator */
-    Random randStream;
+    private Random randStream;
     /** TRUE if we opened the stream */
-    boolean openFlag;
+    private boolean openFlag;
     /** number of records buffered */
-    int bufferCount;
+    private int bufferCount;
 
     /** maximum number of records to buffer */
     private static int BUFFER_MAX = 100000;
@@ -151,6 +152,7 @@ public class BalancedOutputStream implements Closeable, AutoCloseable {
     @Override
     public void close() throws IOException {
         writeAll();
+        this.outputStream.flush();
         // Close the stream if needed.
         if (this.openFlag) this.outputStream.close();
     }
