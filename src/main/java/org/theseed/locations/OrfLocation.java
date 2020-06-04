@@ -69,12 +69,13 @@ public class OrfLocation {
     public char[] getNeighborhood(int pos, int left, int right) {
         char[] retVal = new char[left + right + 1];
         int l = pos - 1 - left;
-        int r = pos - 1 + right;
+        int r = pos + right;
         for (int i = l; i < r; i++) {
+            int idx = i - l;
             if (i < 0 || i >= this.sequence.length())
-                retVal[i] = '-';
+                retVal[idx] = '-';
             else
-                retVal[i] = this.sequence.charAt(i);
+                retVal[idx] = this.sequence.charAt(i);
         }
         return retVal;
     }
