@@ -158,5 +158,14 @@ public class BLocation extends Location {
         return Contig.reverse(retVal.toString());
     }
 
+    @Override
+    public OrfLocation createORF(Genome genome) {
+        // Get the contig sequence reverse complement.
+        String sequence = genome.getContig(this.getContigId()).getRSequence();
+        // Convert this location to a forward one on the reverse-complement sequence.
+        FLocation plusLoc = (FLocation) this.converse(sequence.length());
+        return new OrfLocation(sequence, plusLoc, genome.getGeneticCode(), '-');
+    }
+
 
 }

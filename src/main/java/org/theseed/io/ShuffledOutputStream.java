@@ -18,7 +18,7 @@ import java.util.Iterator;
  * @author Bruce Parrello
  *
  */
-public class ShuffledOutputStream implements Closeable, AutoCloseable {
+public class ShuffledOutputStream implements Closeable, AutoCloseable, ILabeledOutputStream {
 
     // FIELDS
     /** label for the small class */

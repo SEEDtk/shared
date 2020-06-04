@@ -162,5 +162,11 @@ public class FLocation extends Location {
         return retVal.toString();
     }
 
+    @Override
+    public OrfLocation createORF(Genome genome) {
+        String sequence = genome.getContig(this.getContigId()).getSequence();
+        return new OrfLocation(sequence, this, genome.getGeneticCode(), '+');
+    }
+
 
 }

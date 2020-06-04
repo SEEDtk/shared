@@ -23,6 +23,7 @@ public class Contig {
     private int length;
     private String accession;
     private String description;
+    private String rSequence;
 
     /** This enum defines the keys used and their default values.
      */
@@ -156,7 +157,10 @@ public class Contig {
      * @return the reverse compliment of the sequence
      */
     public String getRSequence() {
-        return reverse(this.sequence);
+        // Note we cache the reverse complement in case we need it again.
+        if (this.rSequence == null)
+            this.rSequence = reverse(this.sequence);
+        return this.rSequence;
     }
 
     /**
@@ -293,6 +297,7 @@ public class Contig {
     public void setSequence(String sequence) {
         this.sequence = sequence;
         this.length = sequence.length();
+        this.rSequence = null;
     }
 
 }

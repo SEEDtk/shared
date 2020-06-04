@@ -684,5 +684,12 @@ public abstract class Location implements Comparable<Location>, Cloneable {
      */
     public abstract String getDna(String dna);
 
+    /**
+     * Create an ORF object from this location.
+     *
+     * @param genome	genome containing the location
+     */
+    public abstract OrfLocation createORF(Genome genome);
+
 
 }

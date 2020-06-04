@@ -28,7 +28,7 @@ import org.theseed.counters.CountMap;
  * @author Bruce Parrello
  *
  */
-public class BalancedOutputStream implements Closeable, AutoCloseable {
+public class BalancedOutputStream implements Closeable, AutoCloseable, ILabeledOutputStream {
 
     // FIELDS
     /** proportion of the smallest class's size to be allowed for output */
@@ -150,7 +150,7 @@ public class BalancedOutputStream implements Closeable, AutoCloseable {
      * Close this stream to flush out all the queued lines.
      */
     @Override
-    public void close() throws IOException {
+    public void close() {
         writeAll();
         this.outputStream.flush();
         // Close the stream if needed.
