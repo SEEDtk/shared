@@ -919,4 +919,21 @@ public class Genome  {
         return this.linker;
     }
 
+    /**
+     * @return TRUE if there is a peg contained in the specified location, else FALSE
+     *
+     * @param loc	location to check
+     */
+    public boolean isCoding(Location loc) {
+        // Denote we have not found a matching peg yet.
+        boolean retVal = false;
+        // Get an iterator through the features.
+        Iterator<Feature> iter = this.features.values().iterator();
+        while (! retVal && iter.hasNext()) {
+            Feature peg = iter.next();
+            retVal = (peg.isProtein() && loc.contains(peg.getLocation()));
+        }
+        return retVal;
+    }
+
 }

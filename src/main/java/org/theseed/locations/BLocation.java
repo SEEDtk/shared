@@ -120,13 +120,8 @@ public class BLocation extends Location {
         int gc = genome.getGeneticCode();
         // Get the stops for this genetic code.
         CodonSet stops = STOPS[gc];
-        int newRight = this.getRight();
-        while (newRight <= contigEnd && ! stops.contains(sequence, newRight - 2)) newRight += 3;
-        // Move back before the stop.
-        newRight -= 3;
-        // Create the new location.
-        BLocation retVal = (BLocation) this.clone();
-        retVal.setRight(newRight);
+        // Build the ORF.
+        Location retVal = this.findOrf(sequence, stops, contigEnd);
         return retVal;
     }
 
@@ -159,12 +154,13 @@ public class BLocation extends Location {
     }
 
     @Override
-    public OrfLocation createORF(Genome genome) {
-        // Get the contig sequence reverse complement.
-        String sequence = genome.getContig(this.getContigId()).getRSequence();
-        // Convert this location to a forward one on the reverse-complement sequence.
-        FLocation plusLoc = (FLocation) this.converse(sequence.length());
-        return new OrfLocation(sequence, plusLoc, genome.getGeneticCode(), '-');
+    public SequenceLocation createSequenceLocation(Genome genome) {
+        return BSequenceLocation.create(this, genome);
+    }
+
+    @Override
+    protected CodonSet getStops(int gc) {
+        return STOPS[gc];
     }
 
 

@@ -10,6 +10,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.StringUtils;
+import org.theseed.genome.Contig;
 import org.theseed.genome.Genome;
 import org.theseed.proteins.CodonSet;
 
@@ -580,16 +581,6 @@ public abstract class Location implements Comparable<Location>, Cloneable {
     public abstract Location extend(Genome genome);
 
     /**
-     * Extend this location to a stop at the beginning (or the edge of the contig).  The
-     * stop found will not be included.
-     *
-     * @param genome	genome containing this location
-     *
-     * @return the new location
-     */
-    public abstract Location extendToOrf(Genome genome);
-
-    /**
      * @return TRUE if a location has internal stops
      *
      * @param sequence	sequence of this location's contig
@@ -660,6 +651,49 @@ public abstract class Location implements Comparable<Location>, Cloneable {
     }
 
     /**
+     * Extend this location to a stop at each end.  The stops found will not be included.
+     *
+     * @param genome	genome containing this location
+     *
+     * @return the new location
+     */
+    public Location extendToOrf(Genome genome) {
+        // Get the contig sequence for this location.
+        Contig contig = genome.getContig(this.contigId);
+        String sequence = contig.getSequence();
+        int gc = genome.getGeneticCode();
+        // Get the stops for this genetic code.
+        CodonSet stops = this.getStops(gc);
+        Location retVal = this.findOrf(sequence, stops, contig.length());
+        return retVal;
+    }
+
+
+    /**
+     * @return a new location that represents an ORF containing this one.
+     *
+     * @param sequence	DNA sequence containing this location
+     * @param stops		codon set for stop codons
+     * @param limit		length of the sequence
+     */
+    protected Location findOrf(String sequence, CodonSet stops, int limit) {
+        // Search for the beginning.
+        int newLeft = this.getLeft();
+        while (newLeft > 0 && ! stops.contains(sequence, newLeft)) newLeft -= 3;
+        // Move forward, past the stop.
+        newLeft += 3;
+        // Search for the end.
+        int newRight = this.getRight();
+        while (newRight <= limit && ! stops.contains(sequence, newRight - 2)) newRight += 3;
+        // Move backward, inside the stop.
+        newRight -= 3;
+        // Create the new location.
+        Location retVal = (Location) this.clone();
+        retVal.setLeft(newLeft);
+        retVal.setRight(newRight);
+        return retVal;
+    }
+    /**
      * Create a new location by copying the extent of an old one.
      *
      * @param oldLoc	location to copy
@@ -685,11 +719,28 @@ public abstract class Location implements Comparable<Location>, Cloneable {
     public abstract String getDna(String dna);
 
     /**
-     * Create an ORF object from this location.
+     * @return an ORF object from this location.
      *
      * @param genome	genome containing the location
      */
-    public abstract OrfLocation createORF(Genome genome);
+    public SequenceLocation createORF(Genome genome) {
+        Location orfLoc = this.extendToOrf(genome);
+        return orfLoc.createSequenceLocation(genome);
+    }
+
+    /**
+     * @return a sequence-location object from this location.
+     *
+     * @param genome	genome containing the location
+     */
+    public abstract SequenceLocation createSequenceLocation(Genome genome);
+
+    /**
+     * @return the stop codons for this strand and the given genetic code
+     *
+     * @param gc	relevant genetic code
+     */
+    protected abstract CodonSet getStops(int gc);
 
 
 }

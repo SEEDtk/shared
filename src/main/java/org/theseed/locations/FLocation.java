@@ -119,24 +119,6 @@ public class FLocation extends Location {
     }
 
     @Override
-    public Location extendToOrf(Genome genome) {
-        // Get the contig sequence for this location.
-        Contig contig = genome.getContig(this.contigId);
-        String sequence = contig.getSequence();
-        int gc = genome.getGeneticCode();
-        // Get the stops for this genetic code.
-        CodonSet stops = DnaTranslator.STOPS[gc];
-        int newLeft = this.getLeft();
-        while (newLeft > 0 && ! stops.contains(sequence, newLeft)) newLeft -= 3;
-        // Move forward, past the stop.
-        newLeft += 3;
-        // Create the new location.
-        FLocation retVal = (FLocation) this.clone();
-        retVal.setLeft(newLeft);
-        return retVal;
-    }
-
-    @Override
     protected boolean internalStops(String sequence, int gc, int left, int right) {
         return Location.containsCodon(DnaTranslator.STOPS[gc], sequence, left, right);
     }
@@ -163,9 +145,13 @@ public class FLocation extends Location {
     }
 
     @Override
-    public OrfLocation createORF(Genome genome) {
-        String sequence = genome.getContig(this.getContigId()).getSequence();
-        return new OrfLocation(sequence, this, genome.getGeneticCode(), '+');
+    public SequenceLocation createSequenceLocation(Genome genome) {
+        return FSequenceLocation.create(this, genome);
+    }
+
+    @Override
+    protected CodonSet getStops(int gc) {
+        return DnaTranslator.STOPS[gc];
     }
 
 
