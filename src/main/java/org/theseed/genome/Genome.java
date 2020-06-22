@@ -931,7 +931,8 @@ public class Genome  {
         Iterator<Feature> iter = this.features.values().iterator();
         while (! retVal && iter.hasNext()) {
             Feature peg = iter.next();
-            retVal = (peg.isProtein() && loc.contains(peg.getLocation()));
+            retVal = (peg.isProtein() && loc.contains(peg.getLocation()) &&
+                    (loc.getBegin() - peg.getLocation().getBegin()) % 3 == 0);
         }
         return retVal;
     }
