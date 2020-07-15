@@ -16,7 +16,8 @@ import org.slf4j.LoggerFactory;
 /**
  *
  * This class manages a directory of GTO files and allows simple iterator through the genomes.
- * The GTO file names must consist of the genome ID with a suffix of ".gto".
+ * The GTO file names should consist of the genome ID with a suffix of ".gto", but this is
+ * not required.  The files will be returned in name order, rather than genome ID order.
  *
  * @author Bruce Parrello
  */
