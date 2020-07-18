@@ -255,10 +255,32 @@ public class Feature implements Comparable<Feature> {
      * @param right		the rightmost position of the feature
      */
     public Feature(String fid, String function, String contigId, String strand, int left, int right) {
+        Location loc = Location.create(contigId, strand, left, right);
+        this.init(fid, function, loc);
+    }
+
+    /**
+     * Create a basic feature at a specific location.
+     *
+     * @param fid		ID to give to the feature
+     * @param function	the functional assignment of the feature
+     * @param loc		the location of the feature
+     */
+    public Feature(String fid, String function, Location loc) {
+        this.init(fid, function, loc);
+    }
+
+    /**
+     * Initialize a new feature.
+     *
+     * @param fid		ID to give to the feature
+     * @param function	the functional assignment of the feature
+     * @param loc		the location of the feature
+     */
+    protected void init(String fid, String function, Location loc) {
         this.id = fid;
         this.type = fidType(fid);
         this.function = function;
-        Location loc = Location.create(contigId, strand, left, right);
         this.location = loc;
         this.protein_translation = "";
         this.annotations = new ArrayList<Annotation>(3);
@@ -545,7 +567,7 @@ public class Feature implements Comparable<Feature> {
     }
 
     /**
-     * Add an annotation.
+     * Add a new annotation.
      *
      * @param comment		annotation comment
      * @param annotator		annotator name
@@ -553,6 +575,19 @@ public class Feature implements Comparable<Feature> {
      */
     public void addAnnotation(String comment, String annotator) {
         Annotation newAnno = new Annotation(comment, annotator);
+        this.annotations.add(newAnno);
+    }
+
+    /**
+     * Add an old annotation.
+     *
+     * @param comment		annotation comment
+     * @param time			annotation time
+     * @param annotator		annotator name
+     *
+     */
+    public void addAnnotation(String comment, double time, String annotator) {
+        Annotation newAnno = new Annotation(comment, time, annotator);
         this.annotations.add(newAnno);
     }
 

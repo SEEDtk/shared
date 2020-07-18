@@ -23,7 +23,7 @@ public class Annotation {
 
 
     /**
-     * Create an annotation.
+     * Create a new annotation.
      *
      * @param comment		annotation comment
      * @param annotator		name of the responsible annotator
@@ -32,6 +32,19 @@ public class Annotation {
         this.comment = comment;
         this.annotator = annotator;
         this.annotationTime = System.currentTimeMillis() / 1000.0;
+    }
+
+    /**
+     * Create an annotation from a specific time.
+     *
+     * @param comment		annotation comment
+     * @param time			annotation time
+     * @param annotator		name of the responsible annotator
+     */
+    public Annotation(String comment, double time, String annotator) {
+        this.comment = comment;
+        this.annotator = annotator;
+        this.annotationTime = time;
     }
 
     /**

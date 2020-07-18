@@ -937,4 +937,18 @@ public class Genome  {
         return retVal;
     }
 
+    /**
+     * @param domain 	high-level domain of this genome
+     */
+    protected void setDomain(String domain) {
+        this.domain = domain;
+    }
+
+    /**
+     * @param taxonomyId 	taxonomic ID of this genome
+     */
+    protected void setTaxonomyId(int taxonomyId) {
+        this.taxonomyId = taxonomyId;
+    }
+
 }

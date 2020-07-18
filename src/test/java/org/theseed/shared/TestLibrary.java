@@ -535,6 +535,54 @@ public class TestLibrary extends TestCase {
     }
 
     /**
+     * Test location addition.
+     */
+    public void testLocationAdd() {
+        Location loc1 = Location.create("contig1", "-", 1000, 1999, 3000, 3999);
+        Location loc2 = Location.create("contig1",  "-", 2100, 2899);
+        assertThat(loc1.getLeft(), equalTo(1000));
+        assertThat(loc1.getBegin(), equalTo(3999));
+        assertThat(loc1.getRight(), equalTo(3999));
+        assertThat(loc1.getEnd(), equalTo(1000));
+        assertThat(loc1.getRegionLength(), equalTo(2000));
+        assertThat(loc1.getLength(), equalTo(3000));
+        assertThat(loc1.getRegions().size(), equalTo(2));
+        loc1.add(loc2);
+        assertThat(loc1.getLeft(), equalTo(1000));
+        assertThat(loc1.getBegin(), equalTo(3999));
+        assertThat(loc1.getRight(), equalTo(3999));
+        assertThat(loc1.getEnd(), equalTo(1000));
+        assertThat(loc1.getRegionLength(), equalTo(2800));
+        assertThat(loc1.getLength(), equalTo(3000));
+        assertThat(loc1.getRegions().size(), equalTo(3));
+        loc2 = Location.create("contig1",  "-", 5000, 5999);
+        loc1.add(loc2);
+        assertThat(loc1.getLeft(), equalTo(1000));
+        assertThat(loc1.getBegin(), equalTo(5999));
+        assertThat(loc1.getRight(), equalTo(5999));
+        assertThat(loc1.getEnd(), equalTo(1000));
+        assertThat(loc1.getRegionLength(), equalTo(3800));
+        assertThat(loc1.getLength(), equalTo(5000));
+        assertThat(loc1.getRegions().size(), equalTo(4));
+    }
+
+    /**
+     * Parse seed locations.
+     */
+    public void testSeedParse() {
+        Location loc = Location.parseSeedLocation("NC_10045_1000_1999");
+        assertThat(loc.getContigId(), equalTo("NC_10045"));
+        assertThat(loc.getBegin(), equalTo(1000));
+        assertThat(loc.getEnd(), equalTo(1999));
+        assertThat(loc.getDir(), equalTo('+'));
+        loc = Location.parseSeedLocation("frogger_2999_2000");
+        assertThat(loc.getContigId(), equalTo("frogger"));
+        assertThat(loc.getLeft(), equalTo(2000));
+        assertThat(loc.getRight(), equalTo(2999));
+        assertThat(loc.getDir(), equalTo('-'));
+    }
+
+    /**
      * Test location DNA fetch
      */
     public void testLocationDna() {
@@ -1075,6 +1123,7 @@ public class TestLibrary extends TestCase {
         assertThat(loc.getDir(), equalTo('+'));
         assertThat(loc.getLeft(), equalTo(100));
         assertThat(loc.getRight(), equalTo(200));
+        assertThat(feat.getFunction(), equalTo("hypothetical function"));
         feat.setProteinTranslation("MABCDEFG");
         assertThat(feat.getProteinTranslation(), equalTo("MABCDEFG"));
         assertThat(feat.getProteinLength(), equalTo(8));
@@ -1115,6 +1164,27 @@ public class TestLibrary extends TestCase {
         assertThat(feat.compareTo(f2), lessThan(0));
         feat.setFunction("totally new function");
         assertThat(feat.getFunction(), equalTo("totally new function"));
+        Location loc1 = Location.create("c1", "+", 200, 300);
+        feat = new Feature("fig|161.31.peg.10", "hypothetical function", loc1);
+        loc = feat.getLocation();
+        assertThat(loc.getContigId(), equalTo("c1"));
+        assertThat(loc.getDir(), equalTo('+'));
+        assertThat(loc.getLeft(), equalTo(200));
+        assertThat(loc.getRight(), equalTo(300));
+        assertThat(loc, equalTo(loc1));
+        assertThat(feat.getFunction(), equalTo("hypothetical function"));
+        feat.addAnnotation("this is an annotation", 158257708, "RAST");
+        feat.addAnnotation("this is another annotation", 158257710, "master");
+        List<Annotation> annoList = feat.getAnnotations();
+        Annotation anno = annoList.get(0);
+        assertThat(anno.getAnnotationTime(), equalTo(158257708.0));
+        assertThat(anno.getAnnotator(), equalTo("RAST"));
+        assertThat(anno.getComment(), equalTo("this is an annotation"));
+        anno = annoList.get(1);
+        assertThat(anno.getAnnotationTime(), equalTo(158257710.0));
+        assertThat(anno.getAnnotator(), equalTo("master"));
+        assertThat(anno.getComment(), equalTo("this is another annotation"));
+        assertThat(annoList.size(), equalTo(2));
     }
 
     /**

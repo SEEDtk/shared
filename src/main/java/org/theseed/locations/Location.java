@@ -10,6 +10,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.text.TextStringBuilder;
 import org.theseed.genome.Contig;
 import org.theseed.genome.Genome;
 import org.theseed.proteins.CodonSet;
@@ -29,7 +30,7 @@ public abstract class Location implements Comparable<Location>, Cloneable {
     /** ID of the contig containing this location */
     protected String contigId;
     /** list of regions covered by the location */
-    protected ArrayList<Region> regions;
+    protected List<Region> regions;
     /** TRUE if this location is valid, else FALSE */
     protected boolean valid;
     /** pattern for parsing location strings */
@@ -78,21 +79,35 @@ public abstract class Location implements Comparable<Location>, Cloneable {
      * @return the leftmost position (1-based)
      */
     public int getLeft() {
-        Region first = regions.get(0);
-        return first.getLeft();
+        int retVal = Integer.MAX_VALUE;
+        for (Region region : this.regions)
+            if (region.getLeft() < retVal) retVal = region.getLeft();
+        return retVal;
     }
     /**
      * @return the rightmost position (1-based)
      */
     public int getRight() {
-        Region last = this.lastRegion();
-        return last.getRight();
+        int retVal = 0;
+        for (Region region : this.regions)
+            if (region.getRight() > retVal) retVal = region.getRight();
+        return retVal;
     }
     /**
      * @return the overall length
      */
     public int getLength() {
         return this.getRight() + 1 - this.getLeft();
+    }
+
+    /**
+     * @return the actual length
+     */
+    public int getRegionLength() {
+        int retVal = 0;
+        for (Region region : this.regions)
+            retVal += region.getLength();
+        return retVal;
     }
 
     /**
@@ -233,6 +248,27 @@ public abstract class Location implements Comparable<Location>, Cloneable {
     }
 
     /**
+     * Parse a seed location.
+     *
+     * @param locString	SEED location string
+     *
+     * @return a Location object containing the location.
+     */
+    public static Location parseSeedLocation(String locString) {
+        String[] parts = StringUtils.split(locString, '_');
+        TextStringBuilder contigId = new TextStringBuilder(locString.length());
+        if (parts.length < 3)
+            throw new IllegalArgumentException("Invalid SEED location string \"" + locString + "\".");
+        int n = parts.length - 2;
+        for (int i = 0; i < n; i++)
+            contigId.appendSeparator('_').append(parts[i]);
+        int begin = Integer.valueOf(parts[n]);
+        int end = Integer.valueOf(parts[n+1]);
+        Location retVal = Location.create(contigId.toString(), begin, end);
+        return retVal;
+    }
+
+    /**
      * @return the location corresponding to a location string
      *
      * @param string	a location string produced by this object's "toString" method
@@ -268,6 +304,16 @@ public abstract class Location implements Comparable<Location>, Cloneable {
      */
     public List<Region> getRegions() {
         return this.regions;
+    }
+
+    /**
+     * Add a new location's regions to this location.  Both locations must have the same contig ID and strand,
+     * but this is not checked.
+     *
+     * @param other		other location to add
+     */
+    public void add(Location other) {
+        this.regions.addAll(other.regions);
     }
 
     /**
