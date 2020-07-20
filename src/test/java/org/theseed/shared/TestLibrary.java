@@ -23,6 +23,7 @@ import org.theseed.genome.Annotation;
 import org.theseed.genome.CloseGenome;
 import org.theseed.genome.Contig;
 import org.theseed.genome.Contig.ContigKeys;
+import org.theseed.genome.Coupling;
 import org.theseed.genome.Feature;
 import org.theseed.genome.FeatureList;
 import org.theseed.genome.Genome;
@@ -1185,6 +1186,20 @@ public class TestLibrary extends TestCase {
         assertThat(anno.getAnnotator(), equalTo("master"));
         assertThat(anno.getComment(), equalTo("this is another annotation"));
         assertThat(annoList.size(), equalTo(2));
+        feat.addCoupling("fig|161.31.peg.20", 10, 44.3);
+        feat.addCoupling("fig|161.31.peg.21", 5, 56.8);
+        feat.addCoupling("fig|161.31.peg.21", 6, 56.5);
+        feat.addCoupling("fig|161.31.peg.30", 40, 10.25);
+        Coupling[] couplings = feat.getCouplings();
+        assertThat(couplings.length, equalTo(3));
+        assertThat(couplings[0].getTarget(), equalTo("fig|161.31.peg.21"));
+        assertThat(couplings[0].getSize(), equalTo(6));
+        assertThat(couplings[0].getStrength(), closeTo(56.5, 0.005));
+        assertThat(couplings[1].getTarget(), equalTo("fig|161.31.peg.20"));
+        assertThat(couplings[2].getTarget(), equalTo("fig|161.31.peg.30"));
+        feat.clearCouplings();
+        couplings = feat.getCouplings();
+        assertThat(couplings.length, equalTo(0));
     }
 
     /**
@@ -1354,6 +1369,8 @@ public class TestLibrary extends TestCase {
         // Now we will add a feature and a contig.
         Feature rna = new Feature("fig|161.31.rna.1", "brand new RNA", "161.31.con.0001", "-", 89101, 90100);
         rna.setPgfam("PGF_RNA1");
+        rna.addCoupling("fig|161.31.rna.2", 20, 20.5);
+        rna.addCoupling("fig|161.31.rna.3", 30, 30.5);
         smallGenome.addFeature(rna);
         assertThat(rna.getParent(), equalTo(smallGenome));
         Contig fakeContig = new Contig("161.31.con.0002", "aaaccctttggg", 11);
@@ -1379,6 +1396,14 @@ public class TestLibrary extends TestCase {
         feat = testGenome.getFeature("fig|161.31.rna.1");
         assertThat(feat.getPgfam(), equalTo("PGF_RNA1"));
         assertNull(feat.getPlfam());
+        Coupling[] couplings = feat.getCouplings();
+        assertThat(couplings.length, equalTo(2));
+        assertThat(couplings[0].getTarget(), equalTo("fig|161.31.rna.3"));
+        assertThat(couplings[0].getSize(), equalTo(30));
+        assertThat(couplings[0].getStrength(), closeTo(30.5, 0.001));
+        assertThat(couplings[1].getTarget(), equalTo("fig|161.31.rna.2"));
+        assertThat(couplings[1].getSize(), equalTo(20));
+        assertThat(couplings[1].getStrength(), closeTo(20.5, 0.001));
         Location loc = feat.getLocation();
         assertThat(loc.getContigId(), equalTo("161.31.con.0001"));
         assertThat(loc.getBegin(), equalTo(90100));
@@ -1386,6 +1411,7 @@ public class TestLibrary extends TestCase {
         assertThat(loc.getLength(), equalTo(1000));
         feat = testGenome.getFeature("fig|161.31.peg.985");
         assertThat(feat.getJsonField("test_extra"), equalTo("extra datum"));
+        assertThat(feat.getCouplings().length, equalTo(0));
         // Now we test our ability to create other json objects.
         for (CloseGenome close : closeGenomes) {
             JsonObject json = close.toJson();

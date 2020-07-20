@@ -5,6 +5,8 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
+import java.util.SortedSet;
+import java.util.TreeSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -41,6 +43,7 @@ public class Feature implements Comparable<Feature> {
     private Collection<GoTerm> goTerms;
     private Collection<String> aliases;
     private Genome parent;
+    private SortedSet<Coupling> couplings;
 
     /** parsing pattern for feature type */
     private static final Pattern TYPE_PATTERN = Pattern.compile("fig\\|\\d+\\.\\d+\\.(\\w+)\\.\\d+");
@@ -119,6 +122,7 @@ public class Feature implements Comparable<Feature> {
         LOCATION(null),
         GO_TERMS(null),
         ALIASES(null),
+        COUPLINGS(null),
         ANNOTATIONS(null);
 
         private final Object m_value;
@@ -226,6 +230,18 @@ public class Feature implements Comparable<Feature> {
             for (int i = 0; i < aliasList.size(); i++)
                 this.aliases.add(aliasList.getString(i));
         }
+        // Get the couplings.
+        JsonArray couplingsList = feat.getCollectionOrDefault(FeatureKeys.COUPLINGS);
+        this.couplings = new TreeSet<Coupling>();
+        if (couplingsList != null && couplingsList.size() > 0) {
+            for (Object couplingList : couplingsList) {
+                JsonArray coupling = (JsonArray) couplingList;
+                String target = coupling.getString(0);
+                int size = coupling.getInteger(1);
+                double strength = coupling.getDouble(2);
+                this.addCoupling(target, size, strength);
+            }
+        }
         // Finally, we look for the protein families.
         JsonArray families = feat.getCollectionOrDefault(FeatureKeys.FAMILY_ASSIGNMENTS);
         if (families != null && families.size() > 0) {
@@ -243,6 +259,29 @@ public class Feature implements Comparable<Feature> {
     }
 
     /**
+     * Add a new coupling specification for this feature.  If a coupling already exists for the same
+     * target, it is overwritten.
+     *
+     * @param target	target coupled feature
+     * @param size		size of the coupling group
+     * @param strength	strength of the coupling
+     */
+    public void addCoupling(String target, int size, double strength) {
+        Coupling coupling = new Coupling(target, size, strength);
+        if (this.couplings.contains(coupling)) this.couplings.remove(coupling);
+        this.couplings.add(coupling);
+    }
+
+    /**
+     * @return the list of couplings for this feature. Modifying this list will not modify the feature
+     */
+    public Coupling[] getCouplings() {
+        int n = this.couplings.size();
+        Coupling[] retVal = new Coupling[n];
+        if (n > 0)
+            retVal = this.couplings.toArray(retVal);
+        return retVal;
+    }
 
     /**
      * Create a basic feature at a specific location.
@@ -286,6 +325,7 @@ public class Feature implements Comparable<Feature> {
         this.annotations = new ArrayList<Annotation>(3);
         this.goTerms = new ArrayList<GoTerm>(2);
         this.aliases = new ArrayList<String>(4);
+        this.couplings = new TreeSet<Coupling>();
         // Save a blank JSON object as the original.
         this.original = new JsonObject();
     }
@@ -545,6 +585,14 @@ public class Feature implements Comparable<Feature> {
         }
         if (goList.size() > 0)
             retVal.put(FeatureKeys.GO_TERMS.getKey(), goList);
+        // Similarly, couplings.
+        JsonArray couplingList = new JsonArray();
+        for (Coupling coupling : this.couplings) {
+            JsonArray coupling0 = new JsonArray().addChain(coupling.getTarget()).addChain(coupling.getSize())
+                    .addChain(coupling.getStrength());
+            couplingList.add(coupling0);
+        }
+        retVal.put(FeatureKeys.COUPLINGS.getKey(), couplingList);
         // Finally, store the protein families.
         JsonArray famList = new JsonArray();
         if (this.plfam != null) {
@@ -696,6 +744,13 @@ public class Feature implements Comparable<Feature> {
      */
     public void setParent(Genome parent) {
         this.parent = parent;
+    }
+
+    /**
+     * Erase all the couplings for this feature.
+     */
+    public void clearCouplings() {
+        this.couplings.clear();
     }
 
 }
