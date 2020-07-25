@@ -1633,8 +1633,9 @@ public class TestLibrary extends TestCase {
         File testFile = File.createTempFile("test", ".fasta", new File("src/test"));
         coreGenome.saveDna(testFile);
         testFile.deleteOnExit();
-        FastaInputStream gDnaStream = new FastaInputStream(testFile);
-        assertThat(mdComputer.sequenceMD5(gDnaStream), equalTo(md5));
+        try (FastaInputStream gDnaStream = new FastaInputStream(testFile)) {
+            assertThat(mdComputer.sequenceMD5(gDnaStream), equalTo(md5));
+        }
     }
 
     /**
@@ -1793,6 +1794,35 @@ public class TestLibrary extends TestCase {
             String seq = contig0.getSequence();
             assertThat(seq.toLowerCase(), equalTo(seq));
         }
+        Feature peg1 = new Feature("fig|1.1.peg.1", "test function", "contig1", "+", 10, 100);
+        Feature peg2 = new Feature("fig|1.1.peg.2", "test function 2", "contig1", "-", 200, 300);
+        Feature peg3 = new Feature("fig|1.1.peg.3", "test function 2", "contig1", "+", 300, 400);
+        testGto.addFeature(peg1);
+        testGto.addFeature(peg2);
+        testGto.addFeature(peg3);
+        SubsystemRow subsystem = new SubsystemRow(testGto, "Funny subsystem", "likely");
+        assertThat(subsystem.getName(), equalTo("Funny subsystem"));
+        assertThat(subsystem.getGenome(), equalTo(testGto));
+        assertThat(testGto.getSubsystem("Funny subsystem"), equalTo(subsystem));
+        assertThat(subsystem.getVariantCode(), equalTo("likely"));
+        assertFalse(subsystem.isActive());
+        SubsystemRow.Role role1 = subsystem.new Role("Funny role 1");
+        subsystem.addFeature(role1, "fig|1.1.peg.1");
+        assertThat(peg2.getSubsystems().size(), equalTo(0));
+        SubsystemRow.Role role2 = subsystem.new Role("Funny role 2");
+        subsystem.addFeature(role2, "fig|1.1.peg.2");
+        subsystem.addFeature(role2, "fig|1.1.peg.3");
+        assertThat(peg1.getSubsystems(), contains("Funny subsystem"));
+        assertThat(peg2.getSubsystems(), contains("Funny subsystem"));
+        assertThat(peg3.getSubsystems(), contains("Funny subsystem"));
+        Set<Feature> feats = role1.getFeatures();
+        assertThat(feats.size(), equalTo(1));
+        Set<String> fids = feats.stream().map(k -> k.getId()).collect(Collectors.toSet());
+        assertThat(fids, contains("fig|1.1.peg.1"));
+        feats = role2.getFeatures();
+        assertThat(feats.size(), equalTo(2));
+        fids = feats.stream().map(k -> k.getId()).collect(Collectors.toSet());
+        assertThat(fids, containsInAnyOrder("fig|1.1.peg.2", "fig|1.1.peg.3"));
     }
 
     /*

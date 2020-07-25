@@ -185,6 +185,22 @@ public class SubsystemRow implements Comparable<SubsystemRow> {
     }
 
     /**
+     * Create a brand-new subsystem implementation.
+     *
+     * @param genome	genome implementing the subsystem
+     * @param name		name of the new subsystem
+     * @param variant	variant code
+     */
+    public SubsystemRow(Genome genome, String name, String variant) {
+        this.name = name;
+        this.parent = genome;
+        this.variantCode = variant;
+        this.classifications = new ArrayList<String>(3);
+        this.roles = new ArrayList<Role>();
+        genome.connectSubsystem(this);
+    }
+
+    /**
      * Connect a feature to one of our roles.
      *
      * @param role		role bound to the feature
@@ -270,6 +286,19 @@ public class SubsystemRow implements Comparable<SubsystemRow> {
         return classifications;
     }
 
+    /**
+     * Set the classifications for this subsystem.
+     *
+     * @param superClass	highest-level classification
+     * @param midClass		mid-level classification
+     * @param subClass		lowest-level classification
+     */
+    public void setClassifications(String superClass, String midClass, String subClass) {
+        this.classifications.set(0, superClass);
+        this.classifications.set(1, midClass);
+        this.classifications.set(2, subClass);
+    }
+
     @Override
     public int hashCode() {
         final int prime = 31;
@@ -311,6 +340,13 @@ public class SubsystemRow implements Comparable<SubsystemRow> {
         if (retVal == 0)
             retVal = this.parent.getId().compareTo(o.parent.getId());
         return retVal;
+    }
+
+    /**
+     * @return the genome implementing this subsystem
+     */
+    public Object getGenome() {
+        return this.parent;
     }
 
 }

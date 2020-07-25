@@ -227,10 +227,11 @@ public class Genome  {
      * Set up the attached structures.
      */
     protected void setup() {
-        // Create empty maps for features, close genomes, and contigs.
+        // Create empty maps for features, close genomes, subsystems, and contigs.
         this.features = new HashMap<String, Feature>();
         this.contigs = new HashMap<String, Contig>();
         this.closeGenomes = new TreeSet<CloseGenome>();
+        this.subsystems = new HashMap<String, SubsystemRow>();
         // Create a blank original GTO.
         this.gto = new JsonObject();
         // Denote the genome has no home.
