@@ -4,7 +4,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.regex.Matcher;
@@ -44,6 +46,7 @@ public class Feature implements Comparable<Feature> {
     private Collection<String> aliases;
     private Genome parent;
     private SortedSet<Coupling> couplings;
+    private Set<SubsystemRow.Role> subsystemRoles;
 
     /** parsing pattern for feature type */
     private static final Pattern TYPE_PATTERN = Pattern.compile("fig\\|\\d+\\.\\d+\\.(\\w+)\\.\\d+");
@@ -185,6 +188,8 @@ public class Feature implements Comparable<Feature> {
     public Feature(JsonObject feat) {
         // Save the original object.
         this.original = feat;
+        // Denote we have no subsystem connections.
+        this.subsystemRoles = new HashSet<SubsystemRow.Role>();
         // Extract the scalar fields.
         this.id = feat.getStringOrDefault(FeatureKeys.ID);
         this.type = fidType(this.id);
@@ -322,6 +327,7 @@ public class Feature implements Comparable<Feature> {
         this.function = function;
         this.location = loc;
         this.protein_translation = "";
+        this.subsystemRoles = new HashSet<SubsystemRow.Role>();
         this.annotations = new ArrayList<Annotation>(3);
         this.goTerms = new ArrayList<GoTerm>(2);
         this.aliases = new ArrayList<String>(4);
@@ -751,6 +757,26 @@ public class Feature implements Comparable<Feature> {
      */
     public void clearCouplings() {
         this.couplings.clear();
+    }
+
+    /**
+     * @return the set of subsystems containing this feature
+     */
+    public SortedSet<String> getSubsystems() {
+        SortedSet<String> retVal = new TreeSet<String>();
+        for (SubsystemRow.Role subRole : this.subsystemRoles) {
+            retVal.add(subRole.getSubName());
+        }
+        return retVal;
+    }
+
+    /**
+     * Connect this feature to a subsystem role.
+     *
+     * @param role		role to which this feature is connected
+     */
+    /* package */ void connectSubsystem(SubsystemRow.Role role) {
+        this.subsystemRoles.add(role);
     }
 
 }

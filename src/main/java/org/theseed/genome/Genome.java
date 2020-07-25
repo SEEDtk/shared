@@ -69,6 +69,7 @@ public class Genome  {
     private LinkObject linker;
     private String source;
     private String sourceId;
+    private Map<String, SubsystemRow> subsystems;
 
 
 
@@ -99,8 +100,8 @@ public class Genome  {
         KINGDOM("Bacteria"),
         SOURCE(null),
         SOURCE_ID(null),
-        HOME("none")
-        ;
+        HOME("none"),
+        SUBSYSTEMS(noEntries);
 
         private final Object m_value;
 
@@ -193,6 +194,12 @@ public class Genome  {
             Contig contig = new Contig(contigObj);
             contigs.put(contig.getId(), contig);
         }
+        // Finally, the subsystems.
+        Collection<JsonObject> subList = this.gto.getCollectionOrDefault(GenomeKeys.SUBSYSTEMS);
+        this.subsystems = new HashMap<String, SubsystemRow>();
+        // The subsystem is put into the map by the constructor.
+        for (JsonObject subsystemObj : subList)
+            new SubsystemRow(this, subsystemObj);
         // Determine the Genome's home database.
         this.setHome(this.gto.getStringOrDefault(GenomeKeys.HOME));
     }
@@ -228,6 +235,7 @@ public class Genome  {
         this.gto = new JsonObject();
         // Denote the genome has no home.
         this.setHome("none");
+        // Denote the genome has no subvsystems.
     }
 
     /**
@@ -483,6 +491,10 @@ public class Genome  {
         JsonArray jclose = new JsonArray();
         for (CloseGenome close : this.closeGenomes) jclose.add(close.toJson());
         retVal.put(GenomeKeys.CLOSE_GENOMES.getKey(), jclose);
+        // Add the subsystems.
+        JsonArray jsubs = new JsonArray();
+        for (SubsystemRow subRow : this.subsystems.values()) jsubs.add(subRow.toJson());
+        retVal.put(GenomeKeys.SUBSYSTEMS.getKey(), jsubs);
         // Return the rebuilt GTO.
         return retVal;
     }
@@ -949,6 +961,29 @@ public class Genome  {
      */
     protected void setTaxonomyId(int taxonomyId) {
         this.taxonomyId = taxonomyId;
+    }
+
+    /**
+     * @return the implementation of the named subsystem, or NULL if it does not exist in this genome
+     */
+    public SubsystemRow getSubsystem(String name) {
+        return this.subsystems.get(name);
+    }
+
+    /**
+     * @return the list of subsystem implementations for this genome
+     */
+    public Collection<SubsystemRow> getSubsystems() {
+        return this.subsystems.values();
+    }
+
+    /**
+     * Connect a subsystem implementation to this genome.
+     *
+     * @param subsystemRow	subsystem to connect
+     */
+    /* package */ void connectSubsystem(SubsystemRow subsystemRow) {
+        this.subsystems.put(subsystemRow.getName(), subsystemRow);
     }
 
 }

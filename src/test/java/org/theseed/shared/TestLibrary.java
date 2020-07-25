@@ -29,6 +29,7 @@ import org.theseed.genome.FeatureList;
 import org.theseed.genome.Genome;
 import org.theseed.genome.GenomeDirectory;
 import org.theseed.genome.GoTerm;
+import org.theseed.genome.SubsystemRow;
 import org.theseed.genome.TaxItem;
 import org.theseed.locations.FLocation;
 import org.theseed.locations.Frame;
@@ -332,6 +333,24 @@ public class TestLibrary extends TestCase {
         assertThat(goTerms[0].getDescription(), equalTo("4-amino-4-deoxychorismate synthase activity"));
         assertThat(goTerms[1].getNumber(), equalTo(8696));
         assertThat(goTerms[1].getDescription(), equalTo("4-amino-4-deoxychorismate lyase activity"));
+        // Get this feature's subsystems.
+        Collection<String> subsystems = myFeature.getSubsystems();
+        assertThat(subsystems, contains("Folate Biosynthesis"));
+        SubsystemRow subsystem = myGto.getSubsystem("Invalid subsystem");
+        assertThat(subsystem, nullValue());
+        subsystem = myGto.getSubsystem("Folate Biosynthesis");
+        assertThat(subsystem.getName(), equalTo("Folate Biosynthesis"));
+        assertThat(subsystem.getClassifications(), contains("Metabolism", "Cofactors, Vitamins, Prosthetic Groups", "Folate and pterines"));
+        assertThat(subsystem.getVariantCode(), equalTo("active"));
+        assertTrue(subsystem.isActive());
+        List<SubsystemRow.Role> roles = subsystem.getRoles();
+        assertThat(roles.size(), equalTo(23));
+        assertThat(roles.get(0).getName(), equalTo("2-amino-4-hydroxy-6-hydroxymethyldihydropteridine pyrophosphokinase (EC 2.7.6.3)"));
+        assertThat(roles.get(1).getName(), equalTo("5-formyltetrahydrofolate cyclo-ligase (EC 6.3.3.2)"));
+        assertThat(roles.get(2).getName(), equalTo("ATPase component of general energizing module of ECF transporters"));
+        Set<Feature> bound = roles.get(2).getFeatures();
+        assertThat(bound.size(), equalTo(2));
+        assertThat(bound, containsInAnyOrder(myGto.getFeature("fig|1313.7001.peg.1717"), myGto.getFeature("fig|1313.7001.peg.1718")));
         // Now iterate over the proteins.
         for (Feature feat : this.myGto.getPegs())
             assertTrue("Feature" + feat.getId() + " is not a PEG.", feat.isProtein());
@@ -1706,6 +1725,27 @@ public class TestLibrary extends TestCase {
             Contig diskContig = diskGenome.getContig(contig.getId());
             assertThat(diskContig.length(), equalTo(contig.length()));
             assertThat(diskContig.getSequence(), equalTo(contig.getSequence()));
+        }
+        Collection<SubsystemRow> subsystems = gto.getSubsystems();
+        for (SubsystemRow subsystem : subsystems) {
+            SubsystemRow diskSubsystem = diskGenome.getSubsystem(subsystem.getName());
+            assertThat(diskSubsystem.getVariantCode(), equalTo(subsystem.getVariantCode()));
+            assertThat(diskSubsystem.getClassifications(), contains(subsystem.getClassifications().toArray()));
+            List<SubsystemRow.Role> roles = subsystem.getRoles();
+            List<SubsystemRow.Role> diskRoles = diskSubsystem.getRoles();
+            assertThat(roles.size(), equalTo(diskRoles.size()));
+            for (int i = 0; i < roles.size(); i++) {
+                SubsystemRow.Role role = roles.get(i);
+                SubsystemRow.Role diskRole = diskRoles.get(i);
+                assertThat(role.getName(), equalTo(diskRole.getName()));
+                assertThat(diskRole.getSubName(), equalTo(diskSubsystem.getName()));
+                Set<Feature> roleFeatures = role.getFeatures();
+                Set<Feature> diskFeatures = diskRole.getFeatures();
+                assertThat(roleFeatures.size(), equalTo(diskFeatures.size()));
+                Set<String> roleFids = roleFeatures.stream().map(k -> k.getId()).collect(Collectors.toSet());
+                for (Feature feat : diskFeatures)
+                    assertThat(feat.getId(), in(roleFids));
+            }
         }
 
     }
