@@ -987,4 +987,11 @@ public class Genome  {
         this.subsystems.put(subsystemRow.getName(), subsystemRow);
     }
 
+    /**
+     * Erase all of the subsystems.
+     */
+    public void deleteSubsystems() {
+        this.subsystems.clear();
+    }
+
 }

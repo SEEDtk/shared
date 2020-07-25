@@ -6,6 +6,7 @@ package org.theseed.genome;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import com.github.cliftonlabs.json_simple.JsonArray;
@@ -176,12 +177,24 @@ public class SubsystemRow implements Comparable<SubsystemRow> {
         for (Object binding : bindings) {
             JsonObject bindingObj = (JsonObject) binding;
             String roleName = bindingObj.getStringOrDefault(SubsystemKeys.ROLE_ID);
-            Role role = new Role(roleName);
-            this.roles.add(role);
+            this.addRole(roleName);
             JsonArray fids = bindingObj.getCollectionOrDefault(SubsystemKeys.FEATURES);
             for (int i = 0; i < fids.size(); i++)
-                this.addFeature(role, fids.getString(i));
+                this.addFeature(roleName, fids.getString(i));
         }
+    }
+
+    /**
+     * Add a new role to this subsystem.
+     *
+     * @param roleName	name of the new role
+     *
+     * @return the role created
+     */
+    public Role addRole(String roleName) {
+        Role retVal = new Role(roleName);
+        this.roles.add(retVal);
+        return retVal;
     }
 
     /**
@@ -189,12 +202,11 @@ public class SubsystemRow implements Comparable<SubsystemRow> {
      *
      * @param genome	genome implementing the subsystem
      * @param name		name of the new subsystem
-     * @param variant	variant code
      */
-    public SubsystemRow(Genome genome, String name, String variant) {
+    public SubsystemRow(Genome genome, String name) {
         this.name = name;
         this.parent = genome;
-        this.variantCode = variant;
+        this.variantCode = "active";
         this.classifications = new ArrayList<String>(3);
         this.roles = new ArrayList<Role>();
         genome.connectSubsystem(this);
@@ -203,14 +215,15 @@ public class SubsystemRow implements Comparable<SubsystemRow> {
     /**
      * Connect a feature to one of our roles.
      *
-     * @param role		role bound to the feature
+     * @param role		name of role bound to the feature
      * @param fid		ID of the bound feature
      */
-    public void addFeature(Role role, String fid) {
+    public void addFeature(String role, String fid) {
         Feature feat = this.parent.getFeature(fid);
-        if (feat != null) {
-            role.fids.add(fid);
-            feat.connectSubsystem(role);
+        Optional<Role> thisRole = this.roles.stream().filter(k -> k.name.contentEquals(role)).findFirst();
+        if (thisRole.isPresent() && feat != null) {
+            thisRole.get().fids.add(fid);
+            feat.connectSubsystem(thisRole.get());
         }
     }
 
@@ -246,12 +259,20 @@ public class SubsystemRow implements Comparable<SubsystemRow> {
      * @return TRUE if this is an active variant, else FALSE
      */
     public boolean isActive() {
+        String code = this.variantCode;
+        boolean retVal = isActive(code);
+        return retVal;
+    }
+
+    /**
+     * @return TRUE if the variant code indicates an active variant, else FALSE
+     *
+     * @param code	variant code of interest
+     */
+    public static boolean isActive(String code) {
         boolean retVal;
-        String code;
-        if (this.variantCode.startsWith("*"))
-            code = this.variantCode.substring(1);
-        else
-            code = this.variantCode;
+        if (code.startsWith("*"))
+            code = code.substring(1);
         if (code.contentEquals("active"))
             retVal = true;
         else if (code.contentEquals("inactive") || code.contentEquals("likely"))
@@ -294,9 +315,10 @@ public class SubsystemRow implements Comparable<SubsystemRow> {
      * @param subClass		lowest-level classification
      */
     public void setClassifications(String superClass, String midClass, String subClass) {
-        this.classifications.set(0, superClass);
-        this.classifications.set(1, midClass);
-        this.classifications.set(2, subClass);
+        this.classifications.clear();
+        this.classifications.add(superClass);
+        this.classifications.add(midClass);
+        this.classifications.add(subClass);
     }
 
     @Override
@@ -347,6 +369,16 @@ public class SubsystemRow implements Comparable<SubsystemRow> {
      */
     public Object getGenome() {
         return this.parent;
+    }
+
+    /**
+     * Specify a new variant code for this subsystem.
+     *
+     * @param code		new variant code
+     */
+    public void setVariantCode(String code) {
+        this.variantCode = code;
+
     }
 
 }
