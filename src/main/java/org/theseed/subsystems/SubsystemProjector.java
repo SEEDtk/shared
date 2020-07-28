@@ -7,16 +7,26 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
 import org.apache.commons.lang3.StringUtils;
+import org.theseed.genome.Feature;
+import org.theseed.genome.Genome;
 import org.theseed.io.LineReader;
+import org.theseed.magic.MagicMap;
+import org.theseed.proteins.Role;
+import org.theseed.proteins.RoleMap;
 
 /**
  * This object contains the information necessary to project subsystems onto a genome.  In particular, it contains
- * all of the subsystem specifications and a map of protein family IDs to variant specifications.
+ * all of the subsystem specifications and a map of protein family IDs and/or role IDs to variant specifications.
+ * Protein family IDs are used where available.  Since these IDs have underscores and role IDs do not, there is
+ * no need to type ID strings.
  *
  * The variant specifications are stored in a single list using the natural ordering of variant specifications.
  * This ordering insures that the first variant found for a particular subsystem is the one that should be
@@ -31,13 +41,15 @@ public class SubsystemProjector {
 
     // FIELDS
     /** marker line for end of a group */
-    private static final String END_MARKER = "//";
+    public static final String END_MARKER = "//";
     /** marker line for start of variant section */
     private static final String VARIANT_SECTION_MARKER = "**";
     /** subsystem specifications */
     private Map<String, SubsystemSpec> subsystems;
     /** variant specifications */
     private SortedSet<VariantSpec> variants;
+    /** useful role map */
+    private RoleMap roleMap;
 
     /**
      * Create a new, blank subsystem projector.
@@ -45,6 +57,7 @@ public class SubsystemProjector {
     public SubsystemProjector() {
         this.subsystems = new HashMap<String, SubsystemSpec>(1000);
         this.variants = new TreeSet<VariantSpec>();
+        this.roleMap = new RoleMap();
     }
 
     /**
@@ -59,6 +72,12 @@ public class SubsystemProjector {
     public static SubsystemProjector Load(File inFile) throws IOException {
         SubsystemProjector retVal = new SubsystemProjector();
         try (LineReader inStream = new LineReader(inFile)) {
+            // Loop through the roles.
+            for (String line = inStream.next(); ! line.contentEquals(VARIANT_SECTION_MARKER); line = inStream.next()) {
+                String[] roleDefinition = StringUtils.split(line, "\t", 2);
+                Role newRole = new Role(roleDefinition[0], roleDefinition[1]);
+                retVal.roleMap.put(newRole);
+            }
             // Loop through the subsystems.
             for (String line = inStream.next(); ! line.contentEquals(VARIANT_SECTION_MARKER); line = inStream.next()) {
                 // Read a single subsystem here.  The current line is the name.
@@ -67,10 +86,11 @@ public class SubsystemProjector {
                 line = inStream.next();
                 String[] classes = StringUtils.splitPreserveAllTokens(line, '\t');
                 subsystem.setClassifications(classes);
-                // Now the list of roles.
+                // Now the list of roles.  We add each role to the role map so we can generate an ID for it.
                 line = inStream.next();
                 while (! line.contentEquals(END_MARKER)) {
                     subsystem.addRole(line);
+                    retVal.roleMap.findOrInsert(line);
                     line = inStream.next();
                 }
                 // Add the subsystem to the projector.
@@ -107,15 +127,19 @@ public class SubsystemProjector {
      */
     public void addSubsystem(SubsystemSpec subsystem) {
         this.subsystems.put(subsystem.getName(), subsystem);
+        for (String role : subsystem.getRoles())
+            this.roleMap.findOrInsert(role);
     }
 
     /**
      * Add a new variant specification.
      *
      * @param variant		new variant specification
+     *
+     * @return TRUE if we added the variant, FALSE if it is a duplicate
      */
-    public void addVariant(VariantSpec variant) {
-        this.variants.add(variant);
+    public boolean addVariant(VariantSpec variant) {
+        return this.variants.add(variant);
     }
 
     /**
@@ -125,6 +149,12 @@ public class SubsystemProjector {
      */
     public void save(File outFile) throws IOException {
         try (PrintWriter outStream = new PrintWriter(outFile)) {
+            // Write the roles.  These must come first, since otherwise the order of the subsystems
+            // matters.
+            for (MagicMap.Entry<String,String> entry : this.roleMap.entrySet())
+                outStream.println(entry.getKey() + "\t" + entry.getValue());
+            outStream.println(VARIANT_SECTION_MARKER);
+            // Now we write the subsystems.
             for (SubsystemSpec subsystem : this.subsystems.values()) {
                 // Write the name.
                 outStream.println(subsystem.getName());
@@ -166,6 +196,63 @@ public class SubsystemProjector {
      */
     public SortedSet<VariantSpec> getVariants() {
         return this.variants;
+    }
+
+    /**
+     * @return a family map for the specified genome
+     *
+     * @param genome	genome whose family map is needed
+     */
+    public Map<String, Set<String>> computeFamilyMap(Genome genome) {
+        Map<String, Set<String>> retVal = new HashMap<String, Set<String>>(genome.getFeatureCount());
+        for (Feature feat : genome.getFeatures()) {
+            String pgFam = feat.getPgfam();
+            if (pgFam != null && ! pgFam.isEmpty()) {
+                storeFeature(retVal, feat, pgFam);
+            } else {
+                for (Role role : feat.getUsefulRoles(roleMap))
+                    storeFeature(retVal, feat, role.getId());
+            }
+        }
+        return retVal;
+    }
+
+    /**
+     * Store a feature in a family map using the specified identifier.
+     *
+     * @param familyMap		target family map
+     * @param feat			feature to store
+     * @param identifier	identifier with which to classify it (family or role ID)
+     */
+    private void storeFeature(Map<String, Set<String>> familyMap, Feature feat, String identifier) {
+        Set<String> fids = familyMap.computeIfAbsent(identifier, k -> new HashSet<String>(5));
+        fids.add(feat.getId());
+    }
+
+    /**
+     * @return the ID for the role with the specified description
+     *
+     * @param roleDesc	description of the desired role
+     */
+    public String getRoleId(String roleDesc) {
+        Role found = this.roleMap.getByName(roleDesc);
+        String retVal = null;
+        if (found != null)
+            retVal = found.getId();
+        return retVal;
+    }
+
+    /**
+     * @return the first useful role for the specified feature
+     *
+     * @param feat	feature of interest
+     */
+    public String getRoleId(Feature feat) {
+        String retVal = null;
+        List<Role> found = feat.getUsefulRoles(this.roleMap);
+        if (found.size() > 0)
+            retVal = found.get(0).getId();
+        return retVal;
     }
 
 }

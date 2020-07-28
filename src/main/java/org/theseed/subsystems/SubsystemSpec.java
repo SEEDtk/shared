@@ -124,4 +124,9 @@ public class SubsystemSpec implements Comparable<SubsystemSpec> {
     public List<String> getRoles() {
         return this.roles;
     }
+
+    @Override
+    public String toString() {
+        return this.name;
+    }
 }

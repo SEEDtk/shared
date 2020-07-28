@@ -5,17 +5,14 @@ package org.theseed.subsystems;
 
 import java.util.Arrays;
 import java.util.Comparator;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import org.theseed.genome.Feature;
 import org.theseed.genome.Genome;
 import org.theseed.genome.SubsystemRow;
 
 /**
- * A variant specification is an ordered list of protein families that form a possible subsystem implementation.
+ * A variant specification is an ordered list of protein families and/or role IDs that form a possible subsystem implementation.
  * Variant specifications are ordered by the number of role slots filled in (descending), followed by the total number of
  * role slots (ascending), followed by an item-by-item comparison of the role slots.  This allows us to use a sorted set
  * for the subsystem projector's variant lists.
@@ -193,23 +190,6 @@ public class VariantSpec implements Comparable<VariantSpec> {
     }
 
     /**
-     * @return a family map for the specified genome
-     *
-     * @param genome	genome whose family map is needed
-     */
-    public static Map<String, Set<String>> computeFamilyMap(Genome genome) {
-        Map<String, Set<String>> retVal = new HashMap<String, Set<String>>(genome.getFeatureCount());
-        for (Feature feat : genome.getFeatures()) {
-            String pgFam = feat.getPgfam();
-            if (pgFam != null && ! pgFam.isEmpty()) {
-                Set<String> fids = retVal.computeIfAbsent(pgFam, k -> new HashSet<String>(5));
-                fids.add(feat.getId());
-            }
-        }
-        return retVal;
-    }
-
-    /**
      * @return TRUE if the other variant specification is for the same subsystem
      */
     public boolean isRedundant(VariantSpec other) {
@@ -219,7 +199,7 @@ public class VariantSpec implements Comparable<VariantSpec> {
     @Override
     public String toString() {
         return "VariantSpec[" + (subsystem != null ? subsystem : "(null)")
-                + ":" + (variantCode != null ? variantCode : "(null)") + ", " + cellCount + "cells]";
+                + ":" + (variantCode != null ? variantCode : "(null)") + ", " + cellCount + " cells]";
     }
 
 }

@@ -74,15 +74,18 @@ public class TestSubsystems extends TestCase {
         assertThat(subsystem.getRole(1), equalTo("role 1"));
         assertThat(subsystem.getRole(2), equalTo("role 2"));
     }
+
     /**
-     * test family map creation
+     *
+     * test family map creation (PGFAM only)
      *
      * @throws IOException
      */
     public void testFamilyMap() throws IOException {
         // Test the genome family map.
+        SubsystemProjector projector = new SubsystemProjector();
         Genome gto = new Genome(new File("src/test/gto_test", "1313.7001.gto"));
-        Map<String, Set<String>> familyMap = VariantSpec.computeFamilyMap(gto);
+        Map<String, Set<String>> familyMap = projector.computeFamilyMap(gto);
         assertThat(familyMap.get("PGF_03504890"), hasItem("fig|1313.7001.peg.304"));
         assertThat(familyMap.get("PGF_91035886"), nullValue());
         // Verify that all the features with families are found.
@@ -112,6 +115,7 @@ public class TestSubsystems extends TestCase {
      * @throws IOException
      */
     public void testVariantSpec() throws IOException {
+        SubsystemProjector projector = new SubsystemProjector();
         // Create a subsystem found in 1313.7001.
         SubsystemSpec subsystem = new SubsystemSpec("Cell division related cluster including coaD");
         subsystem.setClassifications("", "Clustering-based subsystems", "Cell Division");
@@ -120,6 +124,7 @@ public class TestSubsystems extends TestCase {
         subsystem.addRole("Cell-division-associated, ABC-transporter-like signaling protein FtsX");
         subsystem.addRole("Phosphopantetheine adenylyltransferase (EC 2.7.7.3)");
         subsystem.addRole("Signal recognition particle receptor FtsY");
+        projector.addSubsystem(subsystem);
         VariantSpec variant = new VariantSpec(subsystem, "likely");
         assertThat(variant.getName(), equalTo(subsystem.getName()));
         assertThat(variant.getCode(), equalTo("likely"));
@@ -156,9 +161,26 @@ public class TestSubsystems extends TestCase {
         SubsystemSpec sub2 = new SubsystemSpec("Funny subsystem");
         variant3 = new VariantSpec(sub2, "likely");
         assertFalse(variant.isRedundant(variant3));
+        sub2 = new SubsystemSpec(subsystem.getName());
+        sub2.addRole("16S rRNA (guanine(966)-N(2))-methyltransferase (EC 2.1.1.171)");
+        sub2.addRole("Cell-division-associated, ABC-transporter-like signaling protein FtsE");
+        sub2.addRole("Cell-division-associated, ABC-transporter-like signaling protein FtsX");
+        sub2.addRole("Phosphopantetheine adenylyltransferase (EC 2.7.7.3)");
+        sub2.addRole("Signal recognition particle receptor FtsY");
+        VariantSpec variant4 = new VariantSpec(sub2, "likely");
+        variant4.setCell(1, "PGF_06857975");
+        variant4.setCell(0, "PGF_07133621");
+        variant4.setCell(2, "PGF_03701810");
+        variant4.setCell(3, "PGF_04762552");
+        variant4.setCell(4, "PGF_08905885");
+        assertThat(variant4, equalTo(variant));
+        assertThat(variant4.compareTo(variant), equalTo(0));
+        assertThat(variant.compareTo(variant4), equalTo(0));
+        assertTrue(projector.addVariant(variant));
+        assertFalse(projector.addVariant(variant4));
         // Test matching and projecting using the genome family map.
         Genome gto = new Genome(new File("src/test/gto_test", "1313.7001.gto"));
-        Map<String, Set<String>> familyMap = VariantSpec.computeFamilyMap(gto);
+        Map<String, Set<String>> familyMap = projector.computeFamilyMap(gto);
         assertTrue(variant.matches(familyMap));
         assertFalse(variant2.matches(familyMap));
         // Get the current subsystem row for this subsystem.
@@ -183,6 +205,57 @@ public class TestSubsystems extends TestCase {
             for (Feature feat : feats)
                 assertThat(feat.getId(), oldFeats.contains(feat));
         }
+    }
+
+    /**
+     * test projections with RNA components
+     *
+     * @throws IOException
+     */
+    public void testRnaProjection() throws IOException {
+        SubsystemProjector projector = new SubsystemProjector();
+        SubsystemSpec sub1 = new SubsystemSpec("Antibiotic targets in protein synthesis");
+        sub1.setClassifications("Stress Response, Defense and Virulence",
+                "Resistance to antibiotics and toxic compounds",
+                "");
+        sub1.addRole("SSU rRNA");
+        sub1.addRole("LSU rRNA");
+        sub1.addRole("SSU ribosomal protein S12p (S23e)");
+        sub1.addRole("SSU ribosomal protein S10p (S20e)");
+        sub1.addRole("Translation elongation factor G");
+        sub1.addRole("LSU ribosomal protein L6p (L9e)");
+        sub1.addRole("Translation elongation factor Tu");
+        sub1.addRole("Isoleucyl-tRNA synthetase (EC 6.1.1.5)");
+        projector.addSubsystem(sub1);
+        String ssuRrna = projector.getRoleId("SSU rRNA");
+        String lsuRrna = projector.getRoleId("LSU rRNA");
+        VariantSpec var1 = new VariantSpec(sub1, "1");
+        var1.setCell(0, ssuRrna);
+        var1.setCell(1, lsuRrna);
+        var1.setCell(2, "PGF_06941403");
+        var1.setCell(3, "PGF_00049828");
+        var1.setCell(4, "PGF_00060409");
+        var1.setCell(5, "PGF_00016444");
+        var1.setCell(6, "PGF_00060428");
+        var1.setCell(7, "PGF_05171623");
+        projector.addVariant(var1);
+        // This is designed to stress the role map save and restore.
+        SubsystemSpec sub2 = new SubsystemSpec("fake subsystem 1");
+        sub2.addRole("SSU rRNAtest");
+        projector.addSubsystem(sub2);
+        sub2 = new SubsystemSpec("fake subsystem 2");
+        sub2.addRole("SSU rRNAtest2");
+        projector.addSubsystem(sub2);
+        // Save and restore to check the role map.
+        File outFile = new File("src/test", "projector.ser");
+        projector.save(outFile);
+        SubsystemProjector loaded = SubsystemProjector.Load(outFile);
+        assertThat(loaded.getRoleId("SSU rRNA"), equalTo(ssuRrna));
+        assertThat(loaded.getRoleId("LSU rRNA"), equalTo(lsuRrna));
+        // Map the test genome.
+        Genome gto = new Genome(new File("src/test","123214.3.gto"));
+        Map<String, Set<String>> familyMap = projector.computeFamilyMap(gto);
+        assertTrue(var1.matches(familyMap));
     }
 
     /**
