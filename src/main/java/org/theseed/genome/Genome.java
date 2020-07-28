@@ -990,7 +990,7 @@ public class Genome  {
     /**
      * Erase all of the subsystems.
      */
-    public void deleteSubsystems() {
+    public void clearSubsystems() {
         this.subsystems.clear();
     }
 

@@ -9,6 +9,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
+import org.theseed.subsystems.VariantId;
+
 import com.github.cliftonlabs.json_simple.JsonArray;
 import com.github.cliftonlabs.json_simple.JsonKey;
 import com.github.cliftonlabs.json_simple.JsonObject;
@@ -78,7 +80,7 @@ public class SubsystemRow implements Comparable<SubsystemRow> {
          * @return the name of the enclosing subsystem
          */
         public String getSubName() {
-            return SubsystemRow.this.name;
+            return SubsystemRow.this.variant.getName();
         }
 
         /**
@@ -141,14 +143,12 @@ public class SubsystemRow implements Comparable<SubsystemRow> {
     // FIELDS
     /** empty list  */
     private static final JsonArray noEntries = new JsonArray();
-    /** variant code for this subsystem */
-    private String variantCode;
+    /** name and variant code for this subsystem */
+    private VariantId variant;
     /** list of roles */
     private List<Role> roles;
     /** parent genome */
     private Genome parent;
-    /** subsystem name */
-    private String name;
     /** classifications */
     private List<String> classifications;
 
@@ -160,8 +160,8 @@ public class SubsystemRow implements Comparable<SubsystemRow> {
      */
     public SubsystemRow(Genome genome, JsonObject subsystemObj) {
         // Get the subsystem metadata.
-        this.variantCode = subsystemObj.getStringOrDefault(SubsystemKeys.VARIANT_CODE);
-        this.name = subsystemObj.getStringOrDefault(SubsystemKeys.NAME);
+        this.variant = new VariantId(subsystemObj.getStringOrDefault(SubsystemKeys.NAME),
+                subsystemObj.getStringOrDefault(SubsystemKeys.VARIANT_CODE));
         this.classifications = new ArrayList<String>(3);
         JsonArray classList = subsystemObj.getCollectionOrDefault(SubsystemKeys.CLASSIFICATION);
         for (int i = 0; i < classList.size(); i++)
@@ -204,9 +204,8 @@ public class SubsystemRow implements Comparable<SubsystemRow> {
      * @param name		name of the new subsystem
      */
     public SubsystemRow(Genome genome, String name) {
-        this.name = name;
+        this.variant = new VariantId(name, "active");
         this.parent = genome;
-        this.variantCode = "active";
         this.classifications = new ArrayList<String>(3);
         this.roles = new ArrayList<Role>();
         genome.connectSubsystem(this);
@@ -232,8 +231,8 @@ public class SubsystemRow implements Comparable<SubsystemRow> {
      */
     public JsonObject toJson() {
         JsonObject retVal = new JsonObject();
-        retVal.put(SubsystemKeys.VARIANT_CODE.getKey(), this.variantCode);
-        retVal.put(SubsystemKeys.NAME.getKey(), this.name);
+        retVal.put(SubsystemKeys.VARIANT_CODE.getKey(), this.variant.getCode());
+        retVal.put(SubsystemKeys.NAME.getKey(), this.variant.getName());
         JsonArray classList = new JsonArray().addAllChain(this.classifications);
         retVal.put(SubsystemKeys.CLASSIFICATION.getKey(), classList);
         JsonArray bindings = new JsonArray();
@@ -252,38 +251,14 @@ public class SubsystemRow implements Comparable<SubsystemRow> {
      * @return the variant code for this subsystem implementation
      */
     public String getVariantCode() {
-        return variantCode;
+        return this.variant.getCode();
     }
 
     /**
      * @return TRUE if this is an active variant, else FALSE
      */
     public boolean isActive() {
-        String code = this.variantCode;
-        boolean retVal = isActive(code);
-        return retVal;
-    }
-
-    /**
-     * @return TRUE if the variant code indicates an active variant, else FALSE
-     *
-     * @param code	variant code of interest
-     */
-    public static boolean isActive(String code) {
-        boolean retVal;
-        if (code.startsWith("*"))
-            code = code.substring(1);
-        if (code.contentEquals("active"))
-            retVal = true;
-        else if (code.contentEquals("inactive") || code.contentEquals("likely"))
-            retVal = false;
-        else if (code.startsWith("-"))
-            retVal = false;
-        else if (code.contentEquals("0"))
-            retVal = false;
-        else
-            retVal = true;
-        return retVal;
+        return this.variant.isActive();
     }
 
     /**
@@ -297,7 +272,7 @@ public class SubsystemRow implements Comparable<SubsystemRow> {
      * @return the name of this subsystem
      */
     public String getName() {
-        return name;
+        return this.variant.getName();
     }
 
     /**
@@ -325,6 +300,7 @@ public class SubsystemRow implements Comparable<SubsystemRow> {
     public int hashCode() {
         final int prime = 31;
         int result = 1;
+        String name = this.getName();
         result = prime * result + ((name == null) ? 0 : name.hashCode());
         result = prime * result + ((parent == null) ? 0 : parent.getId().hashCode());
         return result;
@@ -339,11 +315,13 @@ public class SubsystemRow implements Comparable<SubsystemRow> {
             return false;
         }
         SubsystemRow other = (SubsystemRow) obj;
+        String name = this.getName();
+        String oName = other.getName();
         if (name == null) {
-            if (other.name != null) {
+            if (oName != null) {
                 return false;
             }
-        } else if (!name.equals(other.name)) {
+        } else if (!name.equals(oName)) {
             return false;
         }
         if (parent == null) {
@@ -358,7 +336,7 @@ public class SubsystemRow implements Comparable<SubsystemRow> {
 
     @Override
     public int compareTo(SubsystemRow o) {
-        int retVal = this.name.compareTo(o.name);
+        int retVal = this.getName().compareTo(o.getName());
         if (retVal == 0)
             retVal = this.parent.getId().compareTo(o.parent.getId());
         return retVal;
@@ -377,8 +355,18 @@ public class SubsystemRow implements Comparable<SubsystemRow> {
      * @param code		new variant code
      */
     public void setVariantCode(String code) {
-        this.variantCode = code;
+        this.variant.setCode(code);
 
+    }
+
+    /**
+     * Set the classifications for this subsystem.
+     *
+     * @param classList		list of classifications, in order
+     */
+    public void setClassifications(List<String> classList) {
+        this.classifications.clear();
+        this.classifications.addAll(classList);
     }
 
 }

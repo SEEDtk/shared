@@ -13,6 +13,7 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.UncheckedIOException;
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 /**
  * This is a simple, iterable line reader than can be directly created from a file or a stream.
@@ -28,6 +29,8 @@ public class LineReader implements Iterable<String>, Iterator<String>, Closeable
     private boolean eof;
     /** next line to produce */
     private String nextLine;
+    /** file name for error messages */
+    private String fileName;
 
     /**
      * Create a line reader for the specified input file.
@@ -37,6 +40,7 @@ public class LineReader implements Iterable<String>, Iterator<String>, Closeable
      * @throws IOException
      */
     public LineReader(File inputFile) throws IOException {
+        this.fileName = inputFile.toString();
         Reader streamReader = new FileReader(inputFile);
         setup(streamReader);
     }
@@ -49,6 +53,7 @@ public class LineReader implements Iterable<String>, Iterator<String>, Closeable
      * @throws IOException
      */
     public LineReader(InputStream inputStream) throws IOException {
+        this.fileName = "text file input stream";
         Reader streamReader = new InputStreamReader(inputStream);
         setup(streamReader);
     }
@@ -102,7 +107,7 @@ public class LineReader implements Iterable<String>, Iterator<String>, Closeable
         }
     }
     /**
-     * @return the next line in the file
+     * @return the next line in the file, or NULL at end-of-file
      */
     @Override
     public String next() {
@@ -117,6 +122,8 @@ public class LineReader implements Iterable<String>, Iterator<String>, Closeable
             retVal = this.nextLine;
             this.nextLine = null;
         }
+        if (retVal == null)
+            throw new NoSuchElementException("Premature end-of-file in " + this.fileName + ".");
         return retVal;
     }
 
