@@ -335,9 +335,13 @@ public class TabbedLineReader implements Closeable, AutoCloseable, Iterable<Tabb
      * Prepare the line buffer with the next line of data.  Note we skip blank lines.
      */
     protected void readAhead() {
-        this.nextLine = reader.next();
-        while (this.nextLine != null && this.nextLine.isEmpty())
+        if (! reader.hasNext()) {
+            this.nextLine = null;
+        } else {
             this.nextLine = reader.next();
+            while (this.nextLine != null && this.nextLine.isEmpty() && reader.hasNext())
+                this.nextLine = reader.next();
+        }
     }
 
     /**

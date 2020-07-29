@@ -242,10 +242,65 @@ public class TestSubsystems extends TestCase {
         // This is designed to stress the role map save and restore.
         SubsystemSpec sub2 = new SubsystemSpec("fake subsystem 1");
         sub2.addRole("SSU rRNAtest");
+        sub2.addRole("V-type H+-transporting ATPase subunit A (EC 7.1.2.2)");
+        sub2.addRole("V-type H+-transporting ATPase subunit B (EC 7.1.2.2)");
+        sub2.addRole("V-type H+-transporting ATPase subunit C (EC 7.1.2.2)");
+        sub2.addRole("V-type H+-transporting ATPase subunit D (EC 7.1.2.2)");
         projector.addSubsystem(sub2);
+        VariantSpec varX = new VariantSpec(sub2, "XX");
+        varX.setCell(0, "PGF_91234567");
+        varX.setCell(2, "PGF_06941403");
+        varX.setCell(3, "PGF_00049828");
+        projector.addVariant(varX);
         sub2 = new SubsystemSpec("fake subsystem 2");
         sub2.addRole("SSU rRNAtest2");
         projector.addSubsystem(sub2);
+        // This next adds a second subsystem to test mass projection.
+        sub2 = new SubsystemSpec("V-type ATP synthase");
+        sub2.setClassifications("Respiration", "ATP synthases", "");
+        sub2.addRole("V-type H+-transporting ATPase subunit A (EC 7.1.2.2)");
+        sub2.addRole("V-type H+-transporting ATPase subunit B (EC 7.1.2.2)");
+        sub2.addRole("V-type H+-transporting ATPase subunit C (EC 7.1.2.2)");
+        sub2.addRole("V-type H+-transporting ATPase subunit D (EC 7.1.2.2)");
+        sub2.addRole("V-type H+-transporting ATPase subunit E (EC 7.1.2.2)");
+        sub2.addRole("V-type H+-transporting ATPase subunit epsilon (EC 7.1.2.2)");
+        sub2.addRole("V-type H+-transporting ATPase subunit F (EC 7.1.2.2)");
+        sub2.addRole("V-type H+-transporting ATPase subunit G (EC 7.1.2.2)");
+        sub2.addRole("V-type H+-transporting ATPase subunit I (EC 7.1.2.2)");
+        sub2.addRole("V-type H+-transporting ATPase subunit K (EC 7.1.2.2)");
+        sub2.addRole("V-type H+-transporting ATPase subunit H (EC 7.1.2.2)");
+        projector.addSubsystem(sub2);
+        // We put two variants of different sizes to make sure the correct one is projected.
+        VariantSpec var2 = new VariantSpec(sub2, "active");
+        var2.setCell(0,  "PGF_00066372");
+        var2.setCell(1, "PGF_00066375");
+        var2.setCell(2, "PGF_02056298");
+        var2.setCell(3, "PGF_05031387");
+        var2.setCell(4, "PGF_09999974");
+        var2.setCell(6, "PGF_12590106");
+        var2.setCell(7, "PGF_11524791");
+        var2.setCell(8, "PGF_12681947");
+        var2.setCell(9, "PGF_03798826");
+        projector.addVariant(var2);
+        VariantSpec var3 = new VariantSpec(sub2, "likely");
+        var3.setCell(1, "PGF_00066375");
+        var3.setCell(2, "PGF_02056298");
+        var3.setCell(3, "PGF_05031387");
+        var3.setCell(8, "PGF_12681947");
+        projector.addVariant(var3);
+        VariantSpec var4 = new VariantSpec(sub2, "unlikely");
+        var4.setCell(0,  "PGF_00066372");
+        var4.setCell(1, "PGF_00066375");
+        var4.setCell(2, "PGF_02056298");
+        var4.setCell(3, "PGF_05031387");
+        var4.setCell(4, "PGF_09999974");
+        var4.setCell(5, "PGF_92590106");
+        var4.setCell(6, "PGF_12590106");
+        var4.setCell(7, "PGF_11524791");
+        var4.setCell(8, "PGF_12681947");
+        var4.setCell(9, "PGF_03798826");
+        projector.addVariant(var4);
+        // And here is a variant that won't match.
         // Save and restore to check the role map.
         File outFile = new File("src/test", "projector.ser");
         projector.save(outFile);
@@ -255,7 +310,33 @@ public class TestSubsystems extends TestCase {
         // Map the test genome.
         Genome gto = new Genome(new File("src/test","123214.3.gto"));
         Map<String, Set<String>> familyMap = projector.computeFamilyMap(gto);
+        // Test matching.
         assertTrue(var1.matches(familyMap));
+        assertTrue(var2.matches(familyMap));
+        assertTrue(var3.matches(familyMap));
+        assertFalse(var4.matches(familyMap));
+        // Test projection.
+        projector.project(gto);
+        assertThat(gto.getSubsystems().size(), equalTo(2));
+        SubsystemRow row = gto.getSubsystem("Antibiotic targets in protein synthesis");
+        assertThat(row.getVariantCode(), equalTo("1"));
+        List<SubsystemRow.Role> rowRoles = row.getRoles();
+        for (SubsystemRow.Role rowRole : rowRoles)
+            assertThat(rowRole.getFeatures().size(), greaterThan(0));
+        row = gto.getSubsystem("V-type ATP synthase");
+        assertThat(row.getVariantCode(), equalTo("active"));
+        rowRoles = row.getRoles();
+        assertThat(rowRoles.get(0).getFeatures().size(), greaterThan(0));
+        assertThat(rowRoles.get(1).getFeatures().size(), greaterThan(0));
+        assertThat(rowRoles.get(2).getFeatures().size(), greaterThan(0));
+        assertThat(rowRoles.get(3).getFeatures().size(), greaterThan(0));
+        assertThat(rowRoles.get(4).getFeatures().size(), greaterThan(0));
+        assertThat(rowRoles.get(6).getFeatures().size(), greaterThan(0));
+        assertThat(rowRoles.get(7).getFeatures().size(), greaterThan(0));
+        assertThat(rowRoles.get(8).getFeatures().size(), greaterThan(0));
+        assertThat(rowRoles.get(9).getFeatures().size(), greaterThan(0));
+        row = gto.getSubsystem("fake subsystem 1");
+        assertThat(row, nullValue());
     }
 
     /**

@@ -15,6 +15,8 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.theseed.genome.Feature;
 import org.theseed.genome.Genome;
 import org.theseed.io.LineReader;
@@ -40,6 +42,8 @@ import org.theseed.proteins.RoleMap;
 public class SubsystemProjector {
 
     // FIELDS
+    /** logging facility */
+    protected static Logger log = LoggerFactory.getLogger(SubsystemProjector.class);
     /** marker line for end of a group */
     public static final String END_MARKER = "//";
     /** marker line for start of variant section */
@@ -253,6 +257,39 @@ public class SubsystemProjector {
         if (found.size() > 0)
             retVal = found.get(0).getId();
         return retVal;
+    }
+
+    /**
+     * Project subsystems into a genome.
+     *
+     * @param genome	genome into which subsystems should be projected
+     */
+    public void project(Genome genome) {
+        // Create a family map for this genome.
+        log.info("Scanning features in {} for subsystem projection.", genome);
+        Map<String, Set<String>> familyMap = this.computeFamilyMap(genome);
+        // This map will track the variants found.  It is keyed on subsystem name.  Only the
+        // first variant found for a subsystem is kept, since the variant specs are ordered
+        // from most to least preferable.
+        Map<String, VariantSpec> variantMap = new HashMap<String, VariantSpec>();
+        log.info("Scanning variants for subsystem matches.");
+        for (VariantSpec variant : this.variants) {
+            String name = variant.getName();
+            // Only proceed if we don't already have a match for this subsystem.
+            if (! variantMap.containsKey(name)) {
+                if (variant.matches(familyMap)) {
+                    // Here we have the subsystem.
+                    variantMap.put(name, variant);
+                }
+            }
+        }
+        log.info("{} subsystems found.", variantMap.size());
+        // Instantiate the subsystems.
+        genome.clearSubsystems();
+        for (VariantSpec variant : variantMap.values()) {
+            variant.instantiate(genome, familyMap);
+            log.debug("{} instantiated in {}.", variant.getName(), genome);
+        }
     }
 
 }
