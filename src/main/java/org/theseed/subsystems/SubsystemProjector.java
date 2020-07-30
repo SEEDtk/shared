@@ -220,7 +220,7 @@ public class SubsystemProjector {
      * @param feat			feature to store
      * @param identifier	identifier with which to classify it (role ID)
      */
-    private void storeFeature(Map<String, Set<String>> roleMap, Feature feat, String identifier) {
+    protected void storeFeature(Map<String, Set<String>> roleMap, Feature feat, String identifier) {
         Set<String> fids = roleMap.computeIfAbsent(identifier, k -> new HashSet<String>(5));
         fids.add(feat.getId());
     }

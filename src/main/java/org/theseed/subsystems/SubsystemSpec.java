@@ -127,6 +127,15 @@ public class SubsystemSpec implements Comparable<SubsystemSpec> {
         return this.roles;
     }
 
+    /**
+     * @return the index of a role in this subsystem (of -1 if it is not found)
+     *
+     * @param roleDesc		role description
+     */
+    public int getRoleIndex(String roleDesc) {
+        return this.roles.indexOf(roleDesc);
+    }
+
     @Override
     public String toString() {
         return this.name;

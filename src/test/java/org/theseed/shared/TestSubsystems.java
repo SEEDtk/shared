@@ -114,6 +114,9 @@ public class TestSubsystems extends TestCase {
         sub1.addRole("UDP-N-acetylmuramoylalanine--D-glutamate ligase (EC 6.3.2.9)");
         sub1.addRole("UDP-N-acetylmuramoylalanyl-D-glutamate--L-lysine ligase (EC 6.3.2.7)");
         projector.addSubsystem(sub1);
+        assertThat(sub1.getRoleIndex("Cell division initiation protein DivIVA"), equalTo(10));
+        assertThat(sub1.getRoleIndex("Signal recognition particle protein Ffh"), equalTo(7));
+        assertThat(sub1.getRoleIndex("Signal recognition particle protein invalid"), equalTo(-1));
         Genome gto = new Genome(new File("src/test/gto_test", "1313.7001.gto"));
         Map<String, Set<String>> gRoleMap = projector.computeRoleMap(gto);
         // Verify that all the features with known roles are found.
