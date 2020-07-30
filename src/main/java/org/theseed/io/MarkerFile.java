@@ -47,9 +47,10 @@ public class MarkerFile {
      * @param name		name of the file
      */
     public static String read(File name) {
-        String retVal;
+        String retVal = "";
         try (LineReader reader = new LineReader(name)) {
-            retVal = reader.next();
+            if (reader.hasNext())
+                retVal = reader.next();
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }

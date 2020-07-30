@@ -934,6 +934,10 @@ public class TestLibrary extends TestCase {
         Role rObj4 = new Role("2HydrDehySimiLSulf4", "(R)-2-hydroxyacid dehydrogenase (EC 1.1.1.272), similar to L-sulfolactate dehydrogenase");
         assertEquals("Role checksums affected by EC position.", rObj1, rObj4);
         Role rObj5 = new Role("2HydrDehySimiLSulf5", "(R)-2-hydroxyacid dehydrogenase similar to L-sulfolactate dehydrogenase");
+        assertTrue(rObj5.matches("(r)-2-hydroxyacid dehydrogenase, similar to L-sulfolactate dehydrogenase"));
+        assertTrue(rObj5.matches("(R)-2-hydroxyacid dehydrogenase similar to L-sulfolactate Dehydrogenase"));
+        assertFalse(rObj5.matches("(R)-3-hydroxyacid dehydrogenase similar to L-sulfolactate Dehydrogenase"));
+        assertFalse(rObj4.matches("Phenylalanyl tRNA synthetase alpha chain"));
         assertEquals("Role checksum affected by comma.", rObj1, rObj5);
     }
 

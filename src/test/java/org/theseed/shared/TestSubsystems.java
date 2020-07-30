@@ -4,6 +4,8 @@ import org.theseed.genome.Feature;
 import org.theseed.genome.Genome;
 import org.theseed.genome.SubsystemRow;
 import org.theseed.io.Shuffler;
+import org.theseed.proteins.Role;
+import org.theseed.proteins.RoleMap;
 import org.theseed.subsystems.SubsystemProjector;
 import org.theseed.subsystems.SubsystemSpec;
 import org.theseed.subsystems.VariantId;
@@ -19,6 +21,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.SortedSet;
+import java.util.stream.Collectors;
 
 public class TestSubsystems extends TestCase {
 
@@ -77,34 +80,59 @@ public class TestSubsystems extends TestCase {
 
     /**
      *
-     * test family map creation (PGFAM only)
+     * test role map creation
      *
      * @throws IOException
      */
     public void testFamilyMap() throws IOException {
-        // Test the genome family map.
+        // Create a projector with a subsystem.
         SubsystemProjector projector = new SubsystemProjector();
+        SubsystemSpec sub1 = new SubsystemSpec("Two cell division clusters relating to chromosome partitioning");
+        sub1.addRole("Chromosome (plasmid) partitioning protein ParB");
+        sub1.addRole("Chromosome partition protein smc");
+        sub1.addRole("Ribonuclease III (EC 3.1.26.3)");
+        sub1.addRole("Ribosomal large subunit pseudouridine synthase B (EC 5.4.99.22)");
+        sub1.addRole("Segregation and condensation protein A");
+        sub1.addRole("Segregation and condensation protein B");
+        sub1.addRole("Signal recognition particle associated protein");
+        sub1.addRole("Signal recognition particle protein Ffh");
+        sub1.addRole("Signal recognition particle receptor FtsY");
+        sub1.addRole("16S rRNA (cytosine(1402)-N(4))-methyltransferase (EC 2.1.1.199)");
+        sub1.addRole("Cell division initiation protein DivIVA");
+        sub1.addRole("Cell division integral membrane protein, YggT and half-length relatives");
+        sub1.addRole("Cell division protein FtsA");
+        sub1.addRole("Cell division protein FtsI [Peptidoglycan synthetase] (EC 2.4.1.129)");
+        sub1.addRole("Cell division protein FtsL");
+        sub1.addRole("Cell division protein FtsQ");
+        sub1.addRole("Cell division protein FtsZ");
+        sub1.addRole("Phospho-N-acetylmuramoyl-pentapeptide-transferase (EC 2.7.8.13)");
+        sub1.addRole("Pyridoxal phosphate-containing protein YggS");
+        sub1.addRole("SepF, FtsZ-interacting protein related to cell division");
+        sub1.addRole("UDP-N-acetylglucosamine--N-acetylmuramyl-(pentapeptide) pyrophosphoryl-undecaprenol N-acetylglucosamine transferase (EC 2.4.1.227)");
+        sub1.addRole("UDP-N-acetylmuramate--L-alanine ligase (EC 6.3.2.8)");
+        sub1.addRole("UDP-N-acetylmuramoyl-tripeptide--D-alanyl-D-alanine ligase (EC 6.3.2.10)");
+        sub1.addRole("UDP-N-acetylmuramoylalanine--D-glutamate ligase (EC 6.3.2.9)");
+        sub1.addRole("UDP-N-acetylmuramoylalanyl-D-glutamate--L-lysine ligase (EC 6.3.2.7)");
+        projector.addSubsystem(sub1);
         Genome gto = new Genome(new File("src/test/gto_test", "1313.7001.gto"));
-        Map<String, Set<String>> familyMap = projector.computeFamilyMap(gto);
-        assertThat(familyMap.get("PGF_03504890"), hasItem("fig|1313.7001.peg.304"));
-        assertThat(familyMap.get("PGF_91035886"), nullValue());
-        // Verify that all the features with families are found.
+        Map<String, Set<String>> gRoleMap = projector.computeRoleMap(gto);
+        // Verify that all the features with known roles are found.
+        RoleMap usefulRoles = projector.usefulRoles();
         for (Feature feat : gto.getFeatures()) {
-            String pgFam = feat.getPgfam();
-            if (pgFam != null && ! pgFam.isEmpty()) {
+            for (Role role : feat.getUsefulRoles(usefulRoles)) {
                 String fid = feat.getId();
-                assertThat(fid, familyMap.get(pgFam), hasItem(fid));
+                assertThat(fid, gRoleMap.get(role.getId()), hasItem(fid));
             }
         }
-        // Verify that all families have valid features.
-        for (Map.Entry<String, Set<String>> famEntry : familyMap.entrySet()) {
-            String pgFam = famEntry.getKey();
-            Set<String> fids = famEntry.getValue();
+        // Verify that all roles have valid features.
+        for (Map.Entry<String, Set<String>> roleEntry : gRoleMap.entrySet()) {
+            String roleId = roleEntry.getKey();
+            Set<String> fids = roleEntry.getValue();
             for (String fid : fids) {
                 Feature feat = gto.getFeature(fid);
                 assertThat(fid, feat, not(nullValue()));
-                String fidFam = feat.getPgfam();
-                assertThat(fid, pgFam, equalTo(fidFam));
+                List<String> roles = feat.getUsefulRoles(usefulRoles).stream().map(r -> r.getId()).collect(Collectors.toList());
+                assertThat(fid, roles, hasItem(roleId));
             }
         }
     }
@@ -119,40 +147,42 @@ public class TestSubsystems extends TestCase {
         // Create a subsystem found in 1313.7001.
         SubsystemSpec subsystem = new SubsystemSpec("Cell division related cluster including coaD");
         subsystem.setClassifications("", "Clustering-based subsystems", "Cell Division");
-        subsystem.addRole("16S rRNA (guanine(966)-N(2))-methyltransferase (EC 2.1.1.171)");
-        subsystem.addRole("Cell-division-associated, ABC-transporter-like signaling protein FtsE");
-        subsystem.addRole("Cell-division-associated, ABC-transporter-like signaling protein FtsX");
-        subsystem.addRole("Phosphopantetheine adenylyltransferase (EC 2.7.7.3)");
-        subsystem.addRole("Signal recognition particle receptor FtsY");
+        subsystem.addRole("16S rRNA (guanine(966)-N(2))-methyltransferase (EC 2.1.1.171)"); //16sRrnaNMeth
+        subsystem.addRole("Cell-division-associated, ABC-transporter-like signaling protein FtsE"); // CellDiviAssoAbcTran
+        subsystem.addRole("Cell-division-associated, ABC-transporter-like signaling protein FtsX"); // CellDiviAssoAbcTran2
+        subsystem.addRole("Phosphopantetheine adenylyltransferase (EC 2.7.7.3)"); // PhosAden
+        subsystem.addRole("Signal recognition particle receptor FtsY"); // SignRecoPartRece
+        subsystem.addRole("Hydroxychloroquine-denial protein"); // HydrDeniProt
         projector.addSubsystem(subsystem);
         VariantSpec variant = new VariantSpec(subsystem, "likely");
         assertThat(variant.getName(), equalTo(subsystem.getName()));
         assertThat(variant.getCode(), equalTo("likely"));
-        // This is a test for doing compares and stuff.  We will continue to built the variant-spec in variant.
+        // This is a test for doing compares and stuff.  We will continue to build the variant-spec in "variant".
         VariantSpec variant2 = new VariantSpec(subsystem, "likely");
-        variant.setCell(1, "PGF_06857975");
+        variant.setCell(1, projector);
         assertThat(variant2, not(equalTo(variant)));
         assertThat(variant2, greaterThan(variant));
-        assertThat(variant.getKeyFamily(), equalTo("PGF_06857975"));
-        variant2.setCell(1, "PGF_06857975");
+        assertThat(variant.getKeyRole(), equalTo("CellDiviAssoAbcTran"));
+        variant2.setCell(1, projector);
         assertThat(variant2, equalTo(variant));
         assertThat(variant2.compareTo(variant), equalTo(0));
         assertThat(variant2.getCellCount(), equalTo(1));
-        variant2.setCell(1, "PGF_07133621");
+        variant2.setCell(2, projector);
         assertThat(variant2, not(equalTo(variant)));
         assertThat(variant2.compareTo(variant), not(equalTo(0)));
-        assertThat(variant2.getCellCount(), equalTo(1));
-        variant2.setCell(4, "PGF_91035886");
         assertThat(variant2.getCellCount(), equalTo(2));
-        variant.setCell(0, "PGF_07133621");
-        assertThat(variant.getKeyFamily(), equalTo("PGF_06857975"));
-        variant.setCell(2, "PGF_03701810");
-        assertThat(variant.getKeyFamily(), equalTo("PGF_03701810"));
-        assertThat(variant, lessThan(variant2));
-        variant.setCell(3, "PGF_04762552");
-        assertThat(variant.getKeyFamily(), equalTo("PGF_03701810"));
-        variant.setCell(4, "PGF_08905885");
-        assertThat(variant.getKeyFamily(), equalTo("PGF_03701810"));
+        variant2.setCell(4, projector);
+        assertThat(variant2.getCellCount(), equalTo(3));
+        variant.setCell(0, projector);
+        assertThat(variant.getKeyRole(), equalTo("16sRrnaNMeth"));
+        assertThat(variant, greaterThan(variant2));
+        variant2.setCell(5, projector);
+        variant.setCell(2, projector);
+        assertThat(variant.getKeyRole(), equalTo("16sRrnaNMeth"));
+        variant.setCell(3, projector);
+        assertThat(variant.getKeyRole(), equalTo("16sRrnaNMeth"));
+        variant.setCell(4, projector);
+        assertThat(variant.getKeyRole(), equalTo("16sRrnaNMeth"));
         assertThat(variant.getCellCount(), equalTo(5));
         assertTrue(variant.isRedundant(variant2));
         VariantSpec variant3 = new VariantSpec(subsystem, "active");
@@ -167,12 +197,13 @@ public class TestSubsystems extends TestCase {
         sub2.addRole("Cell-division-associated, ABC-transporter-like signaling protein FtsX");
         sub2.addRole("Phosphopantetheine adenylyltransferase (EC 2.7.7.3)");
         sub2.addRole("Signal recognition particle receptor FtsY");
+        sub2.addRole("Hydroxychloroquine-denial protein");
         VariantSpec variant4 = new VariantSpec(sub2, "likely");
-        variant4.setCell(1, "PGF_06857975");
-        variant4.setCell(0, "PGF_07133621");
-        variant4.setCell(2, "PGF_03701810");
-        variant4.setCell(3, "PGF_04762552");
-        variant4.setCell(4, "PGF_08905885");
+        variant4.setCell(1, projector);
+        variant4.setCell(0, projector);
+        variant4.setCell(2, projector);
+        variant4.setCell(3, projector);
+        variant4.setCell(4, projector);
         assertThat(variant4, equalTo(variant));
         assertThat(variant4.compareTo(variant), equalTo(0));
         assertThat(variant.compareTo(variant4), equalTo(0));
@@ -180,7 +211,7 @@ public class TestSubsystems extends TestCase {
         assertFalse(projector.addVariant(variant4));
         // Test matching and projecting using the genome family map.
         Genome gto = new Genome(new File("src/test/gto_test", "1313.7001.gto"));
-        Map<String, Set<String>> familyMap = projector.computeFamilyMap(gto);
+        Map<String, Set<String>> familyMap = projector.computeRoleMap(gto);
         assertTrue(variant.matches(familyMap));
         assertFalse(variant2.matches(familyMap));
         // Get the current subsystem row for this subsystem.
@@ -230,14 +261,14 @@ public class TestSubsystems extends TestCase {
         String ssuRrna = projector.getRoleId("SSU rRNA");
         String lsuRrna = projector.getRoleId("LSU rRNA");
         VariantSpec var1 = new VariantSpec(sub1, "1");
-        var1.setCell(0, ssuRrna);
-        var1.setCell(1, lsuRrna);
-        var1.setCell(2, "PGF_06941403");
-        var1.setCell(3, "PGF_00049828");
-        var1.setCell(4, "PGF_00060409");
-        var1.setCell(5, "PGF_00016444");
-        var1.setCell(6, "PGF_00060428");
-        var1.setCell(7, "PGF_05171623");
+        var1.setCell(0, projector);
+        var1.setCell(1, projector);
+        var1.setCell(2, projector);
+        var1.setCell(3, projector);
+        var1.setCell(4, projector);
+        var1.setCell(5, projector);
+        var1.setCell(6, projector);
+        var1.setCell(7, projector);
         projector.addVariant(var1);
         // This is designed to stress the role map save and restore.
         SubsystemSpec sub2 = new SubsystemSpec("fake subsystem 1");
@@ -248,9 +279,9 @@ public class TestSubsystems extends TestCase {
         sub2.addRole("V-type H+-transporting ATPase subunit D (EC 7.1.2.2)");
         projector.addSubsystem(sub2);
         VariantSpec varX = new VariantSpec(sub2, "XX");
-        varX.setCell(0, "PGF_91234567");
-        varX.setCell(2, "PGF_06941403");
-        varX.setCell(3, "PGF_00049828");
+        varX.setCell(0, projector);
+        varX.setCell(2, projector);
+        varX.setCell(3, projector);
         projector.addVariant(varX);
         sub2 = new SubsystemSpec("fake subsystem 2");
         sub2.addRole("SSU rRNAtest2");
@@ -272,33 +303,33 @@ public class TestSubsystems extends TestCase {
         projector.addSubsystem(sub2);
         // We put two variants of different sizes to make sure the correct one is projected.
         VariantSpec var2 = new VariantSpec(sub2, "active");
-        var2.setCell(0,  "PGF_00066372");
-        var2.setCell(1, "PGF_00066375");
-        var2.setCell(2, "PGF_02056298");
-        var2.setCell(3, "PGF_05031387");
-        var2.setCell(4, "PGF_09999974");
-        var2.setCell(6, "PGF_12590106");
-        var2.setCell(7, "PGF_11524791");
-        var2.setCell(8, "PGF_12681947");
-        var2.setCell(9, "PGF_03798826");
+        var2.setCell(0, projector);
+        var2.setCell(1, projector);
+        var2.setCell(2, projector);
+        var2.setCell(3, projector);
+        var2.setCell(4, projector);
+        var2.setCell(6, projector);
+        var2.setCell(7, projector);
+        var2.setCell(8, projector);
+        var2.setCell(9, projector);
         projector.addVariant(var2);
         VariantSpec var3 = new VariantSpec(sub2, "likely");
-        var3.setCell(1, "PGF_00066375");
-        var3.setCell(2, "PGF_02056298");
-        var3.setCell(3, "PGF_05031387");
-        var3.setCell(8, "PGF_12681947");
+        var3.setCell(1, projector);
+        var3.setCell(2, projector);
+        var3.setCell(3, projector);
+        var3.setCell(8, projector);
         projector.addVariant(var3);
         VariantSpec var4 = new VariantSpec(sub2, "unlikely");
-        var4.setCell(0,  "PGF_00066372");
-        var4.setCell(1, "PGF_00066375");
-        var4.setCell(2, "PGF_02056298");
-        var4.setCell(3, "PGF_05031387");
-        var4.setCell(4, "PGF_09999974");
-        var4.setCell(5, "PGF_92590106");
-        var4.setCell(6, "PGF_12590106");
-        var4.setCell(7, "PGF_11524791");
-        var4.setCell(8, "PGF_12681947");
-        var4.setCell(9, "PGF_03798826");
+        var4.setCell(0, projector);
+        var4.setCell(1, projector);
+        var4.setCell(2, projector);
+        var4.setCell(3, projector);
+        var4.setCell(4, projector);
+        var4.setCell(5, projector);
+        var4.setCell(6, projector);
+        var4.setCell(7, projector);
+        var4.setCell(8, projector);
+        var4.setCell(9, projector);
         projector.addVariant(var4);
         // And here is a variant that won't match.
         // Save and restore to check the role map.
@@ -309,7 +340,7 @@ public class TestSubsystems extends TestCase {
         assertThat(loaded.getRoleId("LSU rRNA"), equalTo(lsuRrna));
         // Map the test genome.
         Genome gto = new Genome(new File("src/test","123214.3.gto"));
-        Map<String, Set<String>> familyMap = projector.computeFamilyMap(gto);
+        Map<String, Set<String>> familyMap = projector.computeRoleMap(gto);
         // Test matching.
         assertTrue(var1.matches(familyMap));
         assertTrue(var2.matches(familyMap));
@@ -354,18 +385,18 @@ public class TestSubsystems extends TestCase {
         sub1.addRole("s1 role 3");
         projector.addSubsystem(sub1);
         VariantSpec var1_1 = new VariantSpec(sub1, "1");
-        var1_1.setCell(1, "s1fam1");
-        var1_1.setCell(3, "s1fam3");
+        var1_1.setCell(1, projector);
+        var1_1.setCell(3, projector);
         projector.addVariant(var1_1);
         VariantSpec var1_2 = new VariantSpec(sub1, "2");
-        var1_2.setCell(0, "s1fam0");
-        var1_2.setCell(1, "s1fam1a");
-        var1_2.setCell(2, "s1fam2");
+        var1_2.setCell(0, projector);
+        var1_2.setCell(1, projector);
+        var1_2.setCell(2, projector);
         projector.addVariant(var1_2);
         VariantSpec var1_3 = new VariantSpec(sub1, "3");
-        var1_3.setCell(1,  "s1fam1");
-        var1_3.setCell(2,  "s1fam2");
-        var1_3.setCell(3,  "s1fam3");
+        var1_3.setCell(1, projector);
+        var1_3.setCell(2, projector);
+        var1_3.setCell(3, projector);
         projector.addVariant(var1_3);
         SubsystemSpec sub2 = new SubsystemSpec("subsystem 2");
         sub2.setClassifications("", "b2", "c2");
@@ -376,23 +407,23 @@ public class TestSubsystems extends TestCase {
         sub2.addRole("s2 role 4");
         projector.addSubsystem(sub2);
         VariantSpec var2_1 = new VariantSpec(sub2, "1");
-        var2_1.setCell(0, "s2fam0");
-        var2_1.setCell(1, "s2fam1");
-        var2_1.setCell(2, "s2fam2");
-        var2_1.setCell(3, "s2fam3");
-        var2_1.setCell(4, "s2fam4");
+        var2_1.setCell(0, projector);
+        var2_1.setCell(1, projector);
+        var2_1.setCell(2, projector);
+        var2_1.setCell(3, projector);
+        var2_1.setCell(4, projector);
         projector.addVariant(var2_1);
         VariantSpec var2_2 = new VariantSpec(sub2, "2");
-        var2_2.setCell(0, "s2fam0");
-        var2_2.setCell(2, "s2fam2");
-        var2_2.setCell(4, "s2fam4");
+        var2_2.setCell(0, projector);
+        var2_2.setCell(2, projector);
+        var2_2.setCell(4, projector);
         projector.addVariant(var2_2);
         VariantSpec var2_3 = new VariantSpec(sub2, "3");
-        var2_3.setCell(2, "s2fam2");
-        var2_3.setCell(3, "s2fam3");
+        var2_3.setCell(2, projector);
+        var2_3.setCell(3, projector);
         projector.addVariant(var2_3);
         VariantSpec var2_4 = new VariantSpec(sub2, "4");
-        var2_4.setCell(1, "s2fam1");
+        var2_4.setCell(1, projector);
         projector.addVariant(var2_4);
         File saveFile = new File("src/test", "projector.ser");
         projector.save(saveFile);

@@ -27,7 +27,7 @@ public class VariantSpec implements Comparable<VariantSpec> {
     private SubsystemSpec subsystem;
     /** variant code of this configuration */
     private String variantCode;
-    /** array of protein family IDs */
+    /** array of role IDs */
     private String[] cells;
     /** number of filled slots in the array */
     private int cellCount;
@@ -60,14 +60,17 @@ public class VariantSpec implements Comparable<VariantSpec> {
     }
 
     /**
-     * Specify the protein family for a particular role position (cell).
+     * Specify the role ID for a particular role position (cell).  The role ID is computed
+     * by pulling the appropriate role ID from the subsystem projector.  The role description
+     * is known from the parent subsystem specification.
      *
-     * @param i			index of the cell
-     * @param pgfam		ID of the protein family in the cell
+     * @param i				index of the cell
+     * @param projector		target subsystem projector
      */
-    public void setCell(int i, String pgfam) {
+    public void setCell(int i, SubsystemProjector projector) {
         boolean oldEmpty = this.cells[i].isEmpty();
-        this.cells[i] = pgfam;
+        String roleDesc = this.subsystem.getRole(i);
+        this.cells[i] = projector.getRoleId(roleDesc);
         if (oldEmpty) this.cellCount++;
     }
 
@@ -93,14 +96,14 @@ public class VariantSpec implements Comparable<VariantSpec> {
     }
 
     /**
-     * @return TRUE if all of the families in this specification are keys in the hash map
+     * @return TRUE if all of the roles in this specification are keys in the hash map
      *
-     * @param familyMap		hash of protein family IDs to feature sets
+     * @param roleMap		hash of role IDs to feature sets
      */
-    public boolean matches(Map<String, Set<String>> familyMap) {
+    public boolean matches(Map<String, Set<String>> roleMap) {
         boolean retVal = true;
         for (int i = 0; retVal && i < this.cells.length; i++) {
-            if (! this.cells[i].isEmpty() && ! familyMap.containsKey(this.cells[i]))
+            if (! this.cells[i].isEmpty() && ! roleMap.containsKey(this.cells[i]))
                 retVal = false;
         }
         return retVal;
@@ -110,11 +113,11 @@ public class VariantSpec implements Comparable<VariantSpec> {
      * Install a subsystem row for this variant in the specified genome.
      *
      * @param genome		genome to contain the subsystem row
-     * @param familyMap		hash of protein family IDs to feature sets
+     * @param roleMap		hash of role IDs to feature sets
      *
      * @return the subsystem row
      */
-    public SubsystemRow instantiate(Genome genome, Map<String, Set<String>> familyMap) {
+    public SubsystemRow instantiate(Genome genome, Map<String, Set<String>> roleMap) {
         SubsystemRow retVal = new SubsystemRow(genome, this.getName());
         retVal.setVariantCode(this.variantCode);
         retVal.setClassifications(this.subsystem.getClassifications());
@@ -122,9 +125,9 @@ public class VariantSpec implements Comparable<VariantSpec> {
         for (int i = 0; i < this.cells.length; i++) {
             String role = this.subsystem.getRole(i);
             retVal.addRole(role);
-            // Now add any features in this cell.  They will be the ones with the specified protein family.
+            // Now add any features in this cell.  They will be the ones with the specified role.
             if (! this.cells[i].isEmpty()) {
-                Set<String> fids = familyMap.get(this.cells[i]);
+                Set<String> fids = roleMap.get(this.cells[i]);
                 if (fids != null) {
                     for (String fid : fids)
                         retVal.addFeature(role, fid);
@@ -135,16 +138,16 @@ public class VariantSpec implements Comparable<VariantSpec> {
     }
 
     /**
-     * @return the lexically lowest protein family ID for this variant specification, or NULL if the variant specification
+     * @return the lexically lowest role ID for this variant specification, or NULL if the variant specification
      * 		   is empty
      */
-    public String getKeyFamily() {
+    public String getKeyRole() {
         String retVal = Arrays.stream(this.cells).filter(k -> ! k.isEmpty()).min(Comparator.comparing(String::toString)).orElse(null);
         return retVal;
     }
 
     /**
-     * @return the protein family array for this specification
+     * @return the role ID array for this specification
      */
     public String[] getCells() {
         return this.cells;

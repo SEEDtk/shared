@@ -7,6 +7,8 @@ import org.apache.commons.lang3.RegExUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.theseed.magic.MagicObject;
 
+import murmur3.MurmurHash3.LongPair;
+
 public class Role extends MagicObject implements Comparable<Role> {
 
     // ROLE-PARSING PATTERNS
@@ -42,49 +44,69 @@ public class Role extends MagicObject implements Comparable<Role> {
     /** Compute the normalized version of the role description. */
     protected String normalize() {
         String retVal = this.getName();
+        retVal = normalize(retVal);
+        return retVal;
+    }
+
+    /**
+     * @return the normalized form of a role description
+     *
+     * @param roleDesc		role description to normalize
+     */
+    protected String normalize(String roleDesc) {
         // Extract the EC and TC numbers.
         String ecNum = null;
         String tcNum = null;
-        Matcher m = EC_PATTERN.matcher(retVal);
+        Matcher m = EC_PATTERN.matcher(roleDesc);
         if (m.matches()) {
-            retVal = MagicObject.join_text(m.group(1), m.group(3));
+            roleDesc = MagicObject.join_text(m.group(1), m.group(3));
             ecNum = m.group(2);
         }
-        m = TC_PATTERN.matcher(retVal);
+        m = TC_PATTERN.matcher(roleDesc);
         if (m.matches()) {
-            retVal = MagicObject.join_text(m.group(1), m.group(3));
+            roleDesc = MagicObject.join_text(m.group(1), m.group(3));
             tcNum = m.group(2);
         }
         // Convert to lower case so case doesn't matter.
-        retVal = retVal.toLowerCase();
+        roleDesc = roleDesc.toLowerCase();
         // Fix spelling mistakes in "hypothetical".
-        retVal = RegExUtils.replaceAll(retVal, HYPO_WORD_PATTERN, "hypothetical");
+        roleDesc = RegExUtils.replaceAll(roleDesc, HYPO_WORD_PATTERN, "hypothetical");
         // Remove extra spaces and quotes.
-        retVal = RegExUtils.replaceAll(retVal, CR_PATTERN, " ");
-        retVal = retVal.trim();
-        if (retVal.startsWith("\"")) {
-            retVal = retVal.substring(1);
+        roleDesc = RegExUtils.replaceAll(roleDesc, CR_PATTERN, " ");
+        roleDesc = roleDesc.trim();
+        if (roleDesc.startsWith("\"")) {
+            roleDesc = roleDesc.substring(1);
         }
-        if (retVal.endsWith("\"")) {
-            retVal = StringUtils.chop(retVal);
+        if (roleDesc.endsWith("\"")) {
+            roleDesc = StringUtils.chop(roleDesc);
         }
-        retVal = RegExUtils.replaceAll(retVal, SPACE_PATTERN, " ");
+        roleDesc = RegExUtils.replaceAll(roleDesc, SPACE_PATTERN, " ");
         // If we have a hypothetical with a number, replace it.
-        if (retVal.equals("hypothetical protein") || retVal.isEmpty()) {
+        if (roleDesc.equals("hypothetical protein") || roleDesc.isEmpty()) {
             if (ecNum != null) {
-                retVal = "putative protein " + ecNum;
+                roleDesc = "putative protein " + ecNum;
             } else if (tcNum != null) {
-                retVal = "putative transporter " + tcNum;
+                roleDesc = "putative transporter " + tcNum;
             }
         }
         // Now remove the extra spaces and punctuation.
-        retVal = RegExUtils.replaceAll(retVal, EXTRA_SPACES, " ");
-        return retVal;
+        roleDesc = RegExUtils.replaceAll(roleDesc, EXTRA_SPACES, " ");
+        return roleDesc;
     }
 
     @Override
     public int compareTo(Role o) {
         return super.compareTo(o);
+    }
+
+    /**
+     * @return TRUE if this role matches the specified name string
+     *
+     * @param roleDesc		role name to check
+     */
+    public boolean matches(String roleDesc) {
+        LongPair check = this.checksumOf(this.normalize(roleDesc));
+        return check.equals(this.getChecksum());
     }
 
 }

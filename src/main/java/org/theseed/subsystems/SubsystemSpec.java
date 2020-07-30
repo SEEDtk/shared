@@ -6,6 +6,8 @@ package org.theseed.subsystems;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.theseed.proteins.Role;
+
 /**
  * This object specifies the characteristics of a subsystem.  It contains the subsystem name
  * and an ordered list of the subsystem roles.
@@ -128,5 +130,14 @@ public class SubsystemSpec implements Comparable<SubsystemSpec> {
     @Override
     public String toString() {
         return this.name;
+    }
+
+    /**
+     * @return TRUE if this subsystem contains the specified role
+     *
+     * @param role	role of interest
+     */
+    public boolean contains(Role role) {
+        return this.roles.stream().anyMatch(r -> role.matches(r));
     }
 }

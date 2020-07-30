@@ -211,11 +211,11 @@ public class TabbedLineReader implements Closeable, AutoCloseable, Iterable<Tabb
         // Denote no lines have been read.
         this.lineCount = 0;
         // Read the header.
-        this.headerLine = this.reader.next();
-        if (headerLine == null) {
+        if (! this.reader.hasNext()) {
             // Here the entire file is empty.  Insure we get EOF on the first read.
             this.nextLine = null;
         } else {
+        	this.headerLine = this.reader.next();
             // Parse the header line into labels and normalize them to lower case.
             this.labels = StringUtils.split(headerLine, '\t');
             // Set up to return the first data line.

@@ -54,7 +54,18 @@ public abstract class MagicObject implements Serializable {
      */
     private void setChecksum() {
         String normalized = this.normalize();
-        MurmurHash3.murmurhash3_x64_128(normalized, 0, normalized.length(), SEED, WORK_BUFFER, this.checksum);
+        this.checksum = checksumOf(normalized);
+    }
+
+    /**
+     * @return the checksum of a normalized name string
+     *
+     * @param normalized	normalized name string of interest
+     */
+    protected LongPair checksumOf(String normalized) {
+        LongPair retVal = new LongPair();
+        MurmurHash3.murmurhash3_x64_128(normalized, 0, normalized.length(), SEED, WORK_BUFFER, retVal);
+        return retVal;
     }
 
     /**

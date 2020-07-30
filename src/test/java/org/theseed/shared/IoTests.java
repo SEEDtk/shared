@@ -322,7 +322,6 @@ public class IoTests extends TestCase {
         File emptyFile = new File("src/test", "empty.fa");
         try (LineReader reader = new LineReader(emptyFile)) {
             assertFalse(reader.hasNext());
-            assertNull(reader.next());
         }
         // Try a regular file as a stream.
         InputStream inStream = new FileInputStream(new File("src/test", "lines.txt"));
