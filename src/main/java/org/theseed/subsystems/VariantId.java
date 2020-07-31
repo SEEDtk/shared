@@ -52,6 +52,8 @@ public class VariantId implements Comparable<VariantId> {
             retVal = true;
         else if (code.contentEquals("inactive") || code.contentEquals("likely"))
             retVal = false;
+        else if (code.contentEquals("missing"))
+            retVal = false;
         else if (code.startsWith("-"))
             retVal = false;
         else if (code.contentEquals("0"))
