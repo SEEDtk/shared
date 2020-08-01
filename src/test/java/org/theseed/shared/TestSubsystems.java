@@ -383,7 +383,7 @@ public class TestSubsystems extends TestCase {
         SubsystemSpec sub1 = new SubsystemSpec("subsystem 1");
         sub1.setClassifications("a1", "b1", "");
         sub1.addRole("s1 role 0");
-        sub1.addRole("s1 role 1");
+        sub1.addRole("s1 role 1 / s1 role 4");
         sub1.addRole("s1 role 2");
         sub1.addRole("s1 role 3");
         projector.addSubsystem(sub1);
@@ -434,7 +434,7 @@ public class TestSubsystems extends TestCase {
         SubsystemSpec sub = loaded.getSubsystem("subsystem 1");
         assertThat(sub, equalTo(sub1));
         assertThat(sub.getClassifications(), contains("a1", "b1", ""));
-        assertThat(sub.getRoles(), contains("s1 role 0", "s1 role 1", "s1 role 2", "s1 role 3"));
+        assertThat(sub.getRoles(), contains("s1 role 0", "s1 role 1 / s1 role 4", "s1 role 2", "s1 role 3"));
         sub = loaded.getSubsystem("subsystem 2");
         assertThat(sub, equalTo(sub2));
         assertThat(sub.getClassifications(), contains("", "b2", "c2"));

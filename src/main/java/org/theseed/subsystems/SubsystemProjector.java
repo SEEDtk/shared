@@ -22,6 +22,7 @@ import org.theseed.io.LineReader;
 import org.theseed.magic.MagicMap;
 import org.theseed.proteins.Role;
 import org.theseed.proteins.RoleMap;
+import org.theseed.proteins.RoleSet;
 
 /**
  * This object contains the information necessary to project subsystems onto a genome.  In particular, it contains
@@ -128,8 +129,13 @@ public class SubsystemProjector {
      */
     public void addSubsystem(SubsystemSpec subsystem) {
         this.subsystems.put(subsystem.getName(), subsystem);
-        for (String role : subsystem.getRoles())
-            this.roleMap.findOrInsert(role);
+        // We need to put all the roles in the role map.  This is slightly complicated
+        // by the fact that the subsystem role may be a multi-role function.
+        for (String function : subsystem.getRoles()) {
+            String[] roles = Feature.rolesOfFunction(function);
+            for (String role : roles)
+                this.roleMap.findOrInsert(role);
+        }
     }
 
     /**
@@ -226,16 +232,39 @@ public class SubsystemProjector {
     }
 
     /**
-     * @return the ID for the role with the specified description
+     * @return the IDs for the roles in the specified feature
      *
-     * @param roleDesc	description of the desired role
+     * @param feat	feature to process
+     */
+    public RoleSet getRoleIds(Feature feat) {
+        RoleSet retVal;
+        if (feat == null)
+            retVal = RoleSet.NO_ROLES;
+        else
+            retVal = this.getRoleIds(feat.getFunction());
+        return retVal;
+    }
+
+    /**
+     * @return the IDs for the roles represented in the specified function
+     *
+     * @param function	function to process
+     */
+    public RoleSet getRoleIds(String function) {
+        return RoleSet.create(function, this.roleMap);
+    }
+
+    /**
+     * @return the ID of the role with a given description, or NULL if the
+     * 		   description does not match a useful role
+     *
+     * @param roleDesc	description string of the role of interest
      */
     public String getRoleId(String roleDesc) {
-        Role found = this.roleMap.getByName(roleDesc);
-        String retVal = null;
-        if (found != null)
-            retVal = found.getId();
+        Role buffer = this.roleMap.getByName(roleDesc);
+        String retVal = (buffer == null ? null : buffer.getId());
         return retVal;
+
     }
 
     /**

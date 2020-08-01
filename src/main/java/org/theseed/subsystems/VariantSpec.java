@@ -4,12 +4,12 @@
 package org.theseed.subsystems;
 
 import java.util.Arrays;
-import java.util.Comparator;
 import java.util.Map;
 import java.util.Set;
 
 import org.theseed.genome.Genome;
 import org.theseed.genome.SubsystemRow;
+import org.theseed.proteins.RoleSet;
 
 /**
  * A variant specification is an ordered list of protein families and/or role IDs that form a possible subsystem implementation.
@@ -28,7 +28,7 @@ public class VariantSpec implements Comparable<VariantSpec> {
     /** variant code of this configuration */
     private String variantCode;
     /** array of role IDs */
-    private String[] cells;
+    private RoleSet[] cells;
     /** number of filled slots in the array */
     private int cellCount;
 
@@ -41,8 +41,9 @@ public class VariantSpec implements Comparable<VariantSpec> {
     public VariantSpec(SubsystemSpec subsystem, String code) {
         this.subsystem = subsystem;
         this.variantCode = code;
-        this.cells = new String[subsystem.getRoleCount()];
-        for (int i = 0; i < this.cells.length; i++) this.cells[i] = "";
+        this.cells = new RoleSet[subsystem.getRoleCount()];
+        for (int i = 0; i < this.cells.length; i++)
+            this.cells[i] = RoleSet.NO_ROLES;
         this.cellCount = 0;
     }
 
@@ -70,7 +71,7 @@ public class VariantSpec implements Comparable<VariantSpec> {
     public void setCell(int i, SubsystemProjector projector) {
         boolean oldEmpty = this.cells[i].isEmpty();
         String roleDesc = this.subsystem.getRole(i);
-        this.cells[i] = projector.getRoleId(roleDesc);
+        this.cells[i] = projector.getRoleIds(roleDesc);
         if (oldEmpty) this.cellCount++;
     }
 
@@ -103,8 +104,9 @@ public class VariantSpec implements Comparable<VariantSpec> {
     public boolean matches(Map<String, Set<String>> roleMap) {
         boolean retVal = true;
         for (int i = 0; retVal && i < this.cells.length; i++) {
-            if (! this.cells[i].isEmpty() && ! roleMap.containsKey(this.cells[i]))
-                retVal = false;
+            // We fail (return FALSE) iff the cell has roles, and there is no feature
+            // containing all the roles
+            retVal = (this.cells[i].isEmpty() || this.cells[i].featureSet(roleMap) != null);
         }
         return retVal;
     }
@@ -127,7 +129,7 @@ public class VariantSpec implements Comparable<VariantSpec> {
             retVal.addRole(role);
             // Now add any features in this cell.  They will be the ones with the specified role.
             if (! this.cells[i].isEmpty()) {
-                Set<String> fids = roleMap.get(this.cells[i]);
+                Set<String> fids = this.cells[i].featureSet(roleMap);
                 if (fids != null) {
                     for (String fid : fids)
                         retVal.addFeature(role, fid);
@@ -142,14 +144,13 @@ public class VariantSpec implements Comparable<VariantSpec> {
      * 		   is empty
      */
     public String getKeyRole() {
-        String retVal = Arrays.stream(this.cells).filter(k -> ! k.isEmpty()).min(Comparator.comparing(String::toString)).orElse(null);
-        return retVal;
+        return RoleSet.min(this.cells);
     }
 
     /**
      * @return the role ID array for this specification
      */
-    public String[] getCells() {
+    public RoleSet[] getCells() {
         return this.cells;
     }
 
