@@ -181,6 +181,20 @@ public class FeatureList implements Iterable<Feature> {
     }
 
     /**
+     * @return TRUE if there is a feature overlapping the specified location's region on the same strand
+     *
+     * @param loc	location to check
+     */
+    public boolean isOccupied(Location loc) {
+        Collection<Feature> overlaps = this.inRegion(loc.getLeft(), loc.getRight());
+        Iterator<Feature> iter = overlaps.iterator();
+        boolean retVal = false;
+        while (! retVal && iter.hasNext())
+            retVal = (iter.next().getLocation().getDir() == loc.getDir());
+        return retVal;
+    }
+
+    /**
      * This nested class represents a current position in the feature list.  The client can ask
      * for the feature at this position, can move the position forward, and can iterate through
      * all the features within a certain distance to the right.

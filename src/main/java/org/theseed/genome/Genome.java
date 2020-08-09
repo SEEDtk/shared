@@ -24,7 +24,6 @@ import java.util.Map;
 import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.UUID;
-
 import org.apache.commons.lang3.StringUtils;
 import org.theseed.io.Shuffler;
 import org.theseed.locations.Location;
@@ -70,7 +69,6 @@ public class Genome  {
     private String source;
     private String sourceId;
     private Map<String, SubsystemRow> subsystems;
-
 
 
     /** This is an empty list to use as a default intermediate value for cases where the contigs or
@@ -659,6 +657,35 @@ public class Genome  {
     }
 
     /**
+     * @return the next available ID number for features of the specified type
+     *
+     * @param type	feature type of interest
+     */
+    public int getNextIdNum(String type) {
+        // Create a prefix that matches feature IDs of the desired type.
+        String prefix = "fig|" + this.id + "." + type + ".";
+        // Initialize us to a minimum feature ID.
+        String maxFid = prefix + "0";
+        // Loop through all the feature IDs.
+        for (String fid : this.features.keySet()) {
+            if (fid.startsWith(prefix)) {
+                // Here we have a feature of the correct type. Keep it if it has
+                // the maximum index value.  The strings are identical except for
+                // the index value.  A shorter number is always smaller, and
+                // otherwise a lexicographic comparison works.
+                if (maxFid.length() < fid.length())
+                    maxFid = fid;
+                else if (maxFid.length() == fid.length() && maxFid.compareTo(fid) < 0)
+                    maxFid = fid;
+            }
+        }
+        // The next available index number is one more than the maximum we found.
+        // The index number starts after the prefix.
+        int retVal = Integer.valueOf(maxFid.substring(prefix.length())) + 1;
+        return retVal;
+    }
+
+    /**
      * @return a link to a feature in this genome
      *
      * @param fid	feature to link to
@@ -992,6 +1019,17 @@ public class Genome  {
      */
     public void clearSubsystems() {
         this.subsystems.clear();
+    }
+
+    /**
+     * Remove the specified feature from this genome.  No ancillary references are removed, so if the
+     * feature is in a coupling or a subsystem, the genome will become out of whack.
+     *
+     * @param feat	feature to remove.
+     */
+    public void deleteFeature(Feature feat) {
+        String fid = feat.getId();
+        this.features.remove(fid);
     }
 
 }

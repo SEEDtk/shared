@@ -398,6 +398,24 @@ public abstract class Location implements Comparable<Location>, Cloneable {
     }
 
     /**
+     * @return TRUE if this location is on the same contig and strand as the other location
+     *
+     * @param other		other location to compare to this one
+     */
+    public boolean isSameStrand(Location other) {
+        boolean retVal = this.contigId.contentEquals(other.contigId);
+        if (retVal)
+            retVal = (this.getDir() == other.getDir());
+        return retVal;
+    }
+
+    /**
+     * @return the distance between this location and the other location if they are on the same strand
+     *
+     * @param other		other location to compare to this one
+     */
+
+    /**
      * @return TRUE if this location wholly contains another location.
      *
      * @param other	other location to check
@@ -572,12 +590,43 @@ public abstract class Location implements Comparable<Location>, Cloneable {
     }
 
     /**
+     * This nested class provides a comparator that prioritizes strand over position.
+     */
+    public static class StrandSorter implements Comparator<Location> {
+
+        @Override
+        public int compare(Location o1, Location o2) {
+            int retVal = o1.getContigId().compareTo(o2.getContigId());
+            if (retVal == 0) {
+                retVal = o1.getDir() - o2.getDir();
+                if (retVal == 0) {
+                    retVal = o1.getLeft() - o2.getLeft();
+                    if (retVal == 0) {
+                        // Shorter locations compare first.
+                        retVal = o1.getLength() - o2.getLength();
+                        if (retVal == 0) {
+                            retVal = o1.getRegionLength() - o2.getRegionLength();
+                            if (retVal == 0) {
+                                // Fewer regions (less dense) compares first.
+                                retVal = o1.regions.size() - o2.regions.size();
+                                if (retVal == 0) {
+                                    // Everything is the same! Compare region by region.
+                                    for (int i = 0; retVal == 0 && i < o1.regions.size(); i++)
+                                        retVal = o1.regions.get(i).compareTo(o2.regions.get(i));
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            return retVal;
+        }
+
+    }
+
+    /**
      * @return the distance between this location and another location, or -1 if the locations
      * 		   overlap
-     *
-     * This is a gap distance-- the whole number of base pairs between the two features.  It is
-     * also an absolute value.  If the other location is to the left the distance is still
-     * positive.  The only negative distance occurs when we overlap.
      *
      * @param other		other location to measure against this one
      */
@@ -586,15 +635,44 @@ public abstract class Location implements Comparable<Location>, Cloneable {
         if (! this.isContig(other.getContigId())) {
             retVal = Integer.MAX_VALUE;
         } else {
-            // Is the other location to our left?
-            retVal = this.getLeft() - other.getRight() - 1;
+            retVal = calcDistance(other);
+        }
+        return retVal;
+    }
+
+    /**
+     * @return the distance between this location and another location, or -1 if the locations
+     * 		   overlap, local to this strand (different strands return max distance)
+     *
+     * @param other		other location to measure against this one
+     */
+    public int strandDistance(Location other) {
+        int retVal;
+        if (! this.isSameStrand(other)) {
+            retVal = Integer.MAX_VALUE;
+        } else {
+            retVal = calcDistance(other);
+        }
+        return retVal;
+    }
+    /**
+     * @return the distance to the other genome (ignoring contig and strand)
+     *
+     * This is a gap distance-- the whole number of base pairs between the two features.  It is
+     * also an absolute value.  If the other location is to the left the distance is still
+     * positive.  The only negative distance occurs when we overlap.
+     *
+     * @param other		other location to compare to this one
+     */
+    protected int calcDistance(Location other) {
+        // Is the other location to our left?
+        int retVal = this.getLeft() - other.getRight() - 1;
+        if (retVal < 0) {
+            // No.  Is it to our right?
+            retVal = other.getLeft() - this.getRight() - 1;
             if (retVal < 0) {
-                // No.  Is it to our right?
-                retVal = other.getLeft() - this.getRight() - 1;
-                if (retVal < 0) {
-                    // No, so we overlap.
-                    retVal = -1;
-                }
+                // No, so we overlap.
+                retVal = -1;
             }
         }
         return retVal;

@@ -480,6 +480,30 @@ public class Feature implements Comparable<Feature> {
 
     }
 
+    /**
+     * This class sorts by location, but it is strand-based.  That is, different strands
+     * are treated as different contigs.  If two features have the
+     * same location information, it will fall back to the feature ID, to insure no
+     * two distinct features compare equal.
+     */
+    public static class StrandComparator implements Comparator<Feature> {
+
+        private Comparator<Location> comparator;
+
+        public StrandComparator() {
+            this.comparator = new Location.StrandSorter();
+        }
+
+        @Override
+        public int compare(Feature o1, Feature o2) {
+            int retVal = this.comparator.compare(o1.location, o2.location);
+            if (retVal == 0)
+                retVal = o1.compareTo(o2);
+            return retVal;
+        }
+
+    }
+
     @Override
     public int hashCode() {
         final int prime = 31;

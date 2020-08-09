@@ -8,6 +8,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
@@ -18,6 +19,7 @@ import java.util.SortedSet;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.theseed.counters.KeyPair;
 import org.theseed.genome.Annotation;
 import org.theseed.genome.CloseGenome;
@@ -528,6 +530,17 @@ public class TestLibrary extends TestCase {
             String locString2 = locRecurse.toString();
             assertThat(locString2, equalTo(locString));
         }
+        // Test the strand sorter.
+        Arrays.sort(locArray, new Location.StrandSorter());
+        for (int i = 1; i < locArray.length; i++) {
+            Location oldLoc = locArray[i-1];
+            assertThat(oldLoc.getContigId(), lessThanOrEqualTo(locArray[i].getContigId()));
+            if (oldLoc.getContigId().contentEquals(locArray[i].getContigId())) {
+                assertThat(oldLoc.getDir(), lessThanOrEqualTo(locArray[i].getDir()));
+                if (oldLoc.getDir() == locArray[i].getDir())
+                    assertThat(oldLoc.getLeft(), lessThanOrEqualTo(locArray[i].getLeft()));
+            }
+        }
         Location locA = Location.copy(loc1);
         assertThat(locA.getContigId(), equalTo("myContig"));
         assertThat(locA.getBegin(), equalTo(1000));
@@ -850,6 +863,9 @@ public class TestLibrary extends TestCase {
             fids.add(feat.getId());
             assertEquals("Feature " + feat + " not in region.", -1, region.distance(feat.getLocation()));
         }
+        assertTrue(contigFeatures.isOccupied(region));
+        region = Location.create("1313.7001.con.0029", "-", 160, 6860);
+        assertTrue(contigFeatures.isOccupied(region));
         assertThat("Not all expected features found.", fids,
                 hasItems("fig|1313.7001.peg.1244", "fig|1313.7001.peg.1245", "fig|1313.7001.peg.1246",
                          "fig|1313.7001.peg.1249", "fig|1313.7001.peg.1250", "fig|1313.7001.peg.1251"));
@@ -857,6 +873,12 @@ public class TestLibrary extends TestCase {
         assertEquals("Error at left extreme.", 1, inRegion.size());
         inRegion = contigFeatures.inRegion(14000, 15000);
         assertEquals("Error at right extreme.", 0, inRegion.size());
+        region = Location.create("1313.7001.con.0029", "+", 14000, 15000);
+        assertFalse(contigFeatures.isOccupied(region));
+        region = Location.create("1313.7001.con.0029", "-", 5100, 6500);
+        assertTrue(contigFeatures.isOccupied(region));
+        region = Location.create("1313.7001.con.0029", "+", 5100, 6500);
+        assertFalse(contigFeatures.isOccupied(region));
         inRegion = contigFeatures.inRegion(12000, 15000);
         assertEquals("Count error at right edge.", 2, inRegion.size());
         fids.clear();
@@ -1891,6 +1913,35 @@ public class TestLibrary extends TestCase {
                 counter++;
             }
             assertThat(counter, equalTo(myGto.getPegs().size()));
+        }
+    }
+
+    /**
+     * test feature type indexing
+     *
+     * @throws NumberFormatException
+     */
+    public void testFTypeIdNums() throws NumberFormatException {
+        int nextPeg = myGto.getNextIdNum("peg");
+        int nextRna = myGto.getNextIdNum("rna");
+        int nextPoi = myGto.getNextIdNum("poi");
+        int nextRepeat = myGto.getNextIdNum("repeat");
+        assertThat(nextPoi, equalTo(1));
+        for (Feature feat : myGto.getFeatures()) {
+            // Get the feature index.
+            String fid = feat.getId();
+            int idx = Integer.parseUnsignedInt(StringUtils.substringAfterLast(fid, "."));
+            switch (feat.getType()) {
+            case "CDS" :
+                assertThat(fid, idx, lessThan(nextPeg));
+                break;
+            case "rna" :
+                assertThat(fid, idx, lessThan(nextRna));
+                break;
+            case "repeat" :
+                assertThat(fid, idx, lessThan(nextRepeat));
+                break;
+            }
         }
     }
 
