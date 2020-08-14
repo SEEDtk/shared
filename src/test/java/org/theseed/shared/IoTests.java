@@ -446,5 +446,60 @@ public class IoTests extends TestCase {
         }
     }
 
+    /**
+     * test sections
+     *
+     * @throws IOException
+     */
+    public void testLineReaderIter() throws IOException {
+        File testFile = new File("src/test", "lrTest.tbl");
+        LineReader testStream = new LineReader(testFile);
+        Iterator<String[]> iter2 = testStream.new SectionIter("//");
+        assertTrue(iter2.hasNext());
+        assertThat(iter2.next(), arrayContaining("a", "a1", "a2"));
+        assertTrue(iter2.hasNext());
+        assertThat(iter2.next(), arrayContaining("b", "b1", "b2"));
+        assertFalse(iter2.hasNext());
+        assertFalse(iter2.hasNext());
+        iter2 = testStream.new SectionIter("//");
+        assertTrue(iter2.hasNext());
+        assertThat(iter2.next(), arrayContaining("c", "", "c2", "", ""));
+        assertTrue(iter2.hasNext());
+        assertThat(iter2.next(), arrayContaining("d", "d2"));
+        assertFalse(iter2.hasNext());
+        iter2 = testStream.new SectionIter("//");
+        assertFalse(iter2.hasNext());
+        iter2 = testStream.new SectionIter("//");
+        assertTrue(iter2.hasNext());
+        assertThat(iter2.next(), arrayContaining("e", "e1", "", "e2"));
+        assertFalse(iter2.hasNext());
+        testStream.close();
+        testStream = new LineReader(testFile);
+        Iterator<String> iter = testStream.iterator();
+        testStream.skipSection("//");
+        assertTrue(iter.hasNext());
+        assertThat(iter.next(), equalTo("c\t\tc2\t\t"));
+        testStream.skipSection("//");
+        assertTrue(iter.hasNext());
+        assertThat(iter.next(), equalTo("//"));
+        testStream.skipSection("//");
+        assertFalse(iter.hasNext());
+        testStream.close();
+        testStream = new LineReader(testFile);
+        testStream.skipSection("//");
+        iter2 = testStream.new SectionIter(null);
+        assertTrue(iter2.hasNext());
+        assertThat(iter2.next(), arrayContaining("c", "", "c2", "", ""));
+        assertTrue(iter2.hasNext());
+        assertThat(iter2.next(), arrayContaining("d", "d2"));
+        assertTrue(iter2.hasNext());
+        assertThat(iter2.next(), arrayContaining("//"));
+        assertTrue(iter2.hasNext());
+        assertThat(iter2.next(), arrayContaining("//"));
+        assertTrue(iter2.hasNext());
+        assertThat(iter2.next(), arrayContaining("e", "e1", "", "e2"));
+        assertFalse(iter2.hasNext());
+        testStream.close();
+    }
 
 }

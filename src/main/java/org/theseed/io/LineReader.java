@@ -15,6 +15,8 @@ import java.io.UncheckedIOException;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
+import org.apache.commons.lang3.StringUtils;
+
 /**
  * This is a simple, iterable line reader than can be directly created from a file or a stream.
  *
@@ -106,6 +108,7 @@ public class LineReader implements Iterable<String>, Iterator<String>, Closeable
             throw new UncheckedIOException(e);
         }
     }
+
     /**
      * @return the next line in the file, or NULL at end-of-file
      */
@@ -130,6 +133,111 @@ public class LineReader implements Iterable<String>, Iterator<String>, Closeable
     @Override
     public void close() throws IOException {
         this.reader.close();
+    }
+
+    /**
+     * This object is iterable over the current section of the file, and returns tabbed fields.
+     * A marker value of NULL means the section extends to end-of-file.
+     */
+    public class Section implements Iterable<String[]> {
+
+        // FIELDS
+        /** end-of-section marker string */
+        private String marker;
+
+        /**
+         * Construct an iterable for the next section of this file.
+         *
+         * @param marker	end-of-section marker
+         */
+        public Section(String marker) {
+            this.marker = marker;
+        }
+
+        @Override
+        public Iterator<String[]> iterator() {
+            return LineReader.this.new SectionIter(marker);
+        }
+
+    }
+    /**
+     * This class iterates until a marker or end-of-file is found, and returns tabbed fields.
+     * The marker is consumed.  A marker value of NULL means the section goes to end-of-file.
+     */
+    public class SectionIter implements Iterator<String[]> {
+
+        // FIELDS
+        /** TRUE if we have consumed an end-of-section marker */
+        private boolean completed;
+        /** end-of-section marker */
+        private String marker;
+
+        /**
+         * Construct a new iterator.
+         *
+         * @param marker	end-of-section marker
+         */
+        public SectionIter(String marker) {
+            this.marker = marker;
+            this.completed = false;
+        }
+
+        @Override
+        public boolean hasNext() {
+            boolean retVal = ! this.completed;
+            if (retVal) {
+                // Here we may have more stuff to read.  Check the file status.
+                retVal = LineReader.this.hasNext();
+                if (retVal) {
+                    // After a call to hasNext, the read-ahead buffer is filled.
+                    // Look for a marker.
+                    if (isMarker(LineReader.this.nextLine)) {
+                        // Here we are at end-of-section.  Denote there is no next record
+                        // and consume the read-ahead buffer.
+                        retVal = false;
+                        this.completed = true;
+                        LineReader.this.nextLine = null;
+                    }
+                }
+            }
+            return retVal;
+        }
+
+        /**
+         * @return TRUE if the specified line is the marker
+         *
+         * @param line	line to check
+         */
+        public boolean isMarker(String line) {
+            return StringUtils.equals(line, this.marker);
+        }
+
+        @Override
+        public String[] next() {
+            String[] retVal;
+            if (this.completed)
+                throw new NoSuchElementException("Premature end-of-file in " + LineReader.this.fileName + ".");
+            else {
+                String buffer = LineReader.this.next();
+                if (isMarker(buffer)) {
+                    this.completed = true;
+                    throw new NoSuchElementException("Premature end-of-file in " + LineReader.this.fileName + ".");
+                } else {
+                    retVal = StringUtils.splitPreserveAllTokens(buffer, '\t');
+                }
+            }
+            return retVal;
+        }
+
+    }
+
+    /**
+     * Skip the current section in the file.
+     *
+     * @param marker	end-of-section marker string (cannot be NULL)
+     */
+    public void skipSection(String marker) {
+        while (this.hasNext() && ! this.next().contentEquals(marker));
     }
 
 }
