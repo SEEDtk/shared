@@ -1772,7 +1772,7 @@ public class TestLibrary extends TestCase {
                 assertThat(roleFeatures.size(), equalTo(diskFeatures.size()));
                 Set<String> roleFids = roleFeatures.stream().map(k -> k.getId()).collect(Collectors.toSet());
                 for (Feature feat : diskFeatures)
-                    assertThat(feat.getId(), in(roleFids));
+                    assertThat(roleFids, hasItem(feat.getId()));
             }
         }
 

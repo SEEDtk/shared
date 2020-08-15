@@ -154,8 +154,8 @@ public class CounterTest extends TestCase {
         assertEquals("t4/t2 counter wrong after second pass.", 3, pairCounter.getCount(t4, t2));
         assertEquals("t4/t1 counter wrong after second pass.", 1, pairCounter.getCount(t4, t1));
         PairCounter<Thing>.Count testCounter = pairCounter.getPairCount(t4, t2);
-        assertThat("Wrong counter returned (k1).", testCounter.getKey1(), is(oneOf(t2, t4)));
-        assertThat("Wrong counter returned (k2).", testCounter.getKey2(), is(oneOf(t2, t4)));
+        assertThat("Wrong counter returned (k1).", testCounter.getKey1(), anyOf(equalTo(t2), equalTo(t4)));
+        assertThat("Wrong counter returned (k2).", testCounter.getKey2(), anyOf(equalTo(t2), equalTo(t4)));
         assertEquals("Wrong counter value.", 3, testCounter.getCount());
         assertEquals("Wrong togetherness.", 1.0, testCounter.togetherness(), 0.001);
         // Get the sorted list of counts.
@@ -179,8 +179,8 @@ public class CounterTest extends TestCase {
         pairCounter.recordOccurrences(t2, 3);
         pairCounter.recordOccurrence(t4);
         testCounter = pairCounter.getPairCount(t4, t2);
-        assertThat("Wrong counter returned (k1).", testCounter.getKey1(), is(oneOf(t2, t4)));
-        assertThat("Wrong counter returned (k2).", testCounter.getKey2(), is(oneOf(t2, t4)));
+        assertThat("Wrong counter returned (k1).", testCounter.getKey1(), anyOf(equalTo(t2), equalTo(t4)));
+        assertThat("Wrong counter returned (k2).", testCounter.getKey2(), anyOf(equalTo(t2), equalTo(t4)));
         assertEquals("Wrong togetherness value.", 0.75, testCounter.togetherness(), 0.001);
         // Add some pairings.
         pairCounter.recordPairings(t1, t5, 4);
