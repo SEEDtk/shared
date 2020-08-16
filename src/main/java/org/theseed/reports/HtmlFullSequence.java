@@ -76,9 +76,8 @@ public class HtmlFullSequence implements Iterable<HtmlHitSequence> {
      *
      * @param feat	feature to add
      */
-    public HtmlFullSequence add(HtmlHitSequence feat) {
-        this.features.add(feat);
-        return this;
+    public boolean add(HtmlHitSequence feat) {
+        return this.features.add(feat);
     }
 
     /**

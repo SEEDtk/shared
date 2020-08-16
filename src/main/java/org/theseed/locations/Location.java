@@ -255,6 +255,21 @@ public abstract class Location implements Comparable<Location>, Cloneable {
      * @return a Location object containing the location.
      */
     public static Location parseSeedLocation(String locString) {
+        String[] regions = StringUtils.split(locString, ',');
+        Location retVal = Location.parseSeedRegion(regions[0]);
+        for (int i = 1; i < regions.length; i++) {
+            Location partial = Location.parseSeedRegion(regions[i]);
+            retVal.addRegion(partial.getBegin(), partial.getLength());
+        }
+        return retVal;
+    }
+
+    /**
+     * @return the location defined by a primitive SEED location string
+     *
+     * @param locString		seed location string defining a single region
+     */
+    private static Location parseSeedRegion(String locString) {
         String[] parts = StringUtils.split(locString, '_');
         TextStringBuilder contigId = new TextStringBuilder(locString.length());
         if (parts.length < 3)

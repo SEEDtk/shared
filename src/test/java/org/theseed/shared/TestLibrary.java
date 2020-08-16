@@ -614,6 +614,14 @@ public class TestLibrary extends TestCase {
         assertThat(loc.getLeft(), equalTo(2000));
         assertThat(loc.getRight(), equalTo(2999));
         assertThat(loc.getDir(), equalTo('-'));
+        loc = Location.parseSeedLocation("NC_1000_2100_2000,NC_1000_2200_2150");
+        assertThat(loc.getContigId(), equalTo("NC_1000"));
+        assertThat(loc.getDir(), equalTo('-'));
+        List<Region> regions = loc.getRegions();
+        assertThat(regions.get(0).getLeft(), equalTo(2000));
+        assertThat(regions.get(0).getRight(), equalTo(2100));
+        assertThat(regions.get(1).getLeft(), equalTo(2150));
+        assertThat(regions.get(1).getRight(), equalTo(2200));
     }
 
     /**
