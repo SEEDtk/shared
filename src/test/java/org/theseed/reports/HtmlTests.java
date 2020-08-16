@@ -5,8 +5,16 @@ package org.theseed.reports;
 
 import junit.framework.TestCase;
 
+import static j2html.TagCreator.b;
+import static j2html.TagCreator.br;
+import static j2html.TagCreator.code;
+import static j2html.TagCreator.span;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
+
+import java.util.Arrays;
+
+import static org.theseed.reports.HtmlUtilities.joinDelimited;
 
 import org.theseed.locations.Location;
 
@@ -17,6 +25,13 @@ import org.theseed.locations.Location;
  *
  */
 public class HtmlTests extends TestCase {
+
+    public void testJoin() {
+        String test1 = joinDelimited(Arrays.asList(b("item 1"), code("item 2"), span("item 3")), br()).render();
+        assertThat(test1, equalTo("<b>item 1</b> <br> <code>item 2</code> <br> <span>item 3</span>"));
+        test1 = joinDelimited(Arrays.asList(b("item 1"), code("item 2"), span("item 3")), ",").render();
+        assertThat(test1, equalTo("<b>item 1</b>, <code>item 2</code>, <span>item 3</span>"));
+    }
 
     public void testColors() {
         Color color = Color.WHITE.darken(0.79);
@@ -45,7 +60,7 @@ public class HtmlTests extends TestCase {
             }
         }
         String html = hContig.draw(linker).render();
-        System.out.println(html);
+        assertThat(html, equalTo("<p style=\"text-align: center\">Test contig<br><svg width=\"1000\" height=\"110\"><line x1=\"5\" y1=\"5\" x2=\"995\" y2=\"5\" style=\"stroke:black;stroke-width:4\"></line><a href=\"https://www.patricbrc.org/view/Feature/fig|1705389.3.peg.211\" target=\"_blank\"><polygon points=\"-886,10 -797,10 -787,20 -797,30 -886,30\" fill=\"#00FF00\"><title>fig|1705389.3.peg.211 first feature</title></polygon></a><a href=\"https://www.patricbrc.org/view/Feature/fig|1705389.3.peg.212\" target=\"_blank\"><polygon points=\"-490,10 94,10 104,20 94,30 -490,30\" fill=\"#FF0000\"><title>fig|1705389.3.peg.212 second feature</title></polygon></a><a href=\"https://www.patricbrc.org/view/Feature/fig|1705389.3.peg.215\" target=\"_blank\"><polygon points=\"30,35 292,35 302,45 292,55 30,55\" fill=\"#FFC700\"><title>fig|1705389.3.peg.215 fifth feature</title></polygon></a><a href=\"https://www.patricbrc.org/view/Feature/fig|1705389.3.peg.213\" target=\"_blank\"><polygon points=\"203,60 65,60 55,70 65,80 203,80\" fill=\"#0000FF\"><title>fig|1705389.3.peg.213 third feature</title></polygon></a><a href=\"https://www.patricbrc.org/view/Feature/fig|1705389.3.peg.216\" target=\"_blank\"><polygon points=\"302,85 114,85 104,95 114,105 302,105\" fill=\"#FFADAD\"><title>fig|1705389.3.peg.216 sixth feature</title></polygon></a><a href=\"https://www.patricbrc.org/view/Feature/fig|1705389.3.peg.217\" target=\"_blank\"><polygon points=\"114,10 114,10 124,20 114,30 114,30\" fill=\"#808080\"><title>fig|1705389.3.peg.217 little feature</title></polygon></a><a href=\"https://www.patricbrc.org/view/Feature/fig|1705389.3.peg.218\" target=\"_blank\"><polygon points=\"134,10 134,10 125,20 134,30 134,30\" fill=\"#808080\"><title>fig|1705389.3.peg.218 little back feature</title></polygon></a><a href=\"https://www.patricbrc.org/view/Feature/fig|1705389.3.peg.214\" target=\"_blank\"><polygon points=\"154,10 243,10 253,20 243,30 154,30\" fill=\"#000000\"><title>fig|1705389.3.peg.214 fourth feature</title></polygon></a></svg></p>"));
     }
 
 }

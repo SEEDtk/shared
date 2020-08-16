@@ -77,8 +77,11 @@ public abstract class BaseProcessor implements ICommand {
     public void run() {
         try {
             this.runCommand();
+            System.exit(0);
+            log.info("Terminating normally.");
         } catch (Exception e) {
             log.error("EXECUTION ERROR.", e);
+            System.exit(1);
         }
     }
 
