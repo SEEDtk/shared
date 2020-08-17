@@ -17,7 +17,7 @@ public class SubsystemFilter implements FileFilter {
     @Override
     public boolean accept(File pathname) {
         boolean retVal = pathname.isDirectory();
-        if (retVal) {
+        if (retVal && ! pathname.getName().startsWith(".")) {
             File spreadsheetFile = new File(pathname, "spreadsheet");
             retVal = spreadsheetFile.canRead();
         }
