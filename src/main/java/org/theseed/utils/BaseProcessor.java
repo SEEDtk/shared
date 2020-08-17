@@ -26,6 +26,8 @@ public abstract class BaseProcessor implements ICommand {
     // FIELDS
     /** logging facility */
     protected static Logger log = LoggerFactory.getLogger(BaseProcessor.class);
+    /** start time of processor */
+    private long startTime;
 
     // COMMAND-LINE OPTIONS
 
@@ -37,6 +39,12 @@ public abstract class BaseProcessor implements ICommand {
     @Option(name = "-v", aliases = { "--verbose", "--debug" }, usage = "show more detailed progress messages")
     private boolean debug;
 
+    /**
+     * Start the processor.  Here is where we track the start time.
+     */
+    public BaseProcessor() {
+        this.startTime = System.currentTimeMillis();
+    }
 
     @Override
     public boolean parseCommand(String[] args) {
@@ -77,8 +85,8 @@ public abstract class BaseProcessor implements ICommand {
     public void run() {
         try {
             this.runCommand();
+            log.info("{} seconds to run command.", (System.currentTimeMillis() - this.startTime) / 1000.0);
             System.exit(0);
-            log.info("Terminating normally.");
         } catch (Exception e) {
             log.error("EXECUTION ERROR.", e);
             System.exit(1);
@@ -95,6 +103,13 @@ public abstract class BaseProcessor implements ICommand {
      */
     protected abstract boolean validateParms() throws IOException;
 
+    /**
+     * Run the command process.
+     *
+     * All the parameters are filled in, and exceptions are caught and logged.
+     *
+     * @throws Exception
+     */
     protected abstract void runCommand() throws Exception;
 
 }
