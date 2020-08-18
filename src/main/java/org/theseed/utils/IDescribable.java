@@ -15,4 +15,9 @@ public interface IDescribable {
      * @return a description of this enum value
      */
     public String getDescription();
+
+    /**
+     * @return the name of this enum value
+     */
+    public String name();
 }
