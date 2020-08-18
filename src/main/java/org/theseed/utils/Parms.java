@@ -178,13 +178,32 @@ public class Parms {
      */
     public List<String> get() {
         List<String> retVal = new ArrayList<String>(this.binary.size() * 2 + this.unary.size());
-        for (String option : this.unary)
-            retVal.add(option);
-        for (Map.Entry<String, String> parm : this.binary.entrySet()) {
-            retVal.add(parm.getKey());
-            retVal.add(parm.getValue());
-        }
+        fillParmList(retVal);
         return retVal;
+    }
+
+    /**
+     * @return the parameters as a string list with a command in front
+     */
+    public List<String> get(String command) {
+        List<String> retVal = new ArrayList<String>(this.binary.size() * 2 + this.unary.size() + 1);
+        retVal.add(command);
+        fillParmList(retVal);
+        return retVal;
+    }
+
+    /**
+     * Add all the parameters from this object into an existing string list.
+     *
+     * @param stringList	list of strings to which parameters should be appended
+     */
+    private void fillParmList(List<String> stringList) {
+        for (String option : this.unary)
+            stringList.add(option);
+        for (Map.Entry<String, String> parm : this.binary.entrySet()) {
+            stringList.add(parm.getKey());
+            stringList.add(parm.getValue());
+        }
     }
 
     /**

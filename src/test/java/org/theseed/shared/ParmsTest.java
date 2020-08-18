@@ -89,6 +89,8 @@ public class ParmsTest extends TestCase {
         newParms.set("--batch");
         List<String> parmList = newParms.get();
         assertThat(parmList, contains("--batch", "--digits", "12"));
+        parmList = newParms.get("Command");
+        assertThat(parmList, contains("Command", "--batch", "--digits", "12"));
         newParms.set("--maxE", 1e-10);
         parmList = newParms.get();
         assertThat(parmList, contains("--batch", "--digits", "12", "--maxE", "1.0E-10"));
