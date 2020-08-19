@@ -4,8 +4,6 @@
 package org.theseed.reports;
 
 import org.theseed.locations.Location;
-import org.theseed.reports.Color;
-
 import j2html.tags.ContainerTag;
 import j2html.tags.DomContent;
 

@@ -86,7 +86,6 @@ public abstract class BaseProcessor implements ICommand {
         try {
             this.runCommand();
             log.info("{} seconds to run command.", (System.currentTimeMillis() - this.startTime) / 1000.0);
-            System.exit(0);
         } catch (Exception e) {
             log.error("EXECUTION ERROR.", e);
             System.exit(1);

@@ -13,8 +13,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.theseed.io.TabbedLineReader;
-import org.theseed.genome.core.OrganismDirectories;
-import org.theseed.genome.core.PegList;
 
 /**
  * This class manages a coreSEED organism directory and provides useful utilities for accessing genome data.
