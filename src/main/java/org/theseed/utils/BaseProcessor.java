@@ -47,7 +47,7 @@ public abstract class BaseProcessor implements ICommand {
     }
 
     @Override
-    public boolean parseCommand(String[] args) {
+    public final boolean parseCommand(String[] args) {
         boolean retVal = false;
         this.help = false;
         this.debug = false;
@@ -71,7 +71,6 @@ public abstract class BaseProcessor implements ICommand {
             }
         } catch (CmdLineException e) {
             System.err.println(e.getMessage());
-            parser.printUsage(System.err);
         } catch (IOException e) {
             log.error("PARAMETER ERROR.", e);
         }
@@ -82,7 +81,7 @@ public abstract class BaseProcessor implements ICommand {
      * Run the command.
      */
     @Override
-    public void run() {
+    public final void run() {
         try {
             this.runCommand();
             log.info("{} seconds to run command.", (System.currentTimeMillis() - this.startTime) / 1000.0);
