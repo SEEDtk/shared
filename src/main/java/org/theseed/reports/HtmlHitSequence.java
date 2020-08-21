@@ -73,9 +73,8 @@ public class HtmlHitSequence implements Comparable<HtmlHitSequence> {
                     headRight, bottom, right, bottom);
         }
         String colorString = this.color.html();
-        DomContent element = new ContainerTag("polygon").attr("points", points).attr("fill", colorString)
+        DomContent retVal = new ContainerTag("polygon").attr("points", points).attr("fill", colorString)
                 .with(new ContainerTag("title").withText(this.id + " " + this.label));
-        DomContent retVal = linker.featureLink(this.id, element);
         return retVal;
     }
 
