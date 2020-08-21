@@ -16,6 +16,7 @@ import java.io.Writer;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -24,6 +25,8 @@ import java.util.Map;
 import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.UUID;
+import java.util.stream.Collectors;
+
 import org.apache.commons.lang3.StringUtils;
 import org.theseed.io.Shuffler;
 import org.theseed.locations.Location;
@@ -38,7 +41,7 @@ import com.github.cliftonlabs.json_simple.JsonKey;
 import com.github.cliftonlabs.json_simple.JsonObject;
 import com.github.cliftonlabs.json_simple.Jsoner;
 
-import j2html.tags.DomContent;
+import j2html.tags.ContainerTag;
 
 /**
  * GenomeTypeObject for Java
@@ -690,7 +693,7 @@ public class Genome  {
      *
      * @param fid	feature to link to
      */
-    public DomContent featureLink(String fid) {
+    public ContainerTag featureLink(String fid) {
         return this.linker.featureLink(fid);
     }
 
@@ -699,7 +702,7 @@ public class Genome  {
      *
      * @param fidList	list of the feature IDs to link to
      */
-    public DomContent featureListLink(Collection<String> fidList) {
+    public ContainerTag featureListLink(Collection<String> fidList) {
         return this.linker.featureListLink(fidList);
     }
 
@@ -708,14 +711,14 @@ public class Genome  {
      *
      * @param fid	feature to link to
      */
-    public DomContent featureRegionLink(String fid) {
+    public ContainerTag featureRegionLink(String fid) {
         return this.linker.featureRegionLink(fid);
     }
 
     /**
      * @return a link to this genome's overview page
      */
-    public DomContent genomeLink() {
+    public ContainerTag genomeLink() {
         return this.linker.genomeLink(this.id);
     }
 
@@ -1030,6 +1033,13 @@ public class Genome  {
     public void deleteFeature(Feature feat) {
         String fid = feat.getId();
         this.features.remove(fid);
+    }
+
+    /**
+     * @return the taxonomy string of this genome.
+     */
+    public String getTaxString() {
+        return Arrays.stream(this.lineage).map(x -> x.getName()).collect(Collectors.joining("; "));
     }
 
 }

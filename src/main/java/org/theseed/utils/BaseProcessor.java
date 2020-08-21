@@ -71,8 +71,10 @@ public abstract class BaseProcessor implements ICommand {
             }
         } catch (CmdLineException e) {
             System.err.println(e.getMessage());
+            System.exit(99);
         } catch (IOException e) {
             log.error("PARAMETER ERROR.", e);
+            System.exit(99);
         }
         return retVal;
     }

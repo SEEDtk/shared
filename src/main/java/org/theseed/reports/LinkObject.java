@@ -5,10 +5,14 @@ package org.theseed.reports;
 
 import static j2html.TagCreator.*;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 
 import org.apache.commons.lang3.StringUtils;
 
+import j2html.tags.ContainerTag;
 import j2html.tags.DomContent;
 
 /**
@@ -24,15 +28,25 @@ public abstract class LinkObject {
      * @return a hyperlink to the specified genome's overview page
      *
      * @param genomeId	ID of the genome to view
+     * @param element	element to hyperlink
      */
-    public abstract DomContent genomeLink(String genomeId);
+    public abstract ContainerTag genomeLink(String genomeId, DomContent element);
+
+    /**
+     * @return a hyperlink to the specified genome's overview page
+     *
+     * @param genomeId	ID of the genome to view
+     */
+    public ContainerTag genomeLink(String genomeId) {
+        return genomeLink(genomeId, text(genomeId));
+    }
 
     /**
      * @return a hyperlink to the specified feature's overview page
      *
      * @param fid	ID of the feature to view
      */
-    public DomContent featureLink(String fid) {
+    public ContainerTag featureLink(String fid) {
         return featureLink(fid, text(fid));
     }
 
@@ -42,21 +56,21 @@ public abstract class LinkObject {
      * @param fid		ID of the feature to view
      * @param element	element to hyperlink
      */
-    public abstract DomContent featureLink(String fid, DomContent element);
+    public abstract ContainerTag featureLink(String fid, DomContent element);
 
     /**
      * @return a hyperlink to the specified feature's context page
      *
      * @param fid	ID of the feature to view
      */
-    public abstract DomContent featureRegionLink(String fid);
+    public abstract ContainerTag featureRegionLink(String fid);
 
     /**
      * @return a hyperlink to a page listing the specified features
      *
      * @param fidList	IDs of the features to list
      */
-    public abstract DomContent featureListLink(Collection<String> fidList);
+    public abstract ContainerTag featureListLink(Collection<String> fidList);
 
     /**
      * URLs for PATRIC genomes
@@ -72,26 +86,26 @@ public abstract class LinkObject {
         private static final String FEATURE_LIST_LINK = "https://www.patricbrc.org/view/FeatureList/?in(patric_id,(\"%s\"))";
 
         @Override
-        public DomContent genomeLink(String genomeId) {
-            return a(genomeId).withHref(String.format(GENOME_VIEW_LINK, genomeId))
+        public ContainerTag genomeLink(String genomeId, DomContent element) {
+            return a(element).withHref(String.format(GENOME_VIEW_LINK, genomeId))
                     .withTarget("_blank");
         }
 
         @Override
-        public DomContent featureLink(String fid, DomContent element) {
+        public ContainerTag featureLink(String fid, DomContent element) {
             return a(element).withHref(String.format(FEATURE_VIEW_LINK, fid))
                     .withTarget("_blank");
         }
 
         @Override
-        public DomContent featureRegionLink(String fid) {
+        public ContainerTag featureRegionLink(String fid) {
             return a(fid).withHref(String.format(FEATURE_CR_LINK, fid))
                     .withTarget("_blank");
         }
 
         @Override
-        public DomContent featureListLink(Collection<String> fidList) {
-            DomContent retVal = null;
+        public ContainerTag featureListLink(Collection<String> fidList) {
+            ContainerTag retVal = null;
             if (fidList.size() == 1) {
                 // Only one feature.  We go to the feature landing page and display the feature ID.
                 String fid = fidList.iterator().next();
@@ -119,34 +133,51 @@ public abstract class LinkObject {
 
         private static final String FEATURE_VIEW_LINK = "https://core.theseed.org/FIG/seedviewer.cgi?page=Annotation&feature=%s";
 
+        /** subsystem link format */
+        public static final String SUBSYSTEM_LINK = "https://core.theseed.org/FIG/seedviewer.cgi?page=Subsystems;subsystem=%s";
 
         @Override
-        public DomContent genomeLink(String genomeId) {
-            return a(genomeId).withHref(String.format(GENOME_VIEW_LINK, genomeId))
+        public ContainerTag genomeLink(String genomeId, DomContent element) {
+            return a(element).withHref(String.format(GENOME_VIEW_LINK, genomeId))
                     .withTarget("_blank");
         }
 
         @Override
-        public DomContent featureLink(String fid, DomContent element) {
+        public ContainerTag featureLink(String fid, DomContent element) {
             return a(element).withHref(String.format(FEATURE_VIEW_LINK, fid))
                     .withTarget("_blank");
         }
 
         @Override
-        public DomContent featureRegionLink(String fid) {
+        public ContainerTag featureRegionLink(String fid) {
             return featureLink(fid);
         }
 
 
         @Override
-        public DomContent featureListLink(Collection<String> fidList) {
-            DomContent retVal = null;
+        public ContainerTag featureListLink(Collection<String> fidList) {
+            ContainerTag retVal = null;
             if (fidList.size() == 1) {
                 retVal = featureLink(fidList.iterator().next());
             } else {
-                retVal = text(String.format("%d features", fidList.size()));
+                retVal = span(String.format("%d features", fidList.size()));
             }
             return retVal;
+        }
+
+        /**
+         * @return a link to the CoreSEED page for the subsystem with the specified name
+         *
+         * @param ssName	name of the subsystem
+         */
+        public static ContainerTag subsystemLink(String ssName) {
+            String ssId = ssName.replace(' ', '_');
+            try {
+                ssId = URLEncoder.encode(ssId, StandardCharsets.UTF_8.toString());
+            } catch (UnsupportedEncodingException e) {
+                throw new RuntimeException(e);
+            }
+            return a(ssName).withHref(String.format(SUBSYSTEM_LINK, ssId)).withTarget("_blank");
         }
 
     }
@@ -157,27 +188,37 @@ public abstract class LinkObject {
     public static class None extends LinkObject {
 
         @Override
-        public DomContent genomeLink(String genomeId) {
-            return text(genomeId);
+        public ContainerTag genomeLink(String genomeId, DomContent element) {
+            return span(element);
         }
 
         @Override
-        public DomContent featureLink(String fid, DomContent element) {
-            return element;
+        public ContainerTag genomeLink(String genomeId) {
+            return span(genomeId);
         }
 
         @Override
-        public DomContent featureRegionLink(String fid) {
-            return text(fid);
+        public ContainerTag featureLink(String fid) {
+            return span(fid);
         }
 
         @Override
-        public DomContent featureListLink(Collection<String> fidList) {
-            DomContent retVal = null;
+        public ContainerTag featureLink(String fid, DomContent element) {
+            return span(element);
+        }
+
+        @Override
+        public ContainerTag featureRegionLink(String fid) {
+            return span(fid);
+        }
+
+        @Override
+        public ContainerTag featureListLink(Collection<String> fidList) {
+            ContainerTag retVal = null;
             if (fidList.size() == 1) {
                 retVal = featureLink(fidList.iterator().next());
             } else {
-                retVal = text(String.format("%d features", fidList.size()));
+                retVal = span(String.format("%d features", fidList.size()));
             }
             return retVal;
         }
