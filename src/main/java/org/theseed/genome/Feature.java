@@ -799,8 +799,38 @@ public class Feature implements Comparable<Feature> {
      *
      * @param role		role to which this feature is connected
      */
-    /* package */ void connectSubsystem(SubsystemRow.Role role) {
+    protected void connectSubsystem(SubsystemRow.Role role) {
         this.subsystemRoles.add(role);
+    }
+
+    /**
+     * @return the upstream gap region of this feature
+     */
+    public Location upstreamGap() {
+        // Get the length to the appropriate end of the contig.
+        int gap = this.location.getLeft() - 1;
+        if (this.location.getDir() == '-') {
+            Contig contig = this.parent.getContig(this.location.getContigId());
+            gap = contig.length() - this.location.getRight();
+        }
+        // Find the smallest upstream gap to another encoding feature.
+        for (Feature other : this.parent.getFeatures()) {
+            if (other.isProtein() || other.getType().contentEquals("rna")) {
+                int otherGap = this.location.upstreamDistance(other.location);
+                if (otherGap < gap) gap = otherGap;
+            }
+        }
+        // Return the upstream gap of the specified length.
+        return this.location.upstream(gap);
+    }
+
+    /**
+     * @return TRUE if this feature is upstream of a specified other feature, else FALSE
+     *
+     * @param other		other feature to compare
+     */
+    public boolean isUpstream(Feature other) {
+        return this.location.isUpstream(other.location);
     }
 
 }

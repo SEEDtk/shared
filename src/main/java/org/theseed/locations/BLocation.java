@@ -163,5 +163,22 @@ public class BLocation extends Location {
         return STOPS[gc];
     }
 
+    @Override
+    protected int calcUpstreamDistance(Location other) {
+        return other.getLeft() - this.getRight() - 1;
+    }
+
+    @Override
+    public Location upstream(int gap) {
+        BLocation retVal = new BLocation(this.contigId);
+        retVal.addRegion(this.getRight() + gap, gap);
+        return retVal;
+    }
+
+    @Override
+    protected boolean isUpstreamCheck(Location other) {
+        return (this.getLeft() > other.getRight());
+    }
+
 
 }

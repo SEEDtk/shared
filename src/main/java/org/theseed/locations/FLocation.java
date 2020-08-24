@@ -154,5 +154,22 @@ public class FLocation extends Location {
         return DnaTranslator.STOPS[gc];
     }
 
+    @Override
+    protected int calcUpstreamDistance(Location other) {
+        return this.getLeft() - other.getRight() - 1;
+    }
+
+    @Override
+    public Location upstream(int gap) {
+        FLocation retVal = new FLocation(this.contigId);
+        retVal.addRegion(this.getBegin() - gap, gap);
+        return retVal;
+    }
+
+    @Override
+    protected boolean isUpstreamCheck(Location other) {
+        return (this.getRight() < other.getLeft());
+    }
+
 
 }

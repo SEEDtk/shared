@@ -670,8 +670,37 @@ public abstract class Location implements Comparable<Location>, Cloneable {
         }
         return retVal;
     }
+
     /**
-     * @return the distance to the other genome (ignoring contig and strand)
+     * @return the distance between this location and another location if the other
+     * 		   location is upstream; different strands, different contigs
+     * 		   or downstream locations return a max distance
+     *
+     * @param other		other location to measure against this one
+     */
+    public int upstreamDistance(Location other) {
+        int retVal;
+        if (! this.isSameStrand(other))
+            retVal = Integer.MAX_VALUE;
+        else {
+            retVal = calcUpstreamDistance(other);
+            if (retVal < 0)
+                retVal = Integer.MAX_VALUE;
+        }
+        return retVal;
+    }
+
+    /**
+     * @return the distance between this location and the other location, which
+     * 		   must be upstream on the same strand (i.e. "other" must be
+     * 		   upstream of THIS)
+     *
+     * @param other		other location to measure against this one
+     */
+    protected abstract int calcUpstreamDistance(Location other);
+
+    /**
+     * @return the distance to the other location (ignoring contig and strand)
      *
      * This is a gap distance-- the whole number of base pairs between the two features.  It is
      * also an absolute value.  If the other location is to the left the distance is still
@@ -880,6 +909,32 @@ public abstract class Location implements Comparable<Location>, Cloneable {
      * @param gc	relevant genetic code
      */
     protected abstract CodonSet getStops(int gc);
+
+    /**
+     * @return a location that covers the specified number of base pairs upstream of this one
+     *
+     * @param gap	length of the new location
+     */
+    public abstract Location upstream(int gap);
+
+    /**
+     * @return TRUE if this location is upstream of the specified other location
+     *
+     * @param other		other location to compare to this one
+     */
+    public boolean isUpstream(Location other) {
+        boolean retVal = this.isSameStrand(other);
+        if (retVal)
+            retVal = this.isUpstreamCheck(other);
+        return retVal;
+    }
+
+    /**
+     * @return TRUE if this location is upstream from the specified other location on the same strand
+     *
+     * @param other		other location to compare to this one
+     */
+    protected abstract boolean isUpstreamCheck(Location other);
 
 
 }
