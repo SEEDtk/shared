@@ -50,6 +50,7 @@ import com.github.cliftonlabs.json_simple.JsonObject;
 import junit.framework.TestCase;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
+import static org.theseed.test.Matchers.*;
 
 /**
  * @author Bruce Parrello
@@ -64,7 +65,7 @@ public class TestLibrary extends TestCase {
      */
     public TestLibrary(String name) throws IOException {
         super(name);
-        this.myGto = new Genome(new File("src/test/gto_test", "1313.7001.gto"));
+        this.myGto = new Genome(new File("src/test/resources/gto_test", "1313.7001.gto"));
     }
 
     private Genome myGto = null;
@@ -77,7 +78,7 @@ public class TestLibrary extends TestCase {
     public void testKmerCollectionGroup() throws IOException {
         ProteinKmers.setKmerSize(8);
         KmerCollectionGroup kGroup = new KmerCollectionGroup();
-        File inFile = new File("src/test", "seq_list.fa");
+        File inFile = new File("src/test/resources", "seq_list.fa");
         FastaInputStream inStream = new FastaInputStream(inFile);
         for (Sequence inSeq : inStream) {
             String label = inSeq.getComment();
@@ -115,7 +116,7 @@ public class TestLibrary extends TestCase {
      */
     @SuppressWarnings("unlikely-arg-type")
     public void testMagic() throws IOException {
-        File inFile = new File("src/test", "words.txt");
+        File inFile = new File("src/test/resources", "words.txt");
         Scanner thingScanner = new Scanner(inFile);
         thingScanner.useDelimiter("\t|\r\n|\n");
         while (thingScanner.hasNext()) {
@@ -126,7 +127,7 @@ public class TestLibrary extends TestCase {
         thingScanner.close();
         // Test registration
         ThingMap magicTable = new ThingMap();
-        inFile = new File("src/test", "things.txt");
+        inFile = new File("src/test/resources", "things.txt");
         thingScanner = new Scanner(inFile);
         thingScanner.useDelimiter("\t|\r\n|\n");
         while (thingScanner.hasNext()) {
@@ -185,7 +186,7 @@ public class TestLibrary extends TestCase {
         assertSame("Alias 2 string did not work.", newThing, myThing);
 
         // Test save and load.
-        File saveFile = new File("src/test", "things.ser");
+        File saveFile = new File("src/test/resources", "things.ser");
         magicTable.save(saveFile);
         ThingMap newTable = ThingMap.load(saveFile);
         for (Thing oldThing : magicTable.objectValues()) {
@@ -397,7 +398,7 @@ public class TestLibrary extends TestCase {
      * @throws IOException
      */
     public void testGenomeDir() throws IOException {
-        GenomeDirectory gDir = new GenomeDirectory("src/test/gto_test");
+        GenomeDirectory gDir = new GenomeDirectory("src/test/resources/gto_test");
         assertEquals("Wrong number of genomes found.", 5, gDir.size());
         // Run through an iterator.  We know the genome IDs, we just need to find them in order.
         String[] expected = new String[] { "1005394.4", "1313.7001", "1313.7002", "1313.7016", "243277.26" };
@@ -430,7 +431,7 @@ public class TestLibrary extends TestCase {
             assertEquals("Contig has wrong length.", contig.getSequence().length(), contig.length());
         }
         assertEquals("Feature count incorrect.", myGto.getFeatureCount(), featureCount);
-        Genome gto2 = new Genome(new File("src/test", "testLocs.gto"));
+        Genome gto2 = new Genome(new File("src/test/resources", "testLocs.gto"));
         FeatureList contigFeatures = new FeatureList(gto2, "1313.7001.con.0029");
         Location region = Location.create("1313.7001.con.0029", "+", 160, 6860);
         Collection<Feature> inRegion = contigFeatures.inRegion(160, 6860);
@@ -520,7 +521,7 @@ public class TestLibrary extends TestCase {
      * @throws IOException
      */
     public void testRoleMagic() throws IOException {
-        File inFile = new File("src/test", "words.txt");
+        File inFile = new File("src/test/resources", "words.txt");
         Scanner roleScanner = new Scanner(inFile);
         roleScanner.useDelimiter("\t|\r\n|\n");
         while (roleScanner.hasNext()) {
@@ -531,7 +532,7 @@ public class TestLibrary extends TestCase {
         roleScanner.close();
         // Test registration
         RoleMap magicTable = new RoleMap();
-        inFile = new File("src/test", "roles.txt");
+        inFile = new File("src/test/resources", "roles.txt");
         roleScanner = new Scanner(inFile);
         roleScanner.useDelimiter("\t|\r\n|\n");
         while (roleScanner.hasNext()) {
@@ -573,7 +574,7 @@ public class TestLibrary extends TestCase {
         newRole = magicTable.findOrInsert(modifiedRole);
         assertEquals("Wrong ID assigned for second numbered role.", "UniqRoleStri1234n2", newRole.getId());
         // Test save and load.
-        File saveFile = new File("src/test", "roles.ser");
+        File saveFile = new File("src/test/resources", "roles.ser");
         magicTable.save(saveFile);
         RoleMap newTable = RoleMap.load(saveFile);
         for (Role oldRole : magicTable.objectValues()) {
@@ -851,11 +852,11 @@ public class TestLibrary extends TestCase {
      * @throws IOException
      */
     public void testFasta() throws IOException {
-        File inFasta = new File("src/test", "empty.fa");
+        File inFasta = new File("src/test/resources", "empty.fa");
         FastaInputStream inStream = new FastaInputStream(inFasta);
         assertFalse("Error in empty fasta.", inStream.hasNext());
         inStream.close();
-        inFasta = new File("src/test", "test.fa");
+        inFasta = new File("src/test/resources", "test.fa");
         inStream = new FastaInputStream(inFasta);
         ArrayList<Sequence> testSeqs = new ArrayList<Sequence>(5);
         for (Sequence input : inStream) {
@@ -884,7 +885,7 @@ public class TestLibrary extends TestCase {
         assertEquals("Wrong comment for seq 5.", "comment5", seq.getComment());
         assertEquals("Wrong sequence for seq 5.", "ggggccctgaggtcctgagcaagtgggtcggcgagagcgagaaggcgataaggt", seq.getSequence());
         // Write the FASTA back out.
-        File outFasta = new File("src/test", "fasta.ser");
+        File outFasta = new File("src/test/resources", "fasta.ser");
         FastaOutputStream outStream = new FastaOutputStream(outFasta);
         outStream.write(testSeqs);
         outStream.close();
@@ -928,7 +929,7 @@ public class TestLibrary extends TestCase {
      * @throws NumberFormatException
      */
     public void testGTO() throws NumberFormatException, IOException {
-        Genome smallGenome = new Genome(new File("src/test", "small.gto"));
+        Genome smallGenome = new Genome(new File("src/test/resources", "small.gto"));
         Collection<Contig> contigs = smallGenome.getContigs();
         assertThat(contigs.size(), equalTo(1));
         Contig contig = smallGenome.getContig("161.31.con.0001");
@@ -976,7 +977,7 @@ public class TestLibrary extends TestCase {
         assertThat(fakeContig.getAccession(), equalTo("fakeAcc"));
         assertThat(fakeContig.getDescription(), equalTo("fake description"));
         smallGenome.addContig(fakeContig);
-        File testFile = new File("src/test", "gto.ser");
+        File testFile = new File("src/test/resources", "gto.ser");
         smallGenome.update(testFile);
         Genome testGenome = new Genome(testFile);
         features = testGenome.getFeatures();
@@ -1032,10 +1033,10 @@ public class TestLibrary extends TestCase {
         // Test metagenome binning properties.
         assertNull(testGenome.getBinRefGenomeId());
         assertThat(testGenome.getBinCoverage(), equalTo(0.0));
-        testGenome = new Genome(new File("src/test", "bin3.gto"));
+        testGenome = new Genome(new File("src/test/resources", "bin3.gto"));
         assertThat(testGenome.getBinRefGenomeId(), equalTo("43675.15"));
         assertThat(testGenome.getBinCoverage(), closeTo(173.920, 0.0005));
-        Genome testOther = new Genome(new File("src/test", "bin3a.gto"));
+        Genome testOther = new Genome(new File("src/test/resources", "bin3a.gto"));
         assertTrue(testGenome.identical(testGenome));
         assertFalse(testGenome.identical(null));
         assertFalse(testGenome.identical(testOther));
@@ -1103,7 +1104,7 @@ public class TestLibrary extends TestCase {
         loc = Location.create("c3", "-", 7, 27);
         assertNull(loc.extend(fakeGenome));
         // Stress test a real genome.
-        Genome gto = new Genome(new File("src/test", "testLocs.gto"));
+        Genome gto = new Genome(new File("src/test/resources", "testLocs.gto"));
         // Test the plus strand.
         loc = Location.create("1313.7001.con.0049", "+", 63492, 64652); /* peg 1978 */
         loc2 = loc.extend(gto);
@@ -1143,10 +1144,10 @@ public class TestLibrary extends TestCase {
         assertThat(mdComputer.checksum(prot), equalTo("a5b29797d99fceda08c5bb913473529f"));
         prot = "MITHNPVIATVTDRVIRIDGGKIVEDYRNPNPVSIDSLTNL";
         assertThat(mdComputer.checksum(prot), equalTo("9e36013f41acf2443643cdcf178bda67"));
-        Genome coreGenome = new Genome(new File("src/test", "360106.5.gto"));
+        Genome coreGenome = new Genome(new File("src/test/resources", "360106.5.gto"));
         String md5 = mdComputer.sequenceMD5(coreGenome);
         assertThat(md5, equalTo("9606255e9c598c259f96a74083d87a35"));
-        File testFile = File.createTempFile("test", ".fasta", new File("src/test"));
+        File testFile = File.createTempFile("test", ".fasta", new File("src/test/resources"));
         coreGenome.saveDna(testFile);
         testFile.deleteOnExit();
         try (FastaInputStream gDnaStream = new FastaInputStream(testFile)) {
@@ -1166,7 +1167,7 @@ public class TestLibrary extends TestCase {
     private static final String OFF_CONTIG = "NODE_291_length_19898_cov_244.229";
 
     public void testContigUpdate() throws IOException {
-        Genome myGenome = new Genome(new File("src/test", "bin3.gto"));
+        Genome myGenome = new Genome(new File("src/test/resources", "bin3.gto"));
         FeatureList contigFeatures = myGenome.getContigFeatures(OLD_CONTIG);
         Contig contig = myGenome.getContig(OLD_CONTIG);
         myGenome.updateContigId(contig, NEW_CONTIG);
@@ -1200,8 +1201,8 @@ public class TestLibrary extends TestCase {
      * @throws IOException
      */
     public void testSave() throws IOException {
-        File gtoFile = new File("src/test", "gto2.ser");
-        Genome gto = new Genome(new File("src/test/gto_test", "243277.26.gto"));
+        File gtoFile = new File("src/test/resources", "gto2.ser");
+        Genome gto = new Genome(new File("src/test/resources/gto_test", "243277.26.gto"));
         gto.purify();
         gto.update(gtoFile);
         Genome diskGenome = new Genome(gtoFile);
@@ -1322,7 +1323,7 @@ public class TestLibrary extends TestCase {
         assertThat(subsystem.getGenome(), equalTo(testGto));
         assertThat(testGto.getSubsystem("Funny subsystem"), equalTo(subsystem));
         assertThat(subsystem.getVariantCode(), equalTo("likely"));
-        assertFalse(subsystem.isActive());
+        assertThat(subsystem.isActive(), isTrue());
         subsystem.setClassifications("big stuff", "middle stuff", "");
         assertThat(subsystem.getClassifications(), contains("big stuff", "middle stuff", ""));
         Shuffler<String> newClasses = new Shuffler<String>(3).add1("super-class").add1("class").add1("sub-class");
@@ -1351,7 +1352,7 @@ public class TestLibrary extends TestCase {
      * test FASTA saving
      */
     public void testFastas() throws IOException {
-        File fastaTemp = new File("src/test", "fasta.ser");
+        File fastaTemp = new File("src/test/resources", "fasta.ser");
         myGto.saveDna(fastaTemp);
         int counter = 0;
         try (FastaInputStream fastaStream = new FastaInputStream(fastaTemp)) {

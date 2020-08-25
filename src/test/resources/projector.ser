@@ -1,0 +1,75 @@
+VTypeHTranAtpaSubu11	V-type H+-transporting ATPase subunit H (EC 7.1.2.2)
+IsolTrnaSynt	Isoleucyl-tRNA synthetase (EC 6.1.1.5)
+LsuRiboProtL6p	LSU ribosomal protein L6p (L9e)
+VTypeHTranAtpaSubu9	V-type H+-transporting ATPase subunit I (EC 7.1.2.2)
+SsuRrna	SSU rRNA
+VTypeHTranAtpaSubu8	V-type H+-transporting ATPase subunit G (EC 7.1.2.2)
+LsuRrna	LSU rRNA
+SsuRrna3	SSU rRNAtest2
+VTypeHTranAtpaSubu4	V-type H+-transporting ATPase subunit D (EC 7.1.2.2)
+SsuRrna2	SSU rRNAtest
+VTypeHTranAtpaSubu5	V-type H+-transporting ATPase subunit E (EC 7.1.2.2)
+SsuRiboProtS12p	SSU ribosomal protein S12p (S23e)
+TranElonFactG	Translation elongation factor G
+VTypeHTranAtpaSubu7	V-type H+-transporting ATPase subunit F (EC 7.1.2.2)
+VTypeHTranAtpaSubu	V-type H+-transporting ATPase subunit A (EC 7.1.2.2)
+VTypeHTranAtpaSubu2	V-type H+-transporting ATPase subunit B (EC 7.1.2.2)
+VTypeHTranAtpaSubu3	V-type H+-transporting ATPase subunit C (EC 7.1.2.2)
+SsuRiboProtS10p	SSU ribosomal protein S10p (S20e)
+VTypeHTranAtpaSubu6	V-type H+-transporting ATPase subunit epsilon (EC 7.1.2.2)
+TranElonFactTu	Translation elongation factor Tu
+VTypeHTranAtpaSubu10	V-type H+-transporting ATPase subunit K (EC 7.1.2.2)
+**
+fake subsystem 2
+
+SSU rRNAtest2
+//
+fake subsystem 1
+
+SSU rRNAtest
+V-type H+-transporting ATPase subunit A (EC 7.1.2.2)
+V-type H+-transporting ATPase subunit B (EC 7.1.2.2)
+V-type H+-transporting ATPase subunit C (EC 7.1.2.2)
+V-type H+-transporting ATPase subunit D (EC 7.1.2.2)
+//
+V-type ATP synthase
+Respiration	ATP synthases	
+V-type H+-transporting ATPase subunit A (EC 7.1.2.2)
+V-type H+-transporting ATPase subunit B (EC 7.1.2.2)
+V-type H+-transporting ATPase subunit C (EC 7.1.2.2)
+V-type H+-transporting ATPase subunit D (EC 7.1.2.2)
+V-type H+-transporting ATPase subunit E (EC 7.1.2.2)
+V-type H+-transporting ATPase subunit epsilon (EC 7.1.2.2)
+V-type H+-transporting ATPase subunit F (EC 7.1.2.2)
+V-type H+-transporting ATPase subunit G (EC 7.1.2.2)
+V-type H+-transporting ATPase subunit I (EC 7.1.2.2)
+V-type H+-transporting ATPase subunit K (EC 7.1.2.2)
+V-type H+-transporting ATPase subunit H (EC 7.1.2.2)
+//
+Antibiotic targets in protein synthesis
+Stress Response, Defense and Virulence	Resistance to antibiotics and toxic compounds	
+SSU rRNA
+LSU rRNA
+SSU ribosomal protein S12p (S23e)
+SSU ribosomal protein S10p (S20e)
+Translation elongation factor G
+LSU ribosomal protein L6p (L9e)
+Translation elongation factor Tu
+Isoleucyl-tRNA synthetase (EC 6.1.1.5)
+//
+**
+V-type ATP synthase
+unlikely
+VTypeHTranAtpaSubu	VTypeHTranAtpaSubu2	VTypeHTranAtpaSubu3	VTypeHTranAtpaSubu4	VTypeHTranAtpaSubu5	VTypeHTranAtpaSubu6	VTypeHTranAtpaSubu7	VTypeHTranAtpaSubu8	VTypeHTranAtpaSubu9	VTypeHTranAtpaSubu10	
+V-type ATP synthase
+active
+VTypeHTranAtpaSubu	VTypeHTranAtpaSubu2	VTypeHTranAtpaSubu3	VTypeHTranAtpaSubu4	VTypeHTranAtpaSubu5		VTypeHTranAtpaSubu7	VTypeHTranAtpaSubu8	VTypeHTranAtpaSubu9	VTypeHTranAtpaSubu10	
+Antibiotic targets in protein synthesis
+1
+SsuRrna	LsuRrna	SsuRiboProtS12p	SsuRiboProtS10p	TranElonFactG	LsuRiboProtL6p	TranElonFactTu	IsolTrnaSynt
+V-type ATP synthase
+likely
+	VTypeHTranAtpaSubu2	VTypeHTranAtpaSubu3	VTypeHTranAtpaSubu4					VTypeHTranAtpaSubu9		
+fake subsystem 1
+XX
+SsuRrna2		VTypeHTranAtpaSubu2	VTypeHTranAtpaSubu3	

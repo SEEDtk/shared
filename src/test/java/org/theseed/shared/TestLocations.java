@@ -36,7 +36,7 @@ public class TestLocations extends TestCase {
      */
     public TestLocations(String name) throws IOException {
         super(name);
-        this.myGto = new Genome(new File("src/test/gto_test", "1313.7001.gto"));
+        this.myGto = new Genome(new File("src/test/resources/gto_test", "1313.7001.gto"));
     }
 
     private Genome myGto = null;

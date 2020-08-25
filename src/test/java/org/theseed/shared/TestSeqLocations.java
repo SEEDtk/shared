@@ -25,7 +25,7 @@ public class TestSeqLocations extends TestCase {
 
     public void testPegLocations() throws IOException {
         // This tests the reverse-complementing and conversing.
-        Genome gto = new Genome(new File("src/test/gto_test", "1313.7001.gto"));
+        Genome gto = new Genome(new File("src/test/resources/gto_test", "1313.7001.gto"));
         // Loop through the pegs.  We have to restrict ourselves to pegs without errors in them.
         String[] pegs = new String[] { "fig|1313.7001.peg.68", "fig|1313.7001.peg.147", "fig|1313.7001.peg.1682",
                 "fig|1313.7001.peg.1680", "fig|1313.7001.peg.16", "fig|1313.7001.peg.1200" };
@@ -98,7 +98,7 @@ public class TestSeqLocations extends TestCase {
      * @throws IOException
      */
     public void testOrfHandling() throws IOException {
-        Genome gto = new Genome(new File("src/test/gto_test", "1313.7001.gto"));
+        Genome gto = new Genome(new File("src/test/resources/gto_test", "1313.7001.gto"));
         Location loc = Location.create("1313.7001.con.0024", 20, 31);
         Location loc2 = loc.extendToOrf(gto);
         assertThat(loc2.getBegin(), equalTo(2));

@@ -1,0 +1,231 @@
+{
+    "genetic_code":11,
+    "close_genomes":[
+        {
+            "genome":"160.24",
+            "genome_name":"Treponema pallidum strain UW-148B",
+            "closeness_measure":999.0,
+            "analysis_method":"minHash"
+        },
+        {
+            "genome":"161.12",
+            "genome_name":"Treponema pallidum subsp. pallidum strain 15df",
+            "closeness_measure":998.0,
+            "analysis_method":"minHash"
+        },
+        {
+            "genome":"161.26",
+            "genome_name":"Treponema pallidum subsp. pallidum strain PT_SIF1156",
+            "closeness_measure":997.0,
+            "analysis_method":"minHash"
+        },
+        {
+            "genome":"161.27",
+            "genome_name":"Treponema pallidum subsp. pallidum strain PT_SIF1167",
+            "closeness_measure":997.0,
+            "analysis_method":"minHash"
+        },
+        {
+            "genome":"161.5",
+            "genome_name":"Treponema pallidum subsp. pallidum strain Amoy",
+            "closeness_measure":996.0,
+            "analysis_method":"minHash"
+        },
+        {
+            "genome":"161.67",
+            "genome_name":"Treponema pallidum subsp. pallidum strain Haiti B",
+            "closeness_measure":995.0,
+            "analysis_method":"minHash"
+        },
+        {
+            "genome":"160.24",
+            "genome_name":"Treponema pallidum strain UW-148B",
+            "closeness_measure":2130.0,
+            "analysis_method":"repKmer"
+        },
+        {
+            "genome":"161.5",
+            "genome_name":"Treponema pallidum subsp. pallidum strain Amoy",
+            "closeness_measure":998.0,
+            "analysis_method":"repKmer"
+        }
+    ],
+    "scientific_name":"Treponema pallidum subsp. pallidum strain PT_SIF1242",
+    "taxonomy":[
+        "cellular organisms",
+        "Bacteria",
+        "Spirochaetes",
+        "Spirochaetia",
+        "Spirochaetales",
+        "Spirochaetaceae",
+        "Treponema",
+        "Treponema pallidum",
+        "Treponema pallidum subsp. pallidum"
+    ],
+    "source":"PATRIC",
+    "subsystems":[
+        
+    ],
+    "home":"none",
+    "analysis_events":[
+        
+    ],
+    "features":[
+        {
+            "couplings":[
+                
+            ],
+            "family_assignments":[
+                [
+                    "PLFAM",
+                    "PLF_157_00003322"
+                ],
+                [
+                    "PGFAM",
+                    "PGF_03798104"
+                ]
+            ],
+            "aliases":[
+                "A8P40_04965"
+            ],
+            "test_extra":"extra datum",
+            "function":"hypothetical protein",
+            "protein_translation":"MLSGGSLPQLAVARVPPLLHTTGRAFMHVLTFLLPEAAARSLAAVSTAPSNSSTLVAILGTGLSAPLLLTYLLRRFEKTHAVEISYFSLFLCALNFEGVRLFLPILYTGTLTTYAGNVPMQIVMFFRSLALLALFASGIFAKKTLTRQEGAVVFVLCTVAFLISRYTTIHTIHAYRPSQSTQGAILLAQPISESGSIIDSTGEEKTLKVRSSAHRKTRILVTPQRNFTFYYGSHAWHRWFFWTTAVLSALSYGVLGHTLQISHYYIAAAALPFVIAGYRLLTHGLTWSACIVGLFLLNTASVFFIRSVHRVHIWQ",
+            "annotations":[
+                [
+                    "Add feature from PATRIC",
+                    "PATRIC",
+                    1500218027.5
+                ],
+                [
+                    "Set function to hypothetical protein",
+                    "RAST",
+                    1500218027.75
+                ],
+                [
+                    "Analyze json",
+                    "TestLibrary",
+                    1598314830.978
+                ]
+            ],
+            "location":[
+                [
+                    "161.31.con.0001",
+                    1092694,
+                    "+",
+                    948
+                ]
+            ],
+            "id":"fig|161.31.peg.985",
+            "type":"CDS"
+        },
+        {
+            "couplings":[
+                [
+                    "fig|161.31.rna.3",
+                    30,
+                    30.5
+                ],
+                [
+                    "fig|161.31.rna.2",
+                    20,
+                    20.5
+                ]
+            ],
+            "family_assignments":[
+                [
+                    "PGFAM",
+                    "PGF_RNA1"
+                ]
+            ],
+            "function":"brand new RNA",
+            "protein_translation":"",
+            "annotations":[
+                
+            ],
+            "location":[
+                [
+                    "161.31.con.0001",
+                    90100,
+                    "-",
+                    1000
+                ]
+            ],
+            "id":"fig|161.31.rna.1",
+            "type":"rna"
+        }
+    ],
+    "contigs":[
+        {
+            "genetic_code":11,
+            "dna":"aaaccctttggg",
+            "genbank_locus":{
+                "comment":"fake description",
+                "accession":"fakeAcc"
+            },
+            "length":12,
+            "id":"161.31.con.0002"
+        },
+        {
+            "genetic_code":11,
+            "dna":"",
+            "genbank_locus":{
+                "comment":"Treponema pallidum subsp. pallidum strain PT_SIF1242 genome.",
+                "accession":"CP016063"
+            },
+            "length":1139123,
+            "id":"161.31.con.0001"
+        }
+    ],
+    "ncbi_taxonomy_id":161,
+    "domain":"Bacteria",
+    "ncbi_lineage":[
+        [
+            "cellular organisms",
+            131567,
+            "no rank"
+        ],
+        [
+            "Bacteria",
+            2,
+            "superkingdom"
+        ],
+        [
+            "Spirochaetes",
+            203691,
+            "phylum"
+        ],
+        [
+            "Spirochaetia",
+            203692,
+            "class"
+        ],
+        [
+            "Spirochaetales",
+            136,
+            "order"
+        ],
+        [
+            "Spirochaetaceae",
+            137,
+            "family"
+        ],
+        [
+            "Treponema",
+            157,
+            "genus"
+        ],
+        [
+            "Treponema pallidum",
+            160,
+            "species"
+        ],
+        [
+            "Treponema pallidum subsp. pallidum",
+            161,
+            "subspecies"
+        ]
+    ],
+    "id":"161.31",
+    "source_id":"161.31"
+}

@@ -40,7 +40,7 @@ public class IoTests extends TestCase {
      * @throws IOException
      */
     public void testBalancedStream() throws IOException {
-        File testFile = new File("src/test", "balanced.ser");
+        File testFile = new File("src/test/resources", "balanced.ser");
         BalancedOutputStream outStream = new BalancedOutputStream(1.5, testFile);
         outStream.writeImmediate("type", "text");
         outStream.write("a", "a1");
@@ -237,7 +237,7 @@ public class IoTests extends TestCase {
      * @throws IOException
      */
     public void testTabbedFile() throws IOException {
-        File inFile = new File("src/test", "tabbed.txt");
+        File inFile = new File("src/test/resources", "tabbed.txt");
         TabbedLineReader tabReader = new TabbedLineReader(inFile);
         assertThat("Wrong number of columns.", tabReader.size(), equalTo(5));
         assertThat("Header line wrong.", tabReader.header(), equalTo("genome_id\tgenome.genome_name\tcounter.0\tfraction\tflag"));
@@ -293,7 +293,7 @@ public class IoTests extends TestCase {
         assertThat("Wrong number of records", i, equalTo(4));
         tabReader.close();
         // Test headerless files.
-        File fixFile = new File("src/test", "fixed.txt");
+        File fixFile = new File("src/test/resources", "fixed.txt");
         tabReader = new TabbedLineReader(fixFile, 5);
         line = tabReader.next();
         assertThat("Wrong value in column 0 of line 1", line.get(0), equalTo("100.99"));
@@ -319,12 +319,12 @@ public class IoTests extends TestCase {
      */
     public void testLineReader() throws IOException {
         // Start with an empty file.
-        File emptyFile = new File("src/test", "empty.fa");
+        File emptyFile = new File("src/test/resources", "empty.fa");
         try (LineReader reader = new LineReader(emptyFile)) {
             assertFalse(reader.hasNext());
         }
         // Try a regular file as a stream.
-        InputStream inStream = new FileInputStream(new File("src/test", "lines.txt"));
+        InputStream inStream = new FileInputStream(new File("src/test/resources", "lines.txt"));
         try (LineReader reader = new LineReader(inStream)) {
             assertTrue(reader.hasNext());
             List<String> lines = new ArrayList<String>(5);
@@ -335,7 +335,7 @@ public class IoTests extends TestCase {
             assertThat(lines.get(1), equalTo("line 2"));
             assertThat(lines.get(2), equalTo("line 3"));
         }
-        File badFile = new File("src/test", "nosuchfile.bad");
+        File badFile = new File("src/test/resources", "nosuchfile.bad");
         try (LineReader reader = new LineReader(badFile)) {
             assertTrue("Opened an invalid file.", false);
         } catch (IOException e) {
@@ -347,7 +347,7 @@ public class IoTests extends TestCase {
      * test marker files
      */
     public void testMarkers() {
-        File marker = new File("src/test", "marker.ser");
+        File marker = new File("src/test/resources", "marker.ser");
         MarkerFile.write(marker, "abc");
         assertThat(MarkerFile.read(marker), equalTo("abc"));
         MarkerFile.write(marker, 1024);
@@ -358,15 +358,15 @@ public class IoTests extends TestCase {
      * test gto file filter
      */
     public void testGtoFilter() {
-        File gtoDir = new File("src/test", "gto_test");
+        File gtoDir = new File("src/test/resources", "gto_test");
         File[] files = GtoFilter.getAll(gtoDir);
         assertThat(files.length, equalTo(5));
         List<File> list = Arrays.asList(files);
-        assertThat(list, containsInAnyOrder(new File("src/test/gto_test", "1005394.4.gto"),
-                new File("src/test/gto_test", "1313.7001.gto"),
-                new File("src/test/gto_test", "1313.7002.gto"),
-                new File("src/test/gto_test", "1313.7016.gto"),
-                new File("src/test/gto_test", "243277.26.gto")));
+        assertThat(list, containsInAnyOrder(new File("src/test/resources/gto_test", "1005394.4.gto"),
+                new File("src/test/resources/gto_test", "1313.7001.gto"),
+                new File("src/test/resources/gto_test", "1313.7002.gto"),
+                new File("src/test/resources/gto_test", "1313.7016.gto"),
+                new File("src/test/resources/gto_test", "243277.26.gto")));
     }
 
     /**
@@ -375,7 +375,7 @@ public class IoTests extends TestCase {
      * @throws IOException
      */
     public void testShuffleStream() throws IOException {
-        File testFile = new File("src/test", "balanced.ser");
+        File testFile = new File("src/test/resources", "balanced.ser");
         try (ShuffledOutputStream outStream = new ShuffledOutputStream(4.5, "yes", "no", testFile)) {
             outStream.writeImmediate("type", "value");
             outStream.write("no", "1");
@@ -452,7 +452,7 @@ public class IoTests extends TestCase {
      * @throws IOException
      */
     public void testLineReaderIter() throws IOException {
-        File testFile = new File("src/test", "lrTest.tbl");
+        File testFile = new File("src/test/resources", "lrTest.tbl");
         LineReader testStream = new LineReader(testFile);
         Iterator<String[]> iter2 = testStream.new SectionIter("//");
         assertTrue(iter2.hasNext());

@@ -96,11 +96,11 @@ public class KmerTests extends TestCase {
      */
     public void testGenomeKmers() throws IOException, NoSuchAlgorithmException {
         GenomeKmers.setKmerSize(24);
-        Genome g = new Genome(new File("src/test/gto_test", "1005394.4.gto"));
+        Genome g = new Genome(new File("src/test/resources/gto_test", "1005394.4.gto"));
         GenomeKmers kmer1 = new GenomeKmers(g);
-        g = new Genome(new File("src/test/gto_test", "1313.7001.gto"));
+        g = new Genome(new File("src/test/resources/gto_test", "1313.7001.gto"));
         GenomeKmers kmer2 = new GenomeKmers(g);
-        g = new Genome(new File("src/test/gto_test", "1313.7002.gto"));
+        g = new Genome(new File("src/test/resources/gto_test", "1313.7002.gto"));
         GenomeKmers kmer3 = new GenomeKmers(g);
         g = null;
         assertFalse(kmer1.equals(kmer2));

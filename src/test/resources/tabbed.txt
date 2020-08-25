@@ -1,0 +1,6 @@
+genome_id	genome.genome_name	counter.0	fraction	flag
+100.99	name of 100.99	10	0.8
+200.20	name of 200.20	-4	12	Y
+
+1000.6	name of 1000.6	0	0	0
+4		5	6	7
