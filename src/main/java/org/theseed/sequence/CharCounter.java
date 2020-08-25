@@ -45,7 +45,7 @@ public class CharCounter {
      * @param seqList	collection of prepared sequences to process
      * @param pos		position (0-based) to count
      */
-    public List<Count> countSequences(Collection<Sequence> seqList, int pos) {
+    public Count[] countSequences(Collection<Sequence> seqList, int pos) {
         this.clear();
         seqList.stream().forEach(x -> this.count(x, pos));
         return this.getResults();
@@ -151,14 +151,15 @@ public class CharCounter {
     /**
      * @return a sorted list of the counts
      */
-    public List<Count> getResults() {
-        List<Count> retVal = new ArrayList<Count>(10);
+    public Count[] getResults() {
+        List<Count> results = new ArrayList<Count>(10);
         for (int i = 0; i < ARRAY_SIZE; i++) {
             if (this.counts[i] > 0)
-                retVal.add(new Count(this, i));
+                results.add(new Count(this, i));
         }
-        Collections.sort(retVal);
-        return retVal;
+        Collections.sort(results);
+        Count[] retVal = new Count[results.size()];
+        return results.toArray(retVal);
     }
 
     /**

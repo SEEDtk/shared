@@ -31,7 +31,7 @@ public class ParmsTest extends TestCase {
      * @throws IOException
      */
     public void testParms() throws IOException {
-        File parmFile = new File("src/test/resources", "parms.tbl");
+        File parmFile = new File("data", "parms.tbl");
         List<String> parms = Parms.fromFile(parmFile);
         assertThat("Invalid parms result.", parms, contains("-z", "-t", "10", "--bins", "this is a long string",
                 "-tab", "used here"));
@@ -43,7 +43,7 @@ public class ParmsTest extends TestCase {
      * @throws IOException
      */
     public void testMultiParms() throws IOException {
-        File parmFile = new File("src/test/resources", "parms2.tbl");
+        File parmFile = new File("data", "parms2.tbl");
         MultiParms parmIterator = new MultiParms(parmFile);
         List<String> parms = parmIterator.next();
         assertThat(parms, contains("--digits", "1", "--constant", "X", "--letters", "a", "--batch"));

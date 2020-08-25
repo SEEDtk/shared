@@ -41,7 +41,7 @@ public class TestRoleSets extends TestCase {
     }
 
     public void testMultiRoleProjection() throws IOException {
-        Genome gto = new Genome(new File("src/test/resources/gto_test", "1313.7001.gto"));
+        Genome gto = new Genome(new File("data/gto_test", "1313.7001.gto"));
         SubsystemProjector projector = new SubsystemProjector();
         SubsystemSpec subsystem = new SubsystemSpec("Test subsystem");
         subsystem.addRole("Peptide-methionine (S)-S-oxide reductase MsrA (EC 1.8.4.11) / Peptide-methionine (R)-S-oxide reductase MsrB (EC 1.8.4.12)");

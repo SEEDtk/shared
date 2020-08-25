@@ -93,7 +93,7 @@ public class TestDnaTranslate extends TestCase {
      * @throws IOException
      */
     public void testOperon() throws IOException {
-        Genome myGto = new Genome(new File("src/test/resources/gto_test", "1313.7016.gto"));
+        Genome myGto = new Genome(new File("data/gto_test", "1313.7016.gto"));
         String myDna = myGto.getContig("1313.7016.con.0058").getSequence().substring(3900, 5920);
         DnaTranslator xlate = new DnaTranslator(11);
         List<String> prots = xlate.operonFrom(myDna);

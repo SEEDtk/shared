@@ -29,7 +29,7 @@ public class CoreTest extends TestCase {
      * @throws IOException
      */
     public void testPegList() throws IOException {
-        PegList testList = new PegList(new File("src/test/resources", "testP.fa"));
+        PegList testList = new PegList(new File("data", "testP.fa"));
         Sequence found = testList.get("fig|1538.8.peg.30");
         assertNull(found);
         found = testList.get("fig|1538.8.peg.12");
@@ -74,7 +74,7 @@ public class CoreTest extends TestCase {
      * test organism directories
      */
     public void testOrgDir() {
-        OrganismDirectories orgDir = new OrganismDirectories(new File("src/test/resources", "core"));
+        OrganismDirectories orgDir = new OrganismDirectories(new File("data", "core"));
         assertThat(orgDir.size(), equalTo(3));
         Iterator<String> orgIter = orgDir.iterator();
         assertTrue(orgIter.hasNext());

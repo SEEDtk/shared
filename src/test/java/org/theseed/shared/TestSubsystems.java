@@ -117,7 +117,7 @@ public class TestSubsystems extends TestCase {
         assertThat(sub1.getRoleIndex("Cell division initiation protein DivIVA"), equalTo(10));
         assertThat(sub1.getRoleIndex("Signal recognition particle protein Ffh"), equalTo(7));
         assertThat(sub1.getRoleIndex("Signal recognition particle protein invalid"), equalTo(-1));
-        Genome gto = new Genome(new File("src/test/resources/gto_test", "1313.7001.gto"));
+        Genome gto = new Genome(new File("data/gto_test", "1313.7001.gto"));
         Map<String, Set<String>> gRoleMap = projector.computeRoleMap(gto);
         // Verify that all the features with known roles are found.
         RoleMap usefulRoles = projector.usefulRoles();
@@ -213,7 +213,7 @@ public class TestSubsystems extends TestCase {
         assertTrue(projector.addVariant(variant));
         assertFalse(projector.addVariant(variant4));
         // Test matching and projecting using the genome family map.
-        Genome gto = new Genome(new File("src/test/resources/gto_test", "1313.7001.gto"));
+        Genome gto = new Genome(new File("data/gto_test", "1313.7001.gto"));
         Map<String, Set<String>> familyMap = projector.computeRoleMap(gto);
         assertTrue(variant.matches(familyMap));
         assertFalse(variant2.matches(familyMap));
@@ -336,13 +336,13 @@ public class TestSubsystems extends TestCase {
         projector.addVariant(var4);
         // And here is a variant that won't match.
         // Save and restore to check the role map.
-        File outFile = new File("src/test/resources", "projector.ser");
+        File outFile = new File("data", "projector.ser");
         projector.save(outFile);
         SubsystemProjector loaded = SubsystemProjector.Load(outFile);
         assertThat(loaded.getRoleId("SSU rRNA"), equalTo(ssuRrna));
         assertThat(loaded.getRoleId("LSU rRNA"), equalTo(lsuRrna));
         // Map the test genome.
-        Genome gto = new Genome(new File("src/test/resources","123214.3.gto"));
+        Genome gto = new Genome(new File("data","123214.3.gto"));
         Map<String, Set<String>> familyMap = projector.computeRoleMap(gto);
         // Test matching.
         assertTrue(var1.matches(familyMap));
@@ -428,7 +428,7 @@ public class TestSubsystems extends TestCase {
         VariantSpec var2_4 = new VariantSpec(sub2, "4");
         var2_4.setCell(1, projector);
         projector.addVariant(var2_4);
-        File saveFile = new File("src/test/resources", "projector.ser");
+        File saveFile = new File("data", "projector.ser");
         projector.save(saveFile);
         SubsystemProjector loaded = SubsystemProjector.Load(saveFile);
         SubsystemSpec sub = loaded.getSubsystem("subsystem 1");
