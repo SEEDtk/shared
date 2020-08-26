@@ -1,0 +1,119 @@
+SsuRiboProtMrp1Mito	SkzXTn82ppNwztyZ7qt8Sg	SSU ribosomal protein MRP1, mitochondrial
+SsuRiboProtMrp1Mito2	gz2VqQoz8iJ+qtTun4LO7Q	SSU ribosomal protein MRP13, mitochondrial
+SsuRiboProtMrp1Mito3	tkjQh8YbWMpq69jVo1m0eg	SSU ribosomal protein MRP10, mitochondrial
+SsuRiboProtPet1Mito	ZmYqPYeDX+Bc3uHtub7v+A	SSU ribosomal protein PET123, mitochondrial
+SsuRiboProtRsm2Mito	3aHHuoS0Mm9BsS1UEg6EHQ	SSU ribosomal protein RSM22, mitochondrial
+SsuRiboProtRsm2Mito2	lk9kLp6OfnVxCgITwLu03A	SSU ribosomal protein RSM28, mitochondrial
+SsuRiboProtRsm2Mito3	3Tod706HGp/7y169Eq9VDw	SSU ribosomal protein RSM24, mitochondrial
+SsuRiboProtRsm2Mito4	mXHudNOMhgcJAUvpBdEepQ	SSU ribosomal protein RSM25, mitochondrial
+SsuRiboProtS10e	a2NZLK8RWPSqXXCuZ1G+gQ	SSU ribosomal protein S10e
+SsuRiboProtS10p	I8o3OwsZbQPtLiASpcCUqA	SSU ribosomal protein S10p (S20e)
+SsuRiboProtS10pChlo	aI2+Dq2r1RJThZu5XVL93g	SSU ribosomal protein S10p (S20e), chloroplast
+SsuRiboProtS10pMito	bNlFFmkaec2r1Ln/G5pJUg	SSU ribosomal protein S10p (S20e), mitochondrial
+SsuRiboProtS11e	gtO6LmVpGkHxe2lYnVH+fA	SSU ribosomal protein S11e (S17p)
+SsuRiboProtS11p	Xf+ah37xMbhw+Y5frtmygA	SSU ribosomal protein S11p (S14e)
+SsuRiboProtS11pChlo	H5iOvAE8ppp4oHCLqcV9UQ	SSU ribosomal protein S11p (S14e), chloroplast
+SsuRiboProtS11pMito	IylFesMI/Ng7Dwiva0L4mw	SSU ribosomal protein S11p (S14e), mitochondrial
+SsuRiboProtS12e	L1TlDe4/fqhthll1kC4DKQ	SSU ribosomal protein S12e
+SsuRiboProtS12p	ixeJ3af6VccvjS1toGLYHg	SSU ribosomal protein S12p (S23e)
+SsuRiboProtS12pChlo	Fn0qDad7uK+uVQtAM1GMoQ	SSU ribosomal protein S12p (S23e), chloroplast
+SsuRiboProtS12pMito	nbWBBTmMmX1Wlmq4fqrakQ	SSU ribosomal protein S12p (S23e), mitochondrial
+SsuRiboProtS13e	8Cy6XvpnWPK0HloqEpUjrg	SSU ribosomal protein S13e (S15p)
+SsuRiboProtS13p	mNriwr1XtLLzVgkAMMvotw	SSU ribosomal protein S13p (S18e)
+SsuRiboProtS13pChlo	3B2QncO8DaxE9zN98YfX9Q	SSU ribosomal protein S13p (S18e), chloroplast
+SsuRiboProtS13pMito	48IzRKlonUdATxupODVh0A	SSU ribosomal protein S13p (S18e), mitochondrial
+SsuRiboProtS11p	Z1NKuLVCpre/C3hj/YdyUw	SSU ribosomal protein S14e (S11p)
+SsuRiboProtS14p	LAdV0zjP5zrVlLoyMpbnuw	SSU ribosomal protein S14p (S29e)
+SsuRiboProtS14pChlo	QEunSofewepKsdDP6LDj7w	SSU ribosomal protein S14p (S29e), chloroplast
+SsuRiboProtS14pMito	xlsNi24JdAnr0dkGXX79pg	SSU ribosomal protein S14p (S29e), mitochondrial
+SsuRiboProtS14pZinc	8nRZV/87fEDlY3tf5rgyug	SSU ribosomal protein S14p (S29e), zinc-independent
+SsuRiboProtS14pZinc2	iodqVcqdCJkvDPH7sHJ3VQ	SSU ribosomal protein S14p (S29e), zinc-dependent
+SsuRiboProtS15a	UPkpXzYTnf3AbgbrjPGcXA	SSU ribosomal protein S15Ae (S8p)
+SsuRiboProtS15e	NRXjvzxWND9rd3j4HLXaXQ	SSU ribosomal protein S15e (S19p)
+SsuRiboProtS13e	0DP72KUwSHf0kHufcJKR+w	SSU ribosomal protein S15p (S13e)
+SsuRiboProtS15pChlo	Wso+xShh1oknk/a6DiY77g	SSU ribosomal protein S15p (S13e), chloroplast
+SsuRiboProtS15pMito	30M2KZYkHnWYvG1JS+HYNQ	SSU ribosomal protein S15p (S13e), mitochondrial
+SsuRiboProtS16e	Gt9h8XaHJt7+eIGFdlrWYw	SSU ribosomal protein S16e (S9p)
+SsuRiboProtS16p	DSd0N1XiL+KH4BM+P6tiUA	SSU ribosomal protein S16p
+SsuRiboProtS16pChlo	uT3Sg4nHwWNMIjHELGKgKw	SSU ribosomal protein S16p, chloroplast
+SsuRiboProtS16pMito	Uike8KF/oYStNTGUQFXRXw	SSU ribosomal protein S16p, mitochondrial
+SsuRiboProtS17e	GRVrE8kce/0+XUAA0ZDP5Q	SSU ribosomal protein S17e
+SsuRiboProtS11e	4xgbpifuuff+ri8uBAnNKA	SSU ribosomal protein S17p (S11e)
+SsuRiboProtS17pChlo	R2CSqe+Pc8l5QK3ZQoKX9Q	SSU ribosomal protein S17p (S11e), chloroplast
+SsuRiboProtS17pMito	iWUr3FoF0ncwrVMBMjhdgQ	SSU ribosomal protein S17p (S11e), mitochondrial
+SsuRiboProtS13p	KSoqNrRwwgvrkg2ebn+5RA	SSU ribosomal protein S18e (S13p)
+SsuRiboProtS18p	vr7etPFcHasImP6ttufRYQ	SSU ribosomal protein S18p
+SsuRiboProtS18pChlo	9O49N1w4TqR0Xz7/xH6jeg	SSU ribosomal protein S18p, chloroplast
+SsuRiboProtS18pMito	9sFsLL9nQGvScZbvObk0Gw	SSU ribosomal protein S18p, mitochondrial
+SsuRiboProtS18pZinc	rsZnNXqaHMcph4mDq4U/BQ	SSU ribosomal protein S18p, zinc-independent
+SsuRiboProtS18pZinc2	CZFZMIHCLdzlXkd4c1adnw	SSU ribosomal protein S18p, zinc-dependent
+SsuRiboProtS19e	Nt720P+Rivd81GR0KPoVkg	SSU ribosomal protein S19e
+SsuRiboProtS15e	PCnUrguVLKDQx+RDwXPADQ	SSU ribosomal protein S19p (S15e)
+SsuRiboProtS19pChlo	uF/6neOShEA/Yj3b9OFNZA	SSU ribosomal protein S19p (S15e), chloroplast
+SsuRiboProtS19pMito	cxKYY6jjkieFHpaKMWRSyg	SSU ribosomal protein S19p (S15e), mitochondrial
+SsuRiboProtS1p	49IwneoFyahIQa5hq4oh5A	SSU ribosomal protein S1p
+SsuRiboProtS1pChlo	wT6I+eVZxgEWbuP7ku71/A	SSU ribosomal protein S1p, chloroplast
+SsuRiboProtS10p	H5tdtl5++lmMjr2Cl6Z2KA	SSU ribosomal protein S20e (S10p)
+SsuRiboProtS20p	wzPs6aHnz3tqH4t6Imy5vQ	SSU ribosomal protein S20p
+SsuRiboProtS20pChlo	2cdVMrdCfkyg2L2cHju0Ig	SSU ribosomal protein S20p, chloroplast
+SsuRiboProtS21e	EalEC6LiMe/D6UX9/+3j0w	SSU ribosomal protein S21e
+SsuRiboProtS21p	7E7ROdjGRBHFKFYqTG2N6w	SSU ribosomal protein S21p
+SsuRiboProtS21pMito	DJj+1fYiOO97skdmYafvpQ	SSU ribosomal protein S21p, mitochondrial
+SsuRiboProtS22mMito	2BPQwXbNfYaC/c5rHHm/kg	SSU ribosomal protein S22mt, mitochondrial
+SsuRiboProtS12p	OiQCCwXjrNs+wpnJDfhKXw	SSU ribosomal protein S23e (S12p)
+SsuRiboProtS23mMito	t9Xe3zgT+ZXR7ch+pGYahw	SSU ribosomal protein S23mt, mitochondrial
+SsuRiboProtS24e	orA7war0fc1iKFfVy/EXsQ	SSU ribosomal protein S24e
+SsuRiboProtS24mMito	l8iB+K9KExR9Zh/4pScusQ	SSU ribosomal protein S24mt, mitochondrial
+SsuRiboProtS25e	9PVtWPMiVRqze2pgOsQPkg	SSU ribosomal protein S25e
+SsuRiboProtS25mMito	yYYXILDNboewVC6YyjF1Rw	SSU ribosomal protein S25mt, mitochondrial
+SsuRiboProtS26e	/QNmEIWD2cC2Ubae4pOLJQ	SSU ribosomal protein S26e
+SsuRiboProtS26mMito	yOsBiDe0Ep25hTVuaXJ3Rw	SSU ribosomal protein S26mt, mitochondrial
+SsuRiboProtS27a	rAfPnUfZlBpCvLzjin7rrA	SSU ribosomal protein S27Ae
+SsuRiboProtS27e	NpVQKaVcsNq+ZCdqBGpYeA	SSU ribosomal protein S27e
+SsuRiboProtS27mMito	f4qhf3BmKldptkkec6sfig	SSU ribosomal protein S27mt, mitochondrial
+SsuRiboProtS28e	R4B20fAdgShXkl0DlWbglQ	SSU ribosomal protein S28e
+SsuRiboProtS28mMito	6GegJFdltUoCo0RxUq8LmQ	SSU ribosomal protein S28mt, mitochondrial
+SsuRiboProtS29e	u/34TVfg8dfqvMqpD4++BQ	SSU ribosomal protein S29e (S14p)
+SsuRiboProtS29mMito	owmwqZ3txCa7NvdqtgulFA	SSU ribosomal protein S29mt, mitochondrial
+SsuRiboProtS2e	z3tkPwXOVkoPgD3QCmjGcQ	SSU ribosomal protein S2e (S5p)
+SsuRiboProtS2p	cmhRffgQLBsGGXox122WJw	SSU ribosomal protein S2p (SAe)
+SsuRiboProtS2pChlo	r7os8yrhlv8xQQPhEG0u0w	SSU ribosomal protein S2p (SAe), chloroplast
+SsuRiboProtS2pMito	SZjoEHcS6B+8dUDWN6e+7Q	SSU ribosomal protein S2p (SAe), mitochondrial
+SsuRiboProtS30e	yAHp+ZF0geTHJB6qJfN+HQ	SSU ribosomal protein S30e
+SsuRiboProtS30mMito	asLjLnXtUVbATEKcs25zBQ	SSU ribosomal protein S30mt, mitochondrial
+SsuRiboProtS31mMito	G1vm/6ZbZhV6vqTJ99QJ9w	SSU ribosomal protein S31mt, mitochondrial
+SsuRiboProtS33mMito	HeNDpDD4Qbo8xB9f3geycQ	SSU ribosomal protein S33mt, mitochondrial
+SsuRiboProtS34mMito	p+mTJ+/kSbMlyt4yGvSsKA	SSU ribosomal protein S34mt, mitochondrial
+SsuRiboProtS35mMito	dTDAuXh+ANletvAODDVmYA	SSU ribosomal protein S35mt, mitochondrial
+SsuRiboProtS3ae	SOiDss+ZKma1WJvFzVQCXA	SSU ribosomal protein S3Ae
+SsuRiboProtS3e	ra1d+TteUK1LSVQvqi6M4w	SSU ribosomal protein S3e (S3p)
+SsuRiboProtS3e	mO9Fi5S2NgX0/AZJ8GfqRw	SSU ribosomal protein S3p (S3e)
+SsuRiboProtS3pChlo	8FJNIHHUwZB+OuYvPgZu7g	SSU ribosomal protein S3p (S3e), chloroplast
+SsuRiboProtS3pMito	xdO138pPCMGulL3Q9Ge9Vw	SSU ribosomal protein S3p (S3e), mitochondrial
+SsuRiboProtS4e	SHdOJGjhIxkCJJ8WchB5tQ	SSU ribosomal protein S4e
+SsuRiboProtS4p	ixdCrROqhor4ztkTT0iPTw	SSU ribosomal protein S4p (S9e)
+SsuRiboProtS4pChlo	QGrnUvqhAA/LvOM7JACsQg	SSU ribosomal protein S4p (S9e), chloroplast
+SsuRiboProtS4pMito	DGROZCaX44O9dNfFefI6Bw	SSU ribosomal protein S4p (S9e), mitochondrial
+SsuRiboProtS5e	S+QLM1LhdaAqBmAtDV7OhA	SSU ribosomal protein S5e (S7p)
+SsuRiboProtS2e	2tooojDxlr6p/qi9opLMiw	SSU ribosomal protein S5p (S2e)
+SsuRiboProtS5pChlo	s9N3vPlO/3DOj7jAJLQN+g	SSU ribosomal protein S5p (S2e), chloroplast
+SsuRiboProtS5pMito	80SM4JB2m0nYOiyUSPfmkw	SSU ribosomal protein S5p (S2e), mitochondrial
+SsuRiboProtS6e	3XgqBhS5J5+WWzzdEXxOXQ	SSU ribosomal protein S6e
+SsuRiboProtS6p	/mW0UlyouirX2pyFhEeqoQ	SSU ribosomal protein S6p
+SsuRiboProtS6pChlo	Tbh3eAlkKlvDNFacDWG7EA	SSU ribosomal protein S6p, chloroplast
+SsuRiboProtS6pMito	SWCZunwidlesJlpTai4G+g	SSU ribosomal protein S6p, mitochondrial
+SsuRiboProtS7e	vayEW3ZLjpPUdV6dBRiKsw	SSU ribosomal protein S7e
+SsuRiboProtS5e	38as1+8LVkwCdHx/fPSjlQ	SSU ribosomal protein S7p (S5e)
+SsuRiboProtS7pChlo	bwQZjYe03eIiylSIEv6AxA	SSU ribosomal protein S7p (S5e), chloroplast
+SsuRiboProtS7pMito	G2AvYfhTrxaHld9X0HI9+g	SSU ribosomal protein S7p (S5e), mitochondrial
+SsuRiboProtS8e	/Pqf3AHg/A+ujQh2jb17HQ	SSU ribosomal protein S8e
+SsuRiboProtS15a	0kcgY/+vGFCrszmQAD7eMA	SSU ribosomal protein S8p (S15Ae)
+SsuRiboProtS8pChlo	87Uu3r6l/cR9xBoeME/R1g	SSU ribosomal protein S8p (S15Ae), chloroplast
+SsuRiboProtS8pMito	wJSgdp4djVjXuIUlYXYqyQ	SSU ribosomal protein S8p (S15Ae), mitochondrial
+SsuRiboProtS9e	nfRTPSp0lZT/UfjUu0KoYQ	SSU ribosomal protein S9e (S4p)
+SsuRiboProtS16e	uSOeXTiF+rQ35ATeGhLYMg	SSU ribosomal protein S9p (S16e)
+SsuRiboProtS9pChlo	DKCtuU8M6fMD+Njwzd72NQ	SSU ribosomal protein S9p (S16e), chloroplast
+SsuRiboProtS9pMito	ux3xEKncYkpovtJqjZXmWw	SSU ribosomal protein S9p (S16e), mitochondrial
+SsuRiboProtS2p	R8sSsWzcQRowFs9w+o5hrw	SSU ribosomal protein SAe (S2p)
+SsuRiboProtThx	irQBZLJSLFrSRK+ChHWXOg	SSU ribosomal protein Thx
+SsuRiboProtVar1Mito	OjQuCvuOXQYjLo87tPtIqA	SSU ribosomal protein VAR1, mitochondrial
