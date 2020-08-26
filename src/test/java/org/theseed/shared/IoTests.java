@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
 import org.theseed.counters.CountMap;
@@ -352,6 +353,18 @@ public class IoTests extends TestCase {
         assertThat(MarkerFile.read(marker), equalTo("abc"));
         MarkerFile.write(marker, 1024);
         assertThat(MarkerFile.readInt(marker), equalTo(1024));
+    }
+
+    /**
+     * test string set files
+     *
+     * @throws IOException
+     */
+    public void testStringSet() throws IOException {
+        File setFile = new File("data", "set.txt");
+        Set<String> strings = LineReader.readSet(setFile);
+        assertThat(strings.size(), equalTo(4));
+        assertThat(strings, containsInAnyOrder("value 1", "value 2", "value 3", "value 4"));
     }
 
     /**

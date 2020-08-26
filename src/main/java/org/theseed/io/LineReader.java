@@ -12,8 +12,10 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.UncheckedIOException;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
+import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -58,6 +60,27 @@ public class LineReader implements Iterable<String>, Iterator<String>, Closeable
         this.fileName = "text file input stream";
         Reader streamReader = new InputStreamReader(inputStream);
         setup(streamReader);
+    }
+
+    /**
+     * Read a string set from a tab-delimited file.  The strings to be put in the set are
+     * taken from the first column.
+     *
+     * @param inFile	input file to read
+     *
+     * @return a set of the values in the first column of the file
+     *
+     * @throws IOException
+     */
+    public static Set<String> readSet(File inFile) throws IOException {
+        Set<String> retVal = new HashSet<String>();
+        try (LineReader reader = new LineReader(inFile)) {
+            for (String line : reader) {
+                String value = StringUtils.substringBefore(line, "\t");
+                retVal.add(value);
+            }
+        }
+        return retVal;
     }
 
     /**

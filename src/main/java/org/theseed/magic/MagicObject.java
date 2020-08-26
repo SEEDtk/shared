@@ -142,12 +142,13 @@ public abstract class MagicObject implements Serializable {
     }
 
     /**
-     * Update the name.  This will set the checksum. Don't do this unless
-     * the object starts blank.
+     * Update the name.  This will set the checksum.  This can cause
+     * the magic ID to go out of sync with the name unless the object
+     * is blank.
      *
      * @param name	the name to set
      */
-    /* package private */ void setName(String name) {
+    protected void setName(String name) {
         this.name = name;
         this.setChecksum();
     }

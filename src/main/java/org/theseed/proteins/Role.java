@@ -109,4 +109,20 @@ public class Role extends MagicObject implements Comparable<Role> {
         return check.equals(this.getChecksum());
     }
 
+    /**
+     * Update the name.  The checksum must match.
+     *
+     * @param newName		new name for the role
+     */
+    public void updateName(String newName) {
+        if (! this.matches(newName))
+            throw new IllegalArgumentException("New role name \"" + newName + "\" incompatible for role " + this.getId() + ".");
+        this.setName(newName);
+    }
+
+    @Override
+    public String toString() {
+        return this.getId() + ":" + this.getName();
+    }
+
 }

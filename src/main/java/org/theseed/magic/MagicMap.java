@@ -113,6 +113,8 @@ public class MagicMap<T extends MagicObject> implements Map<String, String> {
             if (found != null) {
                 // Here we have an alias.  Save the association.
                 this.aliases.add(obj);
+                // Denote we want to associate the alias with this checksum.
+                found = obj;
             } else {
                 // We have a new object. Parse out the prefix and suffix.
                 Matcher m = ID_PARSER.matcher(id);

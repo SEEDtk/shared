@@ -38,7 +38,10 @@ public class OrganismDirectories implements Iterable<String> {
         for (File subFile : subFiles) {
             String genomeId = subFile.getName();
             if (GENOME_PATTERN.matcher(genomeId).matches() && subFile.isDirectory()) {
-                genomes.add(genomeId);
+                // Here we have a valid genome directory.  Insure it's not deleted.
+                File deleteFile = new File(subFile, "DELETED");
+                if (! deleteFile.exists())
+                    genomes.add(genomeId);
             }
         }
         // Sort the genomes alphabetically.

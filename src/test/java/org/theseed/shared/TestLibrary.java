@@ -173,17 +173,16 @@ public class TestLibrary extends TestCase {
         modifiedThing = "ALIAS Second phenylalanyl role string";
         Thing myThing = magicTable.findOrInsert(modifiedThing);
         assertEquals("Alias 1 did not work.", "PhenTrnaSyntDoma", myThing.getId());
-        assertEquals("Alias 1 overrode text.", "Phenylalanyl-tRNA synthetase domain protein (Bsu YtpR)", myThing.getName());
         magicTable.addAlias("PhenTrnaSyntDoma", "alias third Phenylalanyl role string");
         modifiedThing = "Phenylalanyl-tRNA synthetase domain protein (Bsu YtpR)";
         newThing = magicTable.findOrInsert(modifiedThing);
-        assertSame("Original string did not work.", newThing, myThing);
+        assertEquals("Original string did not work.", newThing.getId(), myThing.getId());
         modifiedThing = "alias second Phenylalanyl role string";
         newThing = magicTable.findOrInsert(modifiedThing);
         assertSame("Alias 1 string did not work.", newThing, myThing);
         modifiedThing = "alias third Phenylalanyl role string";
         newThing = magicTable.findOrInsert(modifiedThing);
-        assertSame("Alias 2 string did not work.", newThing, myThing);
+        assertEquals("Alias 2 string did not work.", newThing.getId(), myThing.getId());
 
         // Test save and load.
         File saveFile = new File("data", "things.ser");
@@ -204,10 +203,10 @@ public class TestLibrary extends TestCase {
         myThing = newTable.findOrInsert(modifiedThing);
         modifiedThing = "alias second Phenylalanyl role string";
         newThing = newTable.findOrInsert(modifiedThing);
-        assertSame("Alias 1 string did not work.", newThing, myThing);
+        assertEquals("Alias 1 string did not work.", newThing.getId(), myThing.getId());
         modifiedThing = "alias third Phenylalanyl role string";
         newThing = newTable.findOrInsert(modifiedThing);
-        assertSame("Alias 2 string did not work.", newThing, myThing);
+        assertEquals("Alias 2 string did not work.", newThing.getId(), myThing.getId());
 
         // Test map interface
         Map<String, String> thingMap = magicTable;
@@ -589,6 +588,25 @@ public class TestLibrary extends TestCase {
         assertNotNull("Role 1 not found", goodRoles.containsName("role 1"));
         assertNotNull("Role 2 not found", goodRoles.containsName("role 2"));
         assertNotNull("Role 3 not found", goodRoles.containsName("role 3"));
+    }
+
+    /**
+     * test role aliases
+     */
+    public void testAliases() {
+        RoleMap roleMap = RoleMap.load(new File("data", "ssuRoles.txt"));
+        Role primeRole = roleMap.getByName("SSU ribosomal protein S13e (S15p)");
+        assertThat(primeRole, notNullValue());
+        assertThat(primeRole.getName(), equalTo("SSU ribosomal protein S13e (S15p)"));
+        Role otherRole = roleMap.getByName("SSU ribosomal protein S15p (S13e)");
+        assertThat(otherRole, notNullValue());
+        assertThat(otherRole.getName(), equalTo("SSU ribosomal protein S15p (S13e)"));
+        primeRole = roleMap.findOrInsert("SSU ribosomal protein S13e (S15p)");
+        assertThat(primeRole, notNullValue());
+        assertThat(primeRole.getName(), equalTo("SSU ribosomal protein S13e (S15p)"));
+        otherRole = roleMap.findOrInsert("SSU ribosomal protein S15p (S13e)");
+        assertThat(otherRole, notNullValue());
+        assertThat(otherRole.getName(), equalTo("SSU ribosomal protein S15p (S13e)"));
     }
 
     /**
