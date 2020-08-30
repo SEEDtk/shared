@@ -4,10 +4,7 @@
 package org.theseed.shared;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.closeTo;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.lessThan;
-import static org.hamcrest.Matchers.lessThanOrEqualTo;
+import static org.hamcrest.Matchers.*;
 
 import java.io.File;
 import java.io.IOException;
@@ -44,6 +41,10 @@ public class KmerTests extends TestCase {
         assertEquals("Similarity not commutative.", 3, kmer3.similarity(kmer2));
         assertEquals("Kmer1 too close to kmer2.", 1.0, kmer1.distance(kmer2), 0.0);
         assertEquals("Kmer1 too close to kmer3.", 0.95, kmer2.distance(kmer3), 0.005);
+        for (String kmer : kmer3) {
+            assertThat(kmer.length(), equalTo(10));
+            assertThat(myProt3, containsString(kmer));
+        }
         int[] hash1 = kmer1.hashSet(200);
         int[] hash2 = kmer2.hashSet(200);
         int[] hash3 = kmer3.hashSet(200);

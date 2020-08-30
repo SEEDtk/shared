@@ -8,7 +8,9 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -215,7 +217,7 @@ public class TabbedLineReader implements Closeable, AutoCloseable, Iterable<Tabb
             // Here the entire file is empty.  Insure we get EOF on the first read.
             this.nextLine = null;
         } else {
-        	this.headerLine = this.reader.next();
+            this.headerLine = this.reader.next();
             // Parse the header line into labels and normalize them to lower case.
             this.labels = StringUtils.split(headerLine, '\t');
             // Set up to return the first data line.
@@ -364,5 +366,30 @@ public class TabbedLineReader implements Closeable, AutoCloseable, Iterable<Tabb
     public int size() {
         return this.labels.length;
     }
+
+    /**
+     * Read a string set from a tab-delimited file with headers.  The strings to be put in the set are
+     * taken from the specified column.
+     *
+     * @param inFile	input file to read
+     * @param column	index (1-based) or name of the column to read
+     *
+     * @return a set of the values in the specified column of the file
+     *
+     * @throws IOException
+     */
+    public static Set<String> readSet(File inFile, String column) throws IOException {
+        Set<String> retVal = new HashSet<String>();
+        try (TabbedLineReader reader = new TabbedLineReader(inFile)) {
+            int idx = reader.findField(column);
+            for (TabbedLineReader.Line line : reader) {
+                String value = line.get(idx);
+                retVal.add(value);
+            }
+        }
+        return retVal;
+    }
+
+
 
 }

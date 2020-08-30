@@ -28,6 +28,8 @@ public abstract class BaseProcessor implements ICommand {
     protected static Logger log = LoggerFactory.getLogger(BaseProcessor.class);
     /** start time of processor */
     private long startTime;
+    /** saved incoming parameters */
+    private String[] options;
 
     // COMMAND-LINE OPTIONS
 
@@ -52,6 +54,9 @@ public abstract class BaseProcessor implements ICommand {
         this.help = false;
         this.debug = false;
         this.setDefaults();
+        // Save the incoming parameters.
+        this.options = args;
+        // Parse them.
         CmdLineParser parser = new CmdLineParser(this);
         try {
             parser.parseArgument(args);
@@ -111,5 +116,12 @@ public abstract class BaseProcessor implements ICommand {
      * @throws Exception
      */
     protected abstract void runCommand() throws Exception;
+
+    /**
+     * @return the original command-line options and parameters
+     */
+    public String[] getOptions() {
+        return options;
+    }
 
 }

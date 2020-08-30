@@ -365,6 +365,10 @@ public class IoTests extends TestCase {
         Set<String> strings = LineReader.readSet(setFile);
         assertThat(strings.size(), equalTo(4));
         assertThat(strings, containsInAnyOrder("value 1", "value 2", "value 3", "value 4"));
+        File tabFile = new File("data", "tabset.tbl");
+        strings = TabbedLineReader.readSet(tabFile, "role");
+        assertThat(strings.size(), equalTo(5));
+        assertThat(strings, containsInAnyOrder("roleA", "roleB", "roleC", "roleD", "roleE"));
     }
 
     /**
