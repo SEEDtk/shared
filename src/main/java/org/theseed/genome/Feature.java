@@ -454,12 +454,21 @@ public class Feature implements Comparable<Feature> {
             retVal = new String[0];
         } else {
             // Remove any comments.
-            String commentFree = RegExUtils.removeFirst(function, COMMENT_PATTERN);
+            String commentFree = commentFree(function);
             // Split the function into roles.
             retVal = Arrays.stream(SEP_PATTERN.split(commentFree)).
                     filter(value -> value.length() > 0).toArray(String[]::new);
         }
         return retVal;
+    }
+
+    /**
+     * @return a function with the comment removed
+     *
+     * @param function	function to check for comments
+     */
+    public static String commentFree(String function) {
+        return RegExUtils.removeFirst(function, COMMENT_PATTERN);
     }
 
     /**
