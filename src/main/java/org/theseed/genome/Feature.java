@@ -12,10 +12,10 @@ import java.util.TreeSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.commons.lang3.RegExUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.theseed.locations.Location;
 import org.theseed.locations.Region;
+import org.theseed.proteins.Function;
 import org.theseed.proteins.Role;
 import org.theseed.proteins.RoleMap;
 
@@ -53,9 +53,6 @@ public class Feature implements Comparable<Feature> {
 
     /** parsing pattern for function-to-roles */
     private static final Pattern SEP_PATTERN = Pattern.compile("\\s+[\\/@]\\s+|\\s*;\\s+");
-
-    /** parsing pattern for removing function comments */
-    private static final Pattern COMMENT_PATTERN = Pattern.compile("\\s*[#!].+");
 
     /** pattern for extracting genome ID from feature ID */
     public static final Pattern FID_PARSER = Pattern.compile("fig\\|(\\d+\\.\\d+)\\.\\w+\\.\\d+");
@@ -454,21 +451,12 @@ public class Feature implements Comparable<Feature> {
             retVal = new String[0];
         } else {
             // Remove any comments.
-            String commentFree = commentFree(function);
+            String commentFree = Function.commentFree(function);
             // Split the function into roles.
             retVal = Arrays.stream(SEP_PATTERN.split(commentFree)).
                     filter(value -> value.length() > 0).toArray(String[]::new);
         }
         return retVal;
-    }
-
-    /**
-     * @return a function with the comment removed
-     *
-     * @param function	function to check for comments
-     */
-    public static String commentFree(String function) {
-        return RegExUtils.removeFirst(function, COMMENT_PATTERN);
     }
 
     /**

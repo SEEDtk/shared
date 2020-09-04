@@ -11,13 +11,18 @@ import murmur3.MurmurHash3.LongPair;
 
 public class Role extends MagicObject implements Comparable<Role> {
 
+    /** regular expression string for an EC number */
+    static public final String EC_REGEX = "\\(\\s*E\\.?C\\.?(?:\\s+|:)(\\d\\.(?:\\d+|-)\\.(?:\\d+|-)\\.(?:n?\\d+|-))\\s*\\)";
+    /** regular expression string for a TC number */
+    static public final String TC_REGEX = "\\(\\s*T\\.?C\\.?(?:\\s+|:)(\\d\\.[A-Z]\\.(?:\\d+|-)\\.(?:\\d+|-)\\.(?:\\d+|-)\\s*)\\)";
+
     // ROLE-PARSING PATTERNS
-    static private final Pattern EC_PATTERN = Pattern.compile("(.+?)\\s*\\(\\s*E\\.?C\\.?(?:\\s+|:)(\\d\\.(?:\\d+|-)\\.(?:\\d+|-)\\.(?:n?\\d+|-))\\s*\\)\\s*(.*)");
-    static private final Pattern TC_PATTERN = Pattern.compile("(.+?)\\s*\\(\\s*T\\.?C\\.?(?:\\s+|:)(\\d\\.[A-Z]\\.(?:\\d+|-)\\.(?:\\d+|-)\\.(?:\\d+|-)\\s*)\\)\\s*(.*)");
-    static private final Pattern HYPO_WORD_PATTERN = Pattern.compile("^\\d{7}[a-z]\\d{2}rik\\b|\\b(?:hyphothetical|hyothetical)\\b");
-    static private final Pattern CR_PATTERN = Pattern.compile("\\r");
-    static private final Pattern SPACE_PATTERN = Pattern.compile("\\s+");
-    static private final Pattern EXTRA_SPACES = Pattern.compile("[\\s,.:]{2,}");
+    static protected final Pattern EC_PATTERN = Pattern.compile("(.+?)\\s*" + EC_REGEX + "\\s*(.*)");
+    static protected final Pattern TC_PATTERN = Pattern.compile("(.+?)\\s*" + TC_REGEX + "\\s*(.*)");
+    static protected final Pattern HYPO_WORD_PATTERN = Pattern.compile("^\\d{7}[a-z]\\d{2}rik\\b|\\b(?:hyphothetical|hyothetical)\\b");
+    static protected final Pattern CR_PATTERN = Pattern.compile("\\r");
+    static protected final Pattern SPACE_PATTERN = Pattern.compile("\\s+");
+    static protected final Pattern EXTRA_SPACES = Pattern.compile("[\\s,.:]{2,}");
 
 
     /**
@@ -67,6 +72,26 @@ public class Role extends MagicObject implements Comparable<Role> {
             roleDesc = MagicObject.join_text(m.group(1), m.group(3));
             tcNum = m.group(2);
         }
+        roleDesc = fixSpelling(roleDesc);
+        // If we have a hypothetical with a number, replace it.
+        if (roleDesc.equals("hypothetical protein") || roleDesc.isEmpty()) {
+            if (ecNum != null) {
+                roleDesc = "putative protein " + ecNum;
+            } else if (tcNum != null) {
+                roleDesc = "putative transporter " + tcNum;
+            }
+        }
+        // Now remove the extra spaces and punctuation.
+        roleDesc = RegExUtils.replaceAll(roleDesc, EXTRA_SPACES, " ");
+        return roleDesc;
+    }
+
+    /**
+     * @return a role or function description string with the common spelling mistakes fixed.
+     *
+     * @param roleDesc	description string to process
+     */
+    public static String fixSpelling(String roleDesc) {
         // Convert to lower case so case doesn't matter.
         roleDesc = roleDesc.toLowerCase();
         // Fix spelling mistakes in "hypothetical".
@@ -81,16 +106,6 @@ public class Role extends MagicObject implements Comparable<Role> {
             roleDesc = StringUtils.chop(roleDesc);
         }
         roleDesc = RegExUtils.replaceAll(roleDesc, SPACE_PATTERN, " ");
-        // If we have a hypothetical with a number, replace it.
-        if (roleDesc.equals("hypothetical protein") || roleDesc.isEmpty()) {
-            if (ecNum != null) {
-                roleDesc = "putative protein " + ecNum;
-            } else if (tcNum != null) {
-                roleDesc = "putative transporter " + tcNum;
-            }
-        }
-        // Now remove the extra spaces and punctuation.
-        roleDesc = RegExUtils.replaceAll(roleDesc, EXTRA_SPACES, " ");
         return roleDesc;
     }
 
@@ -105,7 +120,7 @@ public class Role extends MagicObject implements Comparable<Role> {
      * @param roleDesc		role name to check
      */
     public boolean matches(String roleDesc) {
-        LongPair check = this.checksumOf(this.normalize(roleDesc));
+        LongPair check = this.checksumOf(normalize(roleDesc));
         return check.equals(this.getChecksum());
     }
 

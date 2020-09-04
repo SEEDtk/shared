@@ -34,7 +34,7 @@ public abstract class Location implements Comparable<Location>, Cloneable {
     /** TRUE if this location is valid, else FALSE */
     protected boolean valid;
     /** pattern for parsing location strings */
-    private static Pattern LOCATION_STRING = Pattern.compile("([^+\\-]+)([+\\-])\\[(.+)\\]");
+    private static Pattern LOCATION_STRING = Pattern.compile("(.+)([+\\-])\\[(.+)\\]");
 
 
     /**
@@ -873,6 +873,24 @@ public abstract class Location implements Comparable<Location>, Cloneable {
     }
 
     /**
+     * Copy regions from this location into a new location, keeping them within the
+     * specified bounds.
+     *
+     * @param newLeft	new left edge
+     * @param newRight	new right edge
+     * @param newLoc	destination location
+     */
+    protected void copyRegions(int newLeft, int newRight, Location newLoc) {
+        for (Region region : this.regions) {
+            if (region.getRight() >= newLeft && region.getLeft() <= newRight) {
+                int rLeft = (newLeft >= region.getLeft() ? newLeft : region.getLeft());
+                int rRight = (newRight <= region.getRight() ? newRight : region.getRight());
+                newLoc.putRegion(rLeft, rRight);
+            }
+        }
+    }
+
+    /**
      * @return a version of this location that would apply to the reverse complement of the original sequence
      *
      * @param seqLen	length of the sequence being reverse-complimented
@@ -936,5 +954,12 @@ public abstract class Location implements Comparable<Location>, Cloneable {
      */
     protected abstract boolean isUpstreamCheck(Location other);
 
+    /**
+     * @return a location at a given offset and length inside this location
+     *
+     * @param offset	offset from the beginning (0-based)
+     * @param len		length of the sub-location
+     */
+    public abstract Location subLocation(int offset, int len);
 
 }

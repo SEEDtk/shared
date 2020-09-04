@@ -171,5 +171,35 @@ public class FLocation extends Location {
         return (this.getRight() < other.getLeft());
     }
 
+    @Override
+    public Location subLocation(int offset, int len) {
+        // Create a new location.
+        Location retVal = new FLocation(this.contigId);
+        // Add regions until will fill the space.
+        int used = 0;
+        int curr = 0;
+        for (int i = 0; used < len && i < this.regions.size(); i++) {
+            Region region = this.regions.get(i);
+            // Only use this region if it contains data to the right of the new left.
+            int next = curr + region.getLength();
+            if (next > offset) {
+                // Constrain the left edge.
+                int left = region.getLeft();
+                if (curr < offset) left = region.getLeft() + offset - curr;
+                // Constrain the right edge.
+                int right = region.getRight();
+                int next2 = used + right + 1 - left;
+                if (next2 > len) right = right - (next2 - len);
+                // Store the new region.
+                retVal.putRegion(left, right);
+                // Update the counters.
+                int newLen = right + 1 - left;
+                used += newLen;
+            }
+            curr= next;
+        }
+        return retVal;
+    }
+
 
 }

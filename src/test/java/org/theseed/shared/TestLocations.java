@@ -607,4 +607,25 @@ public class TestLocations extends TestCase {
         assertThat(feat2.isUpstream(feat), isFalse());
     }
 
+    public void testSubLocations() {
+        Location loc1 = Location.create("contig1", "+", 1000, 1099, 1200, 1299, 1400, 1499);
+        Location loc2 = Location.create("contig2", "-", 1400, 1499, 1200, 1299, 1000, 1099);
+        Location loc1a = loc1.subLocation(150, 120);
+        assertThat(loc1a.getContigId(), equalTo(loc1.getContigId()));
+        assertThat(loc1a.getRegionLength(), equalTo(120));
+        assertThat(loc1a.getLeft(), equalTo(1250));
+        Location loc2a = loc2.subLocation(110, 120);
+        assertThat(loc2a.getContigId(), equalTo(loc2.getContigId()));
+        assertThat(loc2a.getRegionLength(), equalTo(120));
+        assertThat(loc2a.getRight(), equalTo(1289));
+        loc1a = loc1.subLocation(50, 200);
+        assertThat(loc1a.getContigId(), equalTo(loc1.getContigId()));
+        assertThat(loc1a.getRegionLength(), equalTo(200));
+        assertThat(loc1a.getLeft(), equalTo(1050));
+        loc2a = loc2.subLocation(50, 200);
+        assertThat(loc2a.getContigId(), equalTo(loc2.getContigId()));
+        assertThat(loc2a.getRegionLength(), equalTo(200));
+        assertThat(loc2a.getRight(), equalTo(1449));
+    }
+
 }

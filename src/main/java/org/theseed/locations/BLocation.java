@@ -180,5 +180,35 @@ public class BLocation extends Location {
         return (this.getLeft() > other.getRight());
     }
 
+    @Override
+    public Location subLocation(int offset, int len) {
+        // Create a new location.
+        Location retVal = new BLocation(this.contigId);
+        // Add regions until will fill the space.
+        int used = 0;
+        int curr = 0;
+        for (int i = this.regions.size() - 1; used < len && i >= 0; i--) {
+            Region region = this.regions.get(i);
+            // Only use this region if it contains data to the left of the new right.
+            int next = curr + region.getLength();
+            if (next > offset) {
+                // Constrain the right edge.
+                int right = region.getRight();
+                if (curr < offset) right = region.getRight() - (offset - curr);
+                // Constrain the left edge.
+                int left = region.getLeft();
+                int next2 = used + right + 1 - left;
+                if (next2 > len) left = left + (next2 - len);
+                // Store the new region.
+                retVal.putRegion(left, right);
+                // Update the counters.
+                int newLen = right + 1 - left;
+                used += newLen;
+            }
+            curr= next;
+        }
+        return retVal;
+    }
+
 
 }
