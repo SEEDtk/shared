@@ -201,5 +201,12 @@ public class FLocation extends Location {
         return retVal;
     }
 
+    @Override
+    public Location expandUpstream(int upstream, int contigLen) {
+        Location retVal = (Location) this.clone();
+        retVal.expand(upstream, 0, contigLen);
+        return retVal;
+    }
+
 
 }

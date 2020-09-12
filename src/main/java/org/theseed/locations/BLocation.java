@@ -210,5 +210,12 @@ public class BLocation extends Location {
         return retVal;
     }
 
+    @Override
+    public Location expandUpstream(int upstream, int contigLen) {
+        Location retVal = (Location) this.clone();
+        retVal.expand(0, upstream, contigLen);
+        return retVal;
+    }
+
 
 }

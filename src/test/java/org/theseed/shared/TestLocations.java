@@ -437,6 +437,25 @@ public class TestLocations extends TestCase {
             String locString2 = locRecurse.toString();
             assertThat(locString2, equalTo(locString));
         }
+        // Test upstream extension.
+        Location loc9u = loc9.expandUpstream(1500, 5000);
+        assertThat(loc9.getLeft(), equalTo(1000));
+        assertThat(loc9.getRight(), equalTo(4000));
+        assertThat(loc9u.getLeft(), equalTo(1));
+        assertThat(loc9u.getRight(), equalTo(4000));
+        assertThat(loc9u.getContigId(), equalTo(loc9.getContigId()));
+        loc9u = loc9.expandUpstream(500, 5000);
+        assertThat(loc9u.getLeft(), equalTo(500));
+        assertThat(loc9u.getRegionLength(), equalTo(loc9.getRegionLength() + 500));
+        Location loc8u = loc8.expandUpstream(1500, 5000);
+        assertThat(loc8.getLeft(), equalTo(1000));
+        assertThat(loc8.getRight(), equalTo(4000));
+        assertThat(loc8u.getLeft(), equalTo(1000));
+        assertThat(loc8u.getRight(), equalTo(5000));
+        assertThat(loc8u.getContigId(), equalTo(loc8.getContigId()));
+        loc8u = loc8.expandUpstream(500, 5000);
+        assertThat(loc8u.getRight(), equalTo(4500));
+        assertThat(loc8u.getRegionLength(), equalTo(loc8.getRegionLength() + 500));
         // Test the strand sorter.
         Arrays.sort(locArray, new Location.StrandSorter());
         for (int i = 1; i < locArray.length; i++) {

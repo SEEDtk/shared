@@ -962,4 +962,12 @@ public abstract class Location implements Comparable<Location>, Cloneable {
      */
     public abstract Location subLocation(int offset, int len);
 
+    /**
+     * @return a location that has been expanded upstream by the specified length
+     *
+     * @param upstream	distance to expand upstream
+     * @param length	length of the contig containing the location
+     */
+    public abstract Location expandUpstream(int upstream, int contigLen);
+
 }
