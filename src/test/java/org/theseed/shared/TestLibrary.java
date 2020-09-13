@@ -293,6 +293,7 @@ public class TestLibrary extends TestCase {
         assertNotNull("Sample feature not found.", myFeature);
         assertEquals("Incorrect feature found.", "fig|1313.7001.peg.758", myFeature.getId());
         assertEquals("Incorrect function in sample feature.", "Transposase, IS4 family", myFeature.getFunction());
+        assertThat(myFeature.getPegFunction(), equalTo("Transposase, IS4 family"));
         assertEquals("Incorrect protein for sample feature.", myProtein, myFeature.getProteinTranslation());
         assertEquals("Incorrect protein length for sample feature.", myProtein.length(), myFeature.getProteinLength());
         assertEquals("Incorrect DNA for sample feature.", myDna1, this.myGto.getDna("fig|1313.7001.peg.758"));
@@ -387,9 +388,24 @@ public class TestLibrary extends TestCase {
         Location loc3 = loc2.converse(dna.length());
         assertThat(loc3.getDna(dna), equalTo(locDna));
         assertThat(loc3, equalTo(loc));
-
     }
 
+    /**
+     * Test peg-function method.
+     *
+     * @throws IOException
+     */
+    public void testPegFunctions() throws IOException {
+        Genome gto = new Genome(new File("data", "123214.3.gto"));
+        for (Feature peg : gto.getPegs()) {
+            String fun = peg.getFunction();
+            if (fun != null && ! fun.isEmpty())
+                assertThat(peg.getPegFunction(), equalTo(fun));
+        }
+        Feature feat = gto.getFeature("fig|123214.3.peg.179");
+        feat.setFunction("");
+        assertThat(feat.getPegFunction(), equalTo("hypothetical protein"));
+    }
 
     /**
      * Test genome directories

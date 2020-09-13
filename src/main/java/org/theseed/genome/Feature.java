@@ -355,6 +355,16 @@ public class Feature implements Comparable<Feature> {
     }
 
     /**
+     * @return the function, or "hypothetical protein" if there is none
+     */
+    public String getPegFunction() {
+        String retVal = this.function;
+        if (retVal == null || retVal.isEmpty())
+            retVal = "hypothetical protein";
+        return retVal;
+    }
+
+    /**
      * @return the protein_translation
      */
     public String getProteinTranslation() {
