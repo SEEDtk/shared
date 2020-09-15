@@ -413,6 +413,10 @@ public class TestLocations extends TestCase {
         assertFalse("loc2 contains loc3.", loc2.contains(loc3));
         assertFalse("loc3 contains loc2.", loc3.contains(loc2));
         assertFalse("loc1 contains loc4.", loc1.contains(loc4));
+        assertThat(loc1.offsetPoint(100), equalTo(1100));
+        assertThat(loc1.offsetPoint(-100), equalTo(900));
+        assertThat(loc4.offsetPoint(100), equalTo(1149));
+        assertThat(loc4.offsetPoint(-100), equalTo(1349));
         Location loc5 = Location.create("myContig", "+",  1000, 2000, 3000, 4000);
         Location loc6 = Location.create("myContig", "+", 3000, 4000, 1000, 2000);
         Location loc7 = Location.create("yourContig", "+", 1000, 2000, 3000, 4000);

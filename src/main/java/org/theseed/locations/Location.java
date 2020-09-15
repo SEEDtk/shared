@@ -963,6 +963,15 @@ public abstract class Location implements Comparable<Location>, Cloneable {
     public abstract Location subLocation(int offset, int len);
 
     /**
+     * @return a contig location at the given offset from this location
+     *
+     * This is a blind offset.  It does not take into account contig length limits or multi-region locations
+     *
+     * @param offset	offset from beginning (0-based
+     */
+    public abstract int offsetPoint(int offset);
+
+    /**
      * @return a location that has been expanded upstream by the specified length
      *
      * @param upstream	distance to expand upstream

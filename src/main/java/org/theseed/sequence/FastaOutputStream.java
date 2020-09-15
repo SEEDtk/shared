@@ -74,7 +74,7 @@ public class FastaOutputStream implements Closeable, AutoCloseable, Flushable {
      *
      * @throws IOException
      */
-    public void write(Collection<Sequence> sequences) throws IOException {
+    public void write(Collection<? extends Sequence> sequences) throws IOException {
         for (Sequence seq : sequences) {
             this.write(seq);
         }

@@ -217,5 +217,10 @@ public class BLocation extends Location {
         return retVal;
     }
 
+    @Override
+    public int offsetPoint(int offset) {
+        return (this.getBegin() - offset);
+    }
+
 
 }
