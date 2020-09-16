@@ -87,6 +87,7 @@ public class CounterTest extends TestCase {
         assertEquals("Wrong count for thing 3.", 3, thingCounter.getCount(t3));
         assertEquals("Wrong count for thing 4.", 4, thingCounter.getCount(t4));
         assertEquals("Wrong count for thing 5.", 0, thingCounter.getCount(t5));
+        assertThat(thingCounter.getTotal(), equalTo(10));
         Collection<Thing> keysFound = thingCounter.keys();
         assertThat("Wrong keys returned.", keysFound, contains(t1, t4, t2, t3));
         assertEquals("Too many keys returned.", 4, keysFound.size());

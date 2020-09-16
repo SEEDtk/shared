@@ -153,6 +153,16 @@ public class CountMap<K> {
     }
 
     /**
+     * @return the total of all the counts
+     */
+    public int getTotal() {
+        int retVal = 0;
+        for (Count count : this.map.values())
+            retVal += count.num;
+        return retVal;
+    }
+
+    /**
      * Erase all the counts in this map without deleting any keys.
      */
     public void clear() {

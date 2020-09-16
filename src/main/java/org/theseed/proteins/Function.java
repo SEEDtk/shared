@@ -3,10 +3,12 @@
  */
 package org.theseed.proteins;
 
+import java.util.Comparator;
 import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.RegExUtils;
 import org.theseed.magic.MagicObject;
+import org.theseed.reports.NaturalSort;
 
 /**
  * This class represents a full functional assignment, and is used when we want to classify proteins by function instead
@@ -67,5 +69,22 @@ public class Function extends MagicObject {
         return RegExUtils.removeFirst(function, COMMENT_PATTERN);
     }
 
+    /**
+     * This is a comparator for sorting functions by name.
+     */
+    public static class ByName implements Comparator<Function> {
+
+        private NaturalSort sorter;
+
+        public ByName() {
+            this.sorter = new NaturalSort();
+        }
+
+        @Override
+        public int compare(Function o1, Function o2) {
+            return sorter.compare(o1.getName(), o2.getName());
+        }
+
+    }
 
 }
