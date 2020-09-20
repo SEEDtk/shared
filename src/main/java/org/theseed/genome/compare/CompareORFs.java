@@ -219,7 +219,7 @@ public abstract class CompareORFs {
             // The genomes are comparable. Load all their features into a sorted set.
             SortedSet<Feature> newOrfs = this.sortFeatures(newGenome);
             SortedSet<Feature> oldOrfs = this.sortFeatures(oldGenome);
-            // Clear the counters.
+            // Clear the counters (if needed).
             this.initCompareData();
             // Get iterators through the sets.
             Iterator<Feature> newIter = newOrfs.iterator();

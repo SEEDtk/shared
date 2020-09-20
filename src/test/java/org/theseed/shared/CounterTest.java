@@ -58,6 +58,10 @@ public class CounterTest extends TestCase {
         assertEquals("Incremental set-good failed.", 4, testMap.good("BBB"));
         testMap.setBad("DDD", 6);
         assertEquals("Incremental set-bad failed.", 7, testMap.bad("DDD"));
+        testMap.clear();
+        assertThat(testMap.good("AAA"), equalTo(0));
+        assertThat(testMap.bad("DDD"), equalTo(0));
+        assertThat(testMap.size(), equalTo(0));
     }
 
     /**

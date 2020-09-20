@@ -187,5 +187,12 @@ public class QualityCountMap<K extends Comparable<K>> {
         return this.map.keySet();
     }
 
+    /**
+     * Erase all the counts.
+     */
+    public void clear() {
+        this.map.clear();
+    }
+
 
 }
