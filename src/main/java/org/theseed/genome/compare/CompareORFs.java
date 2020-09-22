@@ -3,8 +3,6 @@
  */
 package org.theseed.genome.compare;
 
-import java.io.File;
-import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Comparator;
@@ -14,14 +12,10 @@ import java.util.Map;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.theseed.genome.Contig;
 import org.theseed.genome.Feature;
 import org.theseed.genome.Genome;
-import org.theseed.genome.GenomeDirectory;
 import org.theseed.locations.Location;
-import org.theseed.sequence.MD5Hex;
 
 /**
  * This class contains useful genome-comparison utilities, and is a base class for classes used to compare genomes on an ORF-by-ORF basis.
@@ -29,40 +23,12 @@ import org.theseed.sequence.MD5Hex;
  * @author Bruce Parrello
  *
  */
-public abstract class CompareORFs {
+public abstract class CompareORFs extends MatchGenomes {
 
-    // FIELDS
-    /** logging facility */
-    protected static Logger log = LoggerFactory.getLogger(CompareORFs.class);
     /** comparator for sorting */
     protected Comparator<Feature> orfSorter;
     /** contig ID map from old-genome contig IDs to new-genome contig IDs */
     private Map<String, String> contigIdMap;
-    /** MD5 computer */
-    private MD5Hex md5Computer;
-
-    /**
-     * @return a map of genome sequence MD5s to genome files
-     *
-     * @param genomeDir		directory of the genome files
-     *
-     * @throws IOException
-     * @throws NoSuchAlgorithmException
-     */
-    public Map<String, File> getMd5GenomeMap(File genomeDir) throws IOException {
-
-        GenomeDirectory genomes = new GenomeDirectory(genomeDir);
-        Map<String, File> retVal = new HashMap<String, File>();
-        for (Genome refGenome : genomes) {
-            log.info("Scanning {}.", refGenome);
-            // Get the MD5 for all the contig IDs.
-            String key = this.md5Computer.sequenceMD5(refGenome);
-            // Map the file name to the MD5.
-            retVal.put(key, genomes.currFile());
-        }
-        return retVal;
-    }
-
     /**
      * Comparator for sorting Features by contig, end point, strand.
      */
@@ -88,9 +54,9 @@ public abstract class CompareORFs {
      * @throws NoSuchAlgorithmException
      */
     public CompareORFs() throws NoSuchAlgorithmException {
+        super();
         this.orfSorter = new OrfSorter();
         this.contigIdMap = new HashMap<String, String>();
-        this.md5Computer = new MD5Hex();
     }
 
     /**
@@ -129,11 +95,11 @@ public abstract class CompareORFs {
             // Here it is likely we can pull it off. Get a map from MD5s to new-genome contig IDs.
             Map<String, String> md5Map = new HashMap<String, String>(newGenome.getContigCount());
             for (Contig contig : newGenome.getContigs())
-                md5Map.put(this.md5Computer.sequenceMD5(contig.getSequence()), contig.getId());
+                md5Map.put(this.getMd5Computer().sequenceMD5(contig.getSequence()), contig.getId());
             // Loop through the old-genome contigs.
             for (Contig oldContig : oldGenome.getContigs()) {
                 // Get the MD5 of this contig.
-                String oldMd5 = this.md5Computer.sequenceMD5(oldContig.getSequence());
+                String oldMd5 = this.getMd5Computer().sequenceMD5(oldContig.getSequence());
                 String newContigId = md5Map.get(oldMd5);
                 if (newContigId == null)
                     retVal = false;

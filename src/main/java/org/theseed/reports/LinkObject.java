@@ -129,9 +129,9 @@ public abstract class LinkObject {
      */
     public static class Core extends LinkObject {
 
-        private static final String GENOME_VIEW_LINK = "https://core.theseed.org/FIG/seedviewer.cgi?page=Organism&organism=%s";
+        private static final String GENOME_VIEW_LINK = "https://core.theseed.org/FIG/seedviewer.cgi?page=Organism;organism=%s";
 
-        private static final String FEATURE_VIEW_LINK = "https://core.theseed.org/FIG/seedviewer.cgi?page=Annotation&feature=%s";
+        private static final String FEATURE_VIEW_LINK = "https://core.theseed.org/FIG/seedviewer.cgi?page=Annotation;feature=%s";
 
         /** subsystem link format */
         public static final String SUBSYSTEM_LINK = "https://core.theseed.org/FIG/seedviewer.cgi?page=Subsystems;subsystem=%s";
