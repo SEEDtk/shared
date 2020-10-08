@@ -48,7 +48,16 @@ public class Function extends MagicObject {
 
     @Override
     protected String normalize() {
-        String retVal = commentFree(this.getName());
+        return this.normalize(this.getName());
+    }
+
+    /**
+     * @return a normalized copy of the specified function string
+     *
+     * @param funDesc	function description to normalize
+     */
+    protected String normalize(String funDesc) {
+        String retVal = commentFree(funDesc);
         // Remove all the EC and TC numbers.
         retVal = RegExUtils.replaceAll(retVal, EC_PATTERN, " ");
         retVal = RegExUtils.replaceAll(retVal, TC_PATTERN, " ");
@@ -58,6 +67,16 @@ public class Function extends MagicObject {
         retVal = RegExUtils.replaceAll(retVal, Role.EXTRA_SPACES, " ");
         // Return the normalized result.
         return retVal;
+    }
+
+    /**
+     * @return TRUE if the specified function description matches this function
+     *
+     * @param funDesc	function description to check
+     */
+    public boolean matches(String funDesc) {
+        String normalized = this.normalize(funDesc);
+        return this.checksumOf(normalized).equals(this.getChecksum());
     }
 
     /**

@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -29,7 +30,7 @@ import murmur3.MurmurHash3.LongPair;
  * @author Bruce Parrello
  *
  */
-public class MagicMap<T extends MagicObject> implements Map<String, String> {
+public class MagicMap<T extends MagicObject> implements Map<String, String>, Iterable<T> {
 
     // FIELDS
     /** map from prefixes to the next usable suffix number */
@@ -384,6 +385,54 @@ public class MagicMap<T extends MagicObject> implements Map<String, String> {
     @Override
     public int size() {
         return this.idMapper.size();
+    }
+
+    /**
+     * This is an iterator for all the objects in this map.
+     */
+    public class Iter implements Iterator<T> {
+
+        /** current iterator */
+        private Iterator<T> current;
+        /** TRUE if we're iterating the map and not the aliases */
+        private boolean inMap;
+
+        public Iter() {
+            this.current = MagicMap.this.idMapper.values().iterator();
+            this.inMap = true;
+        }
+
+        @Override
+        public boolean hasNext() {
+            boolean retVal = current.hasNext();
+            if (! retVal && inMap) {
+                reposition();
+                retVal = current.hasNext();
+            }
+            return retVal;
+        }
+
+        /**
+         * Switch from iterating the map to the alias list.
+         */
+        protected void reposition() {
+            this.current = MagicMap.this.aliases.iterator();
+            this.inMap = false;
+        }
+
+        @Override
+        public T next() {
+            // Insure we're positioned on the correct iterator.
+            if (! current.hasNext() && this.inMap)
+                reposition();
+            return current.next();
+        }
+
+    }
+
+     @Override
+    public Iterator<T> iterator() {
+        return this.new Iter();
     }
 
 

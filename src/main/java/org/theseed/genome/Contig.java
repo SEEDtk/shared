@@ -12,8 +12,7 @@ import com.github.cliftonlabs.json_simple.JsonObject;
  * @author Bruce Parrello
  *
  */
-public class Contig {
-
+public class Contig implements Comparable<Contig> {
 
     // FIELDS
 
@@ -298,6 +297,14 @@ public class Contig {
         this.sequence = sequence;
         this.length = sequence.length();
         this.rSequence = null;
+    }
+
+    /**
+     * Contigs are sorted by ID.
+     */
+    @Override
+    public int compareTo(Contig o) {
+        return this.id.compareTo(o.id);
     }
 
 }

@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -237,6 +238,18 @@ public class TestLibrary extends TestCase {
             assertNotNull(key, target);
             assertThat(entry.getValue(), equalTo(target.getName()));
         }
+        // Test the iterator.
+        int count = 0;
+        Set<String> phenSet = new HashSet<String>();
+        for (Thing thing : magicTable) {
+            count++;
+            if (thing.getId().contentEquals("PhenTrnaSyntDoma")) {
+                phenSet.add(thing.getName());
+            }
+        }
+        assertThat(phenSet, containsInAnyOrder("alias second Phenylalanyl role string", "alias third Phenylalanyl role string",
+                "Phenylalanyl-tRNA synthetase domain protein (Bsu YtpR)"));
+        assertThat(count, equalTo(11462));
     }
 
     private static final String myProtein = "MNERYQCLKTKEYQALLSSKGRQIFAKRKIDMKSVFGQIKVCLGYKRCHLRGKRQVRIDMGFILMANNLLKYNKRKRQN";
@@ -259,6 +272,12 @@ public class TestLibrary extends TestCase {
         assertEquals("Genome home not correct", "PATRIC", this.myGto.getHome());
         assertEquals("Incorrect source.", "PATRIC", this.myGto.getSource());
         assertEquals("Incorrect source ID.", "1313.7001", this.myGto.getSourceId());
+        Feature f1 = this.myGto.getByFunction("16S rRNA (guanine(966)-N(2))-methyltransferase");
+        assertThat(f1.getId(), equalTo("fig|1313.7001.peg.145"));
+        f1 = this.myGto.getByFunction("hypothetical nonexistent thing");
+        assertThat(f1, nullValue());
+        f1 = this.myGto.getByFunction("Oxidoreductase");
+        assertThat(f1.getId(), equalTo("fig|1313.7001.peg.920"));
         String testLink = this.myGto.genomeLink().render();
         assertThat(testLink, containsString("patricbrc"));
         assertThat(testLink, containsString("1313.7001"));
@@ -368,6 +387,10 @@ public class TestLibrary extends TestCase {
         }
         assertThat(i, equalTo(taxonomy.length));
         assertTrue(myGto.hasContigs());
+        // Test contig sorting.
+        List<Contig> contigs = myGto.getContigs().stream().sorted().collect(Collectors.toList());
+        for (int j = 1; j < contigs.size(); j++)
+            assertThat(contigs.get(0).getId(), lessThan(contigs.get(1).getId()));
     }
 
     /**

@@ -5,6 +5,7 @@ package org.theseed.shared;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
+import static org.theseed.test.Matchers.*;
 
 import java.io.File;
 import java.io.IOException;
@@ -165,5 +166,11 @@ public class TestRoles extends TestCase {
         Function fun10 = map1.findOrInsert("3-ketoacyl-CoA thiolase (EC 2.3.1.16) @ Acetyl-CoA acetyltransferase (EC 2.3.1.9)");
         Function fun11 = map1.findOrInsert("3-ketoacyl-CoA thiolase @ Acetyl-CoA acetyltransferase (EC 2.3.1.9)");
         assertThat(fun10, equalTo(fun11));
+        assertThat(fun10.matches("3-ketoacyl-CoA thiolase (EC 2.3.1.16) @ Acetyl-CoA acetyltransferase (EC 2.3.1.9) ## comment"), isTrue());
+        assertThat(fun10.matches("3-ketoacyl-CoA thiolase @ Acetyl-CoA acetyltransferase "), isTrue());
+        assertThat(fun11.matches("3-ketoacyl-CoA thiolase (EC 2.3.1.16) @ Acetyl-CoA acetyltransferase (EC 2.3.1.9) ## comment"), isTrue());
+        assertThat(fun11.matches("3-ketoacyl-CoA thiolase @ Acetyl-CoA acetyltransferase "), isTrue());
+        assertThat(fun11.matches("3-ketoacyl-CoA thiolase"), isFalse());
+        assertThat(fun11.matches(""), isFalse());
     }
 }

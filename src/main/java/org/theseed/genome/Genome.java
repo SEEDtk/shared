@@ -31,6 +31,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.theseed.io.Shuffler;
 import org.theseed.locations.Location;
 import org.theseed.locations.Region;
+import org.theseed.proteins.Function;
 import org.theseed.reports.LinkObject;
 import org.theseed.sequence.FastaOutputStream;
 import org.theseed.sequence.Sequence;
@@ -1041,5 +1042,27 @@ public class Genome  {
     public String getTaxString() {
         return Arrays.stream(this.lineage).map(x -> x.getName()).collect(Collectors.joining("; "));
     }
+
+    /**
+     * @return the feature with the specified function and having the longest protein string
+     *
+     * @param funDesc	description string for the desired function
+     */
+    public Feature getByFunction(String funDesc) {
+        int protLen = 0;
+        Feature retVal = null;
+        Function target = new Function(funDesc);
+        for (Feature feat : this.getFeatures()) {
+            if (target.matches(feat.getPegFunction())) {
+                int len = feat.getProteinLength();
+                if (len >= protLen) {
+                    retVal = feat;
+                    protLen = len;
+                }
+            }
+        }
+        return retVal;
+    }
+
 
 }

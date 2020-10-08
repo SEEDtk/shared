@@ -3,6 +3,8 @@
  */
 package org.theseed.genome;
 
+import java.io.Serializable;
+
 import com.github.cliftonlabs.json_simple.JsonArray;
 
 /**
@@ -13,9 +15,11 @@ import com.github.cliftonlabs.json_simple.JsonArray;
  * @author Bruce Parrello
  *
  */
-public class Coupling implements Comparable<Coupling> {
+public class Coupling implements Comparable<Coupling>, Serializable {
 
     // FIELDS
+    /** serialization version ID */
+    private static final long serialVersionUID = -8064436329536646800L;
     /** ID of the target feature or family */
     private String target;
     /** coupling size */
