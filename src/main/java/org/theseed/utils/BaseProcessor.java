@@ -30,6 +30,8 @@ public abstract class BaseProcessor implements ICommand {
     private long startTime;
     /** saved incoming parameters */
     private String[] options;
+    /** logging context */
+    private LoggerContext loggerContext;
 
     // COMMAND-LINE OPTIONS
 
@@ -54,6 +56,8 @@ public abstract class BaseProcessor implements ICommand {
         this.help = false;
         this.debug = false;
         this.setDefaults();
+        // Save the logging context.
+        this.loggerContext = (LoggerContext) LoggerFactory.getILoggerFactory();
         // Save the incoming parameters.
         this.options = args;
         // Parse them.
@@ -66,8 +70,7 @@ public abstract class BaseProcessor implements ICommand {
                 retVal = this.validateParms();
                 if (retVal && this.debug) {
                     // To get more progress messages, we set the log level in logback.
-                    LoggerContext loggerContext = (LoggerContext) LoggerFactory.getILoggerFactory();
-                    ch.qos.logback.classic.Logger logger = loggerContext.getLogger("org.theseed");
+                    ch.qos.logback.classic.Logger logger = this.loggerContext.getLogger("org.theseed");
                     logger.setLevel(Level.toLevel("TRACE"));
                     log.info("Debug logging ON.");
                 } else {

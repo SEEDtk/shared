@@ -25,6 +25,8 @@ import java.util.Map;
 import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.UUID;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
@@ -73,6 +75,8 @@ public class Genome  {
     private String source;
     private String sourceId;
     private Map<String, SubsystemRow> subsystems;
+    private Map<String, String> accessionMap;
+    private static final Pattern ACCESSION_LOCATION = Pattern.compile("(\\w+):(\\d+)-(\\d+)");
 
 
     /** This is an empty list to use as a default intermediate value for cases where the contigs or
@@ -233,12 +237,14 @@ public class Genome  {
         this.features = new HashMap<String, Feature>();
         this.contigs = new HashMap<String, Contig>();
         this.closeGenomes = new TreeSet<CloseGenome>();
+        // Denote the genome has no subvsystems.
         this.subsystems = new HashMap<String, SubsystemRow>();
         // Create a blank original GTO.
         this.gto = new JsonObject();
         // Denote the genome has no home.
         this.setHome("none");
-        // Denote the genome has no subvsystems.
+        // Denote no accession map has been built.
+        this.accessionMap = null;
     }
 
     /**
@@ -1062,6 +1068,39 @@ public class Genome  {
             }
         }
         return retVal;
+    }
+
+    /**
+     * @return a location object for the specified RefSeq-style location
+     *
+     * @param Refseq-style location string (contigAccession:begin-end), or NULL if the location is invalid
+     */
+    public Location computeLocation(String refseqLocation) {
+        Location retVal = null;
+        // Make sure we have an accession map.
+        if (this.accessionMap == null)
+            this.buildAccessionMap();
+        // Parse the incoming location.
+        Matcher m = ACCESSION_LOCATION.matcher(refseqLocation);
+        if (m.matches()) {
+            String contigId = this.accessionMap.get(m.group(1));
+            if (contigId != null) {
+                int begin = Integer.valueOf(m.group(2));
+                int end = Integer.valueOf(m.group(3));
+                retVal = Location.create(contigId, begin, end);
+            }
+        }
+        return retVal;
+    }
+
+    /**
+     * Create a mapping from RefSeq accession IDs to PATRIC contig IDs
+     */
+    private void buildAccessionMap() {
+        this.accessionMap = new HashMap<String, String>(this.contigs.size());
+        // Map each accession number to a contig ID.
+        this.contigs.values().stream().filter(x -> StringUtils.isNotEmpty(x.getAccession()))
+                .forEach(x -> this.accessionMap.put(x.getAccession(), x.getId()));
     }
 
 
