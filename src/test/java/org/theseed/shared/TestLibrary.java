@@ -905,6 +905,8 @@ public class TestLibrary extends TestCase {
         rna.setPgfam("PGF_RNA1");
         rna.addCoupling("fig|161.31.rna.2", 20, 20.5);
         rna.addCoupling("fig|161.31.rna.3", 30, 30.5);
+        rna.addAlias("rna1");
+        rna.addAlias("gi|thingness");
         smallGenome.addFeature(rna);
         assertThat(rna.getParent(), equalTo(smallGenome));
         Contig fakeContig = new Contig("161.31.con.0002", "aaaccctttggg", 11);
@@ -930,6 +932,7 @@ public class TestLibrary extends TestCase {
         feat = testGenome.getFeature("fig|161.31.rna.1");
         assertThat(feat.getPgfam(), equalTo("PGF_RNA1"));
         assertNull(feat.getPlfam());
+        assertThat(feat.getAliases(), containsInAnyOrder("rna1", "gi|thingness"));
         Coupling[] couplings = feat.getCouplings();
         assertThat(couplings.length, equalTo(2));
         assertThat(couplings[0].getTarget(), equalTo("fig|161.31.rna.3"));

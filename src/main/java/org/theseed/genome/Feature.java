@@ -630,6 +630,11 @@ public class Feature implements Comparable<Feature> {
             couplingList.add(coupling0);
         }
         retVal.put(FeatureKeys.COUPLINGS.getKey(), couplingList);
+        // Next, aliases.
+        JsonArray aliasList = new JsonArray();
+        for (String alias : this.aliases)
+            aliasList.add(alias);
+        retVal.put(FeatureKeys.ALIASES.getKey(), aliasList);
         // Finally, store the protein families.
         JsonArray famList = new JsonArray();
         if (this.plfam != null) {
