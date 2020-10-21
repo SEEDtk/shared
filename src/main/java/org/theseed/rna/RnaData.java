@@ -14,9 +14,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Optional;
 import java.util.SortedMap;
 import java.util.TreeMap;
+import java.util.function.Predicate;
+import java.util.regex.Pattern;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.theseed.genome.Feature;
 import org.theseed.locations.Location;
 
@@ -30,6 +35,8 @@ import org.theseed.locations.Location;
 public class RnaData implements Iterable<RnaData.Row>, Serializable {
 
     // FIELDS
+    /** logging facility */
+    protected static Logger log = LoggerFactory.getLogger(RnaData.class);
     /** object version ID */
     private static final long serialVersionUID = 3381600661613511529L;
     /** list of sample descriptors */
@@ -38,6 +45,10 @@ public class RnaData implements Iterable<RnaData.Row>, Serializable {
     private SortedMap<FeatureData, Row> rowMap;
     /** map of job names to column indices */
     private HashMap<String, Integer> colMap;
+    /** pattern for RNA functions */
+    private static final Predicate<String> RNA_PREDICATE = Pattern.compile("ribosomal|[tr]RNA").asPredicate();
+    /** scale value for normalizing weights */
+    private static double SCALE_FACTOR = 1000000.0;
 
     /**
      * This sub-object represents the data for a single sample.
@@ -47,6 +58,7 @@ public class RnaData implements Iterable<RnaData.Row>, Serializable {
         private String name;
         private double production;
         private double opticalDensity;
+        private String oldName;
 
         /**
          * Construct a sample-data object.
@@ -54,11 +66,13 @@ public class RnaData implements Iterable<RnaData.Row>, Serializable {
          * @param name				sample name
          * @param production		threonine production level (g/l)
          * @param opticalDensity	optical density (nm600)
+         * @param oldName
          */
-        private JobData(String name, double production, double opticalDensity) {
+        private JobData(String name, double production, double opticalDensity, String oldName) {
             this.name = name;
             this.production = production;
             this.opticalDensity = opticalDensity;
+            this.oldName = oldName;
         }
 
         /**
@@ -130,26 +144,41 @@ public class RnaData implements Iterable<RnaData.Row>, Serializable {
             return true;
         }
 
+        /**
+         * @return the old sample name
+         */
+        public String getOldName() {
+            return this.oldName;
+        }
+
     }
 
     /**
      * This object contains key data fields for a feature.
      */
     public static class FeatureData implements Comparable<FeatureData>, Serializable {
-        private static final long serialVersionUID = -3941353134302649697L;
+        private static final long serialVersionUID = 3941353134302649697L;
         private String id;
         private String function;
         private Location location;
+        private String gene;
 
         /**
          * Construct a feature-data object from a feature.
          *
          * @param feat	incoming feature
          */
-        private FeatureData(Feature feat) {
+        public FeatureData(Feature feat) {
             this.id = feat.getId();
             this.function = feat.getPegFunction();
             this.location = feat.getLocation();
+            // Get the feature's gene name.
+            Optional<String> alias = feat.getAliases().stream()
+                    .filter(x -> ! x.contains("|") && (x.length() == 3 || x.length() == 4)).findAny();
+            if (alias.isPresent())
+                this.gene = alias.get();
+            else
+                this.gene = "";
         }
 
         /**
@@ -216,6 +245,7 @@ public class RnaData implements Iterable<RnaData.Row>, Serializable {
             os.writeUTF(this.id);
             os.writeUTF(this.function);
             os.writeUTF(this.location.toString());
+            os.writeUTF(this.gene);
         }
 
         /** deserialization method for FeatureData */
@@ -224,6 +254,14 @@ public class RnaData implements Iterable<RnaData.Row>, Serializable {
             this.function = is.readUTF();
             String locString = is.readUTF();
             this.location = Location.fromString(locString);
+            this.gene = is.readUTF();
+        }
+
+        /**
+         * @return the gene name for this feature
+         */
+        public String getGene() {
+            return this.gene;
         }
 
     }
@@ -390,12 +428,13 @@ public class RnaData implements Iterable<RnaData.Row>, Serializable {
      * @param jobName			sample name
      * @param production		threonine production level
      * @param opticalDensity	optical density
+     * @param oldName 			original name of sample
      */
-    public void addJob(String jobName, double production, double opticalDensity) {
+    public void addJob(String jobName, double production, double opticalDensity, String oldName) {
         // Save the array index for this sample.
         this.colMap.put(jobName, this.jobs.size());
         // Add the sample to the job list.
-        this.jobs.add(new JobData(jobName, production, opticalDensity));
+        this.jobs.add(new JobData(jobName, production, opticalDensity, oldName));
     }
 
     @Override
@@ -418,7 +457,14 @@ public class RnaData implements Iterable<RnaData.Row>, Serializable {
     }
 
     /**
-     * @return the row object for the specified feature
+     * @return the number of rows in this repository
+     */
+    public int rows() {
+        return this.rowMap.size();
+    }
+
+    /**
+     * @return the row object for the specified feature, creating one if none exists
      *
      * @param feat		feature of interest
      * @param neighbor	nearest neighbor
@@ -460,6 +506,49 @@ public class RnaData implements Iterable<RnaData.Row>, Serializable {
      */
     public int getColIdx(String sample) {
         return this.colMap.get(sample);
+    }
+
+    /**
+     * Normalize this RNA data.  This includes deleting all RNA features and scaling the FPKM
+     * numbers to TPM values. (TPM = FPKM * 10^6 / SUM(all FPKMs for sample))
+     */
+    public void normalize() {
+        // Each row contains an array of weights.  This array keeps the totals.
+        double[] totalWeights = new double[this.size()];
+        // Count the RNAs removed.
+        int removed = 0;
+        // Loop through the rows.  We delete the RNA rows, and sum the rest.
+        Iterator<Row> rowIter = this.rowMap.values().iterator();
+        while (rowIter.hasNext()) {
+            Row row = rowIter.next();
+            String function = row.feat.function;
+            if (RNA_PREDICATE.test(function) || row.feat.id.contains(".rna.")) {
+                // Here we have an RNA that sneaked through the sample filters.
+                rowIter.remove();
+                removed++;
+            } else {
+                // This row is being kept, so we accumulate its values.
+                for (int i = 0; i < totalWeights.length; i++) {
+                    Weight weight = row.getWeight(i);
+                    if (weight != null)
+                        totalWeights[i] += weight.weight;
+                }
+            }
+        }
+        // Now we scale each of the weights.
+        for (int i = 0; i < totalWeights.length; i++)
+            totalWeights[i] = SCALE_FACTOR / totalWeights[i];
+        // Finally, we scale each of the individual weights.
+        for (Row row : this) {
+            for (int i = 0; i < totalWeights.length; i++) {
+                if (totalWeights[i] > 0.0) {
+                    Weight weight = row.getWeight(i);
+                    if (weight != null)
+                        weight.weight *= totalWeights[i];
+                }
+            }
+        }
+        log.info("{} RNA features removed during normalization, {} features remaining.", removed, this.rows());
     }
 
 }
