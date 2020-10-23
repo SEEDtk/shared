@@ -551,4 +551,13 @@ public class RnaData implements Iterable<RnaData.Row>, Serializable {
         log.info("{} RNA features removed during normalization, {} features remaining.", removed, this.rows());
     }
 
+    /**
+     * @return the column index of the sample, or NULL if it does not exist
+     *
+     * @param sample	name of the sample to find
+     */
+    public Integer findColIdx(String sample) {
+        return this.colMap.get(sample);
+    }
+
 }
