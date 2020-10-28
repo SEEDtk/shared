@@ -28,9 +28,9 @@ public class TestRnaData {
     public void testSaveLoad() throws IOException, ClassNotFoundException {
         Genome gto = new Genome(new File("data", "MG1655-wild.gto"));
         RnaData testRna = new RnaData();
-        testRna.addJob("job1", 1.0, 0.1, "old1");
-        testRna.addJob("job2", 2.0, 0.2, "old2");
-        testRna.addJob("job0", Double.NaN, Double.NaN, "old0");
+        testRna.addJob("job1", 1.0, 0.1, "old1", true);
+        testRna.addJob("job2", 2.0, 0.2, "old2", true);
+        testRna.addJob("job0", Double.NaN, Double.NaN, "old0", false);
         assertThat(testRna.size(), equalTo(3));
         Feature f1 = gto.getFeature("fig|511145.183.peg.4025");
         Feature f2 = gto.getFeature("fig|511145.183.peg.494");
@@ -49,6 +49,8 @@ public class TestRnaData {
         assertThat(fX.getId(), equalTo(f1.getId()));
         assertThat(fX.getLocation(), equalTo(f1.getLocation()));
         assertThat(fX.getFunction(), equalTo(f1.getPegFunction()));
+        assertThat(fX.getGene(), equalTo("hslU"));
+        assertThat(fX.getBNumber(), equalTo("b3931"));
         RnaData.Weight weightX = rowX.getWeight(0);
         assertThat(weightX.getWeight(), equalTo(101.0));
         assertThat(weightX.isExactHit(), isFalse());
@@ -68,6 +70,9 @@ public class TestRnaData {
         Optional<RnaData.JobData> job1Check = jobs.stream().filter(x -> x.getName().contentEquals("job1")).findFirst();
         assertThat(job1Check.isPresent(), isTrue());
         RnaData.JobData job1 = job1Check.get();
+        assertThat(job1.getName(), equalTo("job1"));
+        assertThat(job1.getProduction(), equalTo(1.0));
+        assertThat(job1.isSuspicious(), isTrue());
         Optional<RnaData.JobData> jobFCheck = fileJobs.stream().filter(x -> x.getName().contentEquals("job1")).findFirst();
         assertThat(jobFCheck.isPresent(), isTrue());
         RnaData.JobData jobF = jobFCheck.get();
@@ -87,10 +92,10 @@ public class TestRnaData {
     public void testNormalize() throws IOException {
         Genome gto = new Genome(new File("data", "MG1655-wild.gto"));
         RnaData data = new RnaData();
-        data.addJob("job1", 0.1, 1.0, "old1");
-        data.addJob("job2", 0.2, 2.0, "old2");
-        data.addJob("job3", 0.3, 3.0, "old3");
-        data.addJob("job4", 0.4, 4.0, "old4");
+        data.addJob("job1", 0.1, 1.0, "old1", true);
+        data.addJob("job2", 0.2, 2.0, "old2", true);
+        data.addJob("job3", 0.3, 3.0, "old3", false);
+        data.addJob("job4", 0.4, 4.0, "old4", true);
         Feature f1 = gto.getFeature("fig|511145.183.peg.3580"); // Universal stress protein
         Feature f2 = gto.getFeature("fig|511145.183.peg.2251"); // SSU rRNA
         Feature f3 = gto.getFeature("fig|511145.183.peg.4072"); // LSU ribosomal

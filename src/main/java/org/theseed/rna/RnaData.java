@@ -14,7 +14,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Optional;
 import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.function.Predicate;
@@ -59,6 +58,7 @@ public class RnaData implements Iterable<RnaData.Row>, Serializable {
         private double production;
         private double opticalDensity;
         private String oldName;
+        private boolean suspicious;
 
         /**
          * Construct a sample-data object.
@@ -66,13 +66,15 @@ public class RnaData implements Iterable<RnaData.Row>, Serializable {
          * @param name				sample name
          * @param production		threonine production level (g/l)
          * @param opticalDensity	optical density (nm600)
-         * @param oldName
+         * @param oldName			original sample name
+         * @param suspicious		TRUE if the quality is suspect
          */
-        private JobData(String name, double production, double opticalDensity, String oldName) {
+        private JobData(String name, double production, double opticalDensity, String oldName, boolean suspicious) {
             this.name = name;
             this.production = production;
             this.opticalDensity = opticalDensity;
             this.oldName = oldName;
+            this.suspicious = suspicious;
         }
 
         /**
@@ -111,11 +113,6 @@ public class RnaData implements Iterable<RnaData.Row>, Serializable {
             final int prime = 31;
             int result = 1;
             result = prime * result + ((this.name == null) ? 0 : this.name.hashCode());
-            long temp;
-            temp = Double.doubleToLongBits(this.opticalDensity);
-            result = prime * result + (int) (temp ^ (temp >>> 32));
-            temp = Double.doubleToLongBits(this.production);
-            result = prime * result + (int) (temp ^ (temp >>> 32));
             return result;
         }
 
@@ -135,12 +132,6 @@ public class RnaData implements Iterable<RnaData.Row>, Serializable {
             } else if (!this.name.equals(other.name)) {
                 return false;
             }
-            if (Double.doubleToLongBits(this.opticalDensity) != Double.doubleToLongBits(other.opticalDensity)) {
-                return false;
-            }
-            if (Double.doubleToLongBits(this.production) != Double.doubleToLongBits(other.production)) {
-                return false;
-            }
             return true;
         }
 
@@ -151,17 +142,27 @@ public class RnaData implements Iterable<RnaData.Row>, Serializable {
             return this.oldName;
         }
 
+        /**
+         * @return TRUE if this sample is of suspicious quality
+         */
+        public boolean isSuspicious() {
+            return this.suspicious;
+        }
+
     }
 
     /**
      * This object contains key data fields for a feature.
      */
     public static class FeatureData implements Comparable<FeatureData>, Serializable {
-        private static final long serialVersionUID = 3941353134302649697L;
+        private static final long serialVersionUID = 3941353134302649698L;
         private String id;
         private String function;
         private Location location;
         private String gene;
+        private String bNumber;
+        private static final Pattern B_NUMBER = Pattern.compile("b\\d+");
+        private static final Pattern GENE_NAME = Pattern.compile("[a-z]{3}(?:[A-Z])?");
 
         /**
          * Construct a feature-data object from a feature.
@@ -172,13 +173,15 @@ public class RnaData implements Iterable<RnaData.Row>, Serializable {
             this.id = feat.getId();
             this.function = feat.getPegFunction();
             this.location = feat.getLocation();
-            // Get the feature's gene name.
-            Optional<String> alias = feat.getAliases().stream()
-                    .filter(x -> ! x.contains("|") && (x.length() == 3 || x.length() == 4)).findAny();
-            if (alias.isPresent())
-                this.gene = alias.get();
-            else
-                this.gene = "";
+            // Get the feature's gene name and blatner number.
+            this.gene = "";
+            this.bNumber = "";
+            for (String alias : feat.getAliases()) {
+                if (B_NUMBER.matcher(alias).matches())
+                    this.bNumber = alias;
+                else if (GENE_NAME.matcher(alias).matches())
+                    this.gene = alias;
+            }
         }
 
         /**
@@ -246,6 +249,7 @@ public class RnaData implements Iterable<RnaData.Row>, Serializable {
             os.writeUTF(this.function);
             os.writeUTF(this.location.toString());
             os.writeUTF(this.gene);
+            os.writeUTF(this.bNumber);
         }
 
         /** deserialization method for FeatureData */
@@ -255,6 +259,7 @@ public class RnaData implements Iterable<RnaData.Row>, Serializable {
             String locString = is.readUTF();
             this.location = Location.fromString(locString);
             this.gene = is.readUTF();
+            this.bNumber = is.readUTF();
         }
 
         /**
@@ -262,6 +267,13 @@ public class RnaData implements Iterable<RnaData.Row>, Serializable {
          */
         public String getGene() {
             return this.gene;
+        }
+
+        /**
+         * @return the Blatner number for this feature
+         */
+        public String getBNumber() {
+            return this.bNumber;
         }
 
     }
@@ -429,12 +441,13 @@ public class RnaData implements Iterable<RnaData.Row>, Serializable {
      * @param production		threonine production level
      * @param opticalDensity	optical density
      * @param oldName 			original name of sample
+     * @param suspicious		return TRUE if this sample is of suspicious quality
      */
-    public void addJob(String jobName, double production, double opticalDensity, String oldName) {
+    public void addJob(String jobName, double production, double opticalDensity, String oldName, boolean suspicious) {
         // Save the array index for this sample.
         this.colMap.put(jobName, this.jobs.size());
         // Add the sample to the job list.
-        this.jobs.add(new JobData(jobName, production, opticalDensity, oldName));
+        this.jobs.add(new JobData(jobName, production, opticalDensity, oldName, suspicious));
     }
 
     @Override
