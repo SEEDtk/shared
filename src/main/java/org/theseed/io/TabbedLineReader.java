@@ -11,6 +11,8 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -127,6 +129,25 @@ public class TabbedLineReader implements Closeable, AutoCloseable, Iterable<Tabb
         }
 
         /**
+         * @return the boolean value in the indexed column
+         *
+         * "1", "Y", "Yes", or "true" indicates TRUE.  Everything else is FALSE.
+         *
+         * @param idx			index (0-based) of the column in question, as returned by findField
+         */
+        public boolean getFancyFlag(int idx) {
+            String colValue = StringUtils.deleteWhitespace(this.fields[idx]).toLowerCase();
+            return TabbedLineReader.TRUE_VALUES.contains(colValue);
+        }
+
+        /**
+         * @return TRUE if the column is empty, else FALSE
+         */
+        public boolean isEmpty(int idx) {
+            return StringUtils.deleteWhitespace(this.fields[idx]).isEmpty();
+        }
+
+        /**
          * @return the original input line (without the line-end character)
          */
         public String getAll() {
@@ -146,6 +167,8 @@ public class TabbedLineReader implements Closeable, AutoCloseable, Iterable<Tabb
     String headerLine;
     /** number of data lines read */
     int lineCount;
+    /** list of fancy TRUE values */
+    private static final Set<String> TRUE_VALUES = Stream.of("1", "true", "yes", "y", "t").collect(Collectors.toSet());
 
     /**
      * Open a tabbed-line reader for a file.
