@@ -5,11 +5,13 @@ package org.theseed.io;
 
 import java.io.Closeable;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -158,15 +160,17 @@ public class TabbedLineReader implements Closeable, AutoCloseable, Iterable<Tabb
 
     //FIELDS
     /** array of field names from the header */
-    String[] labels;
-    /** underlying reader object */
-    LineReader reader;
+    private String[] labels;
+    /** underlying stream of lines */
+    private Iterator<String> reader;
+    /** underlying input stream */
+    private InputStream stream;
     /** text of next line to return */
-    String nextLine;
+    private String nextLine;
     /** text of header line */
-    String headerLine;
+    private String headerLine;
     /** number of data lines read */
-    int lineCount;
+    private int lineCount;
     /** list of fancy TRUE values */
     private static final Set<String> TRUE_VALUES = Stream.of("1", "true", "yes", "y", "t").collect(Collectors.toSet());
 
@@ -178,8 +182,20 @@ public class TabbedLineReader implements Closeable, AutoCloseable, Iterable<Tabb
      * @throws IOException
      */
     public TabbedLineReader(File inFile) throws IOException {
-        this.reader = new LineReader(inFile);
+        this.openFile(inFile);
         this.readHeader();
+    }
+
+    /**
+     * Open a file for tabbed line reading.
+     *
+     * @param inFile	input file to open
+     *
+     * @throws IOException
+     */
+    private void openFile(File inFile) throws IOException {
+        this.stream = new FileInputStream(inFile);
+        this.reader = new LineReader(this.stream);
     }
 
     /**
@@ -191,7 +207,7 @@ public class TabbedLineReader implements Closeable, AutoCloseable, Iterable<Tabb
      * @throws IOException
      */
     public TabbedLineReader(File inFile, int fields) throws IOException {
-        this.reader = new LineReader(inFile);
+        this.openFile(inFile);
         this.clearLabels(fields);
         this.readAhead();
     }
@@ -205,10 +221,22 @@ public class TabbedLineReader implements Closeable, AutoCloseable, Iterable<Tabb
      * @throws IOException
      */
     public TabbedLineReader(InputStream inStream, int fields) throws IOException {
-        this.reader = new LineReader(inStream);
+        this.openFile(inStream);
         this.clearLabels(fields);
         this.readAhead();
     }
+    /**
+     * Open an input stream for tabbed line reading.
+     *
+     * @param inStream	input stream to read
+     *
+     * @throws IOException
+     */
+    private void openFile(InputStream inStream) throws IOException {
+        this.stream = inStream;
+        this.reader = new LineReader(inStream);
+    }
+
     /**
      * Open a tabbed-line reader for an input stream.
      *
@@ -217,7 +245,7 @@ public class TabbedLineReader implements Closeable, AutoCloseable, Iterable<Tabb
      * @throws IOException
      */
     public TabbedLineReader(InputStream inStream) throws IOException {
-        this.reader = new LineReader(inStream);
+        this.openFile(inStream);
         this.readHeader();
     }
 
@@ -225,6 +253,17 @@ public class TabbedLineReader implements Closeable, AutoCloseable, Iterable<Tabb
      * Construct a blank, empty tabbed-file reader.
      */
     protected TabbedLineReader() {
+    }
+
+    /**
+     * Open a tabbed line reader to read a list of strings.
+     *
+     * @param strings	list of strings, including the header row
+     */
+    public TabbedLineReader(List<String> strings) {
+        this.stream = null;
+        this.reader = strings.iterator();
+        this.readHeader();
     }
 
     /**
@@ -321,7 +360,8 @@ public class TabbedLineReader implements Closeable, AutoCloseable, Iterable<Tabb
     @Override
     public void close() {
         try {
-            reader.close();
+            if (this.stream != null)
+                this.stream.close();
         } catch (Exception e) {
             // Just ignore an error in close.
         }

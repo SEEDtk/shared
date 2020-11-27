@@ -67,6 +67,35 @@ public class Shuffler<T> extends ArrayList<T> {
     }
 
     /**
+     * Rotate the array to the left by the specified number of positions starting with the given index.
+     *
+     * @param start		index of first position to move
+     * @param distance	number of positions to rotate
+     */
+    public void rotate(int start, int distance) {
+        // Compute the size of the array being rotated.
+        int size = this.size() - start;
+        // Convert the distance to a positive number.
+        if (distance < 0)
+            distance = size + distance;
+        // Each (i) will move to (i + distance).  If this goes past the end, we subtract (size) to fix it.
+        // We pull the target location, move the source to it, then find where the old target goes and repeat
+        // until we have performed the correct number of moves.
+        int i = start;
+        T buffer = this.get(i);
+        int rem = size;
+        while (rem > 0) {
+            int j = i + distance;
+            if (j >= this.size()) j -= size;
+            T newBuffer = this.get(j);
+            this.set(j, buffer);
+            i = j;
+            buffer = newBuffer;
+            rem--;
+        }
+    }
+
+    /**
      * Return an iterator for the first N elements of the array.
      *
      * @param limit		maximum number of elements to return

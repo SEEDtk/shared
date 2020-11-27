@@ -81,6 +81,13 @@ public class Parms {
     }
 
     /**
+     * @return the number of slots required to hold these parameters
+     */
+    public int size() {
+        return this.binary.size() * 2 + this.unary.size();
+    }
+
+    /**
      * Read a parameter list from a file.
      *
      * @param inFile	file containing the parameters
@@ -183,6 +190,18 @@ public class Parms {
     }
 
     /**
+     * @return the value of a parameter
+     *
+     * @param name		parameter name
+     */
+    public String getValue(String name) {
+        String retVal = this.binary.get(name);
+        if (retVal == null)
+            retVal = (this.unary.contains(name) ? "Y" : "");
+        return retVal;
+    }
+
+    /**
      * @return the parameters as a string list with a command in front
      */
     public List<String> get(String command) {
@@ -246,13 +265,15 @@ public class Parms {
     }
 
     /**
-     * @param retVal
+     * Copy values from another parameter object into this one.
+     *
+     * @param source	source parameter object
      */
-    protected void copyValues(Parms retVal) {
+    protected void copyValues(Parms source) {
         for (Map.Entry<String,String> entry : this.binary.entrySet())
-            retVal.binary.put(entry.getKey(), entry.getValue());
+            source.binary.put(entry.getKey(), entry.getValue());
         for (String parm : this.unary)
-            retVal.unary.add(parm);
+            source.unary.add(parm);
     }
 
 }

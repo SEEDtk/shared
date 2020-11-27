@@ -12,6 +12,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Scanner;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 
 /**
@@ -53,10 +54,9 @@ public class MultiParms implements Iterator<List<String>> {
     private int[] positions;
 
     /**
-     * Construct an iterator through the parameter combinations encoded in a parameter file.  Note
-     * this is similar to fromFile above, but there are subtle differences.
+     * Construct an iterator through the parameter combinations encoded in a parameter file.
      *
-     * @param inFile	input file containing the parameters, with multiple options tab-delimited
+     * @param inFile	input file containing the parameters, with multiple options comma-delimited
      *
      * @throws IOException
      */
@@ -108,7 +108,29 @@ public class MultiParms implements Iterator<List<String>> {
         Arrays.fill(this.positions, 0);
     }
 
-    @Override
+    /**
+     * Replace a single-valued parameter with another single value.
+     *
+     * @param name		parameter name
+     * @param value		new parameter value
+     */
+    public void replace(String name, String value) {
+        if (this.varMap.containsKey(name))
+            throw new IllegalArgumentException("Attempt to modify varying parameter " + name + ".");
+        int idx = this.parmNames.indexOf(name);
+        String[] values = new String[] { value };
+        if (idx >= 0) {
+            // Here we are doing a straight replace.
+            this.parmValues.set(idx, values);
+        } else {
+            // Here we are adding a new parameter.
+            this.parmNames.add(name);
+            this.parmValues.add(values);
+            this.positions = ArrayUtils.add(this.positions, 0);
+        }
+    }
+
+     @Override
     public boolean hasNext() {
         return ! this.done;
     }
