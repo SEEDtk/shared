@@ -77,8 +77,9 @@ public abstract class BaseProcessor implements ICommand {
                     log.info("Normal logging selected.");
                 }
             }
-        } catch (CmdLineException e) {
+        } catch (CmdLineException | ParseFailureException e) {
             System.err.println(e.getMessage());
+            parser.printUsage(System.err);
             System.exit(99);
         } catch (IOException e) {
             log.error("PARAMETER ERROR.", e);
@@ -109,7 +110,7 @@ public abstract class BaseProcessor implements ICommand {
     /**
      * Validate the parameters after parsing.
      */
-    protected abstract boolean validateParms() throws IOException;
+    protected abstract boolean validateParms() throws IOException, ParseFailureException;
 
     /**
      * Run the command process.
