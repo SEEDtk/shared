@@ -80,18 +80,25 @@ public class Shuffler<T> extends ArrayList<T> {
             distance = size + distance;
         // Each (i) will move to (i + distance).  If this goes past the end, we subtract (size) to fix it.
         // We pull the target location, move the source to it, then find where the old target goes and repeat
-        // until we have performed the correct number of moves.
-        int i = start;
-        T buffer = this.get(i);
+        // until we have performed the correct number of moves.  A glitch occurs if we end up back at the
+        // first position before finishing the array.  To detect this, we use a variable "orig".
         int rem = size;
+        int orig = start;
         while (rem > 0) {
-            int j = i + distance;
-            if (j >= this.size()) j -= size;
-            T newBuffer = this.get(j);
-            this.set(j, buffer);
-            i = j;
-            buffer = newBuffer;
-            rem--;
+            int i = orig;
+            T buffer = this.get(i);
+            boolean loop = false;
+            while (! loop) {
+                int j = i + distance;
+                if (j >= this.size()) j -= size;
+                T newBuffer = this.get(j);
+                this.set(j, buffer);
+                i = j;
+                buffer = newBuffer;
+                rem--;
+                loop = (i == orig);
+            }
+            orig++;
         }
     }
 

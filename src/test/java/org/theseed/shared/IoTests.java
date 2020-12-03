@@ -238,6 +238,28 @@ public class IoTests extends TestCase {
         Shuffler<Integer> test = new Shuffler<Integer>(10);
         for (int i = 0; i < 10; i++)
             test.add(i);
+        test.rotate(1, -5);
+        assertThat(test.get(0), equalTo(0));
+        assertThat(test.get(1), equalTo(6));
+        assertThat(test.get(2), equalTo(7));
+        assertThat(test.get(3), equalTo(8));
+        assertThat(test.get(4), equalTo(9));
+        assertThat(test.get(5), equalTo(1));
+        assertThat(test.get(6), equalTo(2));
+        assertThat(test.get(7), equalTo(3));
+        assertThat(test.get(8), equalTo(4));
+        assertThat(test.get(9), equalTo(5));
+        test.rotate(1, 5);
+        assertThat(test.get(0), equalTo(0));
+        assertThat(test.get(1), equalTo(1));
+        assertThat(test.get(2), equalTo(2));
+        assertThat(test.get(3), equalTo(3));
+        assertThat(test.get(4), equalTo(4));
+        assertThat(test.get(5), equalTo(5));
+        assertThat(test.get(6), equalTo(6));
+        assertThat(test.get(7), equalTo(7));
+        assertThat(test.get(8), equalTo(8));
+        assertThat(test.get(9), equalTo(9));
         test.rotate(1, -4);
         assertThat(test.get(0), equalTo(0));
         assertThat(test.get(1), equalTo(5));
@@ -249,6 +271,77 @@ public class IoTests extends TestCase {
         assertThat(test.get(7), equalTo(2));
         assertThat(test.get(8), equalTo(3));
         assertThat(test.get(9), equalTo(4));
+        test.rotate(1, 4);
+        assertThat(test.get(0), equalTo(0));
+        assertThat(test.get(1), equalTo(1));
+        assertThat(test.get(2), equalTo(2));
+        assertThat(test.get(3), equalTo(3));
+        assertThat(test.get(4), equalTo(4));
+        assertThat(test.get(5), equalTo(5));
+        assertThat(test.get(6), equalTo(6));
+        assertThat(test.get(7), equalTo(7));
+        assertThat(test.get(8), equalTo(8));
+        assertThat(test.get(9), equalTo(9));
+        test.rotate(1,  -3);
+        assertThat(test.get(0), equalTo(0));
+        assertThat(test.get(1), equalTo(4));
+        assertThat(test.get(2), equalTo(5));
+        assertThat(test.get(3), equalTo(6));
+        assertThat(test.get(4), equalTo(7));
+        assertThat(test.get(5), equalTo(8));
+        assertThat(test.get(6), equalTo(9));
+        assertThat(test.get(7), equalTo(1));
+        assertThat(test.get(8), equalTo(2));
+        assertThat(test.get(9), equalTo(3));
+        test.rotate(1, 3);
+        assertThat(test.get(0), equalTo(0));
+        assertThat(test.get(1), equalTo(1));
+        assertThat(test.get(2), equalTo(2));
+        assertThat(test.get(3), equalTo(3));
+        assertThat(test.get(4), equalTo(4));
+        assertThat(test.get(5), equalTo(5));
+        assertThat(test.get(6), equalTo(6));
+        assertThat(test.get(7), equalTo(7));
+        assertThat(test.get(8), equalTo(8));
+        assertThat(test.get(9), equalTo(9));
+        test.rotate(1,  -2);
+        assertThat(test.get(0), equalTo(0));
+        assertThat(test.get(1), equalTo(3));
+        assertThat(test.get(2), equalTo(4));
+        assertThat(test.get(3), equalTo(5));
+        assertThat(test.get(4), equalTo(6));
+        assertThat(test.get(5), equalTo(7));
+        assertThat(test.get(6), equalTo(8));
+        assertThat(test.get(7), equalTo(9));
+        assertThat(test.get(8), equalTo(1));
+        assertThat(test.get(9), equalTo(2));
+        test.rotate(1, 2);
+        assertThat(test.get(0), equalTo(0));
+        assertThat(test.get(1), equalTo(1));
+        assertThat(test.get(2), equalTo(2));
+        assertThat(test.get(3), equalTo(3));
+        assertThat(test.get(4), equalTo(4));
+        assertThat(test.get(5), equalTo(5));
+        assertThat(test.get(6), equalTo(6));
+        assertThat(test.get(7), equalTo(7));
+        assertThat(test.get(8), equalTo(8));
+        assertThat(test.get(9), equalTo(9));
+        test = new Shuffler<Integer>(120);
+        for (int i = 0; i < 120; i++)
+            test.add(i);
+        // Test rotating different sizes.
+        for (int d = 1; d < 60; d++) {
+            test.rotate(0, -d);
+            for (int i = 0; i < 120 - d; i++)
+                assertThat(String.format("Rotation -%d, position %d.", d, i), test.get(i), equalTo(i+d));
+            for (int i = 0; i < d; i++) {
+                int pos = 120 - d + i;
+                assertThat(String.format("Rotation -%d, position %d.", d, pos), test.get(pos), equalTo(i));
+            }
+            test.rotate(0, d);
+            for (int i = 0; i < 120; i++)
+                assertThat(String.format("Rotation %d, position %d.", d, i), test.get(i), equalTo(i));
+        }
     }
 
     /**

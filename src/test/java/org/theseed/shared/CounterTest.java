@@ -16,6 +16,7 @@ import java.util.SortedSet;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.ArrayUtils;
+import org.theseed.counters.BestColumn;
 import org.theseed.counters.CountMap;
 import org.theseed.counters.EnumCounter;
 import org.theseed.counters.PairCounter;
@@ -453,4 +454,15 @@ public class CounterTest extends TestCase {
         assertThat(counters.getCount(Cats.B), equalTo(2));
         assertThat(counters.getCount(Cats.C), equalTo(5));
     }
+
+    public void testBestColumn() {
+        double[] values = { 0.0, -1.0, 1.0, 0.5, 0.3, 0.2, 0.1, 0.6 };
+        BestColumn test = new BestColumn();
+        for (int i = 0; i < values.length; i++)
+            test.merge(i, values[i]);
+        assertThat(test.getBestIdx(), equalTo(2));
+        assertThat(test.getBestValue(), equalTo(1.0));
+    }
+
 }
+
