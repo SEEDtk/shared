@@ -1,0 +1,42 @@
+## Valid optimization preferences are SCORE, RSQUARED, PEARSON, ACCURACY, BOUNDED, MAE.
+--prefer SCORE	# optimization preference
+--bound 0.500000	# threshold for pseudo-accuracy
+--meta sample_id,density	# comma-delimited list of meta-data columns
+--iter 1000	# number of training iterations per batch
+--batchSize 500	# size of each training batch
+--testSize 125	# size of the testing set, taken from the beginning of the file
+## Valid training methods are BATCH, EPOCH.
+--method EPOCH	# training set processing method
+--earlyStop 200	# early-stop useless-iteration limit
+# --widths 10	# configure number and widths of hidden layers
+--balanced 2, 3, 4	# number of hidden layers (overrides widths)
+## Valid regularization modes are GAUSS, LINEAR, L2, WEIGHT_DECAY, NONE.
+--regMode GAUSS	# regularization mode
+--regFactor 0.300000	# regularization coefficient/factor
+# --maxBatches 10	# limit the number of input batches
+--learnRate 1.000000e-03	# weight learning rate
+--updateRate 0.200000	# bias update coefficient
+--seed 952077	# random number initialization seed
+## Valid loss functions are XENT, COSINE_PROXIMITY, FMEASURE, HINGE, KLD, L1, L2, MAE, MAPE, MCXENT, MSE, MSLE, POISSON, SQUARED_HINGE.
+--lossFun L2	# loss function for scoring output
+#-- weights 1.0	# weights (by label) for computing loss function
+## Valid starting weight initializations are DISTRIBUTION, ZERO, ONES, SIGMOID_UNIFORM, NORMAL, LECUN_NORMAL, UNIFORM, XAVIER, XAVIER_UNIFORM, XAVIER_FAN_IN, XAVIER_LEGACY, RELU, RELU_UNIFORM, IDENTITY, LECUN_UNIFORM, VAR_SCALING_NORMAL_FAN_IN, VAR_SCALING_NORMAL_FAN_OUT, VAR_SCALING_NORMAL_FAN_AVG, VAR_SCALING_UNIFORM_FAN_IN, VAR_SCALING_UNIFORM_FAN_OUT, VAR_SCALING_UNIFORM_FAN_AVG.
+--start XAVIER	# starting weight initialization method
+## Valid activation functions are CUBE, ELU, HARDSIGMOID, HARDTANH, IDENTITY, LEAKYRELU, RATIONALTANH, RELU, RELU6, RRELU, SIGMOID, SOFTMAX, SOFTPLUS, SOFTSIGN, TANH, RECTIFIEDTANH, SELU, SWISH, THRESHOLDEDRELU, GELU.
+--init HARDTANH	# initial activation function
+--activation RELU	# hidden layer activation function
+## Valid gradient normalizations are None, RenormalizeL2PerLayer, RenormalizeL2PerParamType, ClipElementWiseAbsoluteValue, ClipL2PerLayer, ClipL2PerParamType.
+--gradNorm None	# gradient normalization strategy
+# --batch	# use a batch normalization layer
+# --cnn 	# convolution kernel sizes
+# --filters 1	# number of convolution filters to try
+# --sub 1	# subsampling factor
+# --strides 1	# stride to use for convolution layer
+# --lstm 0	# number of long-short-term time series layers
+## Valid updater methods are ADAM, AMSGRAD, NADAM, NESTEROVS, RMSPROP, SGD.
+--updater ADAM	# weight gradient updater method (uses learning rate)
+--bUpdater NESTEROVS	# bias gradient updater method (uses update rate)
+# --raw	# suppress input normalization
+# --name model.ser	# model file name
+# --input training.tbl	# training file name
+--trials trials.log	# trial log file name (relative to model directory)# --comment The comment appears in the trial log.

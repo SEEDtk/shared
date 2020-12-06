@@ -67,6 +67,9 @@ public class SampleId implements Comparable<SampleId> {
     protected static final Pattern OLD_STRAIN_NAME = Pattern.compile("(\\d+)([Dd]\\S+)?(?:\\s+(p\\S+))?(?:\\s+\\+(\\S+))?");
     /** set of invalid deletion proteins */
     protected static final Set<String> BAD_DELETES = new TreeSet<String>(Arrays.asList("asd", "thrABC"));
+    /** fragment descriptions */
+    public static final String[] FRAGMENT_DESCRIPTIONS = new String[] { "host", "original thrABC", "core thr operon",
+            "insert method", "asd status", "insertions", "deletions", "IPTG", "time", "medium" };
 
     /**
      * Construct a sample ID from an ID string.
@@ -76,7 +79,10 @@ public class SampleId implements Comparable<SampleId> {
     public SampleId(String sampleData) {
         this.fragments = StringUtils.split(sampleData, '_');
         String timeString = StringUtils.replaceChars(fragments[TIME_COL], 'p', '.');
-        this.timePoint = Double.valueOf(timeString);
+        if (timeString.contentEquals("ML") || timeString.contentEquals("X"))
+            this.timePoint = Double.NaN;
+        else
+            this.timePoint = Double.valueOf(timeString);
     }
 
     /**

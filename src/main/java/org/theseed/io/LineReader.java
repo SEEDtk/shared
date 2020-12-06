@@ -12,8 +12,10 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.UncheckedIOException;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Set;
 
@@ -73,7 +75,21 @@ public class LineReader implements Iterable<String>, Iterator<String>, Closeable
      * @throws IOException
      */
     public static Set<String> readSet(File inFile) throws IOException {
-        Set<String> retVal = new HashSet<String>();
+        return new HashSet<String>(readList(inFile));
+    }
+
+    /**
+     * Read a string list from a tab-delimited file.  The strings to be put in the list are
+     * taken from the first column.  Order is preserved.
+     *
+     * @param inFile	input file to read
+     *
+     * @return a list of the values in the first column of the file
+     *
+     * @throws IOException
+     */
+    public static List<String> readList(File inFile) throws IOException {
+        List<String> retVal = new ArrayList<String>();
         try (LineReader reader = new LineReader(inFile)) {
             for (String line : reader) {
                 String value = StringUtils.substringBefore(line, "\t");
@@ -82,6 +98,7 @@ public class LineReader implements Iterable<String>, Iterator<String>, Closeable
         }
         return retVal;
     }
+
 
     /**
      * Initialize this file for reading.
