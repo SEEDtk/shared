@@ -59,7 +59,7 @@ public class FloatList implements Iterable<Double> {
     }
 
     /**
-     * Construct an empty integer list.
+     * Construct an empty floating-point list.
      */
     public FloatList() {
         this.values = new double[0];
