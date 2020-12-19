@@ -31,7 +31,7 @@ public class ParmFile implements Iterable<ParmDescriptor> {
     /** logging facility */
     protected static Logger log = LoggerFactory.getLogger(ParmFile.class);
     /** input line pattern */
-    public static final Pattern LINE_PATTERN = Pattern.compile("(# )?--(\\S+)(?:\s+([^\t]+))?(?:\s*\t#\s+(.+))?");
+    public static final Pattern LINE_PATTERN = Pattern.compile("(# )?--(\\S+)(?:\\s+([^\\t]+))?(?:\\s*\\t#\\s+(.+))?");
     /** parameter map */
     private SortedMap<String, ParmDescriptor> parmMap;
 
