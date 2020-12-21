@@ -69,6 +69,12 @@ public class TestParmFile {
         assertThat(m.group(2), equalTo("raw"));
         assertThat(m.group(3), nullValue());
         assertThat(m.group(4), equalTo("suppress input normalization"));
+        m = ParmFile.LINE_PATTERN.matcher("# --meta \t# comma-delimited list of meta-data columns");
+        assertThat(m.matches(), isTrue());
+        assertThat(m.group(1), equalTo("# "));
+        assertThat(m.group(2), equalTo("meta"));
+        assertThat(m.group(3), nullValue());
+        assertThat(m.group(4), equalTo("comma-delimited list of meta-data columns"));
     }
 
     @Test

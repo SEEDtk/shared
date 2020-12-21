@@ -45,6 +45,8 @@ public class BalancedOutputStream implements Closeable, AutoCloseable, ILabeledO
     private boolean openFlag;
     /** number of records buffered */
     private int bufferCount;
+    /** number of buffered records written */
+    private int outputCount;
 
     /** maximum number of records to buffer */
     private static int BUFFER_MAX = 100000;
@@ -87,6 +89,7 @@ public class BalancedOutputStream implements Closeable, AutoCloseable, ILabeledO
         this.classCounts = new CountMap<String>();
         this.randStream = new Random();
         this.bufferCount = 0;
+        this.outputCount = 0;
     }
 
     /**
@@ -108,6 +111,7 @@ public class BalancedOutputStream implements Closeable, AutoCloseable, ILabeledO
     public void write(String label, String line) {
         if (this.fuzzFactor == 0) {
             writeImmediate(label, line);
+            this.outputCount++;
         } else {
             // Insure we have a queue for this class.
             Shuffler<String> queue;
@@ -204,6 +208,7 @@ public class BalancedOutputStream implements Closeable, AutoCloseable, ILabeledO
                     while (outCount > 0 && statusArray[i].iter.hasNext()) {
                         this.writeImmediate(labelCounts.get(i).getKey(), statusArray[i].iter.next());
                         outCount--;
+                        this.outputCount++;
                     }
                 }
             }
@@ -217,6 +222,16 @@ public class BalancedOutputStream implements Closeable, AutoCloseable, ILabeledO
      */
     public static void setBufferMax(int newMax) {
         BalancedOutputStream.BUFFER_MAX = newMax;
+    }
+
+    /**
+     * @return the output count
+     */
+    public int getOutputCount() {
+        // Insure everything is written.
+        this.writeAll();
+        this.reset();
+        return this.outputCount;
     }
 
 }
