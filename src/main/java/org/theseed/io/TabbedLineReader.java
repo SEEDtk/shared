@@ -156,6 +156,13 @@ public class TabbedLineReader implements Closeable, AutoCloseable, Iterable<Tabb
             return this.lineText;
         }
 
+        /**
+         * @return all the fields of the line
+         */
+        public String[] getFields() {
+            return this.fields;
+        }
+
     }
 
     //FIELDS
