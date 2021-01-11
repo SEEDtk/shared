@@ -7,6 +7,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FilenameFilter;
 import java.io.IOException;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.TreeSet;
 
@@ -140,6 +141,13 @@ public class GenomeDirectory implements Iterable<Genome> {
     public GenomeDirectory(File inDir) throws IOException {
         this.dirName = inDir;
         setup();
+    }
+
+    /**
+     * @return a list of the genome IDs
+     */
+    public Collection<String> getGenomeIDs() {
+        return this.genomeIDs;
     }
 
 
