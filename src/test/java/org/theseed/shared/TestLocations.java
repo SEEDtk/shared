@@ -607,6 +607,11 @@ public class TestLocations extends TestCase {
         assertThat(t2.getLength(), equalTo(50));
         assertThat(t2.getDir(), equalTo(t1.getDir()));
         assertThat(t2.getContigId(), equalTo(t1.getContigId()));
+        t2 = t1.downstream(50);
+        assertThat(t1.getEnd() - 1, equalTo(t2.getBegin()));
+        assertThat(t2.getLength(), equalTo(50));
+        assertThat(t2.getDir(), equalTo(t1.getDir()));
+        assertThat(t2.getContigId(), equalTo(t1.getContigId()));
         t1 = Location.create("otherContig", "+", 200, 300);
         t2 = t1.upstream(50);
         assertThat(t1.upstreamDistance(t2), equalTo(0));
@@ -615,6 +620,11 @@ public class TestLocations extends TestCase {
         assertThat(t2.getContigId(), equalTo(t1.getContigId()));
         assertThat(t1.isUpstream(t2), isFalse());
         assertThat(t2.isUpstream(t1), isTrue());
+        t2 = t1.downstream(50);
+        assertThat(t1.getEnd() + 1, equalTo(t2.getBegin()));
+        assertThat(t2.getLength(), equalTo(50));
+        assertThat(t2.getDir(), equalTo(t1.getDir()));
+        assertThat(t2.getContigId(), equalTo(t1.getContigId()));
     }
 
     public void testFeatureUpstream() {
@@ -649,6 +659,17 @@ public class TestLocations extends TestCase {
         assertThat(loc2a.getContigId(), equalTo(loc2.getContigId()));
         assertThat(loc2a.getRegionLength(), equalTo(200));
         assertThat(loc2a.getRight(), equalTo(1449));
+    }
+
+    public void testDnaEdges() {
+        Location loc1 = Location.create("1313.7001.con.0002", 5, 10);
+        Location loc2 = loc1.upstream(10);
+        String dna = myGto.getDna(loc2);
+        assertThat(dna, equalTo("aaag"));
+        loc1 = Location.create("1313.7001.con.0026", 2092, 2080);
+        loc2 = loc1.upstream(20);
+        dna = myGto.getDna(loc2);
+        assertThat(dna, equalTo("aaggtacat"));
     }
 
 }

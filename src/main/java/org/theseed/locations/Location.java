@@ -979,4 +979,11 @@ public abstract class Location implements Comparable<Location>, Cloneable {
      */
     public abstract Location expandUpstream(int upstream, int contigLen);
 
+    /**
+     * @return a location that covers the specified number of base pairs downstream of this one
+     *
+     * @param gap	length of the new location
+     */
+    public abstract Location downstream(int gap);
+
 }

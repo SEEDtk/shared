@@ -213,5 +213,11 @@ public class FLocation extends Location {
         return (this.getBegin() + offset);
     }
 
+    @Override
+    public Location downstream(int gap) {
+        FLocation retVal = new FLocation(this.contigId);
+        retVal.addRegion(this.getRight() + 1, gap);
+        return retVal;
+    }
 
 }

@@ -222,5 +222,12 @@ public class BLocation extends Location {
         return (this.getBegin() - offset);
     }
 
+    @Override
+    public Location downstream(int gap) {
+        BLocation retVal = new BLocation(this.contigId);
+        retVal.addRegion(this.getLeft() - 1, gap);
+        return retVal;
+    }
+
 
 }
