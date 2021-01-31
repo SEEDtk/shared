@@ -64,7 +64,7 @@ public class SampleId implements Comparable<SampleId> {
             new AbstractMap.SimpleEntry<>("277", "7"), new AbstractMap.SimpleEntry<>("926", "M"))
             .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
     /** pattern for parsing an old strain name */
-    protected static final Pattern OLD_STRAIN_NAME = Pattern.compile("(\\d+)([Dd]\\S+)?(?:\\s+(p\\S+))?(?:\\s+\\+(\\S+))?");
+    protected static final Pattern OLD_STRAIN_NAME = Pattern.compile("(\\d+)([Dd]\\S+)?((?:\\s+\\S+)+)?");
     /** set of invalid deletion proteins */
     protected static final Set<String> BAD_DELETES = new TreeSet<String>(Arrays.asList("asd", "thrABC"));
     /** fragment descriptions */
@@ -113,10 +113,28 @@ public class SampleId implements Comparable<SampleId> {
             // We have a valid strain.  The first group is the host strain.
             String host = m.group(1);
             retVal.fragments[0] = HOST_MAP.getOrDefault(host, host);
-            // The third group is the plasmid data.
-            String[] plasmidSpecs = PLASMID_MAP.getOrDefault(m.group(3), PLASMID_DEFAULT);
+            // Group 3 is a bunch of inserts, space-delimited.  A "+" is removed.
+            // There can be up to two inserts-- a plasmid spec and a protein.
+            boolean plasmidFound = false;
+            String[] plasmidSpecs = PLASMID_DEFAULT;
+            String insert = "000";
+            if (m.group(3) != null) {
+                String[] insertParts = StringUtils.split(m.group(3));
+                for (String insertPart : insertParts) {
+                    if (insertPart.startsWith("+"))
+                        insertPart = insertPart.substring(1);
+                    insertPart = insertPart.toLowerCase();
+                    // Check for a plasmid.
+                    if (PLASMID_MAP.containsKey(insertPart)) {
+                        plasmidSpecs = PLASMID_MAP.get(insertPart);
+                        plasmidFound = true;
+                    } else
+                        insert = insertPart;
+                }
+            }
+            // Copy the plasmid specs to the output and make the 277 adjustment.
             System.arraycopy(plasmidSpecs, 0, retVal.fragments, 1, 4);
-            if (host.contentEquals("277") && m.group(3) == null)
+            if (host.contentEquals("277") && ! plasmidFound)
                 retVal.fragments[3] = "A";
             // The second group is deletions.
             String deletions = m.group(2);
@@ -149,14 +167,9 @@ public class SampleId implements Comparable<SampleId> {
                 else
                     retVal.fragments[DELETE_COL] = "D" + StringUtils.join(deletes, 'D');
             }
-            // Now we process the additions.  Here, we also need to repair the lower-casing.
-            if (m.group(4) == null)
-                retVal.fragments[INSERT_COL] = "000";
-            else {
-                String insert = m.group(4);
-                retVal.fragments[INSERT_COL] = StringUtils.substring(insert, 0, 3) +
-                        StringUtils.substring(insert, 3).toUpperCase();
-            }
+            // Next we process the protein insert.  Here, we also need to repair the lower-casing.
+            retVal.fragments[INSERT_COL] = StringUtils.substring(insert, 0, 3) +
+                    StringUtils.substring(insert, 3).toUpperCase();
             // Now we save the time.
             retVal.timePoint = time;
             String timeString;

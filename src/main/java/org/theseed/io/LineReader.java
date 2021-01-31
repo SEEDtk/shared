@@ -184,6 +184,8 @@ public class LineReader implements Iterable<String>, Iterator<String>, Closeable
         // FIELDS
         /** end-of-section marker string */
         private String marker;
+        /** field delimiter */
+        private String delim;
 
         /**
          * Construct an iterable for the next section of this file.
@@ -192,11 +194,23 @@ public class LineReader implements Iterable<String>, Iterator<String>, Closeable
          */
         public Section(String marker) {
             this.marker = marker;
+            this.delim = "\t";
+        }
+
+        /**
+         * Construct an iterable for the next section of this file.
+         *
+         * @param marker	end-of-section marker
+         * @param delim		field delimiter
+         */
+        public Section(String marker, String delim) {
+            this.marker = marker;
+            this.delim = delim;
         }
 
         @Override
         public Iterator<String[]> iterator() {
-            return LineReader.this.new SectionIter(marker);
+            return LineReader.this.new SectionIter(marker, delim);
         }
 
     }
@@ -211,14 +225,18 @@ public class LineReader implements Iterable<String>, Iterator<String>, Closeable
         private boolean completed;
         /** end-of-section marker */
         private String marker;
+        /** field delimiter */
+        private String delim;
 
         /**
          * Construct a new iterator.
          *
          * @param marker	end-of-section marker
+         * @param delim		field delimiter
          */
-        public SectionIter(String marker) {
+        public SectionIter(String marker, String delim) {
             this.marker = marker;
+            this.delim = delim;
             this.completed = false;
         }
 
@@ -263,7 +281,7 @@ public class LineReader implements Iterable<String>, Iterator<String>, Closeable
                     this.completed = true;
                     throw new NoSuchElementException("Premature end-of-file in " + LineReader.this.fileName + ".");
                 } else {
-                    retVal = StringUtils.splitPreserveAllTokens(buffer, '\t');
+                    retVal = StringUtils.splitPreserveAllTokens(buffer, this.delim);
                 }
             }
             return retVal;
