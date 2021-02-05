@@ -215,6 +215,13 @@ public class SampleId implements Comparable<SampleId> {
     }
 
     /**
+     * @return the sample ID without the time point
+     */
+    public String toTimeless() {
+        return this.toStrain() + "_" + this.fragments[INDUCE_COL];
+    }
+
+    /**
      * @return the string representative of the sample ID
      */
     public String toString() {
