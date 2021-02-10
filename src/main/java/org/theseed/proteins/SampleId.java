@@ -3,6 +3,7 @@
  */
 package org.theseed.proteins;
 
+import java.io.File;
 import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -46,12 +47,17 @@ public class SampleId implements Comparable<SampleId> {
     public static final int DELETE_COL = 6;
     /** index of the induction column */
     public static final int INDUCE_COL = 7;
+    /** index of column containing replicate flag */
+    public static final int REP_COL = NORMAL_SIZE;
     /** map of sample fragments for each plasmid code */
     private static final Map<String, String[]> PLASMID_MAP = Stream.of(
+            new AbstractMap.SimpleEntry<>("6-4-2", StringUtils.split("D_TasdA1_P_asdD", '_')),
+            new AbstractMap.SimpleEntry<>("2-1-1", StringUtils.split("D_Tasd_P_asdD", '_')),
+            new AbstractMap.SimpleEntry<>("6-4-3", StringUtils.split("D_TasdA_P_asdD", '_')),
             new AbstractMap.SimpleEntry<>("pfb6.4.2", StringUtils.split("D_TasdA1_P_asdD", '_')),
             new AbstractMap.SimpleEntry<>("pwt2.1.1", StringUtils.split("D_Tasd_P_asdD", '_')),
-            new AbstractMap.SimpleEntry<>("pfb6.4.3", StringUtils.split("D_TasdA_P_asdD", '_')))
-            .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+            new AbstractMap.SimpleEntry<>("pfb6.4.3", StringUtils.split("D_TasdA_P_asdD", '_'))
+            ).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
     /** map of mis-spelled deletion protein names */
     private static final Map<String, String> PROTEIN_ERRORS = Stream.of(
             new AbstractMap.SimpleEntry<>("rthA", "rhtA"),
@@ -61,8 +67,17 @@ public class SampleId implements Comparable<SampleId> {
     private static final String[] PLASMID_DEFAULT = new String[] { "0", "0", "0", "asdO" };
     /** map of strain numbers to strain IDs */
     private static final Map<String, String> HOST_MAP = Stream.of(
-            new AbstractMap.SimpleEntry<>("277", "7"), new AbstractMap.SimpleEntry<>("926", "M"))
-            .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+            new AbstractMap.SimpleEntry<>("277", "7"), new AbstractMap.SimpleEntry<>("926", "M"),
+            new AbstractMap.SimpleEntry<>("278", "21278"), new AbstractMap.SimpleEntry<>("823", "30823"),
+            new AbstractMap.SimpleEntry<>("319", "30319"), new AbstractMap.SimpleEntry<>("593", "21593")
+            ).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+    /** map of strain IDs for non-plasmid strains */
+    private static final Map<String, String[]> CHROMO_MAP = Stream.of(
+            new AbstractMap.SimpleEntry<>("277-14", StringUtils.split("7_0_TA1_C_asdO", '_')),
+            new AbstractMap.SimpleEntry<>("277wt1", StringUtils.split("7_0_T_C_asdO", '_')),
+            new AbstractMap.SimpleEntry<>("926-44", StringUtils.split("M_0_T_C_asdO", '_')),
+            new AbstractMap.SimpleEntry<>("926fb1", StringUtils.split("M_0_TA1_C_asdO", '_'))
+            ).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
     /** pattern for parsing an old strain name */
     protected static final Pattern OLD_STRAIN_NAME = Pattern.compile("(\\d+)([Dd]\\S+)?((?:\\s+\\S+)+)?");
     /** set of invalid deletion proteins */
@@ -70,6 +85,8 @@ public class SampleId implements Comparable<SampleId> {
     /** fragment descriptions */
     public static final String[] FRAGMENT_DESCRIPTIONS = new String[] { "host", "original thrABC", "core thr operon",
             "insert method", "asd status", "insertions", "deletions", "IPTG", "time", "medium" };
+    /** RNA filename pattern */
+    private static final Pattern RNA_FILE_NAME = Pattern.compile("([^_]+)_(?:(\\d[\\-_]\\d[\\-_]\\d)_)?(\\d+(?:[._p]5)?)_?hrs?(?:_rep\\d+)?_(S\\d+)(?:_L\\d+)?_R[12]_\\d+\\.fastq");
 
     /**
      * Construct a sample ID from an ID string.
@@ -78,6 +95,13 @@ public class SampleId implements Comparable<SampleId> {
      */
     public SampleId(String sampleData) {
         this.fragments = StringUtils.split(sampleData, '_');
+        parseTimeString();
+    }
+
+    /**
+     * Compute the time point from the time fragment of the sample ID.
+     */
+    private void parseTimeString() {
         String timeString = StringUtils.replaceChars(fragments[TIME_COL], 'p', '.');
         if (timeString.contentEquals("ML") || timeString.contentEquals("X"))
             this.timePoint = Double.NaN;
@@ -186,6 +210,124 @@ public class SampleId implements Comparable<SampleId> {
             // Finally the medium.
             retVal.fragments[MEDIA_COL] = medium;
         }
+        return retVal;
+    }
+
+    /**
+     * Convert an RNA sequence file name to a sample ID.  Note that we lose a lot of information here, of which the read type (1 or 2)
+     * is the most important.  The final sample ID may also need to have a "rep" identifier added.
+     *
+     * @param rnaFile	file containing the RNA sequence data
+     *
+     * @return the sample identified by the RNA sequence file name, or NULL if the file name is invalid
+     */
+    public static SampleId translate(File rnaFile) {
+        SampleId retVal = null;
+        String name = rnaFile.getName();
+        if (! name.startsWith("Blank")) {
+            String[] parts = rnaMatch(rnaFile.getName());
+            if (parts != null) {
+                // Here we have a valid name.  Parse the host.
+                retVal = new SampleId();
+                String host = HOST_MAP.get(parts[0]);
+                if (host == null) {
+                    // If the host is not found, check for an artificial host, which contains operon adjustments built in.
+                    String[] plasmidInfo = CHROMO_MAP.get(parts[0]);
+                    if (plasmidInfo == null)
+                        throw new IllegalArgumentException("Invalid host name \"" + parts[0] + "\".");
+                    else {
+                        // Copy the full host/operon info to the sample ID.
+                        System.arraycopy(plasmidInfo, 0, retVal.fragments, 0, plasmidInfo.length);
+                    }
+                } else {
+                    // Here we have a normal host.
+                    retVal.fragments[0] = host;
+                    // Check for a plasmid.
+                    if (parts[1] != null) {
+                        String[] plasmidInfo = PLASMID_MAP.get(parts[1]);
+                        if (plasmidInfo == null)
+                            throw new IllegalArgumentException("Invalid plasmid specifier \"" + parts[1] + "\".");
+                        else
+                            System.arraycopy(plasmidInfo, 0, retVal.fragments, 1, plasmidInfo.length);
+                    } else {
+                        String[] plasmidInfo = PLASMID_DEFAULT;
+                        System.arraycopy(plasmidInfo, 0, retVal.fragments, 1, plasmidInfo.length);
+                        if (host.equals("7")) {
+                            // If no plasmid on a 277, we add an A in the location slot.
+                            retVal.fragments[3] = "A";
+                        }
+                    }
+                }
+                // Store the IPTG flag.
+                retVal.fragments[INDUCE_COL] = parts[3];
+                // Store the time point.
+                retVal.fragments[TIME_COL] = parts[2];
+                // Store the constant columns.
+                retVal.fragments[MEDIA_COL] = "M1";
+                retVal.fragments[INSERT_COL] = "000";
+                retVal.fragments[DELETE_COL] = "D000";
+                // Compute the numeric time point.
+                retVal.parseTimeString();
+            }
+        }
+        return retVal;
+    }
+
+    /**
+     * Extract the sample number from an RNA file name.
+     *
+     * @param rnaFile	RNA file name
+     *
+     * @return the sample number ("S" followed by one or more digits)
+     */
+    public static String getSampleNumber(File rnaFile) {
+        String name = rnaFile.getName();
+        String[] parts = rnaMatch(name);
+        String retVal = null;
+        if (parts != null)
+            retVal = parts[4];
+        return retVal;
+    }
+
+    /**
+     * Increment this sample ID.  This involves increasing the replicate number.
+     */
+    public void increment() {
+        if (this.fragments.length == NORMAL_SIZE) {
+            String[] newFragments = new String[NORMAL_SIZE + 1];
+            System.arraycopy(this.fragments, 0, newFragments, 0, NORMAL_SIZE);
+            newFragments[REP_COL] = "rep1";
+            this.fragments = newFragments;
+        } else {
+            int repNum = Integer.valueOf(this.fragments[REP_COL].substring(3));
+            this.fragments[REP_COL] = String.format("rep%d", repNum + 1);
+        }
+    }
+
+    /**
+     * Parse an RNA file name.
+     *
+     * @param fileName		base part of the file name to parse
+     *
+     * @return the five components of the file name-- strain, plasmid, time point, IPTG, sample number-- or NULL if the file name is invalid
+     */
+    private static String[] rnaMatch(String fileName) {
+        // Remove the IPTG flag (if any).
+        String reducedName;
+        String iptgFlag;
+        if (StringUtils.contains(fileName, "_IPTG")) {
+            iptgFlag = "I";
+            reducedName = StringUtils.remove(fileName, "_IPTG");
+        } else {
+            iptgFlag = "0";
+            reducedName = fileName;
+        }
+        // Now parse the remainder of the file name.
+        Matcher m = RNA_FILE_NAME.matcher(reducedName);
+        String[] retVal = null;
+        if (m.matches())
+            retVal = new String[] { m.group(1), StringUtils.replaceChars(m.group(2), '_', '-'),
+                    StringUtils.replaceChars(m.group(3), "._", "pp"), iptgFlag, m.group(4) };
         return retVal;
     }
 
@@ -315,9 +457,7 @@ public class SampleId implements Comparable<SampleId> {
 
     @Override
     public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + Arrays.hashCode(this.fragments);
+        int result = Arrays.hashCode(this.fragments);
         return result;
     }
 
