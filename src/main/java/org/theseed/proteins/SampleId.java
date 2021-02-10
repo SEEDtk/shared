@@ -69,7 +69,9 @@ public class SampleId implements Comparable<SampleId> {
     private static final Map<String, String> HOST_MAP = Stream.of(
             new AbstractMap.SimpleEntry<>("277", "7"), new AbstractMap.SimpleEntry<>("926", "M"),
             new AbstractMap.SimpleEntry<>("278", "21278"), new AbstractMap.SimpleEntry<>("823", "30823"),
-            new AbstractMap.SimpleEntry<>("319", "30319"), new AbstractMap.SimpleEntry<>("593", "21593")
+            new AbstractMap.SimpleEntry<>("319", "30319"), new AbstractMap.SimpleEntry<>("593", "21593"),
+            new AbstractMap.SimpleEntry<>("316", "30316"), new AbstractMap.SimpleEntry<>("317", "30317"),
+            new AbstractMap.SimpleEntry<>("318", "30318")
             ).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
     /** map of strain IDs for non-plasmid strains */
     private static final Map<String, String[]> CHROMO_MAP = Stream.of(
