@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.function.Predicate;
@@ -41,9 +42,9 @@ public class RnaData implements Iterable<RnaData.Row>, Serializable {
     /** list of sample descriptors */
     List<JobData> jobs;
     /** map of features to data rows */
-    private SortedMap<FeatureData, Row> rowMap;
+    private SortedMap<String, Row> rowMap;
     /** map of job names to column indices */
-    private HashMap<String, Integer> colMap;
+    private Map<String, Integer> colMap;
     /** pattern for RNA functions */
     private static final Predicate<String> RNA_PREDICATE = Pattern.compile("ribosomal|[tr]RNA").asPredicate();
     /** scale value for normalizing weights */
@@ -413,7 +414,7 @@ public class RnaData implements Iterable<RnaData.Row>, Serializable {
      */
     public RnaData() {
         this.jobs = new ArrayList<JobData>();
-        this.rowMap = new TreeMap<FeatureData, Row>();
+        this.rowMap = new TreeMap<String, Row>();
         this.colMap = new HashMap<String, Integer>();
     }
 
@@ -484,7 +485,7 @@ public class RnaData implements Iterable<RnaData.Row>, Serializable {
      */
     public Row getRow(Feature feat, Feature neighbor) {
         FeatureData fData = new FeatureData(feat);
-        Row retVal = this.rowMap.computeIfAbsent(fData, f -> new Row(f, neighbor));
+        Row retVal = this.rowMap.computeIfAbsent(feat.getId(), f -> new Row(fData, neighbor));
         return retVal;
     }
 
@@ -493,8 +494,8 @@ public class RnaData implements Iterable<RnaData.Row>, Serializable {
      *
      * @param feat	feature of interest
      */
-    public Row getRow(FeatureData feat) {
-        Row retVal = this.rowMap.get(feat);
+    public Row getRow(String fid) {
+        Row retVal = this.rowMap.get(fid);
         return retVal;
     }
 

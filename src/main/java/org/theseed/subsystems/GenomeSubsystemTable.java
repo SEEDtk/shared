@@ -5,9 +5,12 @@ package org.theseed.subsystems;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.SortedSet;
 import java.util.TreeSet;
 
 import org.apache.commons.lang3.StringUtils;
@@ -29,6 +32,8 @@ public class GenomeSubsystemTable {
     protected static Logger log = LoggerFactory.getLogger(GenomeSubsystemTable.class);
     /** map of feature IDs to subsystems */
     private Map<String, Set<SubData>> subMap;
+    /** set of subsystem IDs */
+    private List<String> subIDs;
 
     /**
      * This sub-object contains the ID and description of a single subsystem.
@@ -118,13 +123,19 @@ public class GenomeSubsystemTable {
      * @throws IOException
      */
     public GenomeSubsystemTable(File inFile) throws IOException {
+        // Initialize the subsystem map.
         this.subMap = new HashMap<String, Set<SubData>>(3000);
+        // We will store subsystem IDs in here for later.
+        SortedSet<String> idList = new TreeSet<String>();
+        // Loop through the subsystem file.
         try (LineReader reader = new LineReader(inFile)) {
             int count = 0;
             for (String line : reader) {
                 String[] parts = StringUtils.splitPreserveAllTokens(line, "\t");
                 // Create the subsystem descriptor.
                 SubData sub = new SubData(parts[0], parts[1], parts[2]);
+                // Add it to the main list.
+                idList.add(sub.getId());
                 // Add it to each feature's subsystem set.
                 for (String fid : StringUtils.splitByWholeSeparator(parts[3], SubsystemRowDescriptor.FID_DELIM)) {
                     Set<SubData> fidSubs = this.subMap.computeIfAbsent(fid, x -> new TreeSet<SubData>());
@@ -134,6 +145,8 @@ public class GenomeSubsystemTable {
             }
             log.info("{} subsystems read from {}.", count, inFile);
         }
+        // Format the subsystem ID list.
+        this.subIDs = new ArrayList<String>(idList);
     }
 
     /**
@@ -145,6 +158,13 @@ public class GenomeSubsystemTable {
      */
     public Set<SubData> getSubsystems(String fid) {
         return this.subMap.get(fid);
+    }
+
+    /**
+     * Get the list of subsystems for the genome.
+     */
+    public List<String> getAllSubsystems() {
+        return this.subIDs;
     }
 
 }

@@ -142,25 +142,25 @@ public class TestRnaData {
         data.normalize();
         assertThat(data.rows(), equalTo(4));
         RnaData.FeatureData feat = new RnaData.FeatureData(f1);
-        row = data.getRow(feat);
+        row = data.getRow(feat.getId());
         assertThat(row.getWeight(0).getWeight(), closeTo(100000.0, 0.1));
         assertThat(row.getWeight(1).getWeight(), closeTo(200000.0, 0.1));
         assertThat(row.getWeight(2).getWeight(), closeTo(300000.0, 0.1));
         assertThat(row.getWeight(3).getWeight(), closeTo(400000.0, 0.1));
         feat = new RnaData.FeatureData(f2);
-        row = data.getRow(feat);
+        row = data.getRow(feat.getId());
         assertThat(row, nullValue());
         feat = new RnaData.FeatureData(f3);
-        row = data.getRow(feat);
+        row = data.getRow(feat.getId());
         assertThat(row, nullValue());
         feat = new RnaData.FeatureData(f4);
-        row = data.getRow(feat);
+        row = data.getRow(feat.getId());
         assertThat(row.getWeight(0).getWeight(), closeTo(200000.0, 0.1));
         assertThat(row.getWeight(1).getWeight(), closeTo(300000.0, 0.1));
         assertThat(row.getWeight(2).getWeight(), closeTo(400000.0, 0.1));
         assertThat(row.getWeight(3).getWeight(), closeTo(100000.0, 0.1));
         feat = new RnaData.FeatureData(r1);
-        row = data.getRow(feat);
+        row = data.getRow(feat.getId());
         assertThat(row, nullValue());
     }
 
