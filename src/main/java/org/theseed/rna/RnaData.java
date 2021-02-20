@@ -15,8 +15,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.SortedMap;
-import java.util.TreeMap;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
 
@@ -42,7 +40,7 @@ public class RnaData implements Iterable<RnaData.Row>, Serializable {
     /** list of sample descriptors */
     List<JobData> jobs;
     /** map of features to data rows */
-    private SortedMap<String, Row> rowMap;
+    private Map<String, Row> rowMap;
     /** map of job names to column indices */
     private Map<String, Integer> colMap;
     /** pattern for RNA functions */
@@ -414,7 +412,7 @@ public class RnaData implements Iterable<RnaData.Row>, Serializable {
      */
     public RnaData() {
         this.jobs = new ArrayList<JobData>();
-        this.rowMap = new TreeMap<String, Row>();
+        this.rowMap = new HashMap<String, Row>();
         this.colMap = new HashMap<String, Integer>();
     }
 
