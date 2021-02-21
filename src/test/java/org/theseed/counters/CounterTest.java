@@ -1,7 +1,7 @@
 /**
  *
  */
-package org.theseed.shared;
+package org.theseed.counters;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
@@ -16,11 +16,7 @@ import java.util.SortedSet;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.ArrayUtils;
-import org.theseed.counters.BestColumn;
-import org.theseed.counters.CountMap;
-import org.theseed.counters.EnumCounter;
-import org.theseed.counters.PairCounter;
-import org.theseed.counters.QualityCountMap;
+import org.theseed.shared.Thing;
 import org.theseed.utils.FloatList;
 import org.theseed.utils.IntegerList;
 import org.theseed.utils.SizeList;
