@@ -35,6 +35,8 @@ public class SampleTest {
         samp2 = new SampleId("7_0_0_A_asdO_000_D000_0_12_M1");
         assertThat(samp2.getDeletes().size(), equalTo(0));
         assertThat(samp2.isIPTG(), isFalse());
+        SampleId samp3 = new SampleId("7_0_0_A_asdO_000_D000_0_12_M1_rep1");
+        assertThat(samp2.repBaseId(), equalTo(samp3.repBaseId()));
     }
 
     @Test

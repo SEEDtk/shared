@@ -373,6 +373,13 @@ public class SampleId implements Comparable<SampleId> {
     }
 
     /**
+     * @return the sample ID without the replicate number
+     */
+    public String repBaseId() {
+        return StringUtils.join(this.fragments, '_', 0, REP_COL);
+    }
+
+    /**
      * @return the deletion set for this sample
      */
     public Set<String> getDeletes() {
