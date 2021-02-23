@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -58,6 +59,10 @@ public class RnaData implements Iterable<RnaData.Row>, Serializable {
         private double opticalDensity;
         private String oldName;
         private boolean suspicious;
+        private double quality;
+        private int readCount;
+        private int baseCount;
+        private LocalDate creation;
 
         /**
          * Construct a sample-data object.
@@ -74,6 +79,10 @@ public class RnaData implements Iterable<RnaData.Row>, Serializable {
             this.opticalDensity = opticalDensity;
             this.oldName = oldName;
             this.suspicious = suspicious;
+            this.quality = 0.0;
+            this.readCount = 0;
+            this.baseCount = 0;
+            this.creation = LocalDate.now();
         }
 
         /**
@@ -146,6 +155,70 @@ public class RnaData implements Iterable<RnaData.Row>, Serializable {
          */
         public boolean isSuspicious() {
             return this.suspicious;
+        }
+
+        /**
+         * @return the percent reads in this sample with a map quality >= 30%
+         */
+        public double getQuality() {
+            return this.quality;
+        }
+
+        /**
+         * Specify the read quality percentage.
+         *
+         * @param quality 	the percent reads with a map quality >= 30%
+         */
+        public void setQuality(double quality) {
+            this.quality = quality;
+        }
+
+        /**
+         * @return the number of reads in this sample
+         */
+        public int getReadCount() {
+            return this.readCount;
+        }
+
+        /**
+         * Specify the number of reads in this sample.
+         *
+         * @param readCount 	the number of reads
+         */
+        public void setReadCount(int readCount) {
+            this.readCount = readCount;
+        }
+
+        /**
+         * @return the number of base pairs in this sample
+         */
+        public int getBaseCount() {
+            return this.baseCount;
+        }
+
+        /**
+         * Specify the number of base pairs in this sample
+         *
+         * @param baseCount 	the number of base pairs
+         */
+        public void setBaseCount(int baseCount) {
+            this.baseCount = baseCount;
+        }
+
+        /**
+         * @return the processing date of the sample
+         */
+        public LocalDate getProcessingDate() {
+            return this.creation;
+        }
+
+        /**
+         * Specify the processing date of this sample.
+         *
+         * @param creation 	the creation date to set
+         */
+        public void setProcessingDate(LocalDate creation) {
+            this.creation = creation;
         }
 
     }
@@ -442,11 +515,13 @@ public class RnaData implements Iterable<RnaData.Row>, Serializable {
      * @param oldName 			original name of sample
      * @param suspicious		return TRUE if this sample is of suspicious quality
      */
-    public void addJob(String jobName, double production, double opticalDensity, String oldName, boolean suspicious) {
+    public JobData addJob(String jobName, double production, double opticalDensity, String oldName, boolean suspicious) {
         // Save the array index for this sample.
         this.colMap.put(jobName, this.jobs.size());
         // Add the sample to the job list.
-        this.jobs.add(new JobData(jobName, production, opticalDensity, oldName, suspicious));
+        JobData retVal = new JobData(jobName, production, opticalDensity, oldName, suspicious);
+        this.jobs.add(retVal);
+        return retVal;
     }
 
     @Override
@@ -570,6 +645,16 @@ public class RnaData implements Iterable<RnaData.Row>, Serializable {
      */
     public Integer findColIdx(String sample) {
         return this.colMap.get(sample);
+    }
+
+    /**
+     * @return the job descriptor for the named job
+     *
+     * @param jobName	name of the sample whose job is desired
+     */
+    public JobData getJob(String jobName) {
+        int colIdx = this.findColIdx(jobName);
+        return this.jobs.get(colIdx);
     }
 
 }

@@ -1,7 +1,7 @@
 /**
  *
  */
-package org.theseed.shared;
+package org.theseed.rna;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
@@ -9,6 +9,7 @@ import static org.theseed.test.Matchers.*;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
@@ -16,7 +17,6 @@ import java.util.Optional;
 import org.junit.Test;
 import org.theseed.genome.Feature;
 import org.theseed.genome.Genome;
-import org.theseed.rna.RnaData;
 
 /**
  * @author Bruce Parrello
@@ -28,7 +28,11 @@ public class TestRnaData {
     public void testSaveLoad() throws IOException, ClassNotFoundException {
         Genome gto = new Genome(new File("data", "MG1655-wild.gto"));
         RnaData testRna = new RnaData();
-        testRna.addJob("job1", 1.0, 0.1, "old1", true);
+        RnaData.JobData job0 = testRna.addJob("job1", 1.0, 0.1, "old1", true);
+        job0.setBaseCount(1000000);
+        job0.setReadCount(1000);
+        job0.setQuality(11.1);
+        job0.setProcessingDate(LocalDate.of(2021, 1, 11));
         testRna.addJob("job2", 2.0, 0.2, "old2", true);
         testRna.addJob("job0", Double.NaN, Double.NaN, "old0", false);
         assertThat(testRna.size(), equalTo(3));
@@ -73,6 +77,10 @@ public class TestRnaData {
         assertThat(job1.getName(), equalTo("job1"));
         assertThat(job1.getProduction(), equalTo(1.0));
         assertThat(job1.isSuspicious(), isTrue());
+        assertThat(job1.getBaseCount(), equalTo(1000000));
+        assertThat(job1.getReadCount(), equalTo(1000));
+        assertThat(job1.getProcessingDate(), equalTo(LocalDate.of(2021, 1, 11)));
+        assertThat(job1.getQuality(), closeTo(11.1, 0.001));
         Optional<RnaData.JobData> jobFCheck = fileJobs.stream().filter(x -> x.getName().contentEquals("job1")).findFirst();
         assertThat(jobFCheck.isPresent(), isTrue());
         RnaData.JobData jobF = jobFCheck.get();
