@@ -53,9 +53,9 @@ public class TestRatingList {
         ratings.add("P220", 220.0);
         assertThat(ratings.getBest(), contains("C300", "D250", "E250", "P220", "B200",
                 "L150", "O120", "A100", "G070", "H060"));
-        Iterator<RatingList.Rating<String>> iter = ratings.iterator();
+        Iterator<Rating<String>> iter = ratings.iterator();
         assertThat(iter.hasNext(), isTrue());
-        RatingList.Rating<String> curr = iter.next();
+        Rating<String> curr = iter.next();
         assertThat(curr.getKey(), equalTo("C300"));
         assertThat(curr.getRating(), equalTo(300.0));
         assertThat(iter.hasNext(), isTrue());

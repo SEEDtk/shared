@@ -37,7 +37,7 @@ public class RnaData implements Iterable<RnaData.Row>, Serializable {
     /** logging facility */
     protected static Logger log = LoggerFactory.getLogger(RnaData.class);
     /** object version ID */
-    private static final long serialVersionUID = 3381600661613511529L;
+    private static final long serialVersionUID = 3381600661613511530L;
     /** list of sample descriptors */
     List<JobData> jobs;
     /** map of features to data rows */
@@ -53,7 +53,7 @@ public class RnaData implements Iterable<RnaData.Row>, Serializable {
      * This sub-object represents the data for a single sample.
      */
     public static class JobData implements Serializable {
-        private static final long serialVersionUID = 3865134821481413919L;
+        private static final long serialVersionUID = 3865134821481413920L;
         private String name;
         private double production;
         private double opticalDensity;
@@ -61,7 +61,7 @@ public class RnaData implements Iterable<RnaData.Row>, Serializable {
         private boolean suspicious;
         private double quality;
         private int readCount;
-        private int baseCount;
+        private long baseCount;
         private LocalDate creation;
 
         /**
@@ -192,7 +192,7 @@ public class RnaData implements Iterable<RnaData.Row>, Serializable {
         /**
          * @return the number of base pairs in this sample
          */
-        public int getBaseCount() {
+        public long getBaseCount() {
             return this.baseCount;
         }
 
@@ -201,7 +201,7 @@ public class RnaData implements Iterable<RnaData.Row>, Serializable {
          *
          * @param baseCount 	the number of base pairs
          */
-        public void setBaseCount(int baseCount) {
+        public void setBaseCount(long baseCount) {
             this.baseCount = baseCount;
         }
 

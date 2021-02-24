@@ -77,7 +77,7 @@ public class TestRnaData {
         assertThat(job1.getName(), equalTo("job1"));
         assertThat(job1.getProduction(), equalTo(1.0));
         assertThat(job1.isSuspicious(), isTrue());
-        assertThat(job1.getBaseCount(), equalTo(1000000));
+        assertThat(job1.getBaseCount(), equalTo(1000000L));
         assertThat(job1.getReadCount(), equalTo(1000));
         assertThat(job1.getProcessingDate(), equalTo(LocalDate.of(2021, 1, 11)));
         assertThat(job1.getQuality(), closeTo(11.1, 0.001));
