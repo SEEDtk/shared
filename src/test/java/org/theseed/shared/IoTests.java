@@ -169,6 +169,17 @@ public class IoTests extends TestCase {
     }
 
     /**
+     * Test the column reader.
+     *
+     * @throws IOException
+     */
+    public void testColumnRead() throws IOException {
+        File inFile = new File("data", "tabset.tbl");
+        List<String> roles = TabbedLineReader.readColumn(inFile, "role");
+        assertThat(roles, contains("roleA", "roleB", "roleA", "roleC", "roleD", "roleE"));
+    }
+
+    /**
      * Test the shuffler
      */
     public void testShuffler() {

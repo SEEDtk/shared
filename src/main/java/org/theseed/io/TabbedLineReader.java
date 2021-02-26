@@ -8,6 +8,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -456,6 +457,26 @@ public class TabbedLineReader implements Closeable, AutoCloseable, Iterable<Tabb
                 String value = line.get(idx);
                 retVal.add(value);
             }
+        }
+        return retVal;
+    }
+
+    /**
+     * Read a single column into a list.
+     *
+     * @param inFile	file to read
+     * @param string	index (1-based) or name of the column to read
+     *
+     * @return a list of the strings found in the specified column
+     *
+     * @throws IOException
+     */
+    public static List<String> readColumn(File inFile, String string) throws IOException {
+        List<String> retVal = new ArrayList<String>(100);
+        try (TabbedLineReader inStream = new TabbedLineReader(inFile)) {
+            int inCol = inStream.findField(string);
+            for (TabbedLineReader.Line line : inStream)
+                retVal.add(line.get(inCol));
         }
         return retVal;
     }
