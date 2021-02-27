@@ -445,6 +445,33 @@ public class TestLibrary extends TestCase {
             assertEquals("Incorrect result for genome at position " + i + ".", expected[i], genome.getId());
             assertEquals("Incorrect file for genome at position " + i + ".", expected[i] + ".gto", gDir.currFile().getName());
             i++;
+            String gString = genome.toJsonString();
+            assertThat(gString.contains("\n"), isFalse());
+            Genome genome2 = Genome.fromJson(gString);
+            assertThat(genome2.getId(), equalTo(genome.getId()));
+            assertThat(genome2.getContigCount(), equalTo(genome.getContigCount()));
+            for (Contig contig2 : genome2.getContigs()) {
+                String contigID = contig2.getId();
+                Contig contig = genome.getContig(contigID);
+                assertThat(contig2.getDescription(), equalTo(contig.getDescription()));
+                assertThat(contig2.getSequence(), equalTo(contig.getSequence()));
+                assertThat(contig2.getAccession(), equalTo(contig.getAccession()));
+            }
+            assertThat(genome2.getFeatureCount(), equalTo(genome.getFeatureCount()));
+            for (Feature feature2 : genome2.getFeatures()) {
+                String fid = feature2.getId();
+                Feature feature = genome.getFeature(fid);
+                assertThat(feature2.getAliases(), equalTo(feature.getAliases()));
+                assertThat(feature2.getAnnotations(), equalTo(feature.getAnnotations()));
+                assertThat(feature2.getCouplings(), equalTo(feature.getCouplings()));
+                assertThat(feature2.getFunction(), equalTo(feature.getFunction()));
+                assertThat(feature2.getGoTerms(), equalTo(feature.getGoTerms()));
+                assertThat(feature2.getLocation(), equalTo(feature.getLocation()));
+                assertThat(feature2.getPegFunction(), equalTo(feature.getPegFunction()));
+                assertThat(feature2.getPgfam(), equalTo(feature.getPgfam()));
+                assertThat(feature2.getPlfam(), equalTo(feature.getPlfam()));
+                assertThat(feature2.getProteinTranslation(), equalTo(feature.getProteinTranslation()));
+            }
         }
     }
 
@@ -916,7 +943,7 @@ public class TestLibrary extends TestCase {
         assertThat(fakeContig.getDescription(), equalTo("fake description"));
         smallGenome.addContig(fakeContig);
         File testFile = new File("data", "gto.ser");
-        smallGenome.update(testFile);
+        smallGenome.save(testFile);
         Genome testGenome = new Genome(testFile);
         features = testGenome.getFeatures();
         assertThat(features.size(), equalTo(2));
@@ -1143,7 +1170,7 @@ public class TestLibrary extends TestCase {
         File gtoFile = new File("data", "gto2.ser");
         Genome gto = new Genome(new File("data/gto_test", "243277.26.gto"));
         gto.purify();
-        gto.update(gtoFile);
+        gto.save(gtoFile);
         Genome diskGenome = new Genome(gtoFile);
         assertThat(diskGenome.getId(), equalTo(gto.getId()));
         assertThat(diskGenome.getName(), equalTo(gto.getName()));

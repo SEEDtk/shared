@@ -159,6 +159,21 @@ public class Genome  {
     }
 
     /**
+     * Read a genome object from a JSON string.
+     *
+     * @param string	JSON string containing the GTO
+     *
+     * @throws IOException
+     */
+    public static Genome fromJson(String jsonString) throws IOException {
+        Genome retVal = new Genome();
+        try (StringReader reader = new StringReader(jsonString)) {
+            retVal.read(reader);
+        }
+        return retVal;
+    }
+
+    /**
      * Read a genome into memory.
      *
      * @param reader	input stream containing the GTO.
@@ -172,13 +187,13 @@ public class Genome  {
         } catch (JsonException e) {
             throw new IOException("Error reading JSON data.", e);
         }
-        id = this.gto.getStringOrDefault(GenomeKeys.ID);
-        name = this.gto.getStringOrDefault(GenomeKeys.SCIENTIFIC_NAME);
-        taxonomyId = this.gto.getIntegerOrDefault(GenomeKeys.NCBI_TAXONOMY_ID);
-        geneticCode = this.gto.getIntegerOrDefault(GenomeKeys.GENETIC_CODE);
-        domain = this.gto.getStringOrDefault(GenomeKeys.DOMAIN);
-        source = this.gto.getStringOrDefault(GenomeKeys.SOURCE);
-        sourceId = this.gto.getStringOrDefault(GenomeKeys.SOURCE_ID);
+        this.id = this.gto.getStringOrDefault(GenomeKeys.ID);
+        this.name = this.gto.getStringOrDefault(GenomeKeys.SCIENTIFIC_NAME);
+        this.taxonomyId = this.gto.getIntegerOrDefault(GenomeKeys.NCBI_TAXONOMY_ID);
+        this.geneticCode = this.gto.getIntegerOrDefault(GenomeKeys.GENETIC_CODE);
+        this.domain = this.gto.getStringOrDefault(GenomeKeys.DOMAIN);
+        this.source = this.gto.getStringOrDefault(GenomeKeys.SOURCE);
+        this.sourceId = this.gto.getStringOrDefault(GenomeKeys.SOURCE_ID);
         // Extract the lineage IDs.
         Collection<JsonArray> lineageArray = this.gto.getCollectionOrDefault(GenomeKeys.NCBI_LINEAGE);
         this.lineage = lineageArray.stream().map(x -> new TaxItem(x)).toArray(n -> new TaxItem[n]);
@@ -195,10 +210,10 @@ public class Genome  {
             this.addFeature(feature);
         }
         Collection<JsonObject> contigList = this.gto.getCollectionOrDefault(GenomeKeys.CONTIGS);
-        contigs = new HashMap<String, Contig>();
+        this.contigs = new HashMap<String, Contig>();
         for (JsonObject contigObj : contigList) {
             Contig contig = new Contig(contigObj);
-            contigs.put(contig.getId(), contig);
+            this.contigs.put(contig.getId(), contig);
         }
         // Finally, the subsystems.
         Collection<JsonObject> subList = this.gto.getCollectionOrDefault(GenomeKeys.SUBSYSTEMS);
@@ -289,6 +304,11 @@ public class Genome  {
         this.domain = domain;
         setup();
     }
+
+    /**
+     * Construct an empty genome.
+     */
+    private Genome() { }
 
     /**
      * @return the id
@@ -561,9 +581,9 @@ public class Genome  {
      *
      * @throws IOException
      */
-    public void update(File outFile) throws IOException {
+    public void save(File outFile) throws IOException {
         try (PrintWriter gtoStream = new PrintWriter(outFile)) {
-            updateToStream(gtoStream);
+            saveToStream(gtoStream);
         }
     }
 
@@ -575,9 +595,9 @@ public class Genome  {
      *
      * @throws IOException
      */
-    public void update(OutputStream outStream) throws IOException {
+    public void save(OutputStream outStream) throws IOException {
         try (PrintWriter gtoStream = new PrintWriter(outStream)) {
-            updateToStream(gtoStream);
+            saveToStream(gtoStream);
         }
     }
 
@@ -588,13 +608,20 @@ public class Genome  {
      *
      * @throws IOException
      */
-    private void updateToStream(Writer gtoStream) throws IOException {
-        String jsonString = Jsoner.serialize(this.toJson());
+    private void saveToStream(Writer gtoStream) throws IOException {
+        String jsonString = this.toJsonString();
         try {
             Jsoner.prettyPrint(new StringReader(jsonString), gtoStream, "    ", "\n");
         } catch (JsonException e) {
             throw new RuntimeException("Error updating GTO: " + e.getMessage());
         }
+    }
+
+    /**
+     * @return a single-string JSON representation of this genome
+     */
+    public String toJsonString() {
+        return Jsoner.serialize(this.toJson());
     }
 
     /**
@@ -1101,6 +1128,13 @@ public class Genome  {
         // Map each accession number to a contig ID.
         this.contigs.values().stream().filter(x -> StringUtils.isNotEmpty(x.getAccession()))
                 .forEach(x -> this.accessionMap.put(x.getAccession(), x.getId()));
+    }
+
+    /**
+     * @return TRUE if there is quality information in this GTO, else FALSE
+     */
+    public boolean hasQuality() {
+        return this.gto.containsKey("quality");
     }
 
 
