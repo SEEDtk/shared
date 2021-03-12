@@ -478,6 +478,13 @@ public class RnaData implements Iterable<RnaData.Row>, Serializable {
             return this.weights[iCol];
         }
 
+        /**
+         * @return the number of values in the row
+         */
+        public int size() {
+            return this.weights.length;
+        }
+
     }
 
     /**

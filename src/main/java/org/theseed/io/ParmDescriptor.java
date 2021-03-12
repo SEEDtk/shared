@@ -39,6 +39,21 @@ public class ParmDescriptor implements Comparable<ParmDescriptor> {
         this.lineComments = comments.toArray(this.lineComments);
     }
 
+    /**
+     * Create a simple parm descriptor.
+     *
+     * @param key		parameter name
+     * @param value		parameter value
+     * @param desc		parameter description
+     */
+    public ParmDescriptor(String key, String value, String desc) {
+        this.commented = false;
+        this.name = key;
+        this.value = value;
+        this.description = desc;
+        this.lineComments = new String[0];
+    }
+
     @Override
     public int compareTo(ParmDescriptor o) {
         return (this.name.compareTo(o.name));

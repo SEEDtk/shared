@@ -73,7 +73,7 @@ public class ParmFile implements Iterable<ParmDescriptor> {
     }
 
     /**
-     * Add a parameter to the parm file.
+     * Add a parameter to the parm file.  If the parameter already exists, its value will be replaced.
      *
      * @param descriptor	descriptor of new parameter to add
      */
