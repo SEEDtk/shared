@@ -314,8 +314,10 @@ public class TestLibrary extends TestCase {
         assertEquals("Incorrect function in sample feature.", "Transposase, IS4 family", myFeature.getFunction());
         assertThat(myFeature.getPegFunction(), equalTo("Transposase, IS4 family"));
         assertEquals("Incorrect protein for sample feature.", myProtein, myFeature.getProteinTranslation());
+        assertEquals("Incorrect protein for sample feature (seqtype).", myProtein, Feature.SeqType.PROTEIN.get(myFeature));
         assertEquals("Incorrect protein length for sample feature.", myProtein.length(), myFeature.getProteinLength());
         assertEquals("Incorrect DNA for sample feature.", myDna1, this.myGto.getDna("fig|1313.7001.peg.758"));
+        assertEquals("Incorrect DNA for sample feature.", myDna1, Feature.SeqType.DNA.get(myFeature));
         assertEquals("Incorrect local family for sample feature.", "PLF_1301_00010583", myFeature.getPlfam());
         assertEquals("Incorrect global family for sample feature.", "PGF_07475842", myFeature.getPgfam());
         assertTrue("PEG not a CDS", myFeature.isProtein());

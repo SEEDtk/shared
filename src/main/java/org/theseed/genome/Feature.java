@@ -33,27 +33,38 @@ public class Feature implements Comparable<Feature> {
 
     // FIELDS
 
+    /** ID of this feature */
     private String id;
+    /** type of feature (CDS, rna, crispr...) */
     private String type;
+    /** assigned function */
     private String function;
+    /** protein sequence translation (if applicable) */
     private String protein_translation;
+    /** location of the feature (contig, offset, length) */
     private Location location;
+    /** genus-specific protein family */
     private String plfam;
+    /** global protein family */
     private String pgfam;
+    /** annotation history */
     private List<Annotation> annotations;
+    /** original JSON definition */
     private JsonObject original;
+    /** gene ontology ID numbers */
     private Collection<GoTerm> goTerms;
+    /** alternate names */
     private Collection<String> aliases;
+    /** genome containing this feature */
     private Genome parent;
+    /** list of functionall-coupled features */
     private SortedSet<Coupling> couplings;
+    /** subsystem membership data */
     private Set<SubsystemRow.Role> subsystemRoles;
-
     /** parsing pattern for feature type */
     private static final Pattern TYPE_PATTERN = Pattern.compile("fig\\|\\d+\\.\\d+\\.(\\w+)\\.\\d+");
-
     /** parsing pattern for function-to-roles */
     private static final Pattern SEP_PATTERN = Pattern.compile("\\s+[\\/@]\\s+|\\s*;\\s+");
-
     /** pattern for extracting genome ID from feature ID */
     public static final Pattern FID_PARSER = Pattern.compile("fig\\|(\\d+\\.\\d+)\\.\\w+\\.\\d+");
 
@@ -843,6 +854,31 @@ public class Feature implements Comparable<Feature> {
      */
     public boolean isUpstream(Feature other) {
         return this.location.isUpstream(other.location);
+    }
+
+    /**
+     * This is a utility enum that allows programs to specify extraction of a particular type of
+     * sequence for a feature.
+     */
+    public static enum SeqType {
+        PROTEIN {
+            @Override
+            public String get(Feature feat) {
+                return feat.getProteinTranslation();
+            }
+        }, DNA {
+            @Override
+            public String get(Feature feat) {
+                return feat.parent.getDna(feat.getLocation());
+            }
+        };
+
+        /**
+         * @return the sequence of this type for the specified feature
+         *
+         * @param feat	feature of interest
+         */
+        public abstract String get(Feature feat);
     }
 
 }
