@@ -60,30 +60,42 @@ public class Genome  {
 
     // FIELDS
 
+    /** ID of this genome */
     private String id;
+    /** scientific name */
     private String name;
+    /** protein translation code */
     private int geneticCode;
+    /** domain (Bacteria, Archaea, etc.) */
     private String domain;
+    /** NCBI taxonomy ID */
     private int taxonomyId;
+    /** features, mapped by ID */
     private Map<String, Feature> features;
+    /** contig sequences, mapped by ID */
     private Map<String, Contig> contigs;
+    /** original JSON object */
     private JsonObject gto;
+    /** full taxonomic lineage */
     private TaxItem[] lineage;
+    /** list of close genomes */
     private SortedSet<CloseGenome> closeGenomes;
+    /** database where the genome is stored */
     private String home;
+    /** URL generator */
     private LinkObject linker;
+    /** original genome source */
     private String source;
+    /** original ID of the genome */
     private String sourceId;
+    /** subsystems by name */
     private Map<String, SubsystemRow> subsystems;
+    /** map of refseq sequence IDs to contig IDs */
     private Map<String, String> accessionMap;
+    /** refseq location format */
     private static final Pattern ACCESSION_LOCATION = Pattern.compile("(\\w+):(\\d+)-(\\d+)");
-
-
-    /** This is an empty list to use as a default intermediate value for cases where the contigs or
-     * features are missing.
-     */
+    /** empty list used as a default intermediate value for cases where the contigs or features are missing */
     private static final Collection<JsonObject> noEntries = new ArrayList<JsonObject>();
-
 
     /** This enum defines the keys used and their default values.
      */

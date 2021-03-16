@@ -452,13 +452,47 @@ public class TabbedLineReader implements Closeable, AutoCloseable, Iterable<Tabb
     public static Set<String> readSet(File inFile, String column) throws IOException {
         Set<String> retVal = new HashSet<String>();
         try (TabbedLineReader reader = new TabbedLineReader(inFile)) {
-            int idx = reader.findField(column);
-            for (TabbedLineReader.Line line : reader) {
-                String value = line.get(idx);
-                retVal.add(value);
-            }
+            reader.readIntoSet(column, retVal);
         }
         return retVal;
+    }
+
+    /**
+     * Read a string set from a tab-delimited stream with headers.  The strings to be put in the set are
+     * taken from the specified column.
+     *
+     * @param inStream	input stream to read
+     * @param column	index (1-based) or name of the column to read
+     *
+     * @return a set of the values in the specified column of the file
+     *
+     * @throws IOException
+     */
+    public static Set<String> readSet(InputStream inStream, String column) throws IOException {
+        Set<String> retVal = new HashSet<String>();
+        try (TabbedLineReader reader = new TabbedLineReader(inStream)) {
+            reader.readIntoSet(column, retVal);
+        }
+        return retVal;
+    }
+
+    /**
+     * Read a string set from this file.  The strings to be put in the set are
+     * taken from the specified column.  This process exhausts the file.
+     *
+     * @param inStream	input stream to read
+     * @param column	index (1-based) or name of the column to read
+     *
+     * @return a set of the values in the specified column of the file
+     *
+     * @throws IOException
+     */
+    private void readIntoSet(String column, Set<String> retVal) throws IOException {
+        int idx = this.findField(column);
+        for (TabbedLineReader.Line line : this) {
+            String value = line.get(idx);
+            retVal.add(value);
+        }
     }
 
     /**
