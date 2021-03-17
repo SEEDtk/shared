@@ -92,6 +92,10 @@ public class Genome  {
     private Map<String, SubsystemRow> subsystems;
     /** map of refseq sequence IDs to contig IDs */
     private Map<String, String> accessionMap;
+    /** SSU-rRNA sequence (NULL if unknown, empty if not present */
+    private String ssuRna;
+    /** match pattern for SSU rRNA */
+    public static final Pattern SSU_R_RNA = Pattern.compile("SSU\\s+rRNA|Small\\s+Subunit\\s+(?:Ribosomal\\s+r)?RNA|ssuRNA|16S\\s+(?:r(?:ibosomal\\s+)?)?RNA", Pattern.CASE_INSENSITIVE);
     /** refseq location format */
     private static final Pattern ACCESSION_LOCATION = Pattern.compile("(\\w+):(\\d+)-(\\d+)");
     /** empty list used as a default intermediate value for cases where the contigs or features are missing */
@@ -110,6 +114,7 @@ public class Genome  {
         NCBI_LINEAGE(noEntries),
         FEATURES(noEntries),
         CLOSE_GENOMES(noEntries),
+        SSU_RRNA(null),
         // PATRIC fields
         GENOME_ID("0"),
         GENOME_NAME("unknown organism"),
@@ -206,6 +211,7 @@ public class Genome  {
         this.domain = this.gto.getStringOrDefault(GenomeKeys.DOMAIN);
         this.source = this.gto.getStringOrDefault(GenomeKeys.SOURCE);
         this.sourceId = this.gto.getStringOrDefault(GenomeKeys.SOURCE_ID);
+        this.ssuRna = this.gto.getStringOrDefault(GenomeKeys.SSU_RRNA);
         // Extract the lineage IDs.
         Collection<JsonArray> lineageArray = this.gto.getCollectionOrDefault(GenomeKeys.NCBI_LINEAGE);
         this.lineage = lineageArray.stream().map(x -> new TaxItem(x)).toArray(n -> new TaxItem[n]);
@@ -511,6 +517,9 @@ public class Genome  {
         retVal.put(GenomeKeys.GENETIC_CODE.getKey(), this.geneticCode);
         retVal.put(GenomeKeys.NCBI_TAXONOMY_ID.getKey(), this.taxonomyId);
         retVal.put(GenomeKeys.HOME.getKey(), this.home);
+        // If we have an SSU rRNA, include it.
+        if (this.ssuRna != null)
+            retVal.put(GenomeKeys.SSU_RRNA.getKey(), this.ssuRna);
         // If we have source data, include it.
         if (this.source != null) {
             retVal.put(GenomeKeys.SOURCE.getKey(), this.source);
@@ -1149,5 +1158,35 @@ public class Genome  {
         return this.gto.containsKey("quality");
     }
 
+    /**
+     * Update the SSU rRNA nucleotide sequence.
+     *
+     * @param seq	sequence to store (empty string if there is none
+     */
+    protected void setSsuRRna(String seq) {
+        this.ssuRna = seq;
+    }
+
+    /**
+     * @return the SSU rRNA nucleotide sequence, or an empty string if none is present
+     */
+    public String getSsuRRna() {
+        String retVal = this.ssuRna;
+        if (retVal == null) {
+            // Here we have to search for the sequence.
+            this.ssuRna = "";
+            retVal = "";
+            for (Feature feat : this.features.values()) {
+                // If this is an RNA and it is longer than the current sequence AND it has an SSU rRNA
+                // functional assignment, we save its DNA as the SSU rRNA for this genome.
+                if (feat.getType().contentEquals("rna") && feat.getLocation().getLength() > retVal.length() &&
+                        SSU_R_RNA.matcher(feat.getPegFunction()).find()) {
+                    retVal = this.getDna(feat.getLocation());
+                    this.ssuRna = retVal;
+                }
+            }
+        }
+        return retVal;
+    }
 
 }
