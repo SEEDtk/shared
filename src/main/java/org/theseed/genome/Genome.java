@@ -1163,8 +1163,15 @@ public class Genome  {
      *
      * @param seq	sequence to store (empty string if there is none
      */
-    protected void setSsuRRna(String seq) {
+    public void setSsuRRna(String seq) {
         this.ssuRna = seq;
+    }
+
+    /**
+     * @return TRUE if the SSU rRNA is known
+     */
+    public boolean checkSsuRRna() {
+        return (this.ssuRna != null);
     }
 
     /**

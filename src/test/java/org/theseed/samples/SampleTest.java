@@ -1,7 +1,7 @@
 /**
  *
  */
-package org.theseed.proteins;
+package org.theseed.samples;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;

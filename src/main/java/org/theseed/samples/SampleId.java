@@ -1,7 +1,7 @@
 /**
  *
  */
-package org.theseed.proteins;
+package org.theseed.samples;
 
 import java.io.File;
 import java.util.AbstractMap;
@@ -54,9 +54,9 @@ public class SampleId implements Comparable<SampleId> {
             new AbstractMap.SimpleEntry<>("6-4-2", StringUtils.split("D_TasdA1_P_asdD", '_')),
             new AbstractMap.SimpleEntry<>("2-1-1", StringUtils.split("D_Tasd_P_asdD", '_')),
             new AbstractMap.SimpleEntry<>("6-4-3", StringUtils.split("D_TasdA_P_asdD", '_')),
-            new AbstractMap.SimpleEntry<>("pfb6.4.2", StringUtils.split("D_TasdA1_P_asdD", '_')),
-            new AbstractMap.SimpleEntry<>("pwt2.1.1", StringUtils.split("D_Tasd_P_asdD", '_')),
-            new AbstractMap.SimpleEntry<>("pfb6.4.3", StringUtils.split("D_TasdA_P_asdD", '_'))
+            new AbstractMap.SimpleEntry<>("pfb6-4-2", StringUtils.split("D_TasdA1_P_asdD", '_')),
+            new AbstractMap.SimpleEntry<>("pwt2-1-1", StringUtils.split("D_Tasd_P_asdD", '_')),
+            new AbstractMap.SimpleEntry<>("pfb6-4-3", StringUtils.split("D_TasdA_P_asdD", '_'))
             ).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
     /** map of mis-spelled deletion protein names */
     private static final Map<String, String> PROTEIN_ERRORS = Stream.of(
@@ -88,7 +88,17 @@ public class SampleId implements Comparable<SampleId> {
     public static final String[] FRAGMENT_DESCRIPTIONS = new String[] { "host", "original thrABC", "core thr operon",
             "insert method", "asd status", "insertions", "deletions", "IPTG", "time", "medium" };
     /** RNA filename pattern */
-    private static final Pattern RNA_FILE_NAME = Pattern.compile("([^_]+)_(?:(\\d[\\-_]\\d[\\-_]\\d)_)?(\\d+(?:[._p]5)?)_?hrs?(?:_rep\\d+)?_(S\\d+)(?:_L\\d+)?_R[12]_\\d+\\.fastq");
+    protected static final Pattern RNA_SUFFIX = Pattern.compile("(?:rep\\d+_)?(S\\d+)_+(?:L\\d+_)?R[12]_+001\\.fastq");
+    /** delete glitch pattern */
+    private static final Pattern DELETE_GLITCH = Pattern.compile("([^_]+)_(D[a-z]{3,}.+)");
+    /** PTAC glitch pattern */
+    private static final Pattern PTAC_GLITCH = Pattern.compile("(^[^_]+)(ptac-.+)");
+    /** time specification pattern */
+    private static final Pattern TIME_PATTERN = Pattern.compile("_(\\d+)([p_\\-\\.]_?5)?_?hrs?");
+    /** plasmid specification patter */
+    private static final Pattern PLASMID_PATTERN = Pattern.compile("_(?:pfb)?\\d[_.]\\d[_.]\\d_");
+    /** default time point */
+    public static String DEFAULT_TIME = "9";
 
     /**
      * Construct a sample ID from an ID string.
@@ -140,7 +150,9 @@ public class SampleId implements Comparable<SampleId> {
             String host = m.group(1);
             retVal.fragments[0] = HOST_MAP.getOrDefault(host, host);
             // Group 3 is a bunch of inserts, space-delimited.  A "+" is removed.
-            // There can be up to two inserts-- a plasmid spec and a protein.
+            // There can be up to two inserts-- a plasmid spec and a protein.  Note that the
+            // term "plasmid" is obsolete, as sometimes we put these things directly on the
+            // chromosome.
             boolean plasmidFound = false;
             String[] plasmidSpecs = PLASMID_DEFAULT;
             String insert = "000";
@@ -149,7 +161,9 @@ public class SampleId implements Comparable<SampleId> {
                 for (String insertPart : insertParts) {
                     if (insertPart.startsWith("+"))
                         insertPart = insertPart.substring(1);
-                    insertPart = insertPart.toLowerCase();
+                    // Convert to lower case and fix periods.  A plasmid can be specified with
+                    // either periods or hyphens and we prefer hyphens.
+                    insertPart = StringUtils.replaceChars(insertPart.toLowerCase(), '.', '-');
                     // Check for a plasmid.
                     if (PLASMID_MAP.containsKey(insertPart)) {
                         plasmidSpecs = PLASMID_MAP.get(insertPart);
@@ -167,31 +181,9 @@ public class SampleId implements Comparable<SampleId> {
             if (deletions == null)
                 retVal.fragments[DELETE_COL] = "D000";
             else {
-                // Here we have real deletes to process.  These are hell to process.
-                // The basic strategy is to eat a "d", skip three, push to the next "d",
-                // and repeat.  "asd" and "thrabc" are automatically removed.  All characters
-                // after the first three are uppercased.  Everything else is lower case.
-                List<String> deletes = new ArrayList<String>(11);
-                deletions = deletions.toLowerCase();
-                int pos = 1;
-                while (pos < deletions.length()) {
-                    int end = pos + 3;
-                    while (end < deletions.length() && deletions.charAt(end) != 'd') end++;
-                    String delete = StringUtils.substring(deletions, pos, pos+3) +
-                            StringUtils.substring(deletions, pos+3, end).toUpperCase();
-                    // We have to deal with some messy stuff.  One of the deletion proteins is occasionally
-                    // mis-spelled, and two are redundant, because they are expressed elswhere in the ID.
-                    if (! BAD_DELETES.contains(delete)) {
-                        if (PROTEIN_ERRORS.containsKey(delete))
-                            delete = PROTEIN_ERRORS.get(delete);
-                        deletes.add(delete);
-                    }
-                    pos = end + 1;
-                }
-                if (deletes.size() == 0)
-                    retVal.fragments[DELETE_COL] = "D000";
-                else
-                    retVal.fragments[DELETE_COL] = "D" + StringUtils.join(deletes, 'D');
+                // Here we have real deletes to process.
+                String fixedDeleteSpec = fixDeletes(deletions);
+                retVal.fragments[DELETE_COL] = fixedDeleteSpec;
             }
             // Next we process the protein insert.  Here, we also need to repair the lower-casing.
             retVal.fragments[INSERT_COL] = StringUtils.substring(insert, 0, 3) +
@@ -216,6 +208,40 @@ public class SampleId implements Comparable<SampleId> {
     }
 
     /**
+     * This method fixed up deletions.  These are hell to process. The basic strategy is to eat
+     * a "d", skip three, push to the next "d", and repeat.  "asd" and "thrabc" are
+     * automatically removed.  All characters after the first three are uppercased.  Everything
+     * else is lower case.
+     *
+     * @param deletions		incoming deletion specifier
+     *
+     * @return a corrected deletion specifier
+     */
+    private static String fixDeletes(String deletions) {
+        List<String> deletes = new ArrayList<String>(11);
+        deletions = deletions.toLowerCase();
+        int pos = 1;
+        while (pos < deletions.length()) {
+            int end = pos + 3;
+            while (end < deletions.length() && deletions.charAt(end) != 'd') end++;
+            String delete = StringUtils.substring(deletions, pos, pos+3) +
+                    StringUtils.substring(deletions, pos+3, end).toUpperCase();
+            // We have to deal with some messy stuff.  One of the deletion proteins is occasionally
+            // mis-spelled, and two are redundant, because they are expressed elswhere in the ID.
+            if (! BAD_DELETES.contains(delete)) {
+                if (PROTEIN_ERRORS.containsKey(delete))
+                    delete = PROTEIN_ERRORS.get(delete);
+                deletes.add(delete);
+            }
+            pos = end + 1;
+        }
+        String retVal = "D000";
+        if (deletes.size() > 0)
+            retVal = "D" + StringUtils.join(deletes, 'D');
+        return retVal;
+    }
+
+    /**
      * Convert an RNA sequence file name to a sample ID.  Note that we lose a lot of information here, of which the read type (1 or 2)
      * is the most important.  The final sample ID may also need to have a "rep" identifier added.
      *
@@ -229,14 +255,22 @@ public class SampleId implements Comparable<SampleId> {
         if (! name.startsWith("Blank")) {
             String[] parts = rnaMatch(rnaFile.getName());
             if (parts != null) {
-                // Here we have a valid name.  Parse the host.
+                // Here we have a valid name.  First, separate out the deletes.
+                String strainId = parts[0];
+                String deletes = "D000";
+                int deleteLoc = strainId.indexOf('D');
+                if (deleteLoc >= 0) {
+                    deletes = fixDeletes(StringUtils.substring(strainId, deleteLoc));
+                    strainId = StringUtils.substring(strainId, 0, deleteLoc);
+                }
+                // Parse the host.
                 retVal = new SampleId();
-                String host = HOST_MAP.get(parts[0]);
+                String host = HOST_MAP.get(strainId);
                 if (host == null) {
                     // If the host is not found, check for an artificial host, which contains operon adjustments built in.
-                    String[] plasmidInfo = CHROMO_MAP.get(parts[0]);
+                    String[] plasmidInfo = CHROMO_MAP.get(strainId);
                     if (plasmidInfo == null)
-                        throw new IllegalArgumentException("Invalid host name \"" + parts[0] + "\".");
+                        throw new IllegalArgumentException("Invalid host name \"" + strainId + "\".");
                     else {
                         // Copy the full host/operon info to the sample ID.
                         System.arraycopy(plasmidInfo, 0, retVal.fragments, 0, plasmidInfo.length);
@@ -244,30 +278,41 @@ public class SampleId implements Comparable<SampleId> {
                 } else {
                     // Here we have a normal host.
                     retVal.fragments[0] = host;
-                    // Check for a plasmid.
-                    if (parts[1] != null) {
-                        String[] plasmidInfo = PLASMID_MAP.get(parts[1]);
-                        if (plasmidInfo == null)
-                            throw new IllegalArgumentException("Invalid plasmid specifier \"" + parts[1] + "\".");
-                        else
-                            System.arraycopy(plasmidInfo, 0, retVal.fragments, 1, plasmidInfo.length);
-                    } else {
-                        String[] plasmidInfo = PLASMID_DEFAULT;
+                    String[] plasmidInfo = PLASMID_DEFAULT;
+                    System.arraycopy(plasmidInfo, 0, retVal.fragments, 1, plasmidInfo.length);
+                }
+                // Denote that so far there is no insert.
+                String insert = "000";
+                // Run through the modifiers.
+                for (int i = 4; i < parts.length; i++) {
+                    String modifier = parts[i];
+                    String[] plasmidInfo = PLASMID_MAP.get(modifier);
+                    if (plasmidInfo != null)
                         System.arraycopy(plasmidInfo, 0, retVal.fragments, 1, plasmidInfo.length);
-                        if (host.equals("7")) {
-                            // If no plasmid on a 277, we add an A in the location slot.
-                            retVal.fragments[3] = "A";
-                        }
+                    else switch (modifier) {
+                    case "ptac-thrABC" :
+                        retVal.fragments[2] = "TA1";
+                        retVal.fragments[3] = "C";
+                        break;
+                    case "ptac-asd" :
+                        retVal.fragments[4] = "asdT";
+                        break;
+                    default :
+                        // Here we have an insert.
+                        insert = modifier;
                     }
                 }
+                // If no plasmid on a 277, we add an A in the location slot.
+                if (retVal.fragments[0].equals("7") && retVal.fragments[3].equals("0"))
+                    retVal.fragments[3] = "A";
                 // Store the IPTG flag.
-                retVal.fragments[INDUCE_COL] = parts[3];
+                retVal.fragments[INDUCE_COL] = parts[2];
                 // Store the time point.
-                retVal.fragments[TIME_COL] = parts[2];
+                retVal.fragments[TIME_COL] = parts[1];
                 // Store the constant columns.
                 retVal.fragments[MEDIA_COL] = "M1";
-                retVal.fragments[INSERT_COL] = "000";
-                retVal.fragments[DELETE_COL] = "D000";
+                retVal.fragments[INSERT_COL] = insert;
+                retVal.fragments[DELETE_COL] = deletes;
                 // Compute the numeric time point.
                 retVal.parseTimeString();
             }
@@ -287,7 +332,7 @@ public class SampleId implements Comparable<SampleId> {
         String[] parts = rnaMatch(name);
         String retVal = null;
         if (parts != null)
-            retVal = parts[4];
+            retVal = parts[3];
         return retVal;
     }
 
@@ -311,25 +356,66 @@ public class SampleId implements Comparable<SampleId> {
      *
      * @param fileName		base part of the file name to parse
      *
-     * @return the five components of the file name-- strain, plasmid, time point, IPTG, sample number-- or NULL if the file name is invalid
+     * @return the components of the file name-- [strain, time point, IPTG, sample number, modifiers...]--
+     * 		   or NULL if the file name is invalid
      */
-    private static String[] rnaMatch(String fileName) {
-        // Remove the IPTG flag (if any).
-        String reducedName;
-        String iptgFlag;
-        if (StringUtils.contains(fileName, "_IPTG")) {
-            iptgFlag = "I";
-            reducedName = StringUtils.remove(fileName, "_IPTG");
-        } else {
-            iptgFlag = "0";
-            reducedName = fileName;
-        }
-        // Now parse the remainder of the file name.
-        Matcher m = RNA_FILE_NAME.matcher(reducedName);
-        String[] retVal = null;
+    protected static String[] rnaMatch(String fileName) {
+        // Fix some common spelling errors.
+        String reducedName = StringUtils.replaceOnce(fileName, "pta-", "ptac-");
+        reducedName = StringUtils.replaceOnce(reducedName, "D_lysC", "DlysC");
+        reducedName = StringUtils.replaceOnce(reducedName, "926_lysC", "926DlysC");
+        reducedName = StringUtils.replace(reducedName, "Dtd_h", "Dtdh");
+        // Fix the delete glitch.  This is caused by the weird untranslatable unicode character.
+        Matcher m = DELETE_GLITCH.matcher(reducedName);
         if (m.matches())
-            retVal = new String[] { m.group(1), StringUtils.replaceChars(m.group(2), '_', '-'),
-                    StringUtils.replaceChars(m.group(3), "._", "pp"), iptgFlag, m.group(4) };
+            reducedName = m.group(1) + m.group(2);
+        // Fix the PTAC glitch.  Sometimes the leading space is missing.
+        m = PTAC_GLITCH.matcher(reducedName);
+        if (m.matches())
+            reducedName = m.group(1) + "_" + m.group(2);
+        // Fix the numbered plasmids.  We need to replace the underscores/periods with hyphens.
+        m = PLASMID_PATTERN.matcher(reducedName);
+        if (m.find()) {
+            String plasmid = StringUtils.substring(reducedName, m.start() + 1, m.end() - 1);
+            reducedName = reducedName.substring(0, m.start() + 1) +
+                    StringUtils.replaceChars(plasmid, "._", "--") +
+                    reducedName.substring(m.end() - 1);
+        }
+        // Remove the IPTG flag (if any).
+        String iptgFlag;
+        if (StringUtils.contains(reducedName, "_IPTG")) {
+            iptgFlag = "I";
+            reducedName = StringUtils.remove(reducedName, "_IPTG");
+        } else if (StringUtils.contains(reducedName, "_plus")) {
+            iptgFlag = "I";
+            reducedName = StringUtils.remove(reducedName, "_plus");
+        } else
+            iptgFlag = "0";
+        // Remove the time specification.
+        String timePoint = DEFAULT_TIME;
+        m = TIME_PATTERN.matcher(reducedName);
+        if (m.find()) {
+            timePoint = m.group(1);
+            if (m.group(2) != null)
+                timePoint += "p5";
+            reducedName = reducedName.substring(0, m.start()) + reducedName.substring(m.end());
+        }
+        // Strip off the RNA suffix.  If this fails, we fail the whole match.
+        String[] retVal = null;
+        m = RNA_SUFFIX.matcher(reducedName);
+        if (m.find()) {
+            reducedName = reducedName.substring(0, m.start());
+            String sampleNum = m.group(1);
+            // Now split the file name into pieces.
+            String[] parts = reducedName.split("_+");
+            retVal = new String[parts.length + 3];
+            retVal[0] = parts[0];
+            retVal[1] = timePoint;
+            retVal[2] = iptgFlag;
+            retVal[3] = sampleNum;
+            for (int i = 1; i < parts.length; i++)
+                retVal[i+3] = parts[i];
+        }
         return retVal;
     }
 
