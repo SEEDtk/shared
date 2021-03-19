@@ -7,8 +7,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FilenameFilter;
 import java.io.IOException;
-import java.util.Collection;
 import java.util.Iterator;
+import java.util.Set;
 import java.util.TreeSet;
 
 import org.slf4j.Logger;
@@ -82,16 +82,7 @@ public class GenomeDirectory implements Iterable<Genome> {
         @Override
         public Genome next() {
             String nextID = this.treePos.next();
-            // Build the genome file name.
-            GenomeDirectory.this.gtoFile = new File(dirName, nextID + ".gto");
-            // Read the genome.  Note we have to percolate some checked exceptions.
-            Genome retVal;
-            try {
-                log.debug("Reading genome from {}.", GenomeDirectory.this.gtoFile);
-                retVal = new Genome(GenomeDirectory.this.gtoFile);
-            } catch (NumberFormatException | IOException e) {
-                throw new RuntimeException("Error processing genomes.", e);
-            }
+            Genome retVal = GenomeDirectory.this.getGenome(nextID);
             return retVal;
         }
 
@@ -146,7 +137,7 @@ public class GenomeDirectory implements Iterable<Genome> {
     /**
      * @return a list of the genome IDs
      */
-    public Collection<String> getGenomeIDs() {
+    public Set<String> getGenomeIDs() {
         return this.genomeIDs;
     }
 
@@ -174,6 +165,25 @@ public class GenomeDirectory implements Iterable<Genome> {
      */
     public File currFile() {
         return this.gtoFile;
+    }
+
+    /**
+     * @return the genome with the specified ID
+     *
+     * @param genomeId
+     */
+    public Genome getGenome(String genomeId) {
+        // Build the genome file name.
+        this.gtoFile = new File(dirName, genomeId + ".gto");
+        // Read the genome.  Note we have to percolate some checked exceptions.
+        Genome retVal;
+        try {
+            log.debug("Reading genome from {}.", this.gtoFile);
+            retVal = new Genome(this.gtoFile);
+        } catch (NumberFormatException | IOException e) {
+            throw new RuntimeException("Error processing genomes.", e);
+        }
+        return retVal;
     }
 
 
