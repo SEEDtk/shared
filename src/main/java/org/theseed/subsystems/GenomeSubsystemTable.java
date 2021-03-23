@@ -181,4 +181,11 @@ public class GenomeSubsystemTable {
         return new ArrayList<String>(this.subFeatureMap.keySet());
     }
 
+    /**
+     * @return TRUE if the specified feature is in any subsystem
+     */
+    public boolean isInSubsystem(String fid) {
+        return this.subMap.containsKey(fid);
+    }
+
 }

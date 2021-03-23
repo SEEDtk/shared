@@ -12,6 +12,7 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -577,6 +578,13 @@ public class RnaData implements Iterable<RnaData.Row>, Serializable {
     public Row getRow(String fid) {
         Row retVal = this.rowMap.get(fid);
         return retVal;
+    }
+
+    /**
+     * @return the collection of feature rows in this database
+     */
+    public Collection<Row> getRows() {
+        return this.rowMap.values();
     }
 
     /**
