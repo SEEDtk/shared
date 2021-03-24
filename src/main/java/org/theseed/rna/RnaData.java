@@ -17,7 +17,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Predicate;
 import java.util.regex.Pattern;
 
 import org.slf4j.Logger;
@@ -45,8 +44,6 @@ public class RnaData implements Iterable<RnaData.Row>, Serializable {
     private Map<String, Row> rowMap;
     /** map of job names to column indices */
     private Map<String, Integer> colMap;
-    /** pattern for RNA functions */
-    private static final Predicate<String> RNA_PREDICATE = Pattern.compile("ribosomal|[tr]RNA").asPredicate();
     /** scale value for normalizing weights */
     private static double SCALE_FACTOR = 1000000.0;
 
@@ -623,8 +620,7 @@ public class RnaData implements Iterable<RnaData.Row>, Serializable {
         Iterator<Row> rowIter = this.rowMap.values().iterator();
         while (rowIter.hasNext()) {
             Row row = rowIter.next();
-            String function = row.feat.function;
-            if (RNA_PREDICATE.test(function) || row.feat.id.contains(".rna.")) {
+            if (row.feat.id.contains(".rna.")) {
                 // Here we have an RNA that sneaked through the sample filters.
                 rowIter.remove();
                 removed++;
