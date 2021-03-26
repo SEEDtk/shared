@@ -604,7 +604,9 @@ public class RnaData implements Iterable<RnaData.Row>, Serializable {
      * @param sample	name of the sample in question
      */
     public int getColIdx(String sample) {
-        return this.colMap.get(sample);
+        Integer retVal = this.colMap.get(sample);
+        if (retVal == null) retVal = -1;
+        return (int) retVal;
     }
 
     /**
