@@ -163,6 +163,24 @@ public abstract class SequenceKmers implements Iterable<String> {
         return 1 - ((double) found) / (hash1.length + hash2.length - found);
     }
 
+    /**
+     * Remove kmers in this set that are NOT in the specified other set.
+     *
+     * @param other		other kmer set to compare to this one
+     */
+    public void retainAll(SequenceKmers other) {
+        this.kmerSet.retainAll(other.kmerSet);
+    }
+
+    /**
+     * Remove kmers in this set that ARE in the specified other set.
+     *
+     * @param other		other kmer set to compare to this one
+     */
+    public void removeAll(SequenceKmers other) {
+        this.kmerSet.removeAll(other.kmerSet);
+    }
+
     @Override
     public Iterator<String> iterator() {
         return this.kmerSet.iterator();
