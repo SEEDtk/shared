@@ -30,6 +30,8 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.theseed.io.Shuffler;
 import org.theseed.locations.Location;
 import org.theseed.locations.Region;
@@ -59,7 +61,8 @@ import j2html.tags.ContainerTag;
 public class Genome  {
 
     // FIELDS
-
+    /** logging facility */
+    protected static Logger log = LoggerFactory.getLogger(Genome.class);
     /** ID of this genome */
     private String id;
     /** scientific name */

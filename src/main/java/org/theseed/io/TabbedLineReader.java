@@ -164,6 +164,14 @@ public class TabbedLineReader implements Closeable, AutoCloseable, Iterable<Tabb
             return this.fields;
         }
 
+        /**
+         * @return the original text of the line
+         */
+        @Override
+        public String toString() {
+            return StringUtils.join(this.fields, '\t');
+        }
+
     }
 
     //FIELDS

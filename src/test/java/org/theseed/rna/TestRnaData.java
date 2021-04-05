@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.junit.Test;
@@ -148,28 +149,18 @@ public class TestRnaData {
         row.store("job4", true, 4.0);
         assertThat(data.rows(), equalTo(7));
         data.normalize();
-        assertThat(data.rows(), equalTo(4));
-        RnaData.FeatureData feat = new RnaData.FeatureData(f1);
+        assertThat(data.rows(), equalTo(6));
+        RnaData.FeatureData feat = new RnaData.FeatureData(f3);
         row = data.getRow(feat.getId());
-        assertThat(row.getWeight(0).getWeight(), closeTo(100000.0, 0.1));
-        assertThat(row.getWeight(1).getWeight(), closeTo(200000.0, 0.1));
-        assertThat(row.getWeight(2).getWeight(), closeTo(300000.0, 0.1));
-        assertThat(row.getWeight(3).getWeight(), closeTo(400000.0, 0.1));
-        feat = new RnaData.FeatureData(f2);
-        row = data.getRow(feat.getId());
-        assertThat(row, nullValue());
-        feat = new RnaData.FeatureData(f3);
-        row = data.getRow(feat.getId());
-        assertThat(row, nullValue());
-        feat = new RnaData.FeatureData(f4);
-        row = data.getRow(feat.getId());
-        assertThat(row.getWeight(0).getWeight(), closeTo(200000.0, 0.1));
-        assertThat(row.getWeight(1).getWeight(), closeTo(300000.0, 0.1));
-        assertThat(row.getWeight(2).getWeight(), closeTo(400000.0, 0.1));
-        assertThat(row.getWeight(3).getWeight(), closeTo(100000.0, 0.1));
+        assertThat(row.getWeight(0).getWeight(), closeTo(100000000 / 101100.0, 0.1));
+        assertThat(row.getWeight(1).getWeight(), closeTo(200000000 / 102200.0, 0.1));
+        assertThat(row.getWeight(2).getWeight(), closeTo(300000000 / 103300.0, 0.1));
+        assertThat(row.getWeight(3).getWeight(), closeTo(400000000 / 104400.0, 0.1));
         feat = new RnaData.FeatureData(r1);
         row = data.getRow(feat.getId());
         assertThat(row, nullValue());
+        Map<String, Double> baseMap = data.getBaselines();
+        assertThat(baseMap, not(nullValue()));
     }
 
 }

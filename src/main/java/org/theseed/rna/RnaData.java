@@ -17,12 +17,16 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.SortedMap;
+import java.util.TreeMap;
 import java.util.regex.Pattern;
 
+import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.theseed.genome.Feature;
 import org.theseed.locations.Location;
+import org.theseed.reports.NaturalSort;
 
 /**
  * This object contains the data for all the samples processed during an FPKM summary.  For each named job, it contains the
@@ -670,4 +674,41 @@ public class RnaData implements Iterable<RnaData.Row>, Serializable {
         return this.jobs.get(colIdx);
     }
 
+    /**
+     * @return the baseline value for a row of expression data
+     *
+     * @param row	row for the feature whose baseline value is desired
+     */
+    public double getBaseline(Row row) {
+        DescriptiveStatistics stats = getStats(row);
+        double retVal = ((stats.getPercentile(25) + stats.getPercentile(75)) / 2.0 + stats.getPercentile(50)) / 2.0;
+        return retVal;
+    }
+
+    /**
+     * @return a map of feature IDs to baseline values for this RNA expression database
+     */
+    public SortedMap<String, Double> getBaselines() {
+        SortedMap<String, Double> retVal = new TreeMap<String, Double>(new NaturalSort());
+        for (Map.Entry<String, Row> rowEntry : this.rowMap.entrySet()) {
+            double baseLine = this.getBaseline(rowEntry.getValue());
+            retVal.put(rowEntry.getKey(), baseLine);
+        }
+        return retVal;
+    }
+
+    /**
+     * @return a descriptive statistics object for the valid expression values in the specified row
+     *
+     * @param row	RNA database row for the feature of interest
+     */
+    public static DescriptiveStatistics getStats(RnaData.Row row) {
+        DescriptiveStatistics stats = new DescriptiveStatistics();
+        for (int i = 0; i < row.size(); i++) {
+            Weight w = row.getWeight(i);
+            if (w != null && w.isExactHit() && Double.isFinite(w.getWeight()))
+                stats.addValue(w.getWeight());
+        }
+        return stats;
+    }
 }
