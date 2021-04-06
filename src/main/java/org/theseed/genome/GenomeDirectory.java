@@ -186,5 +186,27 @@ public class GenomeDirectory implements Iterable<Genome> {
         return retVal;
     }
 
+    /**
+     * If the GTOs all have file names consisting of the genome ID with a suffix of ".gto", this
+     * method can be used to determine if a genome is already present.
+     *
+     * @param genomeId	ID of the genome of interest
+     *
+     * @return TRUE if the genome exists, else FALSE
+     */
+    public boolean contains(String genomeId) {
+        return this.genomeIDs.contains(genomeId);
+    }
+
+    /**
+     * Store a new genome in this directory.
+     *
+     * @param genome	genome to store
+     */
+    public void store(Genome genome) throws IOException {
+        File gFile = new File(this.dirName, genome.getId() + ".gto");
+        genome.save(gFile);
+        this.genomeIDs.add(genome.getId());
+    }
 
 }
