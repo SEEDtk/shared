@@ -223,6 +223,49 @@ public class RnaData implements Iterable<RnaData.Row>, Serializable {
             this.creation = creation;
         }
 
+        /**
+         * @return the mean length of a read in this sample
+         */
+        public double getMeanReadLen() {
+            double retVal = 0.0;
+            if (this.readCount > 0)
+                retVal = ((double) this.baseCount) / this.readCount;
+            return retVal;
+        }
+
+        /**
+         * @return the coverage depth of this sample
+         *
+         * @param gLen	number of base pairs in the relevant genome
+         */
+        public double getCoverage(int gLen) {
+            return (this.baseCount * this.quality) / (gLen * 100.0);
+        }
+
+        /**
+         * @return the percent of genes with expression values
+         *
+         * @param data	RNA database
+         */
+        public double getExpressedPercent(RnaData data) {
+            int colIdx = data.getColIdx(this.name);
+            int count = 0;
+            int total = 0;
+            for (RnaData.Row row : data) {
+                RnaData.Weight weight = row.getWeight(colIdx);
+                if (weight != null && weight.isExactHit()) {
+                    double wVal = weight.getWeight();
+                    if (Double.isFinite(wVal) && wVal > 0.0)
+                        count++;
+                }
+                total++;
+            }
+            double retVal = 0.0;
+            if (total > 0)
+                retVal = (count * 100.0) / total;
+            return retVal;
+        }
+
     }
 
     /**
