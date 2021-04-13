@@ -56,6 +56,7 @@ public class SampleId implements Comparable<SampleId> {
             new AbstractMap.SimpleEntry<>("2-1-1", StringUtils.split("D_Tasd_P_asdD", '_')),
             new AbstractMap.SimpleEntry<>("6-4-3", StringUtils.split("D_TasdA_P_asdD", '_')),
             new AbstractMap.SimpleEntry<>("pfb6-4-2", StringUtils.split("D_TasdA1_P_asdD", '_')),
+            new AbstractMap.SimpleEntry<>("pfb6-4-2c", StringUtils.split("D_TasdA1_P_asdD", '_')),
             new AbstractMap.SimpleEntry<>("pwt2-1-1", StringUtils.split("D_Tasd_P_asdD", '_')),
             new AbstractMap.SimpleEntry<>("pfb6-4-3", StringUtils.split("D_TasdA_P_asdD", '_')),
             new AbstractMap.SimpleEntry<>("277-14", StringUtils.split("0_TA1_C_asdO", '_'))
