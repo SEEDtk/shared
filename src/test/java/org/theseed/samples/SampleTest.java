@@ -9,8 +9,13 @@ import static org.theseed.test.Matchers.*;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
+import java.util.Set;
 
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.theseed.io.LineReader;
 import org.theseed.io.TabbedLineReader;
 
 /**
@@ -18,6 +23,33 @@ import org.theseed.io.TabbedLineReader;
  *
  */
 public class SampleTest {
+
+    /** logging facility */
+    protected static Logger log = LoggerFactory.getLogger(SampleTest.class);
+
+    @Test
+    public void testNewSamples() throws IOException {
+        File fileFile = new File("data", "files.txt");
+        try (LineReader reader = new LineReader(fileFile)) {
+            for (String line : reader) {
+                File rnaFile = new File("data", line);
+                SampleId sample = SampleId.translate(rnaFile);
+                assertThat(line, sample, not(nullValue()));
+                String num = SampleId.getSampleNumber(rnaFile);
+                assertThat(line, containsString(num));
+                assertThat(num, startsWith("S"));
+                if (line.contains("pta-asd"))
+                    assertThat(sample.getFragment(4), equalTo("asdT"));
+                if (line.contains("lysC"))
+                    assertThat(sample.getDeletes(), contains("lysC"));
+                if (line.contains("pta-thrABC"))
+                    assertThat(sample.getFragment(2), equalTo("TA1"));
+                if (line.contains("plus"))
+                    assertThat(sample.isIPTG(), isTrue());
+                log.info("Translation of {} = {}.", line, sample.toString());
+            }
+        }
+    }
 
     @Test
     public void idTest() {
@@ -75,6 +107,19 @@ public class SampleTest {
             }
         }
 
+    }
+
+    @Test
+    public void testFileSamples() throws IOException {
+        File strainsIn = new File("data", "RNAseq_3_prod.txt");
+        List<String> strainList = TabbedLineReader.readColumn(strainsIn, "sample");
+        assertThat(strainList.size(), equalTo(88));
+        File targetFile = new File("data", "newSampleIds.txt");
+        Set<String> targets = LineReader.readSet(targetFile);
+        for (String strain : strainList) {
+            SampleId sample = SampleId.translate(strain, "9");
+            assertThat(strain, sample.toString(), in(targets));
+        }
     }
 
     @Test

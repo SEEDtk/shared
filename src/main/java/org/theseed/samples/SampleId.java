@@ -17,6 +17,7 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
+import org.apache.commons.lang3.RegExUtils;
 import org.apache.commons.lang3.StringUtils;
 
 /**
@@ -56,11 +57,13 @@ public class SampleId implements Comparable<SampleId> {
             new AbstractMap.SimpleEntry<>("6-4-3", StringUtils.split("D_TasdA_P_asdD", '_')),
             new AbstractMap.SimpleEntry<>("pfb6-4-2", StringUtils.split("D_TasdA1_P_asdD", '_')),
             new AbstractMap.SimpleEntry<>("pwt2-1-1", StringUtils.split("D_Tasd_P_asdD", '_')),
-            new AbstractMap.SimpleEntry<>("pfb6-4-3", StringUtils.split("D_TasdA_P_asdD", '_'))
+            new AbstractMap.SimpleEntry<>("pfb6-4-3", StringUtils.split("D_TasdA_P_asdD", '_')),
+            new AbstractMap.SimpleEntry<>("277-14", StringUtils.split("0_TA1_C_asdO", '_'))
             ).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
-    /** map of mis-spelled deletion protein names */
+    /** map of mis-spelled protein names */
     private static final Map<String, String> PROTEIN_ERRORS = Stream.of(
             new AbstractMap.SimpleEntry<>("rthA", "rhtA"),
+            new AbstractMap.SimpleEntry<>("ppyc", "pyc"),
             new AbstractMap.SimpleEntry<>("lysCC", "lysC"))
             .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
     /** default plasmid coding */
@@ -71,17 +74,20 @@ public class SampleId implements Comparable<SampleId> {
             new AbstractMap.SimpleEntry<>("278", "21278"), new AbstractMap.SimpleEntry<>("823", "30823"),
             new AbstractMap.SimpleEntry<>("319", "30319"), new AbstractMap.SimpleEntry<>("593", "21593"),
             new AbstractMap.SimpleEntry<>("316", "30316"), new AbstractMap.SimpleEntry<>("317", "30317"),
-            new AbstractMap.SimpleEntry<>("318", "30318")
+            new AbstractMap.SimpleEntry<>("318", "30318"), new AbstractMap.SimpleEntry<>("30318", "30318"),
+            new AbstractMap.SimpleEntry<>("21278", "21278"), new AbstractMap.SimpleEntry<>("30823", "30823"),
+            new AbstractMap.SimpleEntry<>("30319", "30319"), new AbstractMap.SimpleEntry<>("21593", "21593"),
+            new AbstractMap.SimpleEntry<>("30316", "30316"), new AbstractMap.SimpleEntry<>("30317", "30317")
             ).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
     /** map of strain IDs for non-plasmid strains */
     private static final Map<String, String[]> CHROMO_MAP = Stream.of(
             new AbstractMap.SimpleEntry<>("277-14", StringUtils.split("7_0_TA1_C_asdO", '_')),
             new AbstractMap.SimpleEntry<>("277wt1", StringUtils.split("7_0_T_C_asdO", '_')),
+            new AbstractMap.SimpleEntry<>("277w1", StringUtils.split("7_0_T_C_asdO", '_')),
             new AbstractMap.SimpleEntry<>("926-44", StringUtils.split("M_0_T_C_asdO", '_')),
+            new AbstractMap.SimpleEntry<>("926-41", StringUtils.split("M_0_T_C_asdO", '_')),
             new AbstractMap.SimpleEntry<>("926fb1", StringUtils.split("M_0_TA1_C_asdO", '_'))
             ).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
-    /** pattern for parsing an old strain name */
-    protected static final Pattern OLD_STRAIN_NAME = Pattern.compile("(\\d+)([Dd]\\S+)?((?:\\s+\\S+)+)?");
     /** set of invalid deletion proteins */
     protected static final Set<String> BAD_DELETES = new TreeSet<String>(Arrays.asList("asd", "thrABC"));
     /** fragment descriptions */
@@ -97,6 +103,8 @@ public class SampleId implements Comparable<SampleId> {
     private static final Pattern TIME_PATTERN = Pattern.compile("_(\\d+)([p_\\-\\.]_?5)?_?hrs?");
     /** plasmid specification patter */
     private static final Pattern PLASMID_PATTERN = Pattern.compile("_(?:pfb)?\\d[_.]\\d[_.]\\d");
+    /** obsolete plasmid prefixes */
+    private static final Pattern PLASMID_PREFIX = Pattern.compile("^p?ph");
     /** default time point */
     public static String DEFAULT_TIME = "9";
 
@@ -142,68 +150,71 @@ public class SampleId implements Comparable<SampleId> {
     public static SampleId translate(String strain, double time, boolean iptg, String medium) {
         SampleId retVal = new SampleId();
         retVal.fragments = new String[NORMAL_SIZE];
-        Matcher m = OLD_STRAIN_NAME.matcher(strain);
-        if (! m.matches())
-            retVal = null;
-        else {
-            // We have a valid strain.  The first group is the host strain.
-            String host = m.group(1);
-            retVal.fragments[0] = HOST_MAP.getOrDefault(host, host);
-            // Group 3 is a bunch of inserts, space-delimited.  A "+" is removed.
-            // There can be up to two inserts-- a plasmid spec and a protein.  Note that the
-            // term "plasmid" is obsolete, as sometimes we put these things directly on the
-            // chromosome.
-            boolean plasmidFound = false;
-            String[] plasmidSpecs = PLASMID_DEFAULT;
-            String insert = "000";
-            if (m.group(3) != null) {
-                String[] insertParts = StringUtils.split(m.group(3));
-                for (String insertPart : insertParts) {
-                    if (insertPart.startsWith("+"))
-                        insertPart = insertPart.substring(1);
-                    // Convert to lower case and fix periods.  A plasmid can be specified with
-                    // either periods or hyphens and we prefer hyphens.
-                    insertPart = StringUtils.replaceChars(insertPart.toLowerCase(), '.', '-');
-                    // Check for a plasmid.
-                    if (PLASMID_MAP.containsKey(insertPart)) {
-                        plasmidSpecs = PLASMID_MAP.get(insertPart);
-                        plasmidFound = true;
-                    } else
-                        insert = insertPart;
-                }
-            }
-            // Copy the plasmid specs to the output and make the 277 adjustment.
-            System.arraycopy(plasmidSpecs, 0, retVal.fragments, 1, 4);
-            if (host.contentEquals("277") && ! plasmidFound)
-                retVal.fragments[3] = "A";
-            // The second group is deletions.
-            String deletions = m.group(2);
-            if (deletions == null)
-                retVal.fragments[DELETE_COL] = "D000";
-            else {
-                // Here we have real deletes to process.
-                String fixedDeleteSpec = fixDeletes(deletions);
-                retVal.fragments[DELETE_COL] = fixedDeleteSpec;
-            }
-            // Next we process the protein insert.  Here, we also need to repair the lower-casing.
-            retVal.fragments[INSERT_COL] = StringUtils.substring(insert, 0, 3) +
-                    StringUtils.substring(insert, 3).toUpperCase();
-            // Now we save the time.
-            retVal.timePoint = time;
-            String timeString;
-            if (Double.isNaN(time))
-                timeString = "ML";
-            else {
-                timeString = String.format("%1.1f", retVal.timePoint);
-                timeString = StringUtils.removeEnd(timeString, ".0");
-                timeString = StringUtils.replaceChars(timeString, '.', 'p');
-            }
-            retVal.fragments[TIME_COL] = timeString;
-            // Next the IPTG flag.
-            retVal.fragments[INDUCE_COL] = (iptg ? "I" : "0");
-            // Finally the medium.
-            retVal.fragments[MEDIA_COL] = medium;
+        // Erase the leading NRRL (if any).
+        strain = StringUtils.removeStartIgnoreCase(strain, "nrrl ");
+        // Break the strain name into pieces.
+        String[] pieces = StringUtils.split(strain);
+        // Remove deletes from the host name and add them to the master delete string.
+        StringBuffer deleteString = new StringBuffer(40);
+        String parts[] = StringUtils.split(pieces[0], "dD", 2);
+        if (parts.length > 1) {
+            pieces[0] = parts[0];
+            deleteString.append("D" + parts[1]);
         }
+        // The first piece is the host.
+        retVal.parseHost(pieces[0]);
+        // Now we loop through the modifiers.  A modifier can be a plasmid specification, a deletion,
+        // or an insert.  A leading plus sign is removed.  Note that the term "plasmid" is obsolete,
+        // as some plasmids are actually direct modification to the chromosome.  There is, alas, too much
+        // use of the word to let go now.
+        String insert = "000";
+        for (int i = 1; i < pieces.length; i++) {
+            String piece = pieces[i].toLowerCase();
+            if (piece.charAt(0) == 'd') {
+                // Here we have a deletion.  Add it to the delete string.
+                deleteString.append(piece);
+            } else if (piece.contentEquals("plasmid")) {
+                // The word "plasmid" is just a comment.
+            } else {
+                // Remove any leading plus sign.
+                if (piece.charAt(0) == '+')
+                    piece = piece.substring(1);
+                // Fix periods.  A plasmid can be specified with periods or hyphens, and we
+                // prefer hyphens.
+                piece = StringUtils.replaceChars(piece, '.', '-');
+                insert = retVal.parseModifier(insert, piece);
+            }
+        }
+        // Make the 277 adjustment.
+        if (pieces[0].contentEquals("277") && retVal.fragments[3].contentEquals("0"))
+            retVal.fragments[3] = "A";
+        // Now process the deletions.
+        String deletions = deleteString.toString();
+        if (deletions.isEmpty())
+            retVal.fragments[DELETE_COL] = "D000";
+        else {
+            // Here we have real deletes to process.
+            String fixedDeleteSpec = fixDeletes(deletions);
+            retVal.fragments[DELETE_COL] = fixedDeleteSpec;
+        }
+        // Next we process the protein insert.  Here, we also need to repair the lower-casing.
+        retVal.fragments[INSERT_COL] = StringUtils.substring(insert, 0, 3) +
+                StringUtils.substring(insert, 3).toUpperCase();
+        // Now we save the time.
+        retVal.timePoint = time;
+        String timeString;
+        if (Double.isNaN(time))
+            timeString = "ML";
+        else {
+            timeString = String.format("%1.1f", retVal.timePoint);
+            timeString = StringUtils.removeEnd(timeString, ".0");
+            timeString = StringUtils.replaceChars(timeString, '.', 'p');
+        }
+        retVal.fragments[TIME_COL] = timeString;
+        // Next the IPTG flag.
+        retVal.fragments[INDUCE_COL] = (iptg ? "I" : "0");
+        // Finally the medium.
+        retVal.fragments[MEDIA_COL] = medium;
         return retVal;
     }
 
@@ -294,42 +305,13 @@ public class SampleId implements Comparable<SampleId> {
         }
         // Parse the host.
         retVal = new SampleId();
-        String host = HOST_MAP.get(strainId);
-        if (host == null) {
-            // If the host is not found, check for an artificial host, which contains operon adjustments built in.
-            String[] plasmidInfo = CHROMO_MAP.get(strainId);
-            if (plasmidInfo == null)
-                throw new IllegalArgumentException("Invalid host name \"" + strainId + "\".");
-            else {
-                // Copy the full host/operon info to the sample ID.
-                System.arraycopy(plasmidInfo, 0, retVal.fragments, 0, plasmidInfo.length);
-            }
-        } else {
-            // Here we have a normal host.
-            retVal.fragments[0] = host;
-            String[] plasmidInfo = PLASMID_DEFAULT;
-            System.arraycopy(plasmidInfo, 0, retVal.fragments, 1, plasmidInfo.length);
-        }
+        retVal.parseHost(strainId);
         // Denote that so far there is no insert.
         String insert = "000";
         // Run through the modifiers.
         for (int i = 4; i < parts.length; i++) {
             String modifier = parts[i];
-            String[] plasmidInfo = PLASMID_MAP.get(modifier);
-            if (plasmidInfo != null)
-                System.arraycopy(plasmidInfo, 0, retVal.fragments, 1, plasmidInfo.length);
-            else switch (modifier) {
-            case "ptac-thrABC" :
-                retVal.fragments[2] = "TA1";
-                retVal.fragments[3] = "C";
-                break;
-            case "ptac-asd" :
-                retVal.fragments[4] = "asdT";
-                break;
-            default :
-                // Here we have an insert.
-                insert = modifier;
-            }
+            insert = retVal.parseModifier(insert, modifier);
         }
         // If no plasmid on a 277, we add an A in the location slot.
         if (retVal.fragments[0].equals("7") && retVal.fragments[3].equals("0"))
@@ -345,6 +327,61 @@ public class SampleId implements Comparable<SampleId> {
         // Compute the numeric time point.
         retVal.parseTimeString();
         return retVal;
+    }
+
+    /**
+     * Parse a modifier segment.  Here the modifier must be an insert or a plasmid.
+     *
+     * @param insert	current insertion protein string
+     * @param modifier	modifier to parse
+     *
+     * @return new insertion protein string
+     */
+    private String parseModifier(String insert, String modifier) {
+        // Remove the old pPH prefix.
+        modifier = RegExUtils.removeFirst(modifier, PLASMID_PREFIX);
+        String[] plasmidInfo = PLASMID_MAP.get(modifier);
+        if (plasmidInfo != null)
+            System.arraycopy(plasmidInfo, 0, this.fragments, 1, plasmidInfo.length);
+        else switch (modifier) {
+        case "ptac-thrABC" :
+        case "ptac-thrabc" :
+            this.fragments[2] = "TA1";
+            this.fragments[3] = "C";
+            break;
+        case "ptac-asd" :
+            this.fragments[4] = "asdT";
+            break;
+        default :
+            // Here we have an insert.
+            insert = PROTEIN_ERRORS.getOrDefault(modifier, modifier);
+        }
+        return insert;
+    }
+
+    /**
+     * Parse a host specification.
+     *
+     * @param strainId	strain identifier to parse (with deletes removed)
+     */
+    private void parseHost(String strainId) {
+        String host = HOST_MAP.get(strainId);
+
+        if (host == null) {
+            // If the host is not found, check for an artificial host, which contains operon adjustments built in.
+            String[] plasmidInfo = CHROMO_MAP.get(strainId);
+            if (plasmidInfo == null)
+                throw new IllegalArgumentException("Invalid host name \"" + strainId + "\".");
+            else {
+                // Copy the full host/operon info to the sample ID.
+                System.arraycopy(plasmidInfo, 0, this.fragments, 0, plasmidInfo.length);
+            }
+        } else {
+            // Here we have a normal host.
+            this.fragments[0] = host;
+            String[] plasmidInfo = PLASMID_DEFAULT;
+            System.arraycopy(plasmidInfo, 0, this.fragments, 1, plasmidInfo.length);
+        }
     }
 
     /**
