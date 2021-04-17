@@ -48,6 +48,8 @@ public class TestRnaData {
         row = testRna.getRow(f3, null);
         row.store("job2", true, 202.0);
         row.store("job0", false, 203.0);
+        testRna.storeRegulonData(f1.getId(), 1, "mod1,mod2");
+        testRna.storeRegulonData(f3.getId(), 2, "");
         Iterator<RnaData.Row> iter = testRna.iterator();
         rowX = iter.next();
         RnaData.FeatureData fX = rowX.getFeat();
@@ -56,6 +58,8 @@ public class TestRnaData {
         assertThat(fX.getFunction(), equalTo(f1.getPegFunction()));
         assertThat(fX.getGene(), equalTo("hslU"));
         assertThat(fX.getBNumber(), equalTo("b3931"));
+        assertThat(fX.getAtomicRegulon(), equalTo(1));
+        assertThat(fX.getiModulons(), arrayContaining("mod1", "mod2"));
         RnaData.Weight weightX = rowX.getWeight(0);
         assertThat(weightX.getWeight(), equalTo(101.0));
         assertThat(weightX.isExactHit(), isFalse());
@@ -65,6 +69,8 @@ public class TestRnaData {
         fX = rowX.getFeat();
         assertThat(fX.getId(), equalTo(f3.getId()));
         assertThat(rowX.getNeighbor(), nullValue());
+        assertThat(fX.getAtomicRegulon(), equalTo(2));
+        assertThat(fX.getiModulons().length, equalTo(0));
         File saveFile = new File("data", "rna.ser");
         testRna.save(saveFile);
         RnaData fileRna = RnaData.load(saveFile);
@@ -90,10 +96,23 @@ public class TestRnaData {
         iter = testRna.iterator();
         for (RnaData.Row rowF : fileRna) {
             row = iter.next();
-            assertThat(rowF.getFeat(), equalTo(row.getFeat()));
+            RnaData.FeatureData feat = row.getFeat();
+            RnaData.FeatureData featF = rowF.getFeat();
+            assertThat(featF, equalTo(feat));
+            assertThat(featF.getLocation(), equalTo(feat.getLocation()));
+            assertThat(featF.getFunction(), equalTo(feat.getFunction()));
+            assertThat(featF.getGene(), equalTo(feat.getGene()));
+            assertThat(featF.getBNumber(), equalTo(feat.getBNumber()));
+            assertThat(featF.getAtomicRegulon(), equalTo(feat.getAtomicRegulon()));
+            String[] iMods = feat.getiModulons();
+            String[] iModsF = featF.getiModulons();
+            assertThat(iModsF.length, equalTo(iMods.length));
+            for (int i = 0; i < iModsF.length; i++)
+                assertThat(Integer.toString(i), iModsF[i], equalTo(iMods[i]));
             assertThat(rowF.getNeighbor(), equalTo(row.getNeighbor()));
             for (int i = 0; i < 3; i++)
                 assertThat(rowF.getWeight(i), equalTo(row.getWeight(i)));
+
         }
     }
 
