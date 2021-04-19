@@ -107,7 +107,7 @@ public class SubsystemRow implements Comparable<SubsystemRow> {
         public int hashCode() {
             final int prime = 31;
             int result = 1;
-            result = prime * result + getEnclosingInstance().hashCode();
+            result = prime * result + getRow().hashCode();
             result = prime * result + ((name == null) ? 0 : name.hashCode());
             return result;
         }
@@ -121,7 +121,7 @@ public class SubsystemRow implements Comparable<SubsystemRow> {
                 return false;
             }
             Role other = (Role) obj;
-            if (!getEnclosingInstance().equals(other.getEnclosingInstance())) {
+            if (!getRow().equals(other.getRow())) {
                 return false;
             }
             if (name == null) {
@@ -134,7 +134,10 @@ public class SubsystemRow implements Comparable<SubsystemRow> {
             return true;
         }
 
-        private SubsystemRow getEnclosingInstance() {
+        /**
+         * @return the parent subsystem row
+         */
+        public SubsystemRow getRow() {
             return SubsystemRow.this;
         }
 

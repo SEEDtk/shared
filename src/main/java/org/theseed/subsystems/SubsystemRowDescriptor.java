@@ -45,7 +45,7 @@ public class SubsystemRowDescriptor extends MagicObject {
     /**
      * Construct a blank subsystem row descriptor.
      */
-    private SubsystemRowDescriptor() {
+    public SubsystemRowDescriptor() {
         super();
     }
 

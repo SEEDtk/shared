@@ -818,6 +818,17 @@ public class Feature implements Comparable<Feature> {
     }
 
     /**
+     * @return the set of subsystem rows containing this feature
+     */
+    public SortedSet<SubsystemRow> getSubsystemRows() {
+        SortedSet<SubsystemRow> retVal = new TreeSet<SubsystemRow>();
+        for (SubsystemRow.Role subRole : this.subsystemRoles) {
+            retVal.add(subRole.getRow());
+        }
+        return retVal;
+    }
+
+    /**
      * Connect this feature to a subsystem role.
      *
      * @param role		role to which this feature is connected
