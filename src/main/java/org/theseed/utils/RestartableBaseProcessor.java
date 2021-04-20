@@ -74,6 +74,11 @@ public abstract class RestartableBaseProcessor extends BaseProcessor {
             // Normal processing.  Put the log to the standard output.
             System.out.println(header);
             this.output = System.out;
+        } else if (! this.resumeFile.exists()) {
+            // Here the resume file is a new file.  Create it and put the header in it.
+            FileOutputStream outStream = new FileOutputStream(this.resumeFile);
+            this.output = new PrintStream(outStream, true);
+            this.output.println(header);
         } else {
             // Resume processing.  Save the roles we've already seen.
             try (TabbedLineReader reader = new TabbedLineReader(this.resumeFile)) {
