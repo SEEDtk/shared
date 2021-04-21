@@ -4,6 +4,8 @@
 package org.theseed.rna;
 
 /**
+ * This interface is used to describe an object that can return the baseline level for RNA data.
+ *
  * @author Bruce Parrello
  *
  */

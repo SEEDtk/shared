@@ -20,14 +20,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
-import java.util.regex.Pattern;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.theseed.genome.Feature;
-import org.theseed.locations.Location;
 import org.theseed.reports.NaturalSort;
 
 /**
@@ -273,173 +270,6 @@ public class RnaData implements Iterable<RnaData.Row>, Serializable {
     }
 
     /**
-     * This object contains key data fields for a feature.
-     */
-    public static class FeatureData implements Comparable<FeatureData>, Serializable {
-        private static final long serialVersionUID = 3941353134302649699L;
-        private String id;
-        private String function;
-        private Location location;
-        private String gene;
-        private String bNumber;
-        private int atomicRegulon;
-        private String[] iModulons;
-        private static final Pattern B_NUMBER = Pattern.compile("b\\d+");
-        private static final Pattern GENE_NAME = Pattern.compile("[a-z]{3}(?:[A-Z])?");
-        private static final String[] NO_MODULONS = new String[0];
-
-        /**
-         * Construct a feature-data object from a feature.
-         *
-         * @param feat	incoming feature
-         */
-        public FeatureData(Feature feat) {
-            this.id = feat.getId();
-            this.function = feat.getPegFunction();
-            this.location = feat.getLocation();
-            // Get the feature's gene name and blatner number.
-            this.gene = "";
-            this.bNumber = "";
-            for (String alias : feat.getAliases()) {
-                if (B_NUMBER.matcher(alias).matches())
-                    this.bNumber = alias;
-                else if (GENE_NAME.matcher(alias).matches())
-                    this.gene = alias;
-            }
-            // Denote there is no iModulon and we are not in an atomic regulon.
-            this.atomicRegulon = 0;
-            this.iModulons = NO_MODULONS;
-        }
-
-        /**
-         * This object sorts by location.
-         */
-        @Override
-        public int compareTo(FeatureData o) {
-            int retVal = this.location.compareTo(o.location);
-            if (retVal == 0)
-                retVal = this.id.compareTo(o.id);
-            return retVal;
-        }
-
-        /**
-         * @return the feature ID
-         */
-        public String getId() {
-            return this.id;
-        }
-
-        /**
-         * @return the function of this feature
-         */
-        public String getFunction() {
-            return this.function;
-        }
-
-        /**
-         * @return the location of this feature
-         */
-        public Location getLocation() {
-            return this.location;
-        }
-
-        @Override
-        public int hashCode() {
-            final int prime = 31;
-            int result = 1;
-            result = prime * result + ((this.id == null) ? 0 : this.id.hashCode());
-            return result;
-        }
-
-        @Override
-        public boolean equals(Object obj) {
-            if (this == obj) {
-                return true;
-            }
-            if (!(obj instanceof FeatureData)) {
-                return false;
-            }
-            FeatureData other = (FeatureData) obj;
-            if (this.id == null) {
-                if (other.id != null) {
-                    return false;
-                }
-            } else if (!this.id.equals(other.id)) {
-                return false;
-            }
-            return true;
-        }
-
-        /** serialization method for FeatureData */
-        private void writeObject(ObjectOutputStream os) throws IOException {
-            os.writeUTF(this.id);
-            os.writeUTF(this.function);
-            os.writeUTF(this.location.toString());
-            os.writeUTF(this.gene);
-            os.writeUTF(this.bNumber);
-            os.writeInt(this.atomicRegulon);
-            os.writeUTF(StringUtils.join(this.iModulons, ','));
-        }
-
-        /** deserialization method for FeatureData */
-        private void readObject(ObjectInputStream is) throws IOException {
-            this.id = is.readUTF();
-            this.function = is.readUTF();
-            String locString = is.readUTF();
-            this.location = Location.fromString(locString);
-            this.gene = is.readUTF();
-            this.bNumber = is.readUTF();
-            this.atomicRegulon = is.readInt();
-            this.setiModulons(is.readUTF());
-        }
-
-        /**
-         * @return the gene name for this feature
-         */
-        public String getGene() {
-            return this.gene;
-        }
-
-        /**
-         * @return the Blatner number for this feature
-         */
-        public String getBNumber() {
-            return this.bNumber;
-        }
-
-        /**
-         * @return the atomic regulon number, or 0 if this feature is not in a regulon
-         */
-        public int getAtomicRegulon() {
-            return this.atomicRegulon;
-        }
-
-        /**
-         * @param atomicRegulon 	specify this feature's atomic regulon number
-         */
-        public void setAtomicRegulon(int atomicRegulon) {
-            this.atomicRegulon = atomicRegulon;
-        }
-
-        /**
-         * @return the array of iModulons containing this feature
-         */
-        public String[] getiModulons() {
-            return this.iModulons;
-        }
-
-        /**
-         * Specify the iModulons containing this feature.
-         *
-         * @param iModString	a string containing a comma-delimited list of modulon names
-         */
-        public void setiModulons(String iModString) {
-            this.iModulons = StringUtils.split(iModString, ',');
-        }
-
-    }
-
-    /**
      * This nested class represents a weight report
      */
     public static class Weight implements Serializable {
@@ -510,9 +340,9 @@ public class RnaData implements Iterable<RnaData.Row>, Serializable {
         /** object version ID */
         private static final long serialVersionUID = 1L;
         /** feature hit */
-        private FeatureData feat;
+        private RnaFeatureData feat;
         /** neighbor feature (or NULL) */
-        private FeatureData neighbor;
+        private RnaFeatureData neighbor;
         /** hit list */
         private Weight[] weights;
 
@@ -522,11 +352,11 @@ public class RnaData implements Iterable<RnaData.Row>, Serializable {
          * @param fData		target feature
          * @param neighbor	useful neighbor
          */
-        private Row(FeatureData fData, Feature neighbor) {
+        private Row(RnaFeatureData fData, Feature neighbor) {
             this.feat = fData;
             this.neighbor = null;
             if (neighbor != null)
-                this.neighbor = new FeatureData(neighbor);
+                this.neighbor = new RnaFeatureData(neighbor);
             // Clear the weights.
             this.weights = new Weight[RnaData.this.jobs.size()];
         }
@@ -547,14 +377,14 @@ public class RnaData implements Iterable<RnaData.Row>, Serializable {
         /**
          * @return the target feature
          */
-        public FeatureData getFeat() {
+        public RnaFeatureData getFeat() {
             return this.feat;
         }
 
         /**
          * @return the neighbor feature
          */
-        public FeatureData getNeighbor() {
+        public RnaFeatureData getNeighbor() {
             return this.neighbor;
         }
 
@@ -658,7 +488,7 @@ public class RnaData implements Iterable<RnaData.Row>, Serializable {
      * @param neighbor	nearest neighbor
      */
     public Row getRow(Feature feat, Feature neighbor) {
-        FeatureData fData = new FeatureData(feat);
+        RnaFeatureData fData = new RnaFeatureData(feat);
         Row retVal = this.rowMap.computeIfAbsent(feat.getId(), f -> new Row(fData, neighbor));
         return retVal;
     }
@@ -684,7 +514,7 @@ public class RnaData implements Iterable<RnaData.Row>, Serializable {
         Row fRow = this.getRow(fid);
         if (fRow == null)
             throw new IllegalArgumentException("Invalid feature ID " + fid + " specified for regulon data.");
-        FeatureData fData = fRow.getFeat();
+        RnaFeatureData fData = fRow.getFeat();
         fData.setAtomicRegulon(atomicRegulon);
         fData.setiModulons(modulons);
     }
@@ -734,7 +564,7 @@ public class RnaData implements Iterable<RnaData.Row>, Serializable {
         Iterator<Row> rowIter = this.rowMap.values().iterator();
         while (rowIter.hasNext()) {
             Row row = rowIter.next();
-            if (row.feat.id.contains(".rna.")) {
+            if (row.feat.getId().contains(".rna.")) {
                 // Here we have an RNA that sneaked through the sample filters.
                 rowIter.remove();
                 removed++;

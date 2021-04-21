@@ -52,7 +52,7 @@ public class TestRnaData {
         testRna.storeRegulonData(f3.getId(), 2, "");
         Iterator<RnaData.Row> iter = testRna.iterator();
         rowX = iter.next();
-        RnaData.FeatureData fX = rowX.getFeat();
+        RnaFeatureData fX = rowX.getFeat();
         assertThat(fX.getId(), equalTo(f1.getId()));
         assertThat(fX.getLocation(), equalTo(f1.getLocation()));
         assertThat(fX.getFunction(), equalTo(f1.getPegFunction()));
@@ -96,8 +96,8 @@ public class TestRnaData {
         iter = testRna.iterator();
         for (RnaData.Row rowF : fileRna) {
             row = iter.next();
-            RnaData.FeatureData feat = row.getFeat();
-            RnaData.FeatureData featF = rowF.getFeat();
+            RnaFeatureData feat = row.getFeat();
+            RnaFeatureData featF = rowF.getFeat();
             assertThat(featF, equalTo(feat));
             assertThat(featF.getLocation(), equalTo(feat.getLocation()));
             assertThat(featF.getFunction(), equalTo(feat.getFunction()));
@@ -169,13 +169,13 @@ public class TestRnaData {
         assertThat(data.rows(), equalTo(7));
         data.normalize();
         assertThat(data.rows(), equalTo(6));
-        RnaData.FeatureData feat = new RnaData.FeatureData(f3);
+        RnaFeatureData feat = new RnaFeatureData(f3);
         row = data.getRow(feat.getId());
         assertThat(row.getWeight(0).getWeight(), closeTo(100000000 / 101100.0, 0.1));
         assertThat(row.getWeight(1).getWeight(), closeTo(200000000 / 102200.0, 0.1));
         assertThat(row.getWeight(2).getWeight(), closeTo(300000000 / 103300.0, 0.1));
         assertThat(row.getWeight(3).getWeight(), closeTo(400000000 / 104400.0, 0.1));
-        feat = new RnaData.FeatureData(r1);
+        feat = new RnaFeatureData(r1);
         row = data.getRow(feat.getId());
         assertThat(row, nullValue());
         Map<String, Double> baseMap = data.getBaselines();
