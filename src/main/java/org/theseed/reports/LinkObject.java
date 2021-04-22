@@ -171,13 +171,23 @@ public abstract class LinkObject {
          * @param ssName	name of the subsystem
          */
         public static ContainerTag subsystemLink(String ssName) {
+            String ssId = cleanSubsystemName(ssName);
+            return a(ssName).withHref(String.format(SUBSYSTEM_LINK, ssId)).withTarget("_blank");
+        }
+
+        /**
+         * @return a subsystem name suitable for appearing in a link
+         *
+         * @param ssName	subsystem name to convert
+         */
+        public static String cleanSubsystemName(String ssName) {
             String ssId = ssName.replace(' ', '_');
             try {
                 ssId = URLEncoder.encode(ssId, StandardCharsets.UTF_8.toString());
             } catch (UnsupportedEncodingException e) {
                 throw new RuntimeException(e);
             }
-            return a(ssName).withHref(String.format(SUBSYSTEM_LINK, ssId)).withTarget("_blank");
+            return ssId;
         }
 
     }

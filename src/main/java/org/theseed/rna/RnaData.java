@@ -406,7 +406,10 @@ public class RnaData implements Iterable<RnaData.Row>, Serializable {
 
         @Override
         public int compareTo(Row o) {
-            return SORTER.compare(this.feat.getId(), o.feat.getId());
+            int retVal = this.feat.getLocation().compareTo(o.feat.getLocation());
+            if (retVal == 0)
+                retVal = SORTER.compare(this.feat.getId(), o.feat.getId());
+            return retVal;
         }
 
     }
