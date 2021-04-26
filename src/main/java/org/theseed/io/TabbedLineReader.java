@@ -10,9 +10,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -445,6 +447,29 @@ public class TabbedLineReader implements Closeable, AutoCloseable, Iterable<Tabb
     public int size() {
         return this.labels.length;
     }
+
+    /**
+     * Read a map from a tab-delimited file with headers.  The first column specified is the key, the
+     * second is the data.
+     *
+     * @param inFile	input file to read
+     * @param kColumn	index (1-based) or name of the key column to read
+     * @param vCcolumn	index (1-based) or name of the value column to read
+     *
+     * @return a map of the values in the specified columns of the file
+     *
+     * @throws IOException
+     */
+    public static Map<String, String> readMap(File inFile, String kColumn, String vColumn) throws IOException {
+        Map<String, String> retVal = new HashMap<String, String>();
+        try (TabbedLineReader inStream = new TabbedLineReader(inFile)) {
+            int kCol = inStream.findField(kColumn);
+            int vCol = inStream.findField(vColumn);
+            for (Line line : inStream)
+                retVal.put(line.get(kCol), line.get(vCol));
+        }
+        return retVal;
+     }
 
     /**
      * Read a string set from a tab-delimited file with headers.  The strings to be put in the set are
