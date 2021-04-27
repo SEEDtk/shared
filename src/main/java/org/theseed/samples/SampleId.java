@@ -670,7 +670,11 @@ public class SampleId implements Comparable<SampleId> {
 
     @Override
     public int hashCode() {
-        int result = Arrays.hashCode(this.fragments);
+        int result = this.getDeletes().hashCode();
+        for (int i = 0; i < this.fragments.length; i++) {
+            if (i != DELETE_COL)
+                result = 31 * result + this.fragments[i].hashCode();
+        }
         return result;
     }
 
@@ -683,10 +687,18 @@ public class SampleId implements Comparable<SampleId> {
             return false;
         }
         SampleId other = (SampleId) obj;
-        if (!Arrays.equals(this.fragments, other.fragments)) {
-            return false;
+        boolean retVal = true;
+        for (int i = 0; i < this.fragments.length && retVal; i++) {
+            if (i != DELETE_COL)
+                retVal = this.fragments[i].contentEquals(other.fragments[i]);
+            else {
+                // For deletes, the deletion order does not matter, so we have a special compare.
+                Set<String> thisDels = this.getDeletes();
+                Set<String> otherDels = other.getDeletes();
+                retVal = (thisDels.size() == otherDels.size() && thisDels.containsAll(otherDels));
+            }
         }
-        return true;
+        return retVal;
     }
 
 }

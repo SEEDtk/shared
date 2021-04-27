@@ -132,4 +132,21 @@ public class SampleTest {
         test.increment();
         assertThat(test.toString(), equalTo("7_0_0_A_asdO_000_D000_0_12_M1_rep3"));
     }
+
+    @Test
+    public void testObscureCompare() {
+        SampleId samp1 = new SampleId("M_0_TA1_C_asdT_000_DtdhDmetL_I_24_M1");
+        SampleId samp1a = new SampleId("M_0_TA1_C_asdT_000_DmetLDtdh_I_24_M1");
+        SampleId samp2 = new SampleId("M_0_TA1_C_asdT_000_DmetLDtdhDlysC_I_24_M1");
+        SampleId samp3 = new SampleId("M_0_TA1_C_asdT_000_Dtdh_I_24_M1");
+        SampleId samp4 = new SampleId("M_0_TA1_C_asdT_000_DmetLDtdh_0_24_M1");
+        assertThat(samp1, equalTo(samp1a));
+        assertThat(samp1, not(equalTo(samp2)));
+        assertThat(samp1, not(equalTo(samp3)));
+        assertThat(samp1, not(equalTo(samp4)));
+        assertThat(samp1.hashCode(), equalTo(samp1a.hashCode()));
+        assertThat(samp1.hashCode(), not(equalTo(samp2.hashCode())));
+        assertThat(samp1.hashCode(), not(equalTo(samp3.hashCode())));
+        assertThat(samp1.hashCode(), not(equalTo(samp4.hashCode())));
+    }
 }
