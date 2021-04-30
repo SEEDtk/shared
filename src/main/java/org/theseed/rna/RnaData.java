@@ -26,6 +26,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.theseed.genome.Feature;
 import org.theseed.reports.NaturalSort;
+;
 
 /**
  * This object contains the data for all the samples processed during an FPKM summary.  For each named job, it contains the
@@ -404,6 +405,13 @@ public class RnaData implements Iterable<RnaData.Row>, Serializable {
             return this.weights.length;
         }
 
+        /**
+         * @return an iterable for the good weights
+         */
+        public Iterable<Weight> goodWeights() {
+            return RnaData.this.new GoodWeights(this);
+        }
+
         @Override
         public int compareTo(Row o) {
             int retVal = this.feat.getLocation().compareTo(o.feat.getLocation());
@@ -413,6 +421,36 @@ public class RnaData implements Iterable<RnaData.Row>, Serializable {
         }
 
     }
+
+    /**
+     * This nested class iterates over the good weights in a row.
+     */
+    public class GoodWeights implements Iterable<Weight> {
+
+        /** collection of good weights */
+        private Collection<Weight> weights;
+
+        /**
+         * Create a good weights list.
+         *
+         * @param row	row whose weights are desired
+         */
+        public GoodWeights(RnaData.Row row) {
+            this.weights = new ArrayList<Weight>(row.size());
+            for (int i = 0; i < row.size(); i++) {
+                Weight w = row.getWeight(i);
+                if (w != null && w.exactHit && Double.isFinite(w.weight))
+                    this.weights.add(w);
+            }
+        }
+
+        @Override
+        public Iterator<Weight> iterator() {
+            return this.weights.iterator();
+        }
+
+    }
+
 
     /**
      * Create a new RNA data repository.
