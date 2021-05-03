@@ -48,8 +48,8 @@ public class TestRnaData {
         row = testRna.getRow(f3, null);
         row.store("job2", true, 202.0);
         row.store("job0", false, 203.0);
-        testRna.storeRegulonData(f1.getId(), 1, "mod1,mod2");
-        testRna.storeRegulonData(f3.getId(), 2, "");
+        testRna.storeRegulonData(f1.getId(), 1, "mod1,mod2", "secMA-mutT");
+        testRna.storeRegulonData(f3.getId(), 2, "", "");
         Iterator<RnaData.Row> iter = testRna.iterator();
         rowX = iter.next();
         RnaFeatureData fX = rowX.getFeat();
@@ -60,6 +60,7 @@ public class TestRnaData {
         assertThat(fX.getBNumber(), equalTo("b3931"));
         assertThat(fX.getAtomicRegulon(), equalTo(1));
         assertThat(fX.getiModulons(), arrayContaining("mod1", "mod2"));
+        assertThat(fX.getOperon(), equalTo("secMA-mutT"));
         RnaData.Weight weightX = rowX.getWeight(0);
         assertThat(weightX.getWeight(), equalTo(101.0));
         assertThat(weightX.isExactHit(), isFalse());
@@ -103,6 +104,7 @@ public class TestRnaData {
             assertThat(featF.getFunction(), equalTo(feat.getFunction()));
             assertThat(featF.getGene(), equalTo(feat.getGene()));
             assertThat(featF.getBNumber(), equalTo(feat.getBNumber()));
+            assertThat(featF.getOperon(), equalTo(feat.getOperon()));
             assertThat(featF.getAtomicRegulon(), equalTo(feat.getAtomicRegulon()));
             String[] iMods = feat.getiModulons();
             String[] iModsF = featF.getiModulons();

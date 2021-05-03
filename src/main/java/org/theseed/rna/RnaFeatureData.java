@@ -23,7 +23,7 @@ public class RnaFeatureData implements Comparable<RnaFeatureData>, Serializable 
 
     // FIELDS
     /** serialization version ID */
-    private static final long serialVersionUID = 3941353134302649700L;
+    private static final long serialVersionUID = 3941353134302649701L;
     /** feature ID */
     private String id;
     /** functional assignment */
@@ -36,6 +36,8 @@ public class RnaFeatureData implements Comparable<RnaFeatureData>, Serializable 
     private String bNumber;
     /** atomic regulon number */
     private int atomicRegulon;
+    /** operon name */
+    private String operon;
     /** array of iModulon names */
     private String[] iModulons;
     /** default expression baseline */
@@ -68,7 +70,9 @@ public class RnaFeatureData implements Comparable<RnaFeatureData>, Serializable 
         // Denote there is no iModulon and we are not in an atomic regulon.
         this.atomicRegulon = 0;
         this.iModulons = NO_MODULONS;
+        this.operon = "";
         this.baseLine = Double.NaN;
+
     }
 
     /**
@@ -138,6 +142,7 @@ public class RnaFeatureData implements Comparable<RnaFeatureData>, Serializable 
         os.writeUTF(this.gene);
         os.writeUTF(this.bNumber);
         os.writeInt(this.atomicRegulon);
+        os.writeUTF(this.operon);
         os.writeUTF(StringUtils.join(this.iModulons, ','));
         os.writeDouble(this.baseLine);
     }
@@ -151,6 +156,7 @@ public class RnaFeatureData implements Comparable<RnaFeatureData>, Serializable 
         this.gene = is.readUTF();
         this.bNumber = is.readUTF();
         this.atomicRegulon = is.readInt();
+        this.operon = is.readUTF();
         this.setiModulons(is.readUTF());
         this.setBaseLine(is.readDouble());
     }
@@ -213,6 +219,22 @@ public class RnaFeatureData implements Comparable<RnaFeatureData>, Serializable 
      */
     public void setBaseLine(double baseLine) {
         this.baseLine = baseLine;
+    }
+
+    /**
+     * @return the operon name
+     */
+    public String getOperon() {
+        return this.operon;
+    }
+
+    /**
+     * Specify the operon name.
+     *
+     * @param operon 	the operon name to set
+     */
+    public void setOperon(String operon) {
+        this.operon = operon;
     }
 
 }

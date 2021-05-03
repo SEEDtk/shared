@@ -550,14 +550,16 @@ public class RnaData implements Iterable<RnaData.Row>, Serializable {
      * @param fid				ID of the target feature
      * @param atomicRegulon		atomic regulon number (or 0 for none)
      * @param modulons			comma-delimited iModulon string (empty for none)
+     * @param operon			operon name
      */
-    public void storeRegulonData(String fid, int atomicRegulon, String modulons) {
+    public void storeRegulonData(String fid, int atomicRegulon, String modulons, String operon) {
         Row fRow = this.getRow(fid);
         if (fRow == null)
             throw new IllegalArgumentException("Invalid feature ID " + fid + " specified for regulon data.");
         RnaFeatureData fData = fRow.getFeat();
         fData.setAtomicRegulon(atomicRegulon);
         fData.setiModulons(modulons);
+        fData.setOperon(operon);
     }
 
     /**
