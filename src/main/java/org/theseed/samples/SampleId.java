@@ -355,7 +355,11 @@ public class SampleId implements Comparable<SampleId> {
             break;
         default :
             // Here we have an insert.
-            insert = PROTEIN_ERRORS.getOrDefault(modifier, modifier);
+            String newProt = PROTEIN_ERRORS.getOrDefault(modifier, modifier);
+            if (insert.contentEquals("000"))
+                insert = newProt;
+            else
+                insert = insert + "-" + newProt;
         }
         return insert;
     }
@@ -598,16 +602,58 @@ public class SampleId implements Comparable<SampleId> {
     }
 
     /**
+     * @return the insertion set for this sample
+     */
+    public Set<String> getInserts() {
+        Set<String> retVal = new TreeSet<String>();
+        String inserts = this.fragments[INSERT_COL];
+        if (! inserts.contentEquals("000")) {
+            String[] parts = StringUtils.split(inserts, '-');
+            for (String part : parts)
+                retVal.add(part);
+        }
+        return retVal;
+    }
+
+    /**
      * @return the name of this sample with a deletion removed
      *
      * @param protein	name of the protein being undeleted
      */
     public String unDelete(String protein) {
-        String deletes = this.fragments[DELETE_COL];
-        deletes = StringUtils.remove(deletes, "D" + protein);
-        if (deletes.isEmpty())
-            deletes = "D000";
-        String retVal = this.replaceFragment(DELETE_COL, deletes);
+        Set<String> deletes = this.getDeletes();
+        String retVal;
+        if (! deletes.remove(protein)) {
+            // The protein is not being deleted, so return the sample ID unchanged.
+            retVal = this.toString();
+        } else {
+            // Return D000 if we are empty, else join up the new delete set.
+            String newDeletes = "D000";
+            if (! deletes.isEmpty())
+                newDeletes = "D" + StringUtils.join(deletes, "D");
+            retVal = this.replaceFragment(DELETE_COL, newDeletes);
+        }
+        return retVal;
+    }
+
+    /**
+     * @return the name of this sample with an insertion removed
+     *
+     * @param protein	name of the protein being uninserted
+     */
+    public String unInsert(String protein) {
+        Set<String> inserts = this.getInserts();
+        String retVal;
+        if (! inserts.remove(protein)) {
+            // Removing the insert changed nothing, so return the sample ID unchanged.
+            retVal = this.toString();
+        } else {
+            // Return "000" if we are empty, otherwise join the inserts.
+            String newInserts = "000";
+            if (! inserts.isEmpty())
+                newInserts = StringUtils.join(inserts, "-");
+            retVal = this.replaceFragment(INSERT_COL, newInserts);
+        }
         return retVal;
     }
 
@@ -623,15 +669,15 @@ public class SampleId implements Comparable<SampleId> {
     }
 
     /**
-     * @return an array of the basic fragments in the strain name (everything but the deletes)
+     * @return an array of the basic fragments in the strain name (everything but the inserts and deletes)
      */
     public String[] getBaseFragments() {
-        String[] retVal = Arrays.copyOfRange(this.fragments, 0, DELETE_COL);
+        String[] retVal = Arrays.copyOfRange(this.fragments, 0, INSERT_COL);
         return retVal;
     }
 
     /**
-     * @return an array of all the fragments in the strain name (everything but the deletes)
+     * @return an array of all the fragments in the strain name (everything but the time, media, and IPTG indicator)
      */
     public String[] getStrainFragments() {
         String[] retVal = Arrays.copyOfRange(this.fragments, 0, STRAIN_SIZE);
@@ -665,15 +711,23 @@ public class SampleId implements Comparable<SampleId> {
      * @return the number of base fragments
      */
     public static int numBaseFragments() {
-        return DELETE_COL;
+        return INSERT_COL;
     }
 
     @Override
     public int hashCode() {
-        int result = this.getDeletes().hashCode();
+        int result = 0;
         for (int i = 0; i < this.fragments.length; i++) {
-            if (i != DELETE_COL)
-                result = 31 * result + this.fragments[i].hashCode();
+            switch (i) {
+            case INSERT_COL :
+                result = 31 * result + this.getInserts().hashCode();
+                break;
+            case DELETE_COL :
+                result = 31 * result + this.getDeletes().hashCode();
+                break;
+            default :
+                result = 31 * result + this.getFragment(i).hashCode();
+            }
         }
         return result;
     }
@@ -689,13 +743,22 @@ public class SampleId implements Comparable<SampleId> {
         SampleId other = (SampleId) obj;
         boolean retVal = true;
         for (int i = 0; i < this.fragments.length && retVal; i++) {
-            if (i != DELETE_COL)
-                retVal = this.fragments[i].contentEquals(other.fragments[i]);
-            else {
+            switch (i) {
+            case DELETE_COL :
                 // For deletes, the deletion order does not matter, so we have a special compare.
                 Set<String> thisDels = this.getDeletes();
                 Set<String> otherDels = other.getDeletes();
                 retVal = (thisDels.size() == otherDels.size() && thisDels.containsAll(otherDels));
+                break;
+            case INSERT_COL :
+                // Inserts work like deletes.
+                Set<String> thisInserts = this.getInserts();
+                Set<String> otherInserts = other.getInserts();
+                retVal = (thisInserts.size() == otherInserts.size() && thisInserts.containsAll(otherInserts));
+                break;
+            default :
+                // For normal fragments it's just a string compare.
+                retVal = this.fragments[i].contentEquals(other.fragments[i]);
             }
         }
         return retVal;

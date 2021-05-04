@@ -149,4 +149,25 @@ public class SampleTest {
         assertThat(samp1.hashCode(), not(equalTo(samp3.hashCode())));
         assertThat(samp1.hashCode(), not(equalTo(samp4.hashCode())));
     }
+
+    @Test
+    public void testMultiInsert() {
+        SampleId samp1 = new SampleId("M_0_TA1_C_asdT_metL-rhtA_Dtdh_I_24_M1");
+        SampleId samp1a = new SampleId("M_0_TA1_C_asdT_rhtA-metL_Dtdh_I_24_M1");
+        SampleId samp2 = new SampleId("M_0_TA1_C_asdT_rhtA_Dtdh_I_24_M1");
+        SampleId samp3 = new SampleId("M_0_TA1_C_asdT_metL_Dtdh_I_24_M1");
+        SampleId samp4 = new SampleId("M_0_TA1_C_asdT_metL-rhtA-lysC_Dtdh_0_24_M1");
+        assertThat(samp1, equalTo(samp1a));
+        assertThat(samp1, not(equalTo(samp2)));
+        assertThat(samp1, not(equalTo(samp3)));
+        assertThat(samp1, not(equalTo(samp4)));
+        assertThat(samp1.hashCode(), equalTo(samp1a.hashCode()));
+        assertThat(samp1.hashCode(), not(equalTo(samp2.hashCode())));
+        assertThat(samp1.hashCode(), not(equalTo(samp3.hashCode())));
+        assertThat(samp1.hashCode(), not(equalTo(samp4.hashCode())));
+        assertThat(samp1.getInserts(), containsInAnyOrder("metL", "rhtA"));
+        assertThat(samp1.unInsert("tdh"), equalTo("M_0_TA1_C_asdT_metL-rhtA_Dtdh_I_24_M1"));
+        assertThat(samp1.unInsert("metL"), equalTo("M_0_TA1_C_asdT_rhtA_Dtdh_I_24_M1"));
+        assertThat(samp3.unInsert("metL"), equalTo("M_0_TA1_C_asdT_000_Dtdh_I_24_M1"));
+    }
 }
