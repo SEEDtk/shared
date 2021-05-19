@@ -47,6 +47,8 @@ public class Feature implements Comparable<Feature> {
     private String plfam;
     /** global protein family */
     private String pgfam;
+    /** fig protein family */
+    private String figfam;
     /** annotation history */
     private List<Annotation> annotations;
     /** original JSON definition */
@@ -266,6 +268,8 @@ public class Feature implements Comparable<Feature> {
                     this.pgfam = value;
                 } else if (type.contentEquals("PLFAM")) {
                     this.plfam = value;
+                } else if (type.contentEquals("FIGFAM")) {
+                    this.figfam = value;
                 }
             }
         }
@@ -656,6 +660,10 @@ public class Feature implements Comparable<Feature> {
             JsonArray gfam = new JsonArray().addChain("PGFAM").addChain(this.pgfam);
             famList.add(gfam);
         }
+        if (this.figfam != null) {
+            JsonArray ffam = new JsonArray().addChain("FIGFAM").addChain(this.figfam);
+            famList.add(ffam);
+        }
         retVal.put(FeatureKeys.FAMILY_ASSIGNMENTS.getKey(), famList);
         return retVal;
     }
@@ -890,6 +898,25 @@ public class Feature implements Comparable<Feature> {
          * @param feat	feature of interest
          */
         public abstract String get(Feature feat);
+    }
+
+    /**
+     * Specify the FIG protein family for this feature.
+     *
+     * @param ffam	proposed FigFam for this feature
+     */
+    public void setFigfam(String ffam) {
+        if (ffam != null && ! ffam.isEmpty())
+            this.figfam = ffam;
+        else
+            this.figfam = null;
+    }
+
+    /**
+     * @return the FIG protein family for this feature
+     */
+    public String getFigfam() {
+        return this.figfam;
     }
 
 }
