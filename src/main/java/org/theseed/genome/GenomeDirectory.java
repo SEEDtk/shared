@@ -209,4 +209,11 @@ public class GenomeDirectory implements Iterable<Genome> {
         this.genomeIDs.add(genome.getId());
     }
 
+    /**
+     * @return the directory name as a string
+     */
+    public String getName() {
+        return this.dirName.toString();
+    }
+
 }
