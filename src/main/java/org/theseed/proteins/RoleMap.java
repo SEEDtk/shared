@@ -74,8 +74,7 @@ public class RoleMap extends MagicMap<Role> {
             while (reader.hasNext()) {
                 String myLine = reader.nextLine();
                 String[] fields = StringUtils.splitByWholeSeparator(myLine, "\t", 3);
-                Role newRole = new Role(fields[0], fields[2]);
-                retVal.put(newRole);
+                retVal.addRole(fields[0], fields[2]);
             }
         } catch (IOException e) {
             throw new RuntimeException("Error loading role map.", e);
@@ -92,6 +91,17 @@ public class RoleMap extends MagicMap<Role> {
         for (String roleName : roleNames) {
             this.findOrInsert(roleName);
         }
+    }
+
+    /**
+     * Add a role with a known ID to the map.
+     *
+     * @param roleId	ID of the role
+     * @param roleDesc	name of the role
+     */
+    public void addRole(String roleId, String roleDesc) {
+        Role newRole = new Role(roleId, roleDesc);
+        this.put(newRole);
     }
 
 }

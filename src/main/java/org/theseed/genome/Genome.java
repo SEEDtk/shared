@@ -16,7 +16,6 @@ import java.io.Writer;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -27,8 +26,6 @@ import java.util.TreeSet;
 import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
-
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -1097,7 +1094,16 @@ public class Genome  {
      * @return the taxonomy string of this genome.
      */
     public String getTaxString() {
-        return Arrays.stream(this.lineage).map(x -> x.getName()).collect(Collectors.joining("; "));
+        List<String> names = new ArrayList<String>(this.lineage.length);
+        String prev = "cellular organisms";
+        // We remove "cellular organisms" at the front, and also skip over blanks and duplicates.
+        for (TaxItem item : this.lineage) {
+            String name = item.getName();
+            if (name != null && ! name.isEmpty() && ! name.contentEquals(prev))
+                names.add(name);
+            prev = name;
+        }
+        return StringUtils.join(names, "; ");
     }
 
     /**

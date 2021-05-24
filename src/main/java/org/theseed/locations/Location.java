@@ -425,12 +425,6 @@ public abstract class Location implements Comparable<Location>, Cloneable {
     }
 
     /**
-     * @return the distance between this location and the other location if they are on the same strand
-     *
-     * @param other		other location to compare to this one
-     */
-
-    /**
      * @return TRUE if this location wholly contains another location.
      *
      * @param other	other location to check
@@ -891,11 +885,22 @@ public abstract class Location implements Comparable<Location>, Cloneable {
     }
 
     /**
-     * @return a version of this location that would apply to the reverse complement of the original sequence
+     * This method computes what this location would be if the original sequence containing it (the contig)
+     * is reverse-complemented.  It allows the client to recompute the locations when reverse-complimenting
+     * an entire contig or FASTA record.
      *
      * @param seqLen	length of the sequence being reverse-complimented
+     *
+     * @return a version of this location that would apply to the reverse complement of the original sequence
      */
     public abstract Location converse(int seqLen);
+
+    /**
+     * This method returns the version of a location that is on the other strand, but in the same physical place
+     *
+     * @return the reverse of this location
+     */
+    public abstract Location reverse();
 
     /**
      * @return the DNA from the specified sequence implied by this location
@@ -985,5 +990,10 @@ public abstract class Location implements Comparable<Location>, Cloneable {
      * @param gap	length of the new location
      */
     public abstract Location downstream(int gap);
+
+    /**
+     * @return a SEED-style location string for this location
+     */
+    public abstract String toSeedString();
 
 }

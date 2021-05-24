@@ -23,6 +23,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.theseed.counters.KeyPair;
 import org.theseed.genome.Annotation;
 import org.theseed.genome.CloseGenome;
+import org.theseed.genome.CompareGenomes;
 import org.theseed.genome.Contig;
 import org.theseed.genome.Contig.ContigKeys;
 import org.theseed.genome.Coupling;
@@ -1174,44 +1175,7 @@ public class TestLibrary extends TestCase {
         gto.purify();
         gto.save(gtoFile);
         Genome diskGenome = new Genome(gtoFile);
-        assertThat(diskGenome.getId(), equalTo(gto.getId()));
-        assertThat(diskGenome.getName(), equalTo(gto.getName()));
-        assertThat(diskGenome.getDomain(), equalTo(gto.getDomain()));
-        assertThat(ArrayUtils.toObject(diskGenome.getLineage()), arrayContaining(ArrayUtils.toObject(gto.getLineage())));
-        assertThat(diskGenome.getGeneticCode(), equalTo(gto.getGeneticCode()));
-        assertThat(diskGenome.getTaxonomyId(), equalTo(gto.getTaxonomyId()));
-        assertThat(diskGenome.getFeatureCount(), equalTo(gto.getFeatureCount()));
-        assertThat(diskGenome.getContigCount(), equalTo(gto.getContigCount()));
-        Collection<Feature> fids = gto.getFeatures();
-        for (Feature fid : fids) {
-            Feature diskFid = diskGenome.getFeature(fid.getId());
-            assertThat(diskFid.getFunction(), equalTo(fid.getFunction()));
-            assertThat(diskFid.getLocation(), equalTo(fid.getLocation()));
-            assertThat(diskFid.getPlfam(), equalTo(fid.getPlfam()));
-            assertThat(diskFid.getType(), equalTo(fid.getType()));
-            assertThat(diskFid.getProteinTranslation(), equalTo(fid.getProteinTranslation()));
-            Collection<GoTerm> fidGoTerms = fid.getGoTerms();
-            assertThat(diskFid.getGoTerms().size(), equalTo(fidGoTerms.size()));
-            for (GoTerm diskGoTerm : diskFid.getGoTerms()) {
-                assertThat(fidGoTerms, hasItem(diskGoTerm));
-            }
-            Collection<Annotation> fidAnnotations = fid.getAnnotations();
-            assertThat(diskFid.getAnnotations().size(), equalTo(fidAnnotations.size()));
-            for (Annotation diskAnnotation : diskFid.getAnnotations()) {
-                assertThat(fidAnnotations, hasItem(diskAnnotation));
-            }
-            Collection<String> fidAliases = fid.getAliases();
-            assertThat(diskFid.getAliases().size(), equalTo(fidAliases.size()));
-            for (String diskAlias : diskFid.getAliases()) {
-                assertThat(fidAliases, hasItem(diskAlias));
-            }
-        }
-        Collection<Contig> contigs = gto.getContigs();
-        for (Contig contig : contigs) {
-            Contig diskContig = diskGenome.getContig(contig.getId());
-            assertThat(diskContig.length(), equalTo(contig.length()));
-            assertThat(diskContig.getSequence(), equalTo(contig.getSequence()));
-        }
+        CompareGenomes.test(gto, diskGenome, true);
         Collection<SubsystemRow> subsystems = gto.getSubsystems();
         for (SubsystemRow subsystem : subsystems) {
             SubsystemRow diskSubsystem = diskGenome.getSubsystem(subsystem.getName());
@@ -1235,6 +1199,7 @@ public class TestLibrary extends TestCase {
         }
 
     }
+
 
     /**
      * Test ad hoc genome creation.

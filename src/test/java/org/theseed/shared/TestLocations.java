@@ -428,6 +428,8 @@ public class TestLocations extends TestCase {
         assertFalse("Different strands compare equal.", loc5.equals(loc8));
         assertFalse("Different region counts compare equal.", loc5.equals(loc1));
         assertFalse("Different region extents compare equal.", loc5.equals(loc9));
+        assertThat(loc5.toSeedString(), equalTo("myContig_1000_2000,myContig_3000_4000"));
+        assertThat(loc8.toSeedString(), equalTo("myContig_2000_1000,myContig_4000_3000"));
         Location[] locArray = new Location[] { loc1, loc2, loc3, loc4, loc5, loc6, loc7, loc8, loc9 };
         for (Location loc : locArray) {
             String locString = loc.toString();
@@ -670,6 +672,31 @@ public class TestLocations extends TestCase {
         loc2 = loc1.upstream(20);
         dna = myGto.getDna(loc2);
         assertThat(dna, equalTo("aaggtacat"));
+    }
+
+    public void testReversal() {
+        Location floc = Location.create("contig1", "+", 1000, 1099, 1200, 1299);
+        assertThat(floc.getLeft(), equalTo(1000));
+        assertThat(floc.getBegin(), equalTo(1000));
+        assertThat(floc.getRight(), equalTo(1299));
+        assertThat(floc.getEnd(), equalTo(1299));
+        assertThat(floc.getRegionLength(), equalTo(200));
+        assertThat(floc.getLength(), equalTo(300));
+        Location bloc = floc.reverse();
+        assertThat(floc.getLeft(), equalTo(1000));
+        assertThat(floc.getBegin(), equalTo(1000));
+        assertThat(floc.getRight(), equalTo(1299));
+        assertThat(floc.getEnd(), equalTo(1299));
+        assertThat(floc.getRegionLength(), equalTo(200));
+        assertThat(floc.getLength(), equalTo(300));
+        assertThat(bloc.getLeft(), equalTo(1000));
+        assertThat(bloc.getBegin(), equalTo(1299));
+        assertThat(bloc.getRight(), equalTo(1299));
+        assertThat(bloc.getEnd(), equalTo(1000));
+        assertThat(bloc.getRegionLength(), equalTo(200));
+        assertThat(bloc.getLength(), equalTo(300));
+        Location floc2 = bloc.reverse();
+        assertThat(floc2, equalTo(floc));
     }
 
 }

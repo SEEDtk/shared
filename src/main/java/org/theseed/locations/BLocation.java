@@ -3,6 +3,9 @@
  */
 package org.theseed.locations;
 
+import java.util.List;
+
+import org.apache.commons.text.TextStringBuilder;
 import org.theseed.genome.Contig;
 import org.theseed.genome.Genome;
 import org.theseed.proteins.CodonSet;
@@ -227,6 +230,27 @@ public class BLocation extends Location {
         BLocation retVal = new BLocation(this.contigId);
         retVal.addRegion(this.getLeft() - 1, gap);
         return retVal;
+    }
+
+    @Override
+    public Location reverse() {
+        FLocation retVal = new FLocation(this.contigId);
+        List<Region> oldRegions = this.getRegions();
+        for (int i = oldRegions.size() - 1; i >= 0; i--) {
+            Region oldRegion = oldRegions.get(i);
+            retVal.putRegion(oldRegion.getLeft(), oldRegion.getRight());
+        }
+        return retVal;
+    }
+
+    @Override
+    public String toSeedString() {
+        String contig = this.getContigId();
+        TextStringBuilder retVal = new TextStringBuilder(50);
+        for (Region region : this.getRegions())
+            retVal.appendSeparator(',').append(contig).append("_").append(region.getRight())
+                .append("_").append(region.getLeft());
+        return retVal.toString();
     }
 
 
