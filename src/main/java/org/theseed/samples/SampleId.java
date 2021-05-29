@@ -669,6 +669,18 @@ public class SampleId implements Comparable<SampleId> {
     }
 
     /**
+     * @return an operon-generic sample ID string for this sample
+     */
+    public String genericOperon() {
+        StringBuilder retVal = new StringBuilder(40);
+        retVal.append(this.fragments[0]);
+        retVal.append("_X_X_X");
+        for (int i = 4; i < NORMAL_SIZE; i++)
+            retVal.append("_").append(this.fragments[i]);
+        return retVal.toString();
+    }
+
+    /**
      * @return an array of the basic fragments in the strain name (everything but the inserts and deletes)
      */
     public String[] getBaseFragments() {

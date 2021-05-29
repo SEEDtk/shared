@@ -170,4 +170,12 @@ public class SampleTest {
         assertThat(samp1.unInsert("metL"), equalTo("M_0_TA1_C_asdT_rhtA_Dtdh_I_24_M1"));
         assertThat(samp3.unInsert("metL"), equalTo("M_0_TA1_C_asdT_000_Dtdh_I_24_M1"));
     }
+
+    @Test
+    public void testGeneric() {
+        SampleId samp1 = new SampleId("M_0_TA1_C_asdT_metL-rhtA_Dtdh_I_24_M1");
+        SampleId samp2 = new SampleId("M_D_TAasd_P_asdT_rhtA_Dtdh_I_24_M1");
+        assertThat(samp1.genericOperon(), equalTo("M_X_X_X_asdT_metL-rhtA_Dtdh_I_24_M1"));
+        assertThat(samp2.genericOperon(), equalTo("M_X_X_X_asdT_rhtA_Dtdh_I_24_M1"));
+    }
 }
