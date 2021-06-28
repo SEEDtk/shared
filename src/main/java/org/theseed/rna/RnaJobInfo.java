@@ -70,4 +70,11 @@ public class RnaJobInfo {
         return this.growth;
     }
 
+    /**
+     * @return the column index in each row of this job's expression weight
+     */
+    public int getIdx() {
+        return this.colIdx;
+    }
+
 }
