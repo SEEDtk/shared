@@ -526,6 +526,8 @@ public class SampleId implements Comparable<SampleId> {
         Matcher m = DELETE_GLITCH.matcher(retVal);
         if (m.matches())
             retVal = m.group(1) + m.group(2);
+        // If there are two S-numbers, only keep the first one.
+        retVal = retVal.replaceAll("_S(\\d+)_S\\d+_", "_S$1_");
         // Fix the PTAC glitch.  Sometimes the leading space is missing.
         m = PTAC_GLITCH.matcher(retVal);
         if (m.matches())

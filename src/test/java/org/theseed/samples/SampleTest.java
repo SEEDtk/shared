@@ -52,6 +52,23 @@ public class SampleTest {
     }
 
     @Test
+    public void doubleStest() throws IOException {
+        File dFile = new File("data", "rnaseq.list.txt");
+        try (LineReader reader = new LineReader(dFile)) {
+            for (String[] parts : reader.new Section(null)) {
+                File lineFile = new File("data", parts[0]);
+                SampleId sample = SampleId.translate(lineFile);
+                String sampleString = sample.toString();
+                if (parts.length == 3) {
+                    assertThat(sampleString, equalTo(parts[1]));
+                    assertThat(SampleId.getSampleNumber(lineFile), equalTo(parts[2]));
+                } else
+                    log.info("Translation of {} = {} with sample {}.", parts[0], sampleString, SampleId.getSampleNumber(lineFile));
+            }
+        }
+    }
+
+    @Test
     public void idTest() {
         SampleId samp1 = new SampleId("7_D_TasdA_P_asdD_zwf_DasdDdapA_I_6_M1");
         assertThat(samp1.toStrain(), equalTo("7_D_TasdA_P_asdD_zwf_DasdDdapA"));
