@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.util.Comparator;
 import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.StringUtils;
@@ -84,6 +85,29 @@ public class RnaFeatureData implements Comparable<RnaFeatureData>, Serializable 
         if (retVal == 0)
             retVal = this.id.compareTo(o.id);
         return retVal;
+    }
+
+    /**
+     * This is an alternate comparator for sorting by b-number
+     */
+    public static class BSort implements Comparator<RnaFeatureData> {
+
+        @Override
+        public int compare(RnaFeatureData o1, RnaFeatureData o2) {
+            // Features without b-numbers sort to the end, by ID.
+            int retVal;
+            if (o1.bNumber.isEmpty()) {
+                if (o2.bNumber.isEmpty())
+                    retVal = o1.id.compareTo(o2.id);
+                else
+                    retVal = -1;
+            } else if (o2.bNumber.isEmpty())
+                retVal = 1;
+            else
+                retVal = o1.bNumber.compareTo(o2.bNumber);
+            return retVal;
+        }
+
     }
 
     /**
