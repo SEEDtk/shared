@@ -41,8 +41,8 @@ public class DnaKmers extends SequenceKmers {
         int cap = 2 * (n < K ? K : n);
         this.kmerSet = new HashSet<String>(cap);
         for (int i = 0; i <= n; i++) {
-            kmerSet.add(this.original.substring(i, i + K));
-            kmerSet.add(rDna.substring(i, i + K));
+            this.kmerSet.add(this.original.substring(i, i + K));
+            this.kmerSet.add(rDna.substring(i, i + K));
         }
     }
 

@@ -1,7 +1,7 @@
 package org.theseed.sequence;
 
-import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Set;
 import java.util.TreeSet;
 import murmur3.MurmurHash3;
 
@@ -18,7 +18,7 @@ public abstract class SequenceKmers implements Iterable<String> {
     /** initial sequence string */
     protected String sequence;
     /** set of kmers in the sequence */
-    protected HashSet<String> kmerSet;
+    protected Set<String> kmerSet;
 
     /**
      * @return the number of kmers in common between two proteins
@@ -179,6 +179,15 @@ public abstract class SequenceKmers implements Iterable<String> {
      */
     public void removeAll(SequenceKmers other) {
         this.kmerSet.removeAll(other.kmerSet);
+    }
+
+    /**
+     * @return TRUE if the specified kmer is in this set, else FALSE
+     *
+     * @param kmer		kmer to test
+     */
+    public boolean contains(String kmer) {
+        return this.kmerSet.contains(kmer);
     }
 
     @Override
