@@ -245,7 +245,7 @@ public class MagicMap<T extends MagicObject> implements Map<String, String>, Ite
     }
 
     /**
-     * Remove the objects with the specified key.
+     * Remove the objects with the specified key.  Note this requires also removing them from the checksum map.
      *
      * @param key	key of objects to remove
      *
@@ -253,11 +253,14 @@ public class MagicMap<T extends MagicObject> implements Map<String, String>, Ite
      */
     public T remove(String key) {
         T retVal = idMapper.remove(key);
+        this.checkMapper.remove(retVal.getChecksum());
         // Clear any aliases from the alias list.
         for (int i = this.aliases.size() - 1; i >=0; i--) {
             T other = this.aliases.get(i);
-            if (other.getId().contentEquals(retVal.getId()))
+            if (other.getId().contentEquals(retVal.getId())) {
                 this.aliases.remove(i);
+                this.checkMapper.remove(other.getChecksum());
+            }
         }
         return retVal;
     }
