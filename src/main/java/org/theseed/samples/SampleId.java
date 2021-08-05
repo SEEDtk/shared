@@ -34,6 +34,16 @@ public class SampleId implements Comparable<SampleId> {
     private String[] fragments;
     /** time point */
     private double timePoint;
+    /** index of the strain column */
+    public static final int STRAIN_COL = 0;
+    /** index of the operon column */
+    public static final int OPERON_COL = 2;
+    /** index of the ASD mode column */
+    public static final int ASD_COL = 4;
+    /** index of the insertion column */
+    public static final int INSERT_COL = 5;
+    /** index of the deletion column */
+    public static final int DELETE_COL = 6;
     /** number of fragments in the strain ID */
     public static final int STRAIN_SIZE = 7;
     /** array index of pseudo-numeric component */
@@ -42,10 +52,6 @@ public class SampleId implements Comparable<SampleId> {
     public static final int MEDIA_COL = 9;
     /** number of guaranteed fields */
     public static final int NORMAL_SIZE = 10;
-    /** index of the insertion column */
-    public static final int INSERT_COL = 5;
-    /** index of the deletion column */
-    public static final int DELETE_COL = 6;
     /** index of the induction column */
     public static final int INDUCE_COL = 7;
     /** index of column containing replicate flag */
@@ -593,8 +599,18 @@ public class SampleId implements Comparable<SampleId> {
      * @return the deletion set for this sample
      */
     public Set<String> getDeletes() {
-        Set<String> retVal = new TreeSet<String>();
         String deletes = this.fragments[DELETE_COL];
+        Set<String> retVal = parseDeletes(deletes);
+        return retVal;
+    }
+
+    /**
+     * @return the set of deleted proteins in a delete string
+     *
+     * @param deletes	delete string to parse
+     */
+    public static Set<String> parseDeletes(String deletes) {
+        Set<String> retVal = new TreeSet<String>();
         if (! deletes.contentEquals("D000")) {
             String[] parts = StringUtils.split(deletes, 'D');
             for (String part : parts)
@@ -607,8 +623,18 @@ public class SampleId implements Comparable<SampleId> {
      * @return the insertion set for this sample
      */
     public Set<String> getInserts() {
-        Set<String> retVal = new TreeSet<String>();
         String inserts = this.fragments[INSERT_COL];
+        Set<String> retVal = parseInserts(inserts);
+        return retVal;
+    }
+
+    /**
+     * @return the set of inserted proteins in an insert string
+     *
+     * @param inserts	insert string to parse
+     */
+    public static Set<String> parseInserts(String inserts) {
+        Set<String> retVal = new TreeSet<String>();
         if (! inserts.contentEquals("000")) {
             String[] parts = StringUtils.split(inserts, '-');
             for (String part : parts)
