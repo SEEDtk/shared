@@ -112,6 +112,8 @@ public class SampleId implements Comparable<SampleId> {
     private static final Pattern PLASMID_PATTERN = Pattern.compile("_(?:pfb)?\\d[_.]\\d[_.]\\d");
     /** obsolete plasmid prefixes */
     private static final Pattern PLASMID_PREFIX = Pattern.compile("^p?ph");
+    /** list of strange protein names (length != 4) */
+    private static final String[] STRANGE_PROTEINS = new String[] { "ppc", "pyc", "zwf", "pntab", "aceba", "tdh" };
     /** default time point */
     public static String DEFAULT_TIME = "9";
 
@@ -204,9 +206,8 @@ public class SampleId implements Comparable<SampleId> {
             String fixedDeleteSpec = fixDeletes(deletions);
             retVal.fragments[DELETE_COL] = fixedDeleteSpec;
         }
-        // Next we process the protein insert.  Here, we also need to repair the lower-casing.
-        retVal.fragments[INSERT_COL] = StringUtils.substring(insert, 0, 3) +
-                StringUtils.substring(insert, 3).toUpperCase();
+        // Next we process the protein insert.
+        retVal.fragments[INSERT_COL] = insert;
         // Now we save the time.
         retVal.timePoint = time;
         String timeString;
@@ -353,21 +354,53 @@ public class SampleId implements Comparable<SampleId> {
         else switch (modifier) {
         case "ptac-thrABC" :
         case "ptac-thrabc" :
+        case "ptacthrABC" :
+        case "ptacthrabc" :
             this.fragments[2] = "TA1";
             this.fragments[3] = "C";
             break;
         case "ptac-asd" :
+        case "ptacasd" :
             this.fragments[4] = "asdT";
             break;
         default :
-            // Here we have an insert.
-            String newProt = PROTEIN_ERRORS.getOrDefault(modifier, modifier);
-            if (insert.contentEquals("000"))
-                insert = newProt;
-            else
-                insert = insert + "-" + newProt;
+            // Here we have an insert.  Split out the pieces.  This is brutal parsing since there are no delimiters.
+            String[] prots = splitProteins(modifier);
+            for (String prot : prots) {
+                if (insert.contentEquals("000"))
+                    insert = prot;
+                else
+                    insert = insert + "-" + prot;
+            }
         }
         return insert;
+    }
+
+    /**
+     * Split an undelimited protein list into the individual proteins.  Protein names are always length
+     * 4, expect for the ones in STRANGE_PROTEINS.
+     *
+     * @param modifier		modifier to be split into proteins
+     *
+     * @return a list of the protein IDs found
+     */
+    private static String[] splitProteins(String modifier) {
+        List<String> list = new ArrayList<String>(4);
+        int p = 0;
+        while (p < modifier.length()) {
+            // Check for a strange protein.
+            int i = 0;
+            while (i < STRANGE_PROTEINS.length && ! modifier.substring(p).startsWith(STRANGE_PROTEINS[i])) i++;
+            // Compute the length of the current protein.
+            int end = p + (i < STRANGE_PROTEINS.length ? STRANGE_PROTEINS[i].length() : 4);
+            // Add it to the output list.
+            list.add(StringUtils.substring(modifier, p, end));
+            p = end;
+        }
+        // Fix the casing and the spelling errors.
+        String[] retVal = list.stream().map(x -> PROTEIN_ERRORS.getOrDefault(x, x))
+                .map(x -> x.substring(0, 3) + StringUtils.substring(x, 3).toUpperCase()).toArray(String[]::new);
+        return retVal;
     }
 
     /**
