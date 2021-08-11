@@ -386,15 +386,16 @@ public class SampleId implements Comparable<SampleId> {
      */
     private static String[] splitProteins(String modifier) {
         List<String> list = new ArrayList<String>(4);
+        String lcModifier = modifier.toLowerCase();
         int p = 0;
-        while (p < modifier.length()) {
+        while (p < lcModifier.length()) {
             // Check for a strange protein.
             int i = 0;
-            while (i < STRANGE_PROTEINS.length && ! modifier.substring(p).startsWith(STRANGE_PROTEINS[i])) i++;
+            while (i < STRANGE_PROTEINS.length && ! lcModifier.substring(p).startsWith(STRANGE_PROTEINS[i])) i++;
             // Compute the length of the current protein.
             int end = p + (i < STRANGE_PROTEINS.length ? STRANGE_PROTEINS[i].length() : 4);
             // Add it to the output list.
-            list.add(StringUtils.substring(modifier, p, end));
+            list.add(StringUtils.substring(lcModifier, p, end));
             p = end;
         }
         // Fix the casing and the spelling errors.
@@ -832,6 +833,40 @@ public class SampleId implements Comparable<SampleId> {
             default :
                 // For normal fragments it's just a string compare.
                 retVal = this.fragments[i].contentEquals(other.fragments[i]);
+            }
+        }
+        return retVal;
+    }
+
+    /**
+     * Match two sample IDs.  Either one may contain "X" for wildcard in any position.
+     *
+     * @param inSample	sample to match to this one
+     *
+     * @return TRUE for a match, else FALSE
+     */
+    public boolean matches(SampleId inSample) {
+        boolean retVal = true;
+        for (int i = 0; i < NORMAL_SIZE && retVal; i++) {
+            if (! this.fragments[i].contentEquals("X") && ! inSample.fragments[i].contentEquals("X") &&
+                    ! this.fragments[i].contentEquals(inSample.fragments[i])) {
+                // Here we have two constants that don't match.  If we are an insert or delete, we do a set-based check.
+                switch (i) {
+                case DELETE_COL :
+                    // For deletes, the deletion order does not matter, so we have a special compare.
+                    Set<String> thisDels = this.getDeletes();
+                    Set<String> otherDels = inSample.getDeletes();
+                    retVal = (thisDels.size() == otherDels.size() && thisDels.containsAll(otherDels));
+                    break;
+                case INSERT_COL :
+                    // Inserts work like deletes.
+                    Set<String> thisInserts = this.getInserts();
+                    Set<String> otherInserts = inSample.getInserts();
+                    retVal = (thisInserts.size() == otherInserts.size() && thisInserts.containsAll(otherInserts));
+                    break;
+                default:
+                    retVal = false;
+                }
             }
         }
         return retVal;

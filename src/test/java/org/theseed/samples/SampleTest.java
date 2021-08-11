@@ -194,5 +194,12 @@ public class SampleTest {
         SampleId samp2 = new SampleId("M_D_TAasd_P_asdT_rhtA_Dtdh_I_24_M1");
         assertThat(samp1.genericOperon(), equalTo("M_X_X_X_asdT_metL-rhtA_Dtdh_I_24_M1"));
         assertThat(samp2.genericOperon(), equalTo("M_X_X_X_asdT_rhtA_Dtdh_I_24_M1"));
+        SampleId samp1X = new SampleId("M_0_TA1_C_X_rhtA-metL_Dtdh_I_24_M1");
+        SampleId samp2X = new SampleId("X_D_TAasd_P_asdT_rhtA_Dtdh_I_24_M1");
+        assertThat(samp1.matches(samp1X), isTrue());
+        assertThat(samp1.matches(samp2X), isFalse());
+        assertThat(samp2.matches(samp2X), isTrue());
+        assertThat(samp2.matches(samp1X), isFalse());
+        assertThat(samp1X.matches(samp2X), isFalse());
     }
 }
