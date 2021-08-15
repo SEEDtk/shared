@@ -7,6 +7,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.theseed.test.Matchers.*;
 
+import java.util.Collections;
 import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
@@ -57,6 +58,19 @@ public class TestSetUtils {
         assertThat(SetUtils.isMember(mySet, "thrX"), isTrue());
         assertThat(SetUtils.isMember(mySet, "thrW"), isTrue());
         assertThat(SetUtils.isMember(mySet, "thrV"), isTrue());
+    }
+
+    @Test
+    public void testContainsAny() {
+        Set<String> big = SetUtils.newFromArray(StringUtils.split("AB BC CD DE EF GH"));
+        Set<String> small1 = SetUtils.newFromArray(StringUtils.split("EF IJ"));
+        Set<String> small2 = SetUtils.newFromArray(StringUtils.split("KL MN"));
+        Set<String> small3 = Collections.emptySet();
+        assertThat(SetUtils.containsAny(big, small1), isTrue());
+        assertThat(SetUtils.containsAny(big, small2), isFalse());
+        assertThat(SetUtils.containsAny(big, small3), isFalse());
+        assertThat(SetUtils.containsAny(small1, big), isTrue());
+        assertThat(SetUtils.containsAny(small3, small1), isFalse());
     }
 
 }

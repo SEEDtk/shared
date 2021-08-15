@@ -4,6 +4,7 @@
 package org.theseed.utils;
 
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -43,6 +44,22 @@ public class SetUtils {
      */
     public static <T> boolean isMember(Set<T> set, T element) {
         return (set == null || set.contains(element));
+    }
+
+    /**
+     * @return TRUE if the main set contains any elements from the other set
+     *
+     * @param main		main set to check
+     * @param other		other set to check for membership in the main
+     */
+    public static <T> boolean containsAny(Set<T> main, Set<T> other) {
+        boolean retVal = false;
+        Iterator<T> iter = other.iterator();
+        while (! retVal && iter.hasNext()) {
+            T curr = iter.next();
+            retVal = main.contains(curr);
+        }
+        return retVal;
     }
 
 }
