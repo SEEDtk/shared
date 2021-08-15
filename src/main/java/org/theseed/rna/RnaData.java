@@ -52,12 +52,14 @@ public class RnaData implements Iterable<RnaData.Row>, Serializable {
     private static double SCALE_FACTOR = 1000000.0;
     /** feature ID sorter */
     private static final Comparator<String> SORTER = new NaturalSort();
+    /** expression percent required for a good sample */
+    public static double MIN_EXPRESSED = 50.0;
 
     /**
      * This sub-object represents the data for a single sample.
      */
     public static class JobData implements Serializable {
-        private static final long serialVersionUID = 3865134821481413920L;
+        private static final long serialVersionUID = 3865134821481413921L;
         private String name;
         private double production;
         private double opticalDensity;
@@ -67,6 +69,7 @@ public class RnaData implements Iterable<RnaData.Row>, Serializable {
         private int readCount;
         private long baseCount;
         private LocalDate creation;
+        private double expressPercent;
 
         /**
          * Construct a sample-data object.
@@ -246,10 +249,25 @@ public class RnaData implements Iterable<RnaData.Row>, Serializable {
 
         /**
          * @return the percent of genes with expression values
+         */
+        public double getExpressedPercent() {
+            return this.expressPercent;
+        }
+
+        /**
+         * @return TRUE if this is a good sample, else FALSE
+         */
+        public boolean isGood() {
+            return ! this.isSuspicious() && this.getExpressedPercent() >= MIN_EXPRESSED;
+        }
+
+        /**
+         * Update additional quality metrics for this job.  Currently, this is
+         * just the expressed percent.  This method is called before the database is stored.
          *
          * @param data	RNA database
          */
-        public double getExpressedPercent(RnaData data) {
+        protected void updateQuality(RnaData data) {
             int colIdx = data.getColIdx(this.name);
             int count = 0;
             int total = 0;
@@ -262,10 +280,9 @@ public class RnaData implements Iterable<RnaData.Row>, Serializable {
                 }
                 total++;
             }
-            double retVal = 0.0;
+            this.expressPercent = 0.0;
             if (total > 0)
-                retVal = (count * 100.0) / total;
-            return retVal;
+                this.expressPercent = (count * 100.0) / total;
         }
 
     }
@@ -699,4 +716,13 @@ public class RnaData implements Iterable<RnaData.Row>, Serializable {
     public int height() {
         return this.rowMap.size();
     }
+
+    /**
+     * Update the quality data for all the jobs.
+     */
+    public void updateQuality() {
+        for (JobData job : this.jobs)
+            job.updateQuality(this);
+    }
+
 }
