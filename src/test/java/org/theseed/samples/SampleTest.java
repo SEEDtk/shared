@@ -202,4 +202,27 @@ public class SampleTest {
         assertThat(samp2.matches(samp1X), isFalse());
         assertThat(samp1X.matches(samp2X), isFalse());
     }
+
+    @Test
+    public void testModifications() {
+        SampleId samp1 = new SampleId("M_0_TA1_C_asdT_metL-rhtA_Dtdh_I_24_M1");
+        SampleId samp3 = new SampleId(samp1);
+        assertThat(samp3, equalTo(samp1));
+        SampleId samp4 = samp1.addInsert("metL");
+        assertThat(samp4, equalTo(samp1));
+        samp4 = samp4.addInsert("metL");
+        assertThat(samp4, equalTo(samp1));
+        SampleId samp2 = new SampleId("M_0_TA1_C_asdT_000_Dtdh_I_24_M1");
+        samp4 = samp2.addInsert("metL");
+        assertThat(samp4.toString(), equalTo("M_0_TA1_C_asdT_metL_Dtdh_I_24_M1"));
+        samp4 = samp4.addInsert("ppc");
+        assertThat(samp4.toString(), equalTo("M_0_TA1_C_asdT_metL-ppc_Dtdh_I_24_M1"));
+        samp2 = new SampleId(("M_0_TA1_C_asdT_metL_D000_I_24_M1"));
+        samp4 = samp2.addDelete("metL");
+        assertThat(samp4.toString(), equalTo("M_0_TA1_C_asdT_metL_DmetL_I_24_M1"));
+        samp4 = samp4.addDelete("ppc");
+        assertThat(samp4.toString(), equalTo("M_0_TA1_C_asdT_metL_DmetLDppc_I_24_M1"));
+        samp4 = samp4.addDelete("metL");
+        assertThat(samp4.toString(), equalTo("M_0_TA1_C_asdT_metL_DmetLDppc_I_24_M1"));
+    }
 }

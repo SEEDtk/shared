@@ -147,6 +147,16 @@ public class SampleId implements Comparable<SampleId> {
     }
 
     /**
+     * Construct a new sample ID copied from an old one.
+     *
+     * @param oldId		sample ID to copy
+     */
+    public SampleId(SampleId oldId) {
+        this.fragments = oldId.fragments.clone();
+        this.timePoint = oldId.timePoint;
+    }
+
+    /**
      * Construct a sample ID from old-style sample information.
      *
      * @param strain	old-style strain name
@@ -378,7 +388,7 @@ public class SampleId implements Comparable<SampleId> {
 
     /**
      * Split an undelimited protein list into the individual proteins.  Protein names are always length
-     * 4, expect for the ones in STRANGE_PROTEINS.
+     * 4, except for the ones in STRANGE_PROTEINS.
      *
      * @param modifier		modifier to be split into proteins
      *
@@ -662,6 +672,31 @@ public class SampleId implements Comparable<SampleId> {
         return retVal;
     }
 
+    /**
+     * @return a new sample ID with the additional protein inserted
+     *
+     * @param newProtein		new protein to insert
+     */
+    public SampleId addInsert(String newProtein) {
+        SampleId retVal = new SampleId(this);
+        Set<String> inserts = retVal.getInserts();
+        inserts.add(newProtein);
+        retVal.fragments[INSERT_COL] = StringUtils.join(inserts, '-');
+        return retVal;
+    }
+
+    /**
+     * @return a new sample ID with the additional protein deleted
+     *
+     * @param newProtein		new protein to delete
+     */
+    public SampleId addDelete(String newProtein) {
+        SampleId retVal = new SampleId(this);
+        Set<String> deletes = retVal.getDeletes();
+        deletes.add(newProtein);
+        retVal.fragments[DELETE_COL] = "D" + StringUtils.join(deletes, 'D');
+        return retVal;
+    }
     /**
      * @return the set of inserted proteins in an insert string
      *
