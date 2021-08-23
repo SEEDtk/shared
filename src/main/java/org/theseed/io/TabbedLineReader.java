@@ -106,14 +106,16 @@ public class TabbedLineReader implements Closeable, AutoCloseable, Iterable<Tabb
         /**
          * @return the floating-point number in the indexed column
          *
-         * An invalid numeric value throws a RunTimeException.
+         * An invalid numeric value throws a RunTimeException.  An empty value returns NaN.
          *
          * @param idx	index (0-based) of the column in question, as returned by findField
          */
         public double getDouble(int idx) {
             double retVal;
             String colValue = this.fields[idx];
-            try {
+            if (colValue.isEmpty())
+                retVal = Double.NaN;
+            else try {
                 retVal = Double.parseDouble(colValue);
             } catch (NumberFormatException e) {
                 throw new RuntimeException("Invalid value \"" + colValue + "\" in numeric input column.");
