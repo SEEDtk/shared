@@ -86,6 +86,9 @@ public class SampleTest {
         assertThat(samp2.isIPTG(), isFalse());
         SampleId samp3 = new SampleId("7_0_0_A_asdO_000_D000_0_12_M1_rep1");
         assertThat(samp2.repBaseId(), equalTo(samp3.repBaseId()));
+        samp1 = new SampleId("M_0_TA1_C_asdT_pntAB-aspC-ppc_DtdhDmetLDdapA_I_24_M1");
+        samp2 = new SampleId("M_0_TA1_C_asdT_pntAB-aspC-ppc_DtdhDmetLDdapA_0_24_M1");
+        assertThat(samp1.equals(samp2), isFalse());
     }
 
     @Test
