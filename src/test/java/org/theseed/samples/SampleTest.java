@@ -88,7 +88,13 @@ public class SampleTest {
         assertThat(samp2.repBaseId(), equalTo(samp3.repBaseId()));
         samp1 = new SampleId("M_0_TA1_C_asdT_pntAB-aspC-ppc_DtdhDmetLDdapA_I_24_M1");
         samp2 = new SampleId("M_0_TA1_C_asdT_pntAB-aspC-ppc_DtdhDmetLDdapA_0_24_M1");
-        assertThat(samp1.equals(samp2), isFalse());
+        samp3 = new SampleId("M_0_TA1_C_asdT_pntAB-aspC-ppc_DdapADmetLDtdh_I_24_M1");
+        assertThat(samp1, not(equalTo(samp2)));
+        assertThat(samp1, equalTo(samp3));
+        assertThat(samp1.compareTo(samp3), equalTo(0));
+        samp3 = new SampleId("M_0_TA1_C_asdT_pntAB-ppc-aspC_DtdhDmetLDdapA_I_24_M1");
+        assertThat(samp1, equalTo(samp3));
+        assertThat(samp1.compareTo(samp3), equalTo(0));
     }
 
     @Test

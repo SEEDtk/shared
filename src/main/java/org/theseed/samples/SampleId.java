@@ -597,10 +597,19 @@ public class SampleId implements Comparable<SampleId> {
     public int compareTo(SampleId o) {
         int retVal = 0;
         for (int i = 0; retVal == 0 && i < NORMAL_SIZE; i++) {
-            if (i == TIME_COL)
+            switch (i) {
+            case TIME_COL:
                 retVal = Double.compare(this.timePoint, o.timePoint);
-            else
+                break;
+            case DELETE_COL:
+                retVal = SampleId.setCompare(this.getDeletes(), o.getDeletes());
+                break;
+            case INSERT_COL:
+                retVal = SampleId.setCompare(this.getInserts(), o.getInserts());
+                break;
+            default:
                 retVal = this.fragments[i].compareTo(o.fragments[i]);
+            }
         }
         // Handle the optional 11th slot.
         if (retVal == 0) {
@@ -609,6 +618,36 @@ public class SampleId implements Comparable<SampleId> {
             retVal = thisRep.compareTo(oRep);
         }
         return retVal;
+    }
+
+    /**
+     * Compare two protein sets.
+     *
+     * @param set1 		first set to compare
+     * @param set2 		second set compare
+     *
+     * @return a negative value if the first set is less, positive if it is more, 0 if they
+     * 		   are the same
+     */
+    private static int setCompare(Set<String> set1, Set<String> set2) {
+        // Smaller sets compare less.
+        int retVal = set1.size() - set2.size();
+        if (retVal == 0) {
+            List<String> set1S = listifySet(set1);
+            List<String> set2S = listifySet(set2);
+            for (int i = 0; retVal == 0 && i < set1.size(); i++)
+                retVal = set1S.get(i).compareTo(set2S.get(i));
+        }
+        return retVal;
+    }
+
+    /**
+     * @return a sorted list based on the input set
+     *
+     * @param set1		input set to convert to a list
+     */
+    private static List<String> listifySet(Set<String> set1) {
+        return set1.stream().sorted().collect(Collectors.toList());
     }
 
     /**
