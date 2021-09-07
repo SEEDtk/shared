@@ -49,16 +49,26 @@ public abstract class SequenceKmers implements Iterable<String> {
      * @param other		the sequence-kmers object for the other sequence
      */
     public double distance(SequenceKmers other) {
+        int sim = this.similarity(other);
+        return distance(sim, this, other);
+    }
+
+    /**
+     * Convert a similarity into a distance.
+     *
+     * @param sim		number of kmers shared between two sequences
+     * @param curr		kmers for the first sequence
+     * @param other		kmers for the second sequence
+     *
+     * @return the distance between the two sequences
+     */
+    public static double distance(int sim, SequenceKmers curr, SequenceKmers other) {
         double retVal = 1.0;
-        if (this.sequence.contentEquals(other.sequence)) {
-            // Same sequence.  Return 0 distance.  See the odd similarity computation above.
+        if (sim == ProteinKmers.INFINITY)
             retVal = 0.0;
-        } else {
-            double similarity = this.similarity(other);
-            if (similarity > 0) {
-                double union = (this.kmerSet.size() + other.kmerSet.size()) - similarity;
-                retVal = 1.0 - similarity / union;
-            }
+        else if (sim > 0) {
+            double union = (curr.size() + other.size() - sim);
+            retVal -= sim / union;
         }
         return retVal;
     }
