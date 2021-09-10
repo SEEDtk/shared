@@ -70,4 +70,12 @@ public class DnaKmers extends SequenceKmers {
         return this.original;
     }
 
+    /**
+     * @return the length of the original DNA sequence
+     */
+    public int getLen() {
+        return this.original.length();
+    }
+
+
 }
