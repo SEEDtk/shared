@@ -25,13 +25,13 @@ public class MatcherTest extends TestCase {
             assertThat(frog.isEmpty(), isTrue());
             fail();
         } catch (AssertionError e) {
-            assertThat(e.getMessage(), containsString("Expected: <true>"));
+            assertThat(e.toString(), containsString("Expected: <true>"));
         }
         try {
             assertThat(! frog.isEmpty(), isFalse());
             fail();
         } catch (AssertionError e) {
-            assertThat(e.getMessage(), containsString("Expected: <false>"));
+            assertThat(e.toString(), containsString("Expected: <false>"));
         }
     }
 }

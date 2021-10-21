@@ -634,7 +634,7 @@ public class Genome  {
         try {
             Jsoner.prettyPrint(new StringReader(jsonString), gtoStream, "    ", "\n");
         } catch (JsonException e) {
-            throw new RuntimeException("Error updating GTO: " + e.getMessage());
+            throw new RuntimeException("Error updating GTO: " + e.toString());
         }
     }
 

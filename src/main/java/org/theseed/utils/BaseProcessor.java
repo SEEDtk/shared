@@ -78,7 +78,7 @@ public abstract class BaseProcessor implements ICommand {
                 }
             }
         } catch (CmdLineException | ParseFailureException e) {
-            System.err.println(e.getMessage());
+            System.err.println(e.toString());
             parser.printUsage(System.err);
             System.exit(99);
         } catch (IOException e) {
