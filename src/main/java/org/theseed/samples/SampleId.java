@@ -946,4 +946,23 @@ public class SampleId implements Comparable<SampleId> {
         return retVal;
     }
 
+	/**
+	 * Convert this sample ID to a strain ID and return it.
+	 */
+	public SampleId asStrain() {
+		for (int i = STRAIN_SIZE; i < this.fragments.length; i++) {
+			this.fragments[i] = "0";
+		}
+		return this;
+	}
+
+	/**
+	 * @return TRUE if this is a constructed strain
+	 */
+	public boolean isConstructed() {
+		return (! this.fragments[OPERON_COL].contentEquals("0") ||
+				! this.fragments[INSERT_COL].contentEquals("000") ||
+				! this.fragments[DELETE_COL].contentEquals("D000"));
+	}
+
 }
