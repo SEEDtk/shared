@@ -1,7 +1,7 @@
 /**
  *
  */
-package org.theseed.shared;
+package org.theseed.io;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
@@ -18,14 +18,6 @@ import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
 import org.theseed.counters.CountMap;
-import org.theseed.io.BalancedOutputStream;
-import org.theseed.io.GtoFilter;
-import org.theseed.io.LineReader;
-import org.theseed.io.MarkerFile;
-import org.theseed.io.ShuffledOutputStream;
-import org.theseed.io.Shuffler;
-import org.theseed.io.TabbedLineReader;
-
 import junit.framework.TestCase;
 
 /**
