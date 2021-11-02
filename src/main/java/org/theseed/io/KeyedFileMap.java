@@ -7,6 +7,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -87,6 +88,27 @@ public class KeyedFileMap {
             for (List<String> record : this.records.values())
                 writer.println(StringUtils.join(record, '\t'));
         }
+    }
+
+    /**
+     * @return the list of headers for this keyed file
+     */
+    public List<String> getHeaders() {
+        return this.headers;
+    }
+
+    /**
+     * @return the number of records
+     */
+    public int size() {
+        return this.records.size();
+    }
+
+    /**
+     * @return the list of data records
+     */
+    public Collection<List<String>> getRecords() {
+        return this.records.values();
     }
 
 }
