@@ -23,7 +23,7 @@ import org.junit.Test;
 public class TestKeyedFileMap {
 
     @Test
-    public void test() throws IOException {
+    public void testCharFile() throws IOException {
         KeyedFileMap outMap = new KeyedFileMap("letter");
         outMap.addHeaders(Arrays.asList("plant", "animal"));
         outMap.addRecord("a", Arrays.asList("Apple", "Aardvark"));
@@ -62,6 +62,38 @@ public class TestKeyedFileMap {
             assertThat(line, equalTo("c\tCat\tCarrot\tClock"));
             assertThat(testStream.hasNext(), isFalse());
         }
+    }
+
+    @Test
+    public void testNumFile() {
+        KeyedFileMap keyMap = new KeyedFileMap("key");
+        keyMap.addHeaders(Arrays.asList("val1", "val2"));
+        keyMap.addRecord("a", Arrays.asList("100.5", "100.6"));
+        keyMap.addRecord("b", Arrays.asList("200.5", "b"));
+        keyMap.addRecord("c", Arrays.asList("c", "300.6"));
+        keyMap.addRecord("d", Arrays.asList("400.5", "400.6"));
+        keyMap.addRecord("e", Arrays.asList("", "500.6"));
+        List<double[]> numRecords = keyMap.getRecordNumbers();
+        double[] rec = numRecords.get(0);
+        assertThat(Double.isNaN(rec[0]), isTrue());
+        assertThat(rec[1], closeTo(100.5, 0.001));
+        assertThat(rec[2], closeTo(100.6, 0.001));
+        rec = numRecords.get(1);
+        assertThat(Double.isNaN(rec[0]), isTrue());
+        assertThat(rec[1], closeTo(200.5, 0.001));
+        assertThat(Double.isNaN(rec[2]), isTrue());
+        rec = numRecords.get(2);
+        assertThat(Double.isNaN(rec[0]), isTrue());
+        assertThat(Double.isNaN(rec[1]), isTrue());
+        assertThat(rec[2], closeTo(300.6, 0.001));
+        rec = numRecords.get(3);
+        assertThat(Double.isNaN(rec[0]), isTrue());
+        assertThat(rec[1], closeTo(400.5, 0.001));
+        assertThat(rec[2], closeTo(400.6, 0.001));
+        rec = numRecords.get(4);
+        assertThat(Double.isNaN(rec[0]), isTrue());
+        assertThat(Double.isNaN(rec[1]), isTrue());
+        assertThat(rec[2], closeTo(500.6, 0.001));
     }
 
 }

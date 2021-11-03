@@ -12,6 +12,7 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -32,6 +33,8 @@ public class KeyedFileMap {
     private LinkedHashMap<String, List<String>> records;
     /** list of header column labels */
     private List<String> headers;
+    /** double data type pattern */
+    public static final Pattern DOUBLE_PATTERN = Pattern.compile("\\s*[\\-+]?(?:\\d+(?:\\.\\d*)?|\\.\\d+)(?:[eE][\\-+]?\\d+)?");
 
     /**
      * Create a new, blank keyed file map.
@@ -109,6 +112,44 @@ public class KeyedFileMap {
      */
     public Collection<List<String>> getRecords() {
         return this.records.values();
+    }
+
+    /**
+     * This converts the records to floating-point values.  Any value that does not look like
+     * a number is converted to NaN.  The key column is converted to all NaN.
+     *
+     * @return a list of floating-point arrays from the records
+     */
+    public List<double[]> getRecordNumbers() {
+        int width = this.headers.size();
+        // Create the output list.
+        List<double[]> retVal = new ArrayList<double[]>(this.records.size());
+        // Now loop through the records, converting.
+        for (List<String> record : this.records.values()) {
+            double[] numRecord = new double[width];
+            numRecord[0] = Double.NaN;
+            for (int i = 1; i < width; i++) {
+                String value = record.get(i);
+                if (DOUBLE_PATTERN.matcher(value).matches())
+                    numRecord[i] = Double.parseDouble(value);
+                else
+                    numRecord[i] = Double.NaN;
+            }
+            retVal.add(numRecord);
+        }
+        return retVal;
+    }
+
+    /**
+     * Copy the specified map into this one, replacing the current contents.
+     * This is a shallow copy, not a full-depth cloning.  The intent is to
+     * allow us to build a second file and replace this one with it.
+     *
+     * @param newMap	map to copy from
+     */
+    public void shallowCopyFrom(KeyedFileMap newMap) {
+        this.headers = newMap.headers;
+        this.records = newMap.records;
     }
 
 }
