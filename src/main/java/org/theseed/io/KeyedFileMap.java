@@ -23,6 +23,8 @@ import org.apache.commons.lang3.StringUtils;
  * data fields.  We support operations to add columns to individual records and to the header
  * list, but if this is done carelessly it can lead to chaos.
  *
+ * In the case of duplicates, the last value is kept.
+ *
  * @author Bruce Parrello
  *
  */
@@ -33,6 +35,8 @@ public class KeyedFileMap {
     private LinkedHashMap<String, List<String>> records;
     /** list of header column labels */
     private List<String> headers;
+    /** duplicate-key count */
+    private int dupCount;
     /** double data type pattern */
     public static final Pattern DOUBLE_PATTERN = Pattern.compile("\\s*[\\-+]?(?:\\d+(?:\\.\\d*)?|\\.\\d+)(?:[eE][\\-+]?\\d+)?");
 
@@ -45,6 +49,7 @@ public class KeyedFileMap {
         this.records = new LinkedHashMap<String, List<String>>();
         this.headers = new ArrayList<String>();
         this.headers.add(keyName);
+        this.dupCount = 0;
     }
 
     /**
@@ -73,6 +78,8 @@ public class KeyedFileMap {
         List<String> record = new ArrayList<String>(data.size() + 1);
         record.add(key);
         record.addAll(data);
+        if (this.records.containsKey(key))
+            dupCount++;
         this.records.put(key, record);
     }
 
@@ -150,6 +157,13 @@ public class KeyedFileMap {
     public void shallowCopyFrom(KeyedFileMap newMap) {
         this.headers = newMap.headers;
         this.records = newMap.records;
+    }
+
+    /**
+     * @return the duplicate-key count
+     */
+    public int getDupCount() {
+        return this.dupCount;
     }
 
 }
