@@ -28,7 +28,9 @@ public class NaturalSort implements Comparator<String> {
                 i2 = this.consume(o2, 1, i2);
                 retVal = n[0] - n[1];
             } else {
-                retVal = o1.charAt(i1) - o2.charAt(i2);
+                retVal = Character.toLowerCase(o1.charAt(i1)) - Character.toLowerCase(o2.charAt(i2));
+                if (retVal == 0)
+                    retVal = o2.charAt(i2) - o1.charAt(i1);
                 i1++;
                 i2++;
             }
