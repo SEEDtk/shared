@@ -7,6 +7,9 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.theseed.test.Matchers.*;
 import static org.junit.jupiter.api.Assertions.fail;
+
+import java.io.File;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
@@ -21,7 +24,7 @@ import org.theseed.locations.Location;
 import org.theseed.locations.Region;
 import org.theseed.locations.SortedLocationList;
 import org.theseed.locations.DiscreteLocationList.Edge;
-
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -30,7 +33,12 @@ import org.junit.jupiter.api.Test;
  */
 public class TestLocations {
 
-    private Genome myGto = null;
+    private static Genome myGto = null;
+
+    @BeforeAll
+    public static void setup() throws IOException {
+        myGto = new Genome(new File("data/gto_test", "1313.7001.gto"));
+    }
 
     /**
      * Test location merging.
@@ -270,7 +278,7 @@ public class TestLocations {
      */
     @Test
     public void testContigMapping() {
-        Map<String, DiscreteLocationList> gList = DiscreteLocationList.createGenomeCodingMap(this.myGto);
+        Map<String, DiscreteLocationList> gList = DiscreteLocationList.createGenomeCodingMap(myGto);
         DiscreteLocationList contig0036 = gList.get("1313.7001.con.0036");
         assertThat("Contig 0036 not found.", contig0036, not(nullValue()));
         assertThat("Incorrect strand found for test position 33996.", contig0036.computeStrand(33996), equalTo('+'));

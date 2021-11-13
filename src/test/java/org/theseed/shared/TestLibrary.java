@@ -67,7 +67,7 @@ public class TestLibrary {
     private static Genome myGto = null;
 
     @BeforeAll
-    public void setup() throws IOException {
+    public static void setup() throws IOException {
         myGto = new Genome(new File("data/gto_test", "1313.7001.gto"));
     }
 

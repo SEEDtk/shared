@@ -40,7 +40,7 @@ public class KmerTests {
         assertThat("Kmer1 has wrong count.", kmer1.size(), equalTo(41));
         assertThat("Kmer1/kmer3 wrong similarity.", kmer2.similarity(kmer3), equalTo(3));
         assertThat("Similarity not commutative.", kmer3.similarity(kmer2), equalTo(3));
-        assertThat("Kmer1 too close to kmer2.", kmer1.distance(kmer2), equalTo(0.0));
+        assertThat("Kmer1 too close to kmer2.", kmer1.distance(kmer2), equalTo(1.0));
         assertThat("Kmer1 too close to kmer3.", kmer2.distance(kmer3), closeTo(0.95, 0.005));
         for (String kmer : kmer3) {
             assertThat(kmer.length(), equalTo(10));
