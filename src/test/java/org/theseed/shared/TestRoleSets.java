@@ -6,6 +6,7 @@ package org.theseed.shared;
 import org.junit.jupiter.api.Test;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
+import static org.theseed.test.Matchers.*;
 
 import java.io.File;
 import java.io.IOException;
@@ -26,8 +27,9 @@ import org.theseed.subsystems.VariantSpec;
  * @author Bruce Parrello
  *
  */
-public class TestRoleSets extends TestCase {
+public class TestRoleSets {
 
+    @Test
     public void testEmptySets() {
         RoleSet emptySet = RoleSet.fromString("");
         assertThat(emptySet.size(), equalTo(0));
@@ -36,10 +38,11 @@ public class TestRoleSets extends TestCase {
         assertThat(emptySet, not(equalTo(single)));
         assertThat(emptySet.toString(), equalTo(""));
         Iterator<String> emptyIter = emptySet.iterator();
-        assertFalse(emptyIter.hasNext());
-        assertTrue(emptySet.isEmpty());
+        assertThat(emptyIter.hasNext(), isFalse());
+        assertThat(emptySet.isEmpty(), isTrue());
     }
 
+    @Test
     public void testMultiRoleProjection() throws IOException {
         Genome gto = new Genome(new File("data/gto_test", "1313.7001.gto"));
         SubsystemProjector projector = new SubsystemProjector();
@@ -56,13 +59,13 @@ public class TestRoleSets extends TestCase {
         variant.setCell(1, projector);
         variant.setCell(3, projector);
         projector.addVariant(variant);
-        assertTrue(variant.matches(roleMap));
+        assertThat(variant.matches(roleMap), isTrue());
         variant = new VariantSpec(subsystem, "2");
         variant.setCell(1,  projector);
         variant.setCell(3, projector);
         variant.setCell(4, projector);
         projector.addVariant(variant);
-        assertFalse(variant.matches(roleMap));
+        assertThat(variant.matches(roleMap), isFalse());
         projector.project(gto);
         SubsystemRow projected = gto.getSubsystem("Test subsystem");
         assertThat(projected.getVariantCode(), equalTo("1"));
@@ -77,6 +80,7 @@ public class TestRoleSets extends TestCase {
         assertThat(roles.get(4).getFeatures().size(), equalTo(0));
     }
 
+    @Test
     public void testRoleSetMethods() {
         RoleSet set1 = RoleSet.fromString("Bbbb,Aaaa");
         RoleSet set2 = RoleSet.fromString("Cccc");
@@ -93,24 +97,24 @@ public class TestRoleSets extends TestCase {
         assertThat(set2.compareTo(set3), lessThan(0));
         assertThat(set1.compareTo(set4), lessThan(0));
         assertThat(set2.compareTo(set1), greaterThan(0));
-        assertTrue(set3.isEmpty());
-        assertFalse(set1.isEmpty());
-        assertFalse(set2.isEmpty());
+        assertThat(set3.isEmpty(), isTrue());
+        assertThat(set1.isEmpty(), isFalse());
+        assertThat(set2.isEmpty(), isFalse());
         Iterator<String> iter = set4.iterator();
-        assertTrue(iter.hasNext());
+        assertThat(iter.hasNext(), isTrue());
         assertThat(iter.next(), equalTo("Bbbb"));
-        assertTrue(iter.hasNext());
+        assertThat(iter.hasNext(), isTrue());
         assertThat(iter.next(), equalTo("Cccc"));
-        assertFalse(iter.hasNext());
+        assertThat(iter.hasNext(), isFalse());
         assertThat(set1.size(), equalTo(2));
         assertThat(set2.size(), equalTo(1));
         RoleSet[] roleArray = new RoleSet[] { set5, set4, set3, set1, set2 };
         assertThat(RoleSet.min(roleArray), equalTo("Aaaa"));
-        assertFalse(set1.contains(set2));
-        assertTrue(set4.contains(set2));
-        assertFalse(set4.contains(set1));
-        assertTrue(set1.contains(set3));
-        assertFalse(set3.contains(set1));
-        assertTrue(set5.contains(set6));
+        assertThat(set1.contains(set2), isFalse());
+        assertThat(set4.contains(set2), isTrue());
+        assertThat(set4.contains(set1), isFalse());
+        assertThat(set1.contains(set3), isTrue());
+        assertThat(set3.contains(set1), isFalse());
+        assertThat(set5.contains(set6), isTrue());
     }
 }

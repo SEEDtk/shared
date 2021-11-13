@@ -6,8 +6,7 @@ package org.theseed.shared;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.theseed.test.Matchers.*;
-import java.io.File;
-import java.io.IOException;
+import static org.junit.jupiter.api.Assertions.fail;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
@@ -29,21 +28,14 @@ import org.junit.jupiter.api.Test;
  * @author Bruce Parrello
  *
  */
-public class TestLocations extends TestCase {
-
-    /**
-     * @param name
-     */
-    public TestLocations(String name) throws IOException {
-        super(name);
-        this.myGto = new Genome(new File("data/gto_test", "1313.7001.gto"));
-    }
+public class TestLocations {
 
     private Genome myGto = null;
 
     /**
      * Test location merging.
      */
+    @Test
     public void testLocationMerge() {
         Location loc1 = Location.create("MyContig", "+", 100, 110, 200, 210);
         Location loc2 = Location.create("MyContig", "+", 120, 130, 150, 250);
@@ -74,6 +66,7 @@ public class TestLocations extends TestCase {
     /**
      * Main discrete location list test
      */
+    @Test
     public void testDiscreteLocationList() {
         DiscreteLocationList newList = new DiscreteLocationList("myContig");
         Location[] locs = { Location.create("myContig", "+", 10, 99, 102, 199),
@@ -101,17 +94,17 @@ public class TestLocations extends TestCase {
                           };
         // Add all these locations to the list.
         for (Location loc : locs) {
-            assertTrue("Failed to add " + loc + " to list.", newList.addLocation(loc));
+            assertThat("Failed to add " + loc + " to list.", newList.addLocation(loc), isTrue());
         }
         Location badLoc = Location.create("yourContig", "+", 1000, 4999);
-        assertFalse("Added wrong contig successfully.", newList.addLocation(badLoc));
-        assertThat("Invalid contig ID in location list.", equalTo(floc), equalTo("myContig", newList.getContigId());
+        assertThat("Added wrong contig successfully.", newList.addLocation(badLoc), isFalse());
+        assertThat("Invalid contig ID in location list.", newList.getContigId(), equalTo("myContig"));
         // Now we need to verify that none of the stored locations overlap.
         Iterator<Location> iter = newList.iterator();
         Location prev = iter.next();
         while (iter.hasNext()) {
             Location next = iter.next();
-            assertTrue(prev + " overlaps " + next, prev.getRight() < next.getLeft());
+            assertThat(prev + " overlaps " + next, prev.getRight() < next.getLeft(), isTrue());
         }
         // Next, we want to show that every location in the location list is wholly
         // contained in one or more locations of the input list.  If it is contained
@@ -134,21 +127,21 @@ public class TestLocations extends TestCase {
                 }
             }
             if (found > 1) {
-                assertFalse(loc + " is valid but it is in " + found + " input locations.", loc.isValid());
+                assertThat(loc + " is valid but it is in " + found + " input locations.", loc.isValid(), isFalse());
             } else if (invalid) {
-                assertFalse(loc + " is valid but it is in a segmented input location.", loc.isValid());
+                assertThat(loc + " is valid but it is in a segmented input location.", loc.isValid(), isFalse());
             } else if (found == 0) {
                 fail(loc + " was not found in the input locations.");
             } else {
-                assertEquals(loc + " is not on the correct strand.", strand, loc.getDir());
+                assertThat(loc + " is not on the correct strand.", loc.getDir(), equalTo(strand));
             }
         }
         // Now for each input location, we need to show that every position is in a location
         // of the location list.
         for (Location loc : locs) {
             for (int pos = loc.getLeft(); pos <= loc.getRight(); pos++) {
-                assertTrue("Position " + pos + " of location " + loc + " is not in the list.",
-                        newList.computeStrand(pos) != '0');
+                assertThat("Position " + pos + " of location " + loc + " is not in the list.",
+                        newList.computeStrand(pos) != '0', isTrue());
             }
         }
         // Test edge computation.
@@ -171,18 +164,19 @@ public class TestLocations extends TestCase {
         assertThat(newList.isEdge(8000, true), equalTo(Edge.START));
         assertThat(newList.isEdge(8197, true), equalTo(Edge.STOP));
         // Finally, we want to test the frame computation.
-        assertEquals("Invalid frame for contig start.", Frame.F0, newList.computeRegionFrame(1, 9));
-        assertEquals("Invalid frame for segmented position.", Frame.XX, newList.computeRegionFrame(40, 45));
-        assertEquals("Invalid frame for simple minus position.", Frame.M1, newList.computeRegionFrame(390, 399));
-        assertEquals("Invalid frame for simple plus position.", Frame.P0, newList.computeRegionFrame(4009, 4054));
-        assertEquals("Invalid frame for near-overlap position.", Frame.P2, newList.computeRegionFrame(5235, 5245));
-        assertEquals("Invalid frame for overlap position.", Frame.XX, newList.computeRegionFrame(5235, 5255));
-        assertEquals("Invalid frame for extron position.", Frame.F0, newList.computeRegionFrame(7306, 7316));
+        assertThat("Invalid frame for contig start.", newList.computeRegionFrame(1, 9), equalTo(Frame.F0));
+        assertThat("Invalid frame for segmented position.", newList.computeRegionFrame(40, 45), equalTo(Frame.XX));
+        assertThat("Invalid frame for simple minus position.", newList.computeRegionFrame(390, 399), equalTo(Frame.M1));
+        assertThat("Invalid frame for simple plus position.", newList.computeRegionFrame(4009, 4054), equalTo(Frame.P0));
+        assertThat("Invalid frame for near-overlap position.", newList.computeRegionFrame(5235, 5245), equalTo(Frame.P2));
+        assertThat("Invalid frame for overlap position.", newList.computeRegionFrame(5235, 5255), equalTo(Frame.XX));
+        assertThat("Invalid frame for extron position.", newList.computeRegionFrame(7306, 7316), equalTo(Frame.F0));
     }
 
     /**
      * Test overlap testing
      */
+    @Test
     public void testLocOverlap() {
         Location loc1 = Location.create("c1", 100, 200);
         Location loc2 = Location.create("c2", 50, 150);
@@ -190,26 +184,27 @@ public class TestLocations extends TestCase {
         Location loc4 = Location.create("c1", 50, 150);
         Location loc5 = Location.create("c1", 90, 10);
         Location loc6 = Location.create("c1", 210, 300);
-        assertFalse(loc1.isOverlapping(loc2));
-        assertTrue(loc1.isOverlapping(loc3));
-        assertTrue(loc1.isOverlapping(loc4));
-        assertFalse(loc1.isOverlapping(loc5));
-        assertFalse(loc1.isOverlapping(loc6));
-        assertFalse(loc2.isOverlapping(loc1));
-        assertFalse(loc2.isOverlapping(loc3));
-        assertFalse(loc2.isOverlapping(loc4));
-        assertFalse(loc2.isOverlapping(loc5));
-        assertFalse(loc2.isOverlapping(loc6));
-        assertTrue(loc3.isOverlapping(loc1));
-        assertFalse(loc3.isOverlapping(loc2));
-        assertFalse(loc3.isOverlapping(loc4));
-        assertFalse(loc3.isOverlapping(loc5));
-        assertTrue(loc3.isOverlapping(loc6));
+        assertThat(loc1.isOverlapping(loc2), isFalse());
+        assertThat(loc1.isOverlapping(loc3), isTrue());
+        assertThat(loc1.isOverlapping(loc4), isTrue());
+        assertThat(loc1.isOverlapping(loc5), isFalse());
+        assertThat(loc1.isOverlapping(loc6), isFalse());
+        assertThat(loc2.isOverlapping(loc1), isFalse());
+        assertThat(loc2.isOverlapping(loc3), isFalse());
+        assertThat(loc2.isOverlapping(loc4), isFalse());
+        assertThat(loc2.isOverlapping(loc5), isFalse());
+        assertThat(loc2.isOverlapping(loc6), isFalse());
+        assertThat(loc3.isOverlapping(loc1), isTrue());
+        assertThat(loc3.isOverlapping(loc2), isFalse());
+        assertThat(loc3.isOverlapping(loc4), isFalse());
+        assertThat(loc3.isOverlapping(loc5), isFalse());
+        assertThat(loc3.isOverlapping(loc6), isTrue());
     }
 
     /**
      * test the sorted location list
      */
+    @Test
     public void testSortedLocations() {
         // Create some test locations.
         Location loc1 = Location.create("c1", "+", 100, 200);
@@ -226,7 +221,7 @@ public class TestLocations extends TestCase {
         assertThat(locList.get(2), sameInstance(loc3));
         assertThat(locList.get(3), sameInstance(loc4));
         assertThat(locList.get(4), sameInstance(loc7));
-        assertNull(locList.get(5));
+        assertThat(locList.get(5), nullValue());
         locList.addAll(loc5, loc6, loc3);
         assertThat(locList.get(0), sameInstance(loc1));
         assertThat(locList.get(1), sameInstance(loc2));
@@ -240,7 +235,7 @@ public class TestLocations extends TestCase {
         Location old = iter.next();
         while (iter.hasNext()) {
             Location loc = iter.next();
-            assertTrue(old.compareTo(loc) <= 0);
+            assertThat(old.compareTo(loc) <= 0, isTrue());
             old = loc;
         }
         // Test sublists.
@@ -250,7 +245,7 @@ public class TestLocations extends TestCase {
         assertThat(subList, contains(loc6, loc7));
         // Test contains.  This location is a dup of loc1.
         old = Location.create("c1", "+", 100, 200);
-        assertTrue(locList.contains(old));
+        assertThat(locList.contains(old), isTrue());
         assertThat(locList.size(), equalTo(8));
         Location[] locs = locList.toArray();
         assertThat(locs[0], sameInstance(loc1));
@@ -264,7 +259,7 @@ public class TestLocations extends TestCase {
         locList.clear();
         assertThat(locList.size(), equalTo(0));
         iter = locList.iterator();
-        assertFalse(iter.hasNext());
+        assertThat(iter.hasNext(), isFalse());
         locList.add(loc4);
         assertThat(locList.size(), equalTo(1));
         assertThat(locList.get(0), equalTo(loc4));
@@ -273,105 +268,109 @@ public class TestLocations extends TestCase {
     /**
      * Basic test for location-list maps.
      */
+    @Test
     public void testContigMapping() {
         Map<String, DiscreteLocationList> gList = DiscreteLocationList.createGenomeCodingMap(this.myGto);
         DiscreteLocationList contig0036 = gList.get("1313.7001.con.0036");
-        assertNotNull("Contig 0036 not found.", contig0036);
-        assertEquals("Incorrect strand found for test position 33996.", '+', contig0036.computeStrand(33996));
-        assertEquals("Incorrect strand found for test position 30980.", '-', contig0036.computeStrand(30980));
-        assertEquals("Incorrect strand found for test position 30984.", '0', contig0036.computeStrand(30984));
+        assertThat("Contig 0036 not found.", contig0036, not(nullValue()));
+        assertThat("Incorrect strand found for test position 33996.", contig0036.computeStrand(33996), equalTo('+'));
+        assertThat("Incorrect strand found for test position 30980.", contig0036.computeStrand(30980), equalTo('-'));
+        assertThat("Incorrect strand found for test position 30984.", contig0036.computeStrand(30984), equalTo('0'));
     }
     /**
      * Test of plus-locations.
      */
+    @Test
     public void testPlusLocations() {
         Location plusLoc = Location.create("mySequence1", "+");
         plusLoc.addRegion(402, 500);
-        assertFalse("Segmentation error on single segment.", plusLoc.isSegmented());
-        assertTrue("Location does not default to valid.", plusLoc.isValid());
-        assertEquals("Invalid begin in plusLoc.", 402, plusLoc.getBegin());
+        assertThat("Segmentation error on single segment.", plusLoc.isSegmented(), isFalse());
+        assertThat("Location does not default to valid.", plusLoc.isValid(), isTrue());
+        assertThat("Invalid begin in plusLoc.", plusLoc.getBegin(), equalTo(402));
         plusLoc.addRegion(10, 200);
-        assertEquals("Invalid left position in plusLoc.", 10, plusLoc.getLeft());
-        assertEquals("Invalid right position in plusLoc.", 901, plusLoc.getRight());
-        assertEquals("Invalid contig in plusLoc.", "mySequence1", plusLoc.getContigId());
-        assertEquals("Invalid strand in plusLoc.", '+', plusLoc.getDir());
-        assertEquals("Invalid length in plusLoc.", 892, plusLoc.getLength());
-        assertEquals("Invalid begin in plusLoc after add.", 10, plusLoc.getBegin());
+        assertThat("Invalid left position in plusLoc.", plusLoc.getLeft(), equalTo(10));
+        assertThat("Invalid right position in plusLoc.", plusLoc.getRight(), equalTo(901));
+        assertThat("Invalid contig in plusLoc.", plusLoc.getContigId(), equalTo("mySequence1"));
+        assertThat("Invalid strand in plusLoc.", plusLoc.getDir(), equalTo('+'));
+        assertThat("Invalid length in plusLoc.", plusLoc.getLength(), equalTo(892));
+        assertThat("Invalid begin in plusLoc after add.", plusLoc.getBegin(), equalTo(10));
         plusLoc.putRegion(1, 6);
-        assertEquals("Invalid left position in plusLoc after put.", 1, plusLoc.getLeft());
-        assertEquals("Invalid right position in plusLoc after put.", 901, plusLoc.getRight());
+        assertThat("Invalid left position in plusLoc after put.", plusLoc.getLeft(), equalTo(1));
+        assertThat("Invalid right position in plusLoc after put.", plusLoc.getRight(), equalTo(901));
         plusLoc.putRegion(250, 349);
-        assertEquals("Invalid left position in plusLoc after internal put.", 1, plusLoc.getLeft());
-        assertEquals("Invalid right position in plusLoc after internal put.", 901, plusLoc.getRight());
-        assertTrue("Segmentation error on multiple segments.", plusLoc.isSegmented());
+        assertThat("Invalid left position in plusLoc after internal put.", plusLoc.getLeft(), equalTo(1));
+        assertThat("Invalid right position in plusLoc after internal put.", plusLoc.getRight(), equalTo(901));
+        assertThat("Segmentation error on multiple segments.", plusLoc.isSegmented(), isTrue());
         plusLoc.invalidate();
-        assertFalse("Location did not invalidate.", plusLoc.isValid());
+        assertThat("Location did not invalidate.", plusLoc.isValid(), isFalse());
         plusLoc.setLeft(260);
         Collection<Region> plusRegions = plusLoc.getRegions();
         for (Region region : plusRegions) {
             int left = region.getLeft();
-            assertTrue("Invalid region " + region + " extends past 260.", left >= 260);
+            assertThat("Invalid region " + region + " extends past 260.", left >= 260, isTrue());
         }
         Location cloneLoc = (Location) plusLoc.clone();
-        assertEquals("Clone contig does not match.", plusLoc.getContigId(), cloneLoc.getContigId());
-        assertEquals("Clone direction does not match.", plusLoc.getDir(), cloneLoc.getDir());
-        assertEquals("Clone left does not match.", plusLoc.getLeft(), cloneLoc.getLeft());
-        assertEquals("Clone length does not match.", plusLoc.getLength(), cloneLoc.getLength());
-        assertTrue("Segmentation error on clone.", cloneLoc.isSegmented());
-        assertFalse("Validation error on clone.", cloneLoc.isValid());
+        assertThat("Clone contig does not match.", cloneLoc.getContigId(), equalTo(plusLoc.getContigId()));
+        assertThat("Clone direction does not match.", cloneLoc.getDir(), equalTo(plusLoc.getDir()));
+        assertThat("Clone left does not match.", cloneLoc.getLeft(), equalTo(plusLoc.getLeft()));
+        assertThat("Clone length does not match.", cloneLoc.getLength(), equalTo(plusLoc.getLength()));
+        assertThat("Segmentation error on clone.", cloneLoc.isSegmented(), isTrue());
+        assertThat("Validation error on clone.", cloneLoc.isValid(), isFalse());
         Collection<Region> cloneRegions = cloneLoc.getRegions();
         for (Region region : plusRegions) {
-            assertTrue("Region " + region + " not found in clone.", region.containedIn(cloneRegions));
+            assertThat("Region " + region + " not found in clone.", region.containedIn(cloneRegions), isTrue());
         }
     }
 
     /**
      * Test of minus-locations.
      */
+    @Test
     public void testMinusLocations() {
         Location minusLoc = Location.create("mySequence1", "-");
         minusLoc.addRegion(901, 500);
-        assertFalse("Segmentation error on single segment.", minusLoc.isSegmented());
-        assertTrue("Location does not default to valid.", minusLoc.isValid());
-        assertEquals("Invalid begin in minusLoc.", 901, minusLoc.getBegin());
+        assertThat("Segmentation error on single segment.", minusLoc.isSegmented(), isFalse());
+        assertThat("Location does not default to valid.", minusLoc.isValid(), isTrue());
+        assertThat("Invalid begin in minusLoc.", minusLoc.getBegin(), equalTo(901));
         minusLoc.addRegion(209, 200);
-        assertEquals("Invalid left position in minusLoc.", 10, minusLoc.getLeft());
-        assertEquals("Invalid right position in minusLoc.", 901, minusLoc.getRight());
-        assertEquals("Invalid contig in minusLoc.", "mySequence1", minusLoc.getContigId());
-        assertEquals("Invalid strand in minusLoc.", '-', minusLoc.getDir());
-        assertEquals("Invalid length in minusLoc.", 892, minusLoc.getLength());
-        assertEquals("Invalid begin in minusLoc after add.", 901, minusLoc.getBegin());
+        assertThat("Invalid left position in minusLoc.", minusLoc.getLeft(), equalTo(10));
+        assertThat("Invalid right position in minusLoc.", minusLoc.getRight(), equalTo(901));
+        assertThat("Invalid contig in minusLoc.", minusLoc.getContigId(), equalTo("mySequence1"));
+        assertThat("Invalid strand in minusLoc.", minusLoc.getDir(), equalTo('-'));
+        assertThat("Invalid length in minusLoc.", minusLoc.getLength(), equalTo(892));
+        assertThat("Invalid begin in minusLoc after add.", minusLoc.getBegin(), equalTo(901));
         minusLoc.putRegion(1, 6);
-        assertEquals("Invalid left position in minusLoc after put.", 1, minusLoc.getLeft());
-        assertEquals("Invalid right position in minusLoc after put.", 901, minusLoc.getRight());
+        assertThat("Invalid left position in minusLoc after put.", minusLoc.getLeft(), equalTo(1));
+        assertThat("Invalid right position in minusLoc after put.", minusLoc.getRight(), equalTo(901));
         minusLoc.putRegion(250, 349);
-        assertEquals("Invalid left position in minusLoc after internal put.", 1, minusLoc.getLeft());
-        assertEquals("Invalid right position in minusLoc after internal put.", 901, minusLoc.getRight());
-        assertTrue("Segmentation error on multiple segments.", minusLoc.isSegmented());
+        assertThat("Invalid left position in minusLoc after internal put.", minusLoc.getLeft(), equalTo(1));
+        assertThat("Invalid right position in minusLoc after internal put.", minusLoc.getRight(), equalTo(901));
+        assertThat("Segmentation error on multiple segments.", minusLoc.isSegmented(), isTrue());
         minusLoc.invalidate();
-        assertFalse("Location did not invalidate.", minusLoc.isValid());
+        assertThat("Location did not invalidate.", minusLoc.isValid(), isFalse());
         minusLoc.setRight(260);
         Collection<Region> minusRegions = minusLoc.getRegions();
         for (Region region : minusRegions) {
             int right = region.getRight();
-            assertTrue("Invalid region extends to " + right + " past 260.", right <= 260);
+            assertThat("Invalid region extends to " + right + " past 260.", right <= 260, isTrue());
         }
         Location cloneLoc = (Location) minusLoc.clone();
-        assertEquals("Clone contig does not match.", minusLoc.getContigId(), cloneLoc.getContigId());
-        assertEquals("Clone direction does not match.", minusLoc.getDir(), cloneLoc.getDir());
-        assertEquals("Clone left does not match.", minusLoc.getLeft(), cloneLoc.getLeft());
-        assertEquals("Clone length does not match.", minusLoc.getLength(), cloneLoc.getLength());
-        assertTrue("Segmentation error on clone.", cloneLoc.isSegmented());
-        assertFalse("Validation error on clone.", cloneLoc.isValid());
+        assertThat("Clone contig does not match.", cloneLoc.getContigId(), equalTo(minusLoc.getContigId()));
+        assertThat("Clone direction does not match.", cloneLoc.getDir(), equalTo(minusLoc.getDir()));
+        assertThat("Clone left does not match.", cloneLoc.getLeft(), equalTo(minusLoc.getLeft()));
+        assertThat("Clone length does not match.", cloneLoc.getLength(), equalTo(minusLoc.getLength()));
+        assertThat("Segmentation error on clone.", cloneLoc.isSegmented(), isTrue());
+        assertThat("Validation error on clone.", cloneLoc.isValid(), isFalse());
         Collection<Region> cloneRegions = cloneLoc.getRegions();
         for (Region region :minusRegions) {
-            assertTrue("Region " + region + " not found in clone.", region.containedIn(cloneRegions));
+            assertThat("Region " + region + " not found in clone.", region.containedIn(cloneRegions), isTrue());
         }
     }
 
     /**
      * Test of simple locations
      */
+    @Test
     public void testSimpleLocations() {
         Location loc1 = Location.create("contig1", 100, 200);
         assertThat(loc1.getDir(), equalTo('+'));
@@ -392,14 +391,15 @@ public class TestLocations extends TestCase {
     /**
      * Location comparison test
      */
+    @Test
     public void testLocations() {
         Region region1 = new Region(1000, 2000);
         Region region2 = new Region(1000, 2000);
         Region region3 = new Region(2000, 3000);
-        assertTrue("region1 not equal to region 2.", region1.equals(region2));
-        assertFalse("region1 equal to region 3.", region1.equals(region3));
-        assertTrue("Region equals is not commutative.", region2.equals(region1));
-        assertEquals("Equal regions have different hash codes.", region1.hashCode(), region2.hashCode());
+        assertThat("region1 not equal to region 2.", region1.equals(region2), isTrue());
+        assertThat("region1 equal to region 3.", region1.equals(region3), isFalse());
+        assertThat("Region equals is not commutative.", region2.equals(region1), isTrue());
+        assertThat("Equal regions have different hash codes.", region2.hashCode(), equalTo(region1.hashCode()));
         assertThat(region1.getBegin("+"), equalTo(1000));
         assertThat(region1.getBegin("-"), equalTo(2000));
         assertThat(region1.getLength(), equalTo(1001));
@@ -407,12 +407,12 @@ public class TestLocations extends TestCase {
         Location loc2 = Location.create("myContig", "-", 1100, 1199);
         Location loc3 = Location.create("myContig", "-", 1150, 1249);
         Location loc4 = Location.create("yourContig", "-", 1150, 1249);
-        assertTrue("loc1 is not less than loc2.", loc1.compareTo(loc2) < 0);
-        assertTrue("loc2 is not less than loc3.", loc2.compareTo(loc3) < 0);
-        assertTrue("loc1 does not contain loc2.", loc1.contains(loc2));
-        assertFalse("loc2 contains loc3.", loc2.contains(loc3));
-        assertFalse("loc3 contains loc2.", loc3.contains(loc2));
-        assertFalse("loc1 contains loc4.", loc1.contains(loc4));
+        assertThat("loc1 is not less than loc2.", loc1.compareTo(loc2) < 0, isTrue());
+        assertThat("loc2 is not less than loc3.", loc2.compareTo(loc3) < 0, isTrue());
+        assertThat("loc1 does not contain loc2.", loc1.contains(loc2), isTrue());
+        assertThat("loc2 contains loc3.", loc2.contains(loc3), isFalse());
+        assertThat("loc3 contains loc2.", loc3.contains(loc2), isFalse());
+        assertThat("loc1 contains loc4.", loc1.contains(loc4), isFalse());
         assertThat(loc1.offsetPoint(100), equalTo(1100));
         assertThat(loc1.offsetPoint(-100), equalTo(900));
         assertThat(loc4.offsetPoint(100), equalTo(1149));
@@ -422,12 +422,12 @@ public class TestLocations extends TestCase {
         Location loc7 = Location.create("yourContig", "+", 1000, 2000, 3000, 4000);
         Location loc8 = Location.create("myContig", "-", 1000, 2000, 3000, 4000);
         Location loc9 = Location.create("myContig",  "+",  1000, 1999, 3000, 4000);
-        assertTrue("loc5 not equal to loc6.", loc5.equals(loc6));
-        assertEquals("Equal locations have different hash codes.", loc5.hashCode(), loc6.hashCode());
-        assertFalse("Different contigs compare equal.", loc5.equals(loc7));
-        assertFalse("Different strands compare equal.", loc5.equals(loc8));
-        assertFalse("Different region counts compare equal.", loc5.equals(loc1));
-        assertFalse("Different region extents compare equal.", loc5.equals(loc9));
+        assertThat("loc5 not equal to loc6.", loc5.equals(loc6), isTrue());
+        assertThat("Equal locations have different hash codes.", loc6.hashCode(), equalTo(loc5.hashCode()));
+        assertThat("Different contigs compare equal.", loc5.equals(loc7), isFalse());
+        assertThat("Different strands compare equal.", loc5.equals(loc8), isFalse());
+        assertThat("Different region counts compare equal.", loc5.equals(loc1), isFalse());
+        assertThat("Different region extents compare equal.", loc5.equals(loc9), isFalse());
         assertThat(loc5.toSeedString(), equalTo("myContig_1000_2000,myContig_3000_4000"));
         assertThat(loc8.toSeedString(), equalTo("myContig_2000_1000,myContig_4000_3000"));
         Location[] locArray = new Location[] { loc1, loc2, loc3, loc4, loc5, loc6, loc7, loc8, loc9 };
@@ -439,7 +439,7 @@ public class TestLocations extends TestCase {
             assertThat(locString, locRecurse.getLeft(), equalTo(loc.getLeft()));
             assertThat(locString, locRecurse.getRight(), equalTo(loc.getRight()));
             assertThat(locString, locRecurse.getLength(), equalTo(loc.getLength()));
-            assertTrue(locString, locRecurse.equals(loc));
+            assertThat(locString, locRecurse.equals(loc), isTrue());
             String locString2 = locRecurse.toString();
             assertThat(locString2, equalTo(locString));
         }
@@ -503,6 +503,7 @@ public class TestLocations extends TestCase {
     /**
      * Test location addition.
      */
+    @Test
     public void testLocationAdd() {
         Location loc1 = Location.create("contig1", "-", 1000, 1999, 3000, 3999);
         Location loc2 = Location.create("contig1",  "-", 2100, 2899);
@@ -535,6 +536,7 @@ public class TestLocations extends TestCase {
     /**
      * Parse seed locations.
      */
+    @Test
     public void testSeedParse() {
         Location loc = Location.parseSeedLocation("NC_10045_1000_1999");
         assertThat(loc.getContigId(), equalTo("NC_10045"));
@@ -556,31 +558,33 @@ public class TestLocations extends TestCase {
         assertThat(regions.get(1).getRight(), equalTo(2200));
     }
 
+    @Test
     public void testDistance() {
         Location t1 = Location.create("myContig", "+", 10, 20);
         Location t2 = Location.create("myContig", "-", 25, 45);
-        assertEquals("Wrong initial distance.", 4, t1.distance(t2));
-        assertEquals("Distance not commutative", 4, t2.distance(t1));
+        assertThat("Wrong initial distance.", t1.distance(t2), equalTo(4));
+        assertThat("Distance not commutative", t2.distance(t1), equalTo(4));
         t1.setRight(24);
-        assertEquals("Distance wrong when left adjacent.", 0, t1.distance(t2));
+        assertThat("Distance wrong when left adjacent.", t1.distance(t2), equalTo(0));
         t1.setRight(25);
-        assertEquals("Distance wrong at overlap left edge.", -1, t1.distance(t2));
+        assertThat("Distance wrong at overlap left edge.", t1.distance(t2), equalTo(-1));
         t1.setRight(100);
-        assertEquals("Distance wrong when contained.", -1, t1.distance(t2));
+        assertThat("Distance wrong when contained.", t1.distance(t2), equalTo(-1));
         t1.setLeft(45);
-        assertEquals("Distance wrong at overlap right edge.", -1, t1.distance(t2));
+        assertThat("Distance wrong at overlap right edge.", t1.distance(t2), equalTo(-1));
         t1.setLeft(46);
-        assertEquals("Distance wrong at right adjacent.", 0, t1.distance(t2));
+        assertThat("Distance wrong at right adjacent.", t1.distance(t2), equalTo(0));
         t1.setLeft(51);
-        assertEquals("Distance wrong at end.", 5, t1.distance(t2));
+        assertThat("Distance wrong at end.", t1.distance(t2), equalTo(5));
         Feature f1 = myGto.getFeature("fig|1313.7001.peg.841");
         Feature f2 = myGto.getFeature("fig|1313.7001.peg.847");
-        assertEquals("Feature distance not equal location distance.", f1.getLocation().distance(f2.getLocation()),
-                f1.distance(f2));
+        assertThat("Feature distance not equal location distance.", f1.distance(f2),
+                equalTo(f1.getLocation().distance(f2.getLocation())));
         Feature f3 = myGto.getFeature("fig|1313.7001.peg.1113");
-        assertEquals("Contig mismatch not caught.", Integer.MAX_VALUE, f1.distance(f3));
+        assertThat("Contig mismatch not caught.", f1.distance(f3), equalTo(Integer.MAX_VALUE));
     }
 
+    @Test
     public void testUpstream() {
         Location t1 = Location.create("myContig", "+", 400, 500);
         Location t2 = Location.create("otherContig", "+", 200, 300);
@@ -629,6 +633,7 @@ public class TestLocations extends TestCase {
         assertThat(t2.getContigId(), equalTo(t1.getContigId()));
     }
 
+    @Test
     public void testFeatureUpstream() {
         Feature feat = myGto.getFeature("fig|1313.7001.peg.1600");
         Feature feat2 = myGto.getFeature("fig|1313.7001.peg.1631");
@@ -642,6 +647,7 @@ public class TestLocations extends TestCase {
         assertThat(feat2.isUpstream(feat), isFalse());
     }
 
+    @Test
     public void testSubLocations() {
         Location loc1 = Location.create("contig1", "+", 1000, 1099, 1200, 1299, 1400, 1499);
         Location loc2 = Location.create("contig2", "-", 1400, 1499, 1200, 1299, 1000, 1099);
@@ -663,6 +669,7 @@ public class TestLocations extends TestCase {
         assertThat(loc2a.getRight(), equalTo(1449));
     }
 
+    @Test
     public void testDnaEdges() {
         Location loc1 = Location.create("1313.7001.con.0002", 5, 10);
         Location loc2 = loc1.upstream(10);
@@ -674,6 +681,7 @@ public class TestLocations extends TestCase {
         assertThat(dna, equalTo("aaggtacat"));
     }
 
+    @Test
     public void testReversal() {
         Location floc = Location.create("contig1", "+", 1000, 1099, 1200, 1299);
         assertThat(floc.getLeft(), equalTo(1000));
@@ -696,7 +704,7 @@ public class TestLocations extends TestCase {
         assertThat(bloc.getRegionLength(), equalTo(200));
         assertThat(bloc.getLength(), equalTo(300));
         Location floc2 = bloc.reverse();
-        assertThat(floc2));
+        assertThat(floc2, equalTo(floc));
     }
 
 }

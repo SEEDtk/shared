@@ -19,8 +19,9 @@ import org.theseed.utils.ProcessUtils;
  * @author Bruce Parrello
  *
  */
-public class TestProcessUtils extends TestCase {
+public class TestProcessUtils {
 
+    @Test
     public void testRunCommand() throws IOException, InterruptedException {
         // This test only works if the CLI is hooked up.
         String cliDir = System.getenv("CLI_PATH");

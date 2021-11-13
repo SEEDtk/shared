@@ -21,8 +21,9 @@ import static org.hamcrest.Matchers.*;
  * @author Bruce Parrello
  *
  */
-public class TestSeqLocations extends TestCase {
+public class TestSeqLocations {
 
+    @Test
     public void testPegLocations() throws IOException {
         // This tests the reverse-complementing and conversing.
         Genome gto = new Genome(new File("data/gto_test", "1313.7001.gto"));
@@ -97,6 +98,7 @@ public class TestSeqLocations extends TestCase {
      * test ORF extension
      * @throws IOException
      */
+    @Test
     public void testOrfHandling() throws IOException {
         Genome gto = new Genome(new File("data/gto_test", "1313.7001.gto"));
         Location loc = Location.create("1313.7001.con.0024", 20, 31);

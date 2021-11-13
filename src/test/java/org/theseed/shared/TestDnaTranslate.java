@@ -5,6 +5,7 @@ package org.theseed.shared;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
+import static org.theseed.test.Matchers.*;
 
 import java.io.File;
 import java.io.IOException;
@@ -22,11 +23,12 @@ import org.junit.jupiter.api.Test;
  * @author Bruce Parrello
  *
  */
-public class TestDnaTranslate extends TestCase {
+public class TestDnaTranslate {
 
     /**
      * test protein translation
      */
+    @Test
     public void testDnaTranslator() {
         // Start with GC 4.
         DnaTranslator xlator = new DnaTranslator(4);
@@ -69,10 +71,10 @@ public class TestDnaTranslate extends TestCase {
         assertThat(xlator.getGeneticCode(), equalTo(11));
         String prot2 = StringUtils.chop(prot1) + "*";
         assertThat(xlator.pegTranslate(dna1, 1, dna1.length()), equalTo(prot2));
-        assertTrue(xlator.isStart(dna1, 1));
-        assertTrue(xlator.isStop(dna1, dna1.length() - 2));
-        assertFalse(xlator.isStart(dna1, 2));
-        assertFalse(xlator.isStop(dna1, 4));
+        assertThat(xlator.isStart(dna1, 1), isTrue());
+        assertThat(xlator.isStop(dna1, dna1.length() - 2), isTrue());
+        assertThat(xlator.isStart(dna1, 2), isFalse());
+        assertThat(xlator.isStop(dna1, 4), isFalse());
         // Try a bad character.
         dna1 = "angcggatggcttggtcgaccgtgggggcgcacatcgggcagcgaccgggccaggccgca" +
                 "taccagatgctggagacccgccgccgtggcagcgtgctgcgactcggcaatcccaagcgg" +
@@ -92,6 +94,7 @@ public class TestDnaTranslate extends TestCase {
      *
      * @throws IOException
      */
+    @Test
     public void testOperon() throws IOException {
         Genome myGto = new Genome(new File("data/gto_test", "1313.7016.gto"));
         String myDna = myGto.getContig("1313.7016.con.0058").getSequence().substring(3900, 5920);
@@ -106,6 +109,7 @@ public class TestDnaTranslate extends TestCase {
     /**
      * Test the location fixer.
      */
+    @Test
     public void testLocationFixer() {
         String dna = "ccacccccgcctttgcgacgccggtaacgtgtgctactcatgctggaagactaggatttggcagcc";
         FLocation loc1a = new FLocation("contig1", 10, 24);
@@ -121,51 +125,51 @@ public class TestDnaTranslate extends TestCase {
         FLocation loc3c = new FLocation("contig1", 46, 51);
         FLocation loc4c = new FLocation("contig1", 58, 63);
         LocationFixer fixer = LocationFixer.Type.LONGEST.create(11);
-        assertFalse(fixer.fix(loc1a, dna));
+        assertThat(fixer.fix(loc1a, dna), isFalse());
         assertThat(loc1a, equalTo(loc1b));
-        assertTrue(fixer.fix(loc2a, dna));
+        assertThat(fixer.fix(loc2a, dna), isTrue());
         assertThat(loc2a.getLeft(), equalTo(13));
         assertThat(loc2a.getRight(), equalTo(27));
-        assertTrue(fixer.fix(loc3a, dna));
+        assertThat(fixer.fix(loc3a, dna), isTrue());
         assertThat(loc3a.getLeft(), equalTo(31));
         assertThat(loc3a.getRight(), equalTo(54));
-        assertFalse(fixer.fix(loc4a, dna));
+        assertThat(fixer.fix(loc4a, dna), isFalse());
         assertThat(loc4a, equalTo(loc4b));
         fixer = LocationFixer.Type.NEAREST.create(11);
-        assertFalse(fixer.fix(loc1b, dna));
+        assertThat(fixer.fix(loc1b, dna), isFalse());
         assertThat(loc1b, equalTo(loc1a));
-        assertTrue(fixer.fix(loc2b,  dna));
+        assertThat(fixer.fix(loc2b,  dna), isTrue());
         assertThat(loc2b, equalTo(loc2a));
-        assertTrue(fixer.fix(loc3b, dna));
+        assertThat(fixer.fix(loc3b, dna), isTrue());
         assertThat(loc3b.getLeft(), equalTo(40));
         assertThat(loc3b.getRight(), equalTo(54));
-        assertFalse(fixer.fix(loc4b, dna));
+        assertThat(fixer.fix(loc4b, dna), isFalse());
         assertThat(loc4b, equalTo(loc4a));
         fixer = LocationFixer.Type.LIKELIEST.create(11);
-        assertFalse(fixer.fix(loc1c, dna));
+        assertThat(fixer.fix(loc1c, dna), isFalse());
         assertThat(loc1c, equalTo(loc1b));
-        assertTrue(fixer.fix(loc2c, dna));
+        assertThat(fixer.fix(loc2c, dna), isTrue());
         assertThat(loc2c.getLeft(), equalTo(13));
         assertThat(loc2c.getRight(), equalTo(27));
-        assertTrue(fixer.fix(loc3c, dna));
+        assertThat(fixer.fix(loc3c, dna), isTrue());
         assertThat(loc3c.getLeft(), equalTo(40));
         assertThat(loc3c.getRight(), equalTo(54));
-        assertFalse(fixer.fix(loc4c, dna));
+        assertThat(fixer.fix(loc4c, dna), isFalse());
         assertThat(loc4c, equalTo(loc4b));
         dna = "ccctagcccatgccccccatgccccccgtgcccccctagccctag";
         loc1a = new FLocation("contig1", 28, 36);
-        assertTrue(fixer.fix(loc1a, dna));
+        assertThat(fixer.fix(loc1a, dna), isTrue());
         assertThat(loc1a.getLeft(), equalTo(10));
         assertThat(loc1a.getRight(), equalTo(39));
         fixer = LocationFixer.Type.BIASED.create(11);
         loc1a = new FLocation("contig1", 28, 36);
-        assertTrue(fixer.fix(loc1a, dna));
+        assertThat(fixer.fix(loc1a, dna), isTrue());
         assertThat(loc1a.getLeft(), equalTo(19));
         assertThat(loc1a.getRight(), equalTo(39));
         dna = "acccgtgcccgtgccccccatgcccccctagccc";
         loc1a = new FLocation("contig1", 23, 28);
         loc1b = (FLocation) loc1a.clone();
-        assertTrue(fixer.fix(loc1b, dna));
+        assertThat(fixer.fix(loc1b, dna), isTrue());
         assertThat(loc1b.getLeft(), equalTo(20));
         assertThat(loc1b.getRight(), equalTo(31));
 

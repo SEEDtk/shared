@@ -20,8 +20,9 @@ import org.theseed.sequence.Sequence;
  * @author Bruce Parrello
  *
  */
-public class TestCharCounts extends TestCase {
+public class TestCharCounts {
 
+    @Test
     public void testCharCounts() throws IOException {
         CharCounter counters = new CharCounter();
         File seqFile = new File("data", "alignCounts.fa");

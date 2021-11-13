@@ -49,6 +49,8 @@ import org.theseed.sequence.MD5Hex;
 import org.theseed.sequence.ProteinKmers;
 import org.theseed.sequence.Sequence;
 import com.github.cliftonlabs.json_simple.JsonObject;
+
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
@@ -58,25 +60,23 @@ import static org.theseed.test.Matchers.*;
  * @author Bruce Parrello
  *
  */
-public class TestLibrary extends TestCase {
+public class TestLibrary {
 
     private static final String GO_STRING = "GO:0033925|mannosyl-glycoprotein endo-beta-N-acetylglucosaminidase activity";
 
-    /**
-     * @param name
-     */
-    public TestLibrary(String name) throws IOException {
-        super(name);
-        this.myGto = new Genome(new File("data/gto_test", "1313.7001.gto"));
-    }
+    private static Genome myGto = null;
 
-    private Genome myGto = null;
+    @BeforeAll
+    public void setup() throws IOException {
+        myGto = new Genome(new File("data/gto_test", "1313.7001.gto"));
+    }
 
     /**
      * test sequence group kmer distance
      *
      * @throws IOException
      */
+    @Test
     public void testKmerCollectionGroup() throws IOException {
         ProteinKmers.setKmerSize(8);
         KmerCollectionGroup kGroup = new KmerCollectionGroup();
@@ -117,6 +117,7 @@ public class TestLibrary extends TestCase {
      * @throws IOException
      */
     @SuppressWarnings("unlikely-arg-type")
+    @Test
     public void testMagic() throws IOException {
         File inFile = new File("data", "words.txt");
         Scanner thingScanner = new Scanner(inFile);
@@ -124,7 +125,7 @@ public class TestLibrary extends TestCase {
         while (thingScanner.hasNext()) {
             String condensed = thingScanner.next();
             String full = thingScanner.next();
-            assertThat("String did not condense.", lessThan(nextRepeat), equalTo(condensed, MagicMap.condense(full));
+            assertThat("String did not condense.", MagicMap.condense(full), equalTo(condensed));
         }
         thingScanner.close();
         // Test registration
@@ -135,56 +136,56 @@ public class TestLibrary extends TestCase {
         while (thingScanner.hasNext()) {
             String thingId = thingScanner.next();
             thingScanner.next();
-            assertNull("Wrong ID found", magicTable.getItem(thingId));
+            assertThat("Wrong ID found", magicTable.getItem(thingId), nullValue());
             String thingDesc = thingScanner.next();
             Thing newThing = new Thing(thingId, thingDesc);
             magicTable.register(newThing);
-            assertEquals("Registered ID did not read back.", thingDesc, magicTable.getName(thingId));
+            assertThat("Registered ID did not read back.", magicTable.getName(thingId), equalTo(thingDesc));
         }
         thingScanner.close();
-        assertTrue("PheS not found.", magicTable.containsKey("PhenTrnaSyntAlph"));
-        assertFalse("Known bad key found.", magicTable.containsKey("PhenTrnaSyntGamm"));
+        assertThat("PheS not found.", magicTable.containsKey("PhenTrnaSyntAlph"), isTrue());
+        assertThat("Known bad key found.", magicTable.containsKey("PhenTrnaSyntGamm"), isFalse());
         String modifiedThing = "3-keto-L-gulonate-6-phosphate decarboxylase UlaK putative (L-ascorbate utilization protein D) (EC 4.1.1.85)";
         Thing newThing = magicTable.findOrInsert(modifiedThing);
-        assertEquals("Wrong ID assigned for modified thing.", "3KetoLGulo6PhosDeca6", newThing.getId());
-        assertSame("Modified thing did not read back.", newThing, magicTable.getItem("3KetoLGulo6PhosDeca6"));
+        assertThat("Wrong ID assigned for modified thing.", newThing.getId(), equalTo("3KetoLGulo6PhosDeca6"));
+        assertThat("Modified thing did not read back.", magicTable.getItem("3KetoLGulo6PhosDeca6"),sameInstance(newThing));
         modifiedThing = "Unique (new) thing string without numbers";
         newThing = magicTable.findOrInsert(modifiedThing);
-        assertEquals("Wrong ID assigned for unique thing.", "UniqThinStriWith", newThing.getId());
-        assertSame("Unique thing did not read back.", newThing, magicTable.getItem("UniqThinStriWith"));
+        assertThat("Wrong ID assigned for unique thing.", newThing.getId(), equalTo("UniqThinStriWith"));
+        assertThat("Unique thing did not read back.", magicTable.getItem("UniqThinStriWith"),sameInstance(newThing));
         Thing findThing = magicTable.findOrInsert(modifiedThing);
-        assertSame("Unique thing was re-inserted.", newThing, findThing);
+        assertThat("Unique thing was re-inserted.", findThing,sameInstance(newThing));
         modifiedThing = "Unique (old) thing string without numbers";
         findThing = magicTable.findOrInsert(modifiedThing);
-        assertTrue("Parenthetical did not change thing ID.", findThing != newThing);
-        assertEquals("Wrong ID assigned for parenthetical thing.", "UniqThinStriWith2", findThing.getId());
-        assertSame("Parenthetical thing did not read back.", findThing, magicTable.getItem("UniqThinStriWith2"));
+        assertThat("Parenthetical did not change thing ID.", findThing != newThing, isTrue());
+        assertThat("Wrong ID assigned for parenthetical thing.", findThing.getId(), equalTo("UniqThinStriWith2"));
+        assertThat("Parenthetical thing did not read back.", magicTable.getItem("UniqThinStriWith2"),sameInstance(findThing));
         modifiedThing = "Unique (newer) thing string without numbers";
         newThing = magicTable.findOrInsert(modifiedThing);
-        assertEquals("Wrong ID assigned for newer thing.", "UniqThinStriWith3", newThing.getId());
-        assertSame("Parenthetical thing did not read back.", newThing, magicTable.getItem("UniqThinStriWith3"));
+        assertThat("Wrong ID assigned for newer thing.", newThing.getId(), equalTo("UniqThinStriWith3"));
+        assertThat("Parenthetical thing did not read back.", magicTable.getItem("UniqThinStriWith3"),sameInstance(newThing));
         modifiedThing = "Unique thing string 12345 with numbers";
         newThing = magicTable.findOrInsert(modifiedThing);
-        assertEquals("Name not stored in thing.", modifiedThing, newThing.getName());
-        assertEquals("Wrong ID assigned for numbered thing.", "UniqThinStri1234n1", newThing.getId());
+        assertThat("Name not stored in thing.", newThing.getName(), equalTo(modifiedThing));
+        assertThat("Wrong ID assigned for numbered thing.", newThing.getId(), equalTo("UniqThinStri1234n1"));
         modifiedThing = "Unique thing string 12345 with more numbers";
         newThing = magicTable.findOrInsert(modifiedThing);
-        assertEquals("Wrong ID assigned for second numbered thing.", "UniqThinStri1234n2", newThing.getId());
+        assertThat("Wrong ID assigned for second numbered thing.", newThing.getId(), equalTo("UniqThinStri1234n2"));
         // Add two aliases.
         magicTable.addAlias("PhenTrnaSyntDoma", "alias second Phenylalanyl role string");
         modifiedThing = "ALIAS Second phenylalanyl role string";
         Thing myThing = magicTable.findOrInsert(modifiedThing);
-        assertEquals("Alias 1 did not work.", "PhenTrnaSyntDoma", myThing.getId());
+        assertThat("Alias 1 did not work.", myThing.getId(), equalTo("PhenTrnaSyntDoma"));
         magicTable.addAlias("PhenTrnaSyntDoma", "alias third Phenylalanyl role string");
         modifiedThing = "Phenylalanyl-tRNA synthetase domain protein (Bsu YtpR)";
         newThing = magicTable.findOrInsert(modifiedThing);
-        assertEquals("Original string did not work.", newThing.getId(), myThing.getId());
+        assertThat("Original string did not work.", myThing.getId(), equalTo(newThing.getId()));
         modifiedThing = "alias second Phenylalanyl role string";
         newThing = magicTable.findOrInsert(modifiedThing);
-        assertSame("Alias 1 string did not work.", newThing, myThing);
+        assertThat("Alias 1 string did not work.", myThing,sameInstance(newThing));
         modifiedThing = "alias third Phenylalanyl role string";
         newThing = magicTable.findOrInsert(modifiedThing);
-        assertEquals("Alias 2 string did not work.", newThing.getId(), myThing.getId());
+        assertThat("Alias 2 string did not work.", myThing.getId(), equalTo(newThing.getId()));
 
         // Test save and load.
         File saveFile = new File("data", "things.ser");
@@ -192,51 +193,51 @@ public class TestLibrary extends TestCase {
         ThingMap newTable = ThingMap.load(saveFile);
         for (Thing oldThing : magicTable.objectValues()) {
             newThing = newTable.getItem(oldThing.getId());
-            assertNotNull("Could not find thing in loaded table.", newThing);
+            assertThat("Could not find thing in loaded table.", newThing, not(nullValue()));
             if (! oldThing.getName().startsWith("alias")) {
-                assertEquals("Loaded table has wrong thing name.", oldThing.getName(), newThing.getName());
-                assertEquals("Loaded thing has wrong checksum.", oldThing, newThing);
+                assertThat("Loaded table has wrong thing name.", newThing.getName(), equalTo(oldThing.getName()));
+                assertThat("Loaded thing has wrong checksum.", newThing, equalTo(oldThing));
             }
             newThing = newTable.getByName(oldThing.getName());
-            assertNotNull("Could not find thing by name in loaded table.", newThing);
-            assertEquals("Found incorrect object by name in loaded table.", oldThing.getId(), newThing.getId());
+            assertThat("Could not find thing by name in loaded table.", newThing, not(nullValue()));
+            assertThat("Found incorrect object by name in loaded table.", newThing.getId(), equalTo(oldThing.getId()));
         }
         modifiedThing = "Phenylalanyl-tRNA synthetase domain protein (Bsu YtpR)";
         myThing = newTable.findOrInsert(modifiedThing);
         modifiedThing = "alias second Phenylalanyl role string";
         newThing = newTable.findOrInsert(modifiedThing);
-        assertEquals("Alias 1 string did not work.", newThing.getId(), myThing.getId());
+        assertThat("Alias 1 string did not work.", myThing.getId(), equalTo(newThing.getId()));
         modifiedThing = "alias third Phenylalanyl role string";
         newThing = newTable.findOrInsert(modifiedThing);
-        assertEquals("Alias 2 string did not work.", newThing.getId(), myThing.getId());
+        assertThat("Alias 2 string did not work.", myThing.getId(), equalTo(newThing.getId()));
 
         // Test map interface
         Map<String, String> thingMap = magicTable;
-        assertFalse(thingMap.containsKey(myThing));
-        assertTrue(thingMap.containsKey("PhenTrnaSyntAlph"));
-        assertFalse(thingMap.containsKey("FrogsAndToads"));
-        assertFalse(thingMap.containsValue(myThing));
-        assertTrue(thingMap.containsValue("Unique thing string 12345 with more numbers"));
-        assertFalse(thingMap.containsValue("Obviously fake role name"));
+        assertThat(thingMap.containsKey(myThing), isFalse());
+        assertThat(thingMap.containsKey("PhenTrnaSyntAlph"), isTrue());
+        assertThat(thingMap.containsKey("FrogsAndToads"), isFalse());
+        assertThat(thingMap.containsValue(myThing), isFalse());
+        assertThat(thingMap.containsValue("Unique thing string 12345 with more numbers"), isTrue());
+        assertThat(thingMap.containsValue("Obviously fake role name"), isFalse());
         assertThat(thingMap.get("PhenTrnaSyntAlph"), equalTo("Phenylalanyl-tRNA synthetase alpha chain (EC 6.1.1.20)"));
-        assertNull(thingMap.get("FrogsAndToads"));
-        assertNull(thingMap.get(myThing));
+        assertThat(thingMap.get("FrogsAndToads"), nullValue());
+        assertThat(thingMap.get(myThing), nullValue());
         thingMap.remove("PhenTrnaSyntAlph");
-        assertFalse(thingMap.containsKey("PhenTrnaSyntAlph"));
-        assertNull(thingMap.remove("FrogsAndToads"));
+        assertThat(thingMap.containsKey("PhenTrnaSyntAlph"), isFalse());
+        assertThat(thingMap.remove("FrogsAndToads"), nullValue());
         Collection<String> values = thingMap.values();
         for (String value : values)
-            assertNotNull(value, magicTable.getByName(value));
+            assertThat(value, magicTable.getByName(value), not(nullValue()));
         for (String key : magicTable.keySet()) {
             Thing target = magicTable.getItem(key);
-            assertTrue(key, values.contains(target.getName()));
+            assertThat(key, values.contains(target.getName()), isTrue());
         }
         Set<Map.Entry<String, String>> entries = thingMap.entrySet();
         assertThat(entries.size(), equalTo(magicTable.size()));
         for (Map.Entry<String, String> entry : entries) {
             String key = entry.getKey();
             Thing target = magicTable.getItem(key);
-            assertNotNull(key, target);
+            assertThat(key, target, not(nullValue()));
             assertThat(entry.getValue(), equalTo(target.getName()));
         }
         // Test the iterator.
@@ -263,90 +264,91 @@ public class TestLibrary extends TestCase {
      * @throws FileNotFoundException
      * @throws JsonException
      */
+    @Test
     public void testGenome()
     {
-        assertEquals("Genome ID not correct.", "1313.7001", this.myGto.getId());
-        assertEquals("Genome name not correct.", "Streptococcus pneumoniae P210774-233", this.myGto.getName());
-        assertNull("Nonexistent feature found.", this.myGto.getFeature("fig|1313.7001.cds.75"));
-        assertEquals("Incorrect contig count.", 52, this.myGto.getContigCount());
-        assertEquals("Incorrect length.", 2101113, this.myGto.getLength());
-        assertEquals("Genome home not correct", "PATRIC", this.myGto.getHome());
-        assertEquals("Incorrect source.", "PATRIC", this.myGto.getSource());
-        assertEquals("Incorrect source ID.", "1313.7001", this.myGto.getSourceId());
-        Feature f1 = this.myGto.getByFunction("16S rRNA (guanine(966)-N(2))-methyltransferase");
+        assertThat("Genome ID not correct.", myGto.getId(), equalTo("1313.7001"));
+        assertThat("Genome name not correct.", myGto.getName(), equalTo("Streptococcus pneumoniae P210774-233"));
+        assertThat("Nonexistent feature found.", myGto.getFeature("fig|1313.7001.cds.75"), nullValue());
+        assertThat("Incorrect contig count.", myGto.getContigCount(), equalTo(52));
+        assertThat("Incorrect length.", myGto.getLength(), equalTo(2101113));
+        assertThat("Genome home not correct", myGto.getHome(), equalTo("PATRIC"));
+        assertThat("Incorrect source.", myGto.getSource(), equalTo("PATRIC"));
+        assertThat("Incorrect source ID.", myGto.getSourceId(), equalTo("1313.7001"));
+        Feature f1 = myGto.getByFunction("16S rRNA (guanine(966)-N(2))-methyltransferase");
         assertThat(f1.getId(), equalTo("fig|1313.7001.peg.145"));
-        f1 = this.myGto.getByFunction("hypothetical nonexistent thing");
+        f1 = myGto.getByFunction("hypothetical nonexistent thing");
         assertThat(f1, nullValue());
-        f1 = this.myGto.getByFunction("Oxidoreductase");
+        f1 = myGto.getByFunction("Oxidoreductase");
         assertThat(f1.getId(), equalTo("fig|1313.7001.peg.920"));
-        String testLink = this.myGto.genomeLink().render();
+        String testLink = myGto.genomeLink().render();
         assertThat(testLink, containsString("patricbrc"));
         assertThat(testLink, containsString("1313.7001"));
-        testLink = this.myGto.featureLink("fig|1313.7001.peg.758").render();
+        testLink = myGto.featureLink("fig|1313.7001.peg.758").render();
         assertThat(testLink, containsString("patricbrc"));
         assertThat(testLink, containsString("fig|1313.7001.peg.758"));
-        testLink = this.myGto.featureRegionLink("fig|1313.7001.peg.758").render();
+        testLink = myGto.featureRegionLink("fig|1313.7001.peg.758").render();
         assertThat(testLink, containsString("patricbrc"));
         assertThat(testLink, containsString("fig|1313.7001.peg.758"));
-        this.myGto.setHome("CORE");
-        testLink = this.myGto.genomeLink().render();
+        myGto.setHome("CORE");
+        testLink = myGto.genomeLink().render();
         assertThat(testLink, containsString("core.theseed"));
         assertThat(testLink, containsString("1313.7001"));
-        testLink = this.myGto.featureLink("fig|1313.7001.peg.758").render();
+        testLink = myGto.featureLink("fig|1313.7001.peg.758").render();
         assertThat(testLink, containsString("core.theseed"));
         assertThat(testLink, containsString("fig|1313.7001.peg.758"));
-        testLink = this.myGto.featureRegionLink("fig|1313.7001.peg.758").render();
+        testLink = myGto.featureRegionLink("fig|1313.7001.peg.758").render();
         assertThat(testLink, containsString("core.theseed"));
         assertThat(testLink, containsString("fig|1313.7001.peg.758"));
-        this.myGto.setHome("none");
-        testLink = this.myGto.genomeLink().render();
+        myGto.setHome("none");
+        testLink = myGto.genomeLink().render();
         assertThat(testLink, not(containsString("<a")));
         assertThat(testLink, containsString("1313.7001"));
-        testLink = this.myGto.featureLink("fig|1313.7001.peg.758").render();
+        testLink = myGto.featureLink("fig|1313.7001.peg.758").render();
         assertThat(testLink, not(containsString("<a")));
         assertThat(testLink, containsString("fig|1313.7001.peg.758"));
-        testLink = this.myGto.featureRegionLink("fig|1313.7001.peg.758").render();
+        testLink = myGto.featureRegionLink("fig|1313.7001.peg.758").render();
         assertThat(testLink, not(containsString("<a")));
         assertThat(testLink, containsString("fig|1313.7001.peg.758"));
         // Now we need to pull out a PEG and ask about it.
-        Feature myFeature = this.myGto.getFeature("fig|1313.7001.peg.758");
-        assertNotNull("Sample feature not found.", myFeature);
-        assertEquals("Incorrect feature found.", "fig|1313.7001.peg.758", myFeature.getId());
-        assertEquals("Incorrect function in sample feature.", "Transposase, IS4 family", myFeature.getFunction());
+        Feature myFeature = myGto.getFeature("fig|1313.7001.peg.758");
+        assertThat("Sample feature not found.", myFeature, not(nullValue()));
+        assertThat("Incorrect feature found.", myFeature.getId(), equalTo("fig|1313.7001.peg.758"));
+        assertThat("Incorrect function in sample feature.", myFeature.getFunction(), equalTo("Transposase, IS4 family"));
         assertThat(myFeature.getPegFunction(), equalTo("Transposase, IS4 family"));
-        assertEquals("Incorrect protein for sample feature.", myProtein, myFeature.getProteinTranslation());
-        assertEquals("Incorrect protein for sample feature (seqtype).", myProtein, Feature.SeqType.PROTEIN.get(myFeature));
-        assertEquals("Incorrect protein length for sample feature.", myProtein.length(), myFeature.getProteinLength());
-        assertEquals("Incorrect DNA for sample feature.", myDna1, this.myGto.getDna("fig|1313.7001.peg.758"));
-        assertEquals("Incorrect DNA for sample feature.", myDna1, Feature.SeqType.DNA.get(myFeature));
-        assertEquals("Incorrect local family for sample feature.", "PLF_1301_00010583", myFeature.getPlfam());
-        assertEquals("Incorrect global family for sample feature.", "PGF_07475842", myFeature.getPgfam());
-        assertTrue("PEG not a CDS", myFeature.isProtein());
+        assertThat("Incorrect protein for sample feature.", myFeature.getProteinTranslation(), equalTo(myProtein));
+        assertThat("Incorrect protein for sample feature (seqtype).", Feature.SeqType.PROTEIN.get(myFeature), equalTo(myProtein));
+        assertThat("Incorrect protein length for sample feature.", myFeature.getProteinLength(), equalTo(myProtein.length()));
+        assertThat("Incorrect DNA for sample feature.", myGto.getDna("fig|1313.7001.peg.758"), equalTo(myDna1));
+        assertThat("Incorrect DNA for sample feature.", Feature.SeqType.DNA.get(myFeature), equalTo(myDna1));
+        assertThat("Incorrect local family for sample feature.", myFeature.getPlfam(), equalTo("PLF_1301_00010583"));
+        assertThat("Incorrect global family for sample feature.", myFeature.getPgfam(), equalTo("PGF_07475842"));
+        assertThat("PEG not a CDS", myFeature.isProtein(), isTrue());
         assertThat(myFeature.getGoTerms().size(), equalTo(0));
         // Next the location.
         Location myLoc = myFeature.getLocation();
-        assertEquals("Incorrect contig for feature.", "1313.7001.con.0017", myLoc.getContigId());
-        assertEquals("Incorrect left for feature.", 30698, myLoc.getLeft());
-        assertEquals("Incorrect right for feature", 30937, myLoc.getRight());
-        assertEquals("Incorrect begin for feature.", 30937, myLoc.getBegin());
-        assertEquals("Incorrect length for feature.", 240, myLoc.getLength());
-        assertEquals("Incorrect strand for feature.", '-', myLoc.getDir());
-        assertFalse("Segmentation flag failure.", myLoc.isSegmented());
+        assertThat("Incorrect contig for feature.", myLoc.getContigId(), equalTo("1313.7001.con.0017"));
+        assertThat("Incorrect left for feature.", myLoc.getLeft(), equalTo(30698));
+        assertThat("Incorrect right for feature", myLoc.getRight(), equalTo(30937));
+        assertThat("Incorrect begin for feature.", myLoc.getBegin(), equalTo(30937));
+        assertThat("Incorrect length for feature.", myLoc.getLength(), equalTo(240));
+        assertThat("Incorrect strand for feature.", myLoc.getDir(), equalTo('-'));
+        assertThat("Segmentation flag failure.", myLoc.isSegmented(), isFalse());
         // Now we check a segmented location.
-        myFeature = this.myGto.getFeature("fig|1313.7001.repeat_unit.238");
-        assertEquals("Incorrect DNA for segmented feature.", myDna2, this.myGto.getDna(myFeature.getId()));
+        myFeature = myGto.getFeature("fig|1313.7001.repeat_unit.238");
+        assertThat("Incorrect DNA for segmented feature.", myGto.getDna(myFeature.getId()), equalTo(myDna2));
         myLoc = myFeature.getLocation();
-        assertEquals("Incorrect contig for segmented location.", "1313.7001.con.0018", myLoc.getContigId());
-        assertEquals("Incorrect left for segmented location.", 11908, myLoc.getLeft());
-        assertEquals("Incorrect right for segmented location.", 12116, myLoc.getRight());
-        assertEquals("Incorrect begin for feature.", 11908, myLoc.getBegin());
-        assertEquals("Incorrect length for feature.", 209, myLoc.getLength());
-        assertEquals("Incorrect strand for segmented location.", '+', myLoc.getDir());
-        assertTrue("Segmentation flag failure.", myLoc.isSegmented());
-        assertFalse("Non-peg typed as CDS", myFeature.isProtein());
-        assertEquals("Incorrect DNA retrieval by location.", myDna2, this.myGto.getDna(myLoc));
+        assertThat("Incorrect contig for segmented location.", myLoc.getContigId(), equalTo("1313.7001.con.0018"));
+        assertThat("Incorrect left for segmented location.", myLoc.getLeft(), equalTo(11908));
+        assertThat("Incorrect right for segmented location.", myLoc.getRight(), equalTo(12116));
+        assertThat("Incorrect begin for feature.", myLoc.getBegin(), equalTo(11908));
+        assertThat("Incorrect length for feature.", myLoc.getLength(), equalTo(209));
+        assertThat("Incorrect strand for segmented location.", myLoc.getDir(), equalTo('+'));
+        assertThat("Segmentation flag failure.", myLoc.isSegmented(), isTrue());
+        assertThat("Non-peg typed as CDS", myFeature.isProtein(), isFalse());
+        assertThat("Incorrect DNA retrieval by location.", myGto.getDna(myLoc), equalTo(myDna2));
         // For fun, we check a feature with GO terms.
-        myFeature = this.myGto.getFeature("fig|1313.7001.peg.975");
+        myFeature = myGto.getFeature("fig|1313.7001.peg.975");
         GoTerm[] goTerms = new GoTerm[2];
         assertThat(myFeature.getGoTerms().size(), equalTo(2));
         goTerms = myFeature.getGoTerms().toArray(goTerms);
@@ -363,7 +365,7 @@ public class TestLibrary extends TestCase {
         assertThat(subsystem.getName(), equalTo("Folate Biosynthesis"));
         assertThat(subsystem.getClassifications(), contains("Metabolism", "Cofactors, Vitamins, Prosthetic Groups", "Folate and pterines"));
         assertThat(subsystem.getVariantCode(), equalTo("active"));
-        assertTrue(subsystem.isActive());
+        assertThat(subsystem.isActive(), isTrue());
         List<SubsystemRow.Role> roles = subsystem.getRoles();
         assertThat(roles.size(), equalTo(23));
         assertThat(roles.get(0).getName(), equalTo("2-amino-4-hydroxy-6-hydroxymethyldihydropteridine pyrophosphokinase (EC 2.7.6.3)"));
@@ -373,23 +375,23 @@ public class TestLibrary extends TestCase {
         assertThat(bound.size(), equalTo(2));
         assertThat(bound, containsInAnyOrder(myGto.getFeature("fig|1313.7001.peg.1717"), myGto.getFeature("fig|1313.7001.peg.1718")));
         // Now iterate over the proteins.
-        for (Feature feat : this.myGto.getPegs())
-            assertTrue("Feature" + feat.getId() + " is not a PEG.", feat.isProtein());
+        for (Feature feat : myGto.getPegs())
+            assertThat("Feature" + feat.getId() + " is not a PEG.", feat.isProtein(), isTrue());
         // Iterate over all features to make sure they have the correct parent.
-        for (Feature feat : this.myGto.getFeatures())
+        for (Feature feat : myGto.getFeatures())
             assertThat("Feature " + feat + " does not have the correct parent.", feat.getParent(), equalTo(myGto));
         // Test the taxonomy.
         int[] taxonomy = new int[] {1313, 1301, 1300, 186826, 91061,
                                        1239, 1783272, 2, 131567};
         int i = 0;
-        Iterator<TaxItem> iter = this.myGto.taxonomy();
+        Iterator<TaxItem> iter = myGto.taxonomy();
         while (iter.hasNext()) {
             TaxItem item = iter.next();
             assertThat(item.getId(), equalTo(taxonomy[i]));
             i++;
         }
         assertThat(i, equalTo(taxonomy.length));
-        assertTrue(myGto.hasContigs());
+        assertThat(myGto.hasContigs(), isTrue());
         // Test contig sorting.
         List<Contig> contigs = myGto.getContigs().stream().sorted().collect(Collectors.toList());
         for (int j = 1; j < contigs.size(); j++)
@@ -399,6 +401,7 @@ public class TestLibrary extends TestCase {
     /**
      * Test location DNA fetch
      */
+    @Test
     public void testLocationDna() {
         String dna = myGto.getContig("1313.7001.con.0001").getSequence();
         Location loc = myGto.getFeature("fig|1313.7001.peg.1").getLocation();
@@ -421,6 +424,7 @@ public class TestLibrary extends TestCase {
      *
      * @throws IOException
      */
+    @Test
     public void testPegFunctions() throws IOException {
         Genome gto = new Genome(new File("data", "123214.3.gto"));
         for (Feature peg : gto.getPegs()) {
@@ -438,15 +442,16 @@ public class TestLibrary extends TestCase {
      *
      * @throws IOException
      */
+    @Test
     public void testGenomeDir() throws IOException {
         GenomeDirectory gDir = new GenomeDirectory("data/gto_test");
-        assertEquals("Wrong number of genomes found.", 5, gDir.size());
+        assertThat("Wrong number of genomes found.", gDir.size(), equalTo(5));
         // Run through an iterator.  We know the genome IDs, we just need to find them in order.
         String[] expected = new String[] { "1005394.4", "1313.7001", "1313.7002", "1313.7016", "243277.26" };
         int i = 0;
         for (Genome genome : gDir) {
-            assertEquals("Incorrect result for genome at position " + i + ".", expected[i], genome.getId());
-            assertEquals("Incorrect file for genome at position " + i + ".", expected[i] + ".gto", gDir.currFile().getName());
+            assertThat("Incorrect result for genome at position " + i + ".", genome.getId(), equalTo(expected[i]));
+            assertThat("Incorrect file for genome at position " + i + ".", gDir.currFile().getName(), equalTo(expected[i] + ".gto"));
             i++;
             String gString = genome.toJsonString();
             assertThat(gString.contains("\n"), isFalse());
@@ -483,6 +488,7 @@ public class TestLibrary extends TestCase {
      * @throws IOException
      * @throws NumberFormatException
      */
+    @Test
     public void testContigFeatures() throws NumberFormatException, IOException {
         Collection<Contig> contigs = myGto.getContigs();
         int featureCount = 0;
@@ -493,12 +499,12 @@ public class TestLibrary extends TestCase {
             previous.addRegion(0, 0);
             for (Feature feat : contigFeatures) {
                 Location current = feat.getLocation();
-                assertEquals("Feature is on wrong contig.", contig.getId(), current.getContigId());
-                assertTrue("Feature is out of order.", current.getBegin() >= previous.getBegin());
+                assertThat("Feature is on wrong contig.", current.getContigId(), equalTo(contig.getId()));
+                assertThat("Feature is out of order.", current.getBegin() >= previous.getBegin(), isTrue());
             }
-            assertEquals("Contig has wrong length.", contig.getSequence().length(), contig.length());
+            assertThat("Contig has wrong length.", contig.length(), equalTo(contig.getSequence().length()));
         }
-        assertEquals("Feature count incorrect.", myGto.getFeatureCount(), featureCount);
+        assertThat("Feature count incorrect.", featureCount, equalTo(myGto.getFeatureCount()));
         Genome gto2 = new Genome(new File("data", "testLocs.gto"));
         FeatureList contigFeatures = new FeatureList(gto2, "1313.7001.con.0029");
         Location region = Location.create("1313.7001.con.0029", "+", 160, 6860);
@@ -506,42 +512,43 @@ public class TestLibrary extends TestCase {
         ArrayList<String> fids = new ArrayList<String>(inRegion.size());
         for (Feature feat : inRegion) {
             fids.add(feat.getId());
-            assertEquals("Feature " + feat + " not in region.", -1, region.distance(feat.getLocation()));
+            assertThat("Feature " + feat + " not in region.", region.distance(feat.getLocation()), equalTo(-1));
         }
-        assertTrue(contigFeatures.isOccupied(region));
+        assertThat(contigFeatures.isOccupied(region), isTrue());
         region = Location.create("1313.7001.con.0029", "-", 160, 6860);
-        assertTrue(contigFeatures.isOccupied(region));
+        assertThat(contigFeatures.isOccupied(region), isTrue());
         assertThat("Not all expected features found.", fids,
                 hasItems("fig|1313.7001.peg.1244", "fig|1313.7001.peg.1245", "fig|1313.7001.peg.1246",
                          "fig|1313.7001.peg.1249", "fig|1313.7001.peg.1250", "fig|1313.7001.peg.1251"));
         inRegion = contigFeatures.inRegion(0, 100);
-        assertEquals("Error at left extreme.", 1, inRegion.size());
+        assertThat("Error at left extreme.", inRegion.size(), equalTo(1));
         inRegion = contigFeatures.inRegion(14000, 15000);
-        assertEquals("Error at right extreme.", 0, inRegion.size());
+        assertThat("Error at right extreme.", inRegion.size(), equalTo(0));
         region = Location.create("1313.7001.con.0029", "+", 14000, 15000);
-        assertFalse(contigFeatures.isOccupied(region));
+        assertThat(contigFeatures.isOccupied(region), isFalse());
         region = Location.create("1313.7001.con.0029", "-", 5100, 6500);
-        assertTrue(contigFeatures.isOccupied(region));
+        assertThat(contigFeatures.isOccupied(region), isTrue());
         region = Location.create("1313.7001.con.0029", "+", 5100, 6500);
-        assertFalse(contigFeatures.isOccupied(region));
+        assertThat(contigFeatures.isOccupied(region), isFalse());
         inRegion = contigFeatures.inRegion(12000, 15000);
-        assertEquals("Count error at right edge.", 2, inRegion.size());
+        assertThat("Count error at right edge.", inRegion.size(), equalTo(2));
         fids.clear();
         for (Feature feat : inRegion) fids.add(feat.getId());
         assertThat("Incorrect feature found at right edge.", fids,
                 containsInAnyOrder("fig|1313.7001.peg.1256", "fig|1313.7001.peg.1257"));
         contigFeatures = new FeatureList(gto2, "1313.7001.con.0003");
         inRegion = contigFeatures.inRegion(2000, 16000);
-        assertEquals("Features found in empty contig.", 0, inRegion.size());
+        assertThat("Features found in empty contig.", inRegion.size(), equalTo(0));
         contigFeatures = new FeatureList(gto2, "1313.7001.con.0025");
         inRegion = contigFeatures.inRegion(0, 2000);
-        assertEquals("Features found in empty left edge.", 0, inRegion.size());
+        assertThat("Features found in empty left edge.", inRegion.size(), equalTo(0));
 
     }
 
     /**
      * Test the key pairs.
      */
+    @Test
     public void testKeyPair() {
         Thing t1 = new Thing("T1", "first thing");
         Thing t2 = new Thing("T2", "second thing");
@@ -549,17 +556,18 @@ public class TestLibrary extends TestCase {
         KeyPair<Thing> p12 = new KeyPair<Thing>(t1, t2);
         KeyPair<Thing> p21 = new KeyPair<Thing>(t2, t1);
         KeyPair<Thing> p13 = new KeyPair<Thing>(t1, t3);
-        assertEquals("Equality is not commutative.", p12, p21);
-        assertEquals("Hash codes are not commutative.", p12.hashCode(), p21.hashCode());
-        assertFalse("Different things compare equal.", p13.equals(p12));
-        assertSame("Wrong left value.", t1, p12.getLeft());
-        assertSame("Wrong right value.", t2, p12.getRight());
+        assertThat("Equality is not commutative.", p21, equalTo(p12));
+        assertThat("Hash codes are not commutative.", p21.hashCode(), equalTo(p12.hashCode()));
+        assertThat("Different things compare equal.", p13.equals(p12), isFalse());
+        assertThat("Wrong left value.", p12.getLeft(),sameInstance(t1));
+        assertThat("Wrong right value.", p12.getRight(),sameInstance(t2));
     }
 
 
     /**
      * Create a genome and check it for couplings.
      */
+    @Test
     public void testNeighbors() {
         Genome fakeGenome = new Genome("12345.6", "Bacillus praestrigiae Narnia", "Bacteria", 11);
         fakeGenome.addContig(new Contig("con1", "agct", 11));
@@ -573,38 +581,38 @@ public class TestLibrary extends TestCase {
         fakeGenome.addFeature(new Feature("fig|12345.6.peg.8",  "Role 3", "con1", "+", 5150, 5200));
         fakeGenome.addFeature(new Feature("fig|12345.6.peg.9",  "Role 1", "con1", "+", 5250, 5400));
         fakeGenome.addFeature(new Feature("fig|12345.6.peg.10", "Role 2", "con1", "-", 5401, 5450));
-        assertEquals("Incorrect ID in fake genome.", "12345.6", fakeGenome.getId());
-        assertEquals("Incorrect name in fake genome.", "Bacillus praestrigiae Narnia", fakeGenome.getName());
-        assertEquals("Incorrect domain in fake genome.", "Bacteria", fakeGenome.getDomain());
-        assertEquals("Incorrect genetic code in fake genome.", 11, fakeGenome.getGeneticCode());
+        assertThat("Incorrect ID in fake genome.", fakeGenome.getId(), equalTo("12345.6"));
+        assertThat("Incorrect name in fake genome.", fakeGenome.getName(), equalTo("Bacillus praestrigiae Narnia"));
+        assertThat("Incorrect domain in fake genome.", fakeGenome.getDomain(), equalTo("Bacteria"));
+        assertThat("Incorrect genetic code in fake genome.", fakeGenome.getGeneticCode(), equalTo(11));
         Collection<Contig> contigs0 = fakeGenome.getContigs();
-        assertEquals("Wrong number of contigs in fake genome.", 1, contigs0.size());
+        assertThat("Wrong number of contigs in fake genome.", contigs0.size(), equalTo(1));
         Contig[] contigs = new Contig[1];
         contigs = contigs0.toArray(contigs);
-        assertEquals("Incorrect contig ID in fake contig.", "con1", contigs[0].getId());
-        assertEquals("Incorrect genetic code in fake contig.", 11, contigs[0].getGeneticCode());
-        assertEquals("Incorrect sequence in fake contig.", "agct", contigs[0].getSequence());
+        assertThat("Incorrect contig ID in fake contig.", contigs[0].getId(), equalTo("con1"));
+        assertThat("Incorrect genetic code in fake contig.", contigs[0].getGeneticCode(), equalTo(11));
+        assertThat("Incorrect sequence in fake contig.", contigs[0].getSequence(), equalTo("agct"));
         Collection<Feature> features = fakeGenome.getFeatures();
-        assertEquals("Incorrect number of features in fake genome.", 10, features.size());
+        assertThat("Incorrect number of features in fake genome.", features.size(), equalTo(10));
         int found = 0;
         for (Feature feat : features) {
-            assertTrue("Incorrect contig in " + feat + ".", feat.getLocation().isContig("con1"));
+            assertThat("Incorrect contig in " + feat + ".", feat.getLocation().isContig("con1"), isTrue());
             if (feat.getId().contentEquals("fig|12345.6.peg.1")) {
-                assertEquals("Wrong role in peg.1.", "Role 1", feat.getFunction());
+                assertThat("Wrong role in peg.1.", feat.getFunction(), equalTo("Role 1"));
                 Location loc = feat.getLocation();
-                assertEquals("Wrong strand in peg 1.", '+', loc.getDir());
-                assertEquals("Wrong left in peg 1.", 100, loc.getLeft());
-                assertEquals("Wrong right in peg 1.", 300, loc.getRight());
+                assertThat("Wrong strand in peg 1.", loc.getDir(), equalTo('+'));
+                assertThat("Wrong left in peg 1.", loc.getLeft(), equalTo(100));
+                assertThat("Wrong right in peg 1.", loc.getRight(), equalTo(300));
                 found++;
             }
         }
-        assertEquals("Test feature not found.", 1, found);
+        assertThat("Test feature not found.", found, equalTo(1));
         // Create a feature list for the contig and do a coupling iteration.
         FeatureList contigFeatures = fakeGenome.getContigFeatures("con1");
         FeatureList.Position pos = contigFeatures.new Position();
-        assertTrue("End-of-list at beginning.", pos.hasNext());
+        assertThat("End-of-list at beginning.", pos.hasNext(), isTrue());
         Feature current = pos.next();
-        assertEquals("Wrong feature first.", "fig|12345.6.peg.1", current.getId());
+        assertThat("Wrong feature first.", current.getId(), equalTo("fig|12345.6.peg.1"));
         Collection<Feature> neighbors = pos.within(100);
         assertThat("Wrong neighbors found at 100 for peg1.",
                 neighbors.stream().map(Feature::getId).collect(Collectors.toList()),
@@ -614,36 +622,36 @@ public class TestLibrary extends TestCase {
                 neighbors.stream().map(Feature::getId).collect(Collectors.toList()),
                 containsInAnyOrder("fig|12345.6.peg.2", "fig|12345.6.peg.3",
                         "fig|12345.6.peg.4", "fig|12345.6.peg.5"));
-        assertTrue("End of list after peg 1", pos.hasNext());
+        assertThat("End of list after peg 1", pos.hasNext(), isTrue());
         current = pos.next();
-        assertEquals("Wrong feature after peg 1.", "fig|12345.6.peg.2", current.getId());
+        assertThat("Wrong feature after peg 1.", current.getId(), equalTo("fig|12345.6.peg.2"));
         neighbors = pos.within(100);
         assertThat("Wrong neighbors found at 100 for peg2.",
                 neighbors.stream().map(Feature::getId).collect(Collectors.toList()),
                 contains("fig|12345.6.peg.3"));
         current = pos.next();
-        assertEquals("Wrong feature after peg 2.", "fig|12345.6.peg.3", current.getId());
+        assertThat("Wrong feature after peg 2.", current.getId(), equalTo("fig|12345.6.peg.3"));
         neighbors = pos.within(100);
-        assertEquals("Found neighbors at 100 for peg3.", 0, neighbors.size());
+        assertThat("Found neighbors at 100 for peg3.", neighbors.size(), equalTo(0));
         current = pos.next();
-        assertEquals("Wrong feature after peg 3.", "fig|12345.6.peg.4", current.getId());
+        assertThat("Wrong feature after peg 3.", current.getId(), equalTo("fig|12345.6.peg.4"));
         neighbors = pos.within(100);
         assertThat("Wrong neighbors found at 100 for peg4.",
                 neighbors.stream().map(Feature::getId).collect(Collectors.toList()),
                 contains("fig|12345.6.peg.5"));
-        assertTrue("End-of-list after peg 4.", pos.hasNext());
+        assertThat("End-of-list after peg 4.", pos.hasNext(), isTrue());
         current = pos.next();
-        assertEquals("Wrong feature after peg 4.", "fig|12345.6.peg.5", current.getId());
+        assertThat("Wrong feature after peg 4.", current.getId(), equalTo("fig|12345.6.peg.5"));
         neighbors = pos.within(100);
-        assertEquals("Found neighbors at 100 for peg5.", 0, neighbors.size());
+        assertThat("Found neighbors at 100 for peg5.", neighbors.size(), equalTo(0));
         current = pos.next();
-        assertEquals("Wrong feature after peg 5.", "fig|12345.6.peg.6", current.getId());
+        assertThat("Wrong feature after peg 5.", current.getId(), equalTo("fig|12345.6.peg.6"));
         neighbors = pos.within(100);
-        assertEquals("Found neighbors at 100 for peg6.", 0, neighbors.size());
+        assertThat("Found neighbors at 100 for peg6.", neighbors.size(), equalTo(0));
         current = pos.next();
-        assertEquals("Wrong feature after peg 6.", "fig|12345.6.peg.7", current.getId());
+        assertThat("Wrong feature after peg 6.", current.getId(), equalTo("fig|12345.6.peg.7"));
         neighbors = pos.within(48);
-        assertEquals("Found neighbors at 48 for peg7.", 0, neighbors.size());
+        assertThat("Found neighbors at 48 for peg7.", neighbors.size(), equalTo(0));
         neighbors = pos.within(49);
         assertThat("Wrong neighbors found at 49 for peg7.",
                 neighbors.stream().map(Feature::getId).collect(Collectors.toList()),
@@ -657,30 +665,31 @@ public class TestLibrary extends TestCase {
                 neighbors.stream().map(Feature::getId).collect(Collectors.toList()),
                 containsInAnyOrder("fig|12345.6.peg.8", "fig|12345.6.peg.9",
                         "fig|12345.6.peg.10"));
-        assertTrue("End-of-list after peg 7.", pos.hasNext());
+        assertThat("End-of-list after peg 7.", pos.hasNext(), isTrue());
         current = pos.next();
-        assertEquals("Wrong feature after peg 7.", "fig|12345.6.peg.8", current.getId());
+        assertThat("Wrong feature after peg 7.", current.getId(), equalTo("fig|12345.6.peg.8"));
         neighbors = pos.within(48);
-        assertEquals("Found neighbors at 48 for peg8.", 0, neighbors.size());
+        assertThat("Found neighbors at 48 for peg8.", neighbors.size(), equalTo(0));
         neighbors = pos.within(100);
         assertThat("Wrong neighbors found at 100 for peg8.",
                 neighbors.stream().map(Feature::getId).collect(Collectors.toList()),
                 contains("fig|12345.6.peg.9"));
         current = pos.next();
-        assertEquals("Wrong feature after peg 8.", "fig|12345.6.peg.9", current.getId());
+        assertThat("Wrong feature after peg 8.", current.getId(), equalTo("fig|12345.6.peg.9"));
         neighbors = pos.within(100);
         assertThat("Wrong neighbors found at 100 for peg9.",
                 neighbors.stream().map(Feature::getId).collect(Collectors.toList()),
                 contains("fig|12345.6.peg.10"));
         current = pos.next();
         neighbors = pos.within(1000);
-        assertEquals("Found neighbors for peg10.", 0, neighbors.size());
-        assertFalse("No end-of-list after peg10.", pos.hasNext());
+        assertThat("Found neighbors for peg10.", neighbors.size(), equalTo(0));
+        assertThat("No end-of-list after peg10.", pos.hasNext(), isFalse());
     }
 
     /**
      * test custom features
      */
+    @Test
     public void testFeature() {
         Feature feat = new Feature("fig|161.31.peg.10", "hypothetical function", "c1", "+", 100, 200);
         Location loc = feat.getLocation();
@@ -693,9 +702,9 @@ public class TestLibrary extends TestCase {
         assertThat(feat.getProteinTranslation(), equalTo("MABCDEFG"));
         assertThat(feat.getProteinLength(), equalTo(8));
         feat.setPgfam("");
-        assertNull(feat.getPgfam());
+        assertThat(feat.getPgfam(), nullValue());
         feat.setPlfam("");
-        assertNull(feat.getPlfam());
+        assertThat(feat.getPlfam(), nullValue());
         feat.setPgfam("PG1");
         feat.setPlfam("PG2");
         assertThat(feat.getPlfam(), equalTo("PG2"));
@@ -718,7 +727,7 @@ public class TestLibrary extends TestCase {
         GoTerm[] goTerms = new GoTerm[2];
         goTerms = feat.getGoTerms().toArray(goTerms);
         assertThat(goTerms[0].getNumber(), equalTo(8696));
-        assertNull(goTerms[0].getDescription());
+        assertThat(goTerms[0].getDescription(), nullValue());
         assertThat(goTerms[1].getNumber(), equalTo(46820));
         assertThat(goTerms[1].getDescription(), equalTo("4-amino-4-deoxychorismate synthase activity"));
         Feature f2 = new Feature("fig|161.31.peg.10", "more hypothetical function", "c2", "+", 110, 220);
@@ -770,57 +779,59 @@ public class TestLibrary extends TestCase {
      * test roles-of-function
      */
 
+    @Test
     public void testFunctions() {
         String fun1 = "fun serum/thing / slash role @ at-role; semi role   # pound comment ## pounding";
         String[] roles = Feature.rolesOfFunction(fun1);
-        assertEquals("Wrong role count.", 4, roles.length);
-        assertEquals("first role wrong", "fun serum/thing", roles[0]);
-        assertEquals("second role wrong", "slash role", roles[1]);
-        assertEquals("third role wrong", "at-role", roles[2]);
-        assertEquals("fourth role wrong", "semi role", roles[3]);
+        assertThat("Wrong role count.", roles.length, equalTo(4));
+        assertThat("first role wrong", roles[0], equalTo("fun serum/thing"));
+        assertThat("second role wrong", roles[1], equalTo("slash role"));
+        assertThat("third role wrong", roles[2], equalTo("at-role"));
+        assertThat("fourth role wrong", roles[3], equalTo("semi role"));
         fun1 = "unitary role with comment ! bang comment";
         roles = Feature.rolesOfFunction(fun1);
-        assertEquals("Wrong unit role count.", 1, roles.length);
-        assertEquals("Wrong unit role", "unitary role with comment", roles[0]);
+        assertThat("Wrong unit role count.", roles.length, equalTo(1));
+        assertThat("Wrong unit role", roles[0], equalTo("unitary role with comment"));
         roles = Feature.rolesOfFunction("");
-        assertEquals("Failure on empty function", 0, roles.length);
+        assertThat("Failure on empty function", roles.length, equalTo(0));
         roles = Feature.rolesOfFunction(null);
-        assertEquals("Failure on null function", 0, roles.length);
+        assertThat("Failure on null function", roles.length, equalTo(0));
         roles = Feature.rolesOfFunction("simple");
-        assertEquals("Failure on simple role", 1, roles.length);
-        assertEquals("Wrong simple role", "simple", roles[0]);
+        assertThat("Failure on simple role", roles.length, equalTo(1));
+        assertThat("Wrong simple role", roles[0], equalTo("simple"));
         Feature testFeat = myGto.getFeature("fig|1313.7001.peg.1189");
         roles = testFeat.getRoles();
-        assertEquals("Wrong number of roles in feature", 2, roles.length);
-        assertEquals("Wrong first role of feature", "IMP cyclohydrolase (EC 3.5.4.10)", roles[0]);
-        assertEquals("Wrong second role of feature", "Phosphoribosylaminoimidazolecarboxamide formyltransferase (EC 2.1.2.3)",
-                roles[1]);
+        assertThat("Wrong number of roles in feature", roles.length, equalTo(2));
+        assertThat("Wrong first role of feature", roles[0], equalTo("IMP cyclohydrolase (EC 3.5.4.10)"));
+        assertThat("Wrong second role of feature", roles[1],
+                equalTo("Phosphoribosylaminoimidazolecarboxamide formyltransferase (EC 2.1.2.3)"));
         // Test useful roles.
         RoleMap goodRoles = new RoleMap();
         goodRoles.register("Phosphoribosylaminoimidazolecarboxamide formyltransferase (EC 2.1.2.3)");
         List<Role> found = testFeat.getUsefulRoles(goodRoles);
-        assertEquals("Useful role count wrong.", 1, found.size());
-        assertEquals("Wrong useful role returned", "PhosForm", found.get(0).getId());
+        assertThat("Useful role count wrong.", found.size(), equalTo(1));
+        assertThat("Wrong useful role returned", found.get(0).getId(), equalTo("PhosForm"));
         testFeat = myGto.getFeature("fig|1313.7001.peg.1190");
         found = testFeat.getUsefulRoles(goodRoles);
-        assertEquals("Useful role found in useless peg.", 0, found.size());
+        assertThat("Useful role found in useless peg.", found.size(), equalTo(0));
         // Test hypotheticals
-        assertTrue(Feature.isHypothetical("hypothetical protein"));
-        assertTrue(Feature.isHypothetical(null));
-        assertTrue(Feature.isHypothetical("  # comment only"));
-        assertTrue(Feature.isHypothetical("Hypothetical protein # with comment"));
-        assertFalse(Feature.isHypothetical("Normal function # hypothetical protein"));
-        assertFalse(Feature.isHypothetical("May some day be a putative function"));
+        assertThat(Feature.isHypothetical("hypothetical protein"), isTrue());
+        assertThat(Feature.isHypothetical(null), isTrue());
+        assertThat(Feature.isHypothetical("  # comment only"), isTrue());
+        assertThat(Feature.isHypothetical("Hypothetical protein # with comment"), isTrue());
+        assertThat(Feature.isHypothetical("Normal function # hypothetical protein"), isFalse());
+        assertThat(Feature.isHypothetical("May some day be a putative function"), isFalse());
     }
 
     /**
      * FASTA file test
      * @throws IOException
      */
+    @Test
     public void testFasta() throws IOException {
         File inFasta = new File("data", "empty.fa");
         FastaInputStream inStream = new FastaInputStream(inFasta);
-        assertFalse("Error in empty fasta.", inStream.hasNext());
+        assertThat("Error in empty fasta.", inStream.hasNext(), isFalse());
         inStream.close();
         inFasta = new File("data", "test.fa");
         inStream = new FastaInputStream(inFasta);
@@ -829,27 +840,27 @@ public class TestLibrary extends TestCase {
             testSeqs.add(input);
         }
         inStream.close();
-        assertEquals("Wrong number of sequences.", 5, testSeqs.size());
+        assertThat("Wrong number of sequences.", testSeqs.size(), equalTo(5));
         Sequence seq = testSeqs.get(0);
-        assertEquals("Wrong label for seq 1.", "label1", seq.getLabel());
-        assertEquals("Wrong comment for seq 1.", "", seq.getComment());
-        assertEquals("Wrong sequence for seq 1.", "tgtgcagcgagccctacagccttggagggaacaacacggactacctgccgctcgtctacccaaagggggtccccctccccaacacaacggttaccagcgtgccgagcg", seq.getSequence());
+        assertThat("Wrong label for seq 1.", seq.getLabel(), equalTo("label1"));
+        assertThat("Wrong comment for seq 1.", seq.getComment(), equalTo(""));
+        assertThat("Wrong sequence for seq 1.", seq.getSequence(), equalTo("tgtgcagcgagccctacagccttggagggaacaacacggactacctgccgctcgtctacccaaagggggtccccctccccaacacaacggttaccagcgtgccgagcg"));
         seq = testSeqs.get(1);
-        assertEquals("Wrong label for seq 2.", "label2", seq.getLabel());
-        assertEquals("Wrong comment for seq 2.", "comment2 with spaces", seq.getComment());
-        assertEquals("Wrong sequence for seq 2.", "ctcaatgggtccgtagtcggcatcggcagatgtgtataagcagcatgcccgccctctgcag", seq.getSequence());
+        assertThat("Wrong label for seq 2.", seq.getLabel(), equalTo("label2"));
+        assertThat("Wrong comment for seq 2.", seq.getComment(), equalTo("comment2 with spaces"));
+        assertThat("Wrong sequence for seq 2.", seq.getSequence(), equalTo("ctcaatgggtccgtagtcggcatcggcagatgtgtataagcagcatgcccgccctctgcag"));
         seq = testSeqs.get(2);
-        assertEquals("Wrong label for seq 3.", "label3", seq.getLabel());
-        assertEquals("Wrong comment for seq 3.", "comment3", seq.getComment());
-        assertEquals("Wrong sequence for seq 3.", "gtataaagtattggcctgttgag", seq.getSequence());
+        assertThat("Wrong label for seq 3.", seq.getLabel(), equalTo("label3"));
+        assertThat("Wrong comment for seq 3.", seq.getComment(), equalTo("comment3"));
+        assertThat("Wrong sequence for seq 3.", seq.getSequence(), equalTo("gtataaagtattggcctgttgag"));
         seq = testSeqs.get(3);
-        assertEquals("Wrong label for seq 4.", "label4", seq.getLabel());
-        assertEquals("Wrong comment for seq 4.", "comment4", seq.getComment());
-        assertEquals("Wrong sequence for seq 4.", "", seq.getSequence());
+        assertThat("Wrong label for seq 4.", seq.getLabel(), equalTo("label4"));
+        assertThat("Wrong comment for seq 4.", seq.getComment(), equalTo("comment4"));
+        assertThat("Wrong sequence for seq 4.", seq.getSequence(), equalTo(""));
         seq = testSeqs.get(4);
-        assertEquals("Wrong label for seq 5.", "label5", seq.getLabel());
-        assertEquals("Wrong comment for seq 5.", "comment5", seq.getComment());
-        assertEquals("Wrong sequence for seq 5.", "ggggccctgaggtcctgagcaagtgggtcggcgagagcgagaaggcgataaggt", seq.getSequence());
+        assertThat("Wrong label for seq 5.", seq.getLabel(), equalTo("label5"));
+        assertThat("Wrong comment for seq 5.", seq.getComment(), equalTo("comment5"));
+        assertThat("Wrong sequence for seq 5.", seq.getSequence(), equalTo("ggggccctgaggtcctgagcaagtgggtcggcgagagcgagaaggcgataaggt"));
         // Write the FASTA back out.
         File outFasta = new File("data", "fasta.ser");
         FastaOutputStream outStream = new FastaOutputStream(outFasta);
@@ -862,15 +873,16 @@ public class TestLibrary extends TestCase {
             readSeqs.add(inStream.next());
         }
         inStream.close();
-        assertEquals("Wrong number of records on read back.", 5, readSeqs.size());
+        assertThat("Wrong number of records on read back.", readSeqs.size(), equalTo(5));
         for (int i = 0; i < 5; i++) {
-            assertEquals("Compare error at position " + i + " on readback.", testSeqs.get(i), readSeqs.get(i));
+            assertThat("Compare error at position " + i + " on readback.", readSeqs.get(i), equalTo(testSeqs.get(i)));
         }
     }
 
     /**
      * test frame comparison
      */
+    @Test
     public void testFrames() {
         assertThat("M0 compare fail.", Frame.M0.compareTo(Frame.F0), lessThan(0));
         assertThat("M1 compare fail.", Frame.M1.compareTo(Frame.F0), lessThan(0));
@@ -879,13 +891,13 @@ public class TestLibrary extends TestCase {
         assertThat("P0 compare fail.", Frame.P0.compareTo(Frame.F0), greaterThan(0));
         assertThat("P1 compare fail.", Frame.P1.compareTo(Frame.F0), greaterThan(0));
         assertThat("P2 compare fail.", Frame.P2.compareTo(Frame.F0), greaterThan(0));
-        assertTrue("M0 negative fail.", Frame.M0.negative());
-        assertTrue("M1 negative fail.", Frame.M1.negative());
-        assertTrue("M2 negative fail.", Frame.M2.negative());
-        assertFalse("F0 negative fail.", Frame.F0.negative());
-        assertFalse("P0 negative fail.", Frame.P0.negative());
-        assertFalse("P1 negative fail.", Frame.P1.negative());
-        assertFalse("P2 negative fail.", Frame.P2.negative());
+        assertThat("M0 negative fail.", Frame.M0.negative(), isTrue());
+        assertThat("M1 negative fail.", Frame.M1.negative(), isTrue());
+        assertThat("M2 negative fail.", Frame.M2.negative(), isTrue());
+        assertThat("F0 negative fail.", Frame.F0.negative(), isFalse());
+        assertThat("P0 negative fail.", Frame.P0.negative(), isFalse());
+        assertThat("P1 negative fail.", Frame.P1.negative(), isFalse());
+        assertThat("P2 negative fail.", Frame.P2.negative(), isFalse());
     }
 
     /**
@@ -894,6 +906,7 @@ public class TestLibrary extends TestCase {
      * @throws IOException
      * @throws NumberFormatException
      */
+    @Test
     public void testGTO() throws NumberFormatException, IOException {
         Genome smallGenome = new Genome(new File("data", "small.gto"));
         Collection<Contig> contigs = smallGenome.getContigs();
@@ -928,7 +941,7 @@ public class TestLibrary extends TestCase {
         curr = iter.next();
         while (iter.hasNext()) {
             CloseGenome next = iter.next();
-            assertTrue(curr.compareTo(next) < 0);
+            assertThat(curr.compareTo(next) < 0, isTrue());
         }
         // Now we will add a feature and a contig.
         Feature rna = new Feature("fig|161.31.rna.1", "brand new RNA", "161.31.con.0001", "-", 89101, 90100);
@@ -961,7 +974,7 @@ public class TestLibrary extends TestCase {
         assertThat(contig2.getDescription(), equalTo("fake description"));
         feat = testGenome.getFeature("fig|161.31.rna.1");
         assertThat(feat.getPgfam(), equalTo("PGF_RNA1"));
-        assertNull(feat.getPlfam());
+        assertThat(feat.getPlfam(), nullValue());
         assertThat(feat.getAliases(), containsInAnyOrder("rna1", "gi|thingness"));
         Coupling[] couplings = feat.getCouplings();
         assertThat(couplings.length, equalTo(2));
@@ -1000,43 +1013,45 @@ public class TestLibrary extends TestCase {
         for (@SuppressWarnings("unused") Feature f : testGenome.getFeatures()) fCount++;
         assertThat(fCount, equalTo(0));
         // Test metagenome binning properties.
-        assertNull(testGenome.getBinRefGenomeId());
+        assertThat(testGenome.getBinRefGenomeId(), nullValue());
         assertThat(testGenome.getBinCoverage(), equalTo(0.0));
         testGenome = new Genome(new File("data", "bin3.gto"));
         assertThat(testGenome.getBinRefGenomeId(), equalTo("43675.15"));
         assertThat(testGenome.getBinCoverage(), closeTo(173.920, 0.0005));
         Genome testOther = new Genome(new File("data", "bin3a.gto"));
-        assertTrue(testGenome.identical(testGenome));
-        assertFalse(testGenome.identical(null));
-        assertFalse(testGenome.identical(testOther));
-        assertFalse(testGenome.identical(smallGenome));
+        assertThat(testGenome.identical(testGenome), isTrue());
+        assertThat(testGenome.identical(null), isFalse());
+        assertThat(testGenome.identical(testOther), isFalse());
+        assertThat(testGenome.identical(smallGenome), isFalse());
     }
 
     /**
      * test codon sets
      */
+    @Test
     public void testCodonSet() {
         String myDna = "aaattgcaaggacaactgatggagcgctaatagtgactg";
         CodonSet newSet = new CodonSet("ttg", "ctg", "atg");
-        assertFalse(newSet.contains(myDna, 1));
-        assertTrue(newSet.contains(myDna, 4));
-        assertFalse(newSet.contains(myDna, 7));
-        assertFalse(newSet.contains(myDna, 10));
-        assertFalse(newSet.contains(myDna, 13));
-        assertTrue(newSet.contains(myDna, 16));
-        assertTrue(newSet.contains(myDna, 19));
-        assertFalse(newSet.contains(myDna, 22));
-        assertFalse(newSet.contains(myDna, 25));
-        assertFalse(newSet.contains(myDna, 28));
-        assertFalse(newSet.contains(myDna, 31));
-        assertFalse(newSet.contains(myDna, 34));
-        assertTrue(newSet.contains(myDna, 37));
+        assertThat(newSet.contains(myDna, 1), isFalse());
+        assertThat(newSet.contains(myDna, 4), isTrue());
+        assertThat(newSet.contains(myDna, 7), isFalse());
+        assertThat(newSet.contains(myDna, 10), isFalse());
+        assertThat(newSet.contains(myDna, 13), isFalse());
+        assertThat(newSet.contains(myDna, 16), isTrue());
+        assertThat(newSet.contains(myDna, 19), isTrue());
+        assertThat(newSet.contains(myDna, 22), isFalse());
+        assertThat(newSet.contains(myDna, 25), isFalse());
+        assertThat(newSet.contains(myDna, 28), isFalse());
+        assertThat(newSet.contains(myDna, 31), isFalse());
+        assertThat(newSet.contains(myDna, 34), isFalse());
+        assertThat(newSet.contains(myDna, 37), isTrue());
     }
 
     /**
      * test location extension
      * @throws IOException
      */
+    @Test
     public void testExtend() throws IOException {
         // We need a fake genome to test the edge cases.
         Genome fakeGenome = new Genome("12345.6", "Mycobacteria praestrigiae Narnia", "Bacteria", 4);
@@ -1047,13 +1062,13 @@ public class TestLibrary extends TestCase {
         seq = "aaaaaaaaaaaacagaaaaaattattgaaatgaaaaaaaaaatagttaaaaaaaaaaaaaaaa";
         fakeGenome.addContig(new Contig("c1", seq, 4));
         // Test codon scan.
-        assertFalse(Location.containsCodon(new CodonSet("caa", "cag", "cat"), seq, 16, 54));
-        assertTrue(Location.containsCodon(new CodonSet("cag", "acg"), seq, 1, 22));
-        assertFalse(Location.containsCodon(new CodonSet("cag", "acg"), seq, 1, 15));
-        assertFalse(Location.containsCodon(new CodonSet("cag", "acg"), seq, 2, 44));
+        assertThat(Location.containsCodon(new CodonSet("caa", "cag", "cat"), seq, 16, 54), isFalse());
+        assertThat(Location.containsCodon(new CodonSet("cag", "acg"), seq, 1, 22), isTrue());
+        assertThat(Location.containsCodon(new CodonSet("cag", "acg"), seq, 1, 15), isFalse());
+        assertThat(Location.containsCodon(new CodonSet("cag", "acg"), seq, 2, 44), isFalse());
         // Test edge before stop on - strand.
         Location loc = Location.create("c1", "-", 4, 15);
-        assertNull(loc.extend(fakeGenome));
+        assertThat(loc.extend(fakeGenome), nullValue());
         // Insure that a GC 11 stop is not found in GC 4.
         loc = Location.create("c1", "+", 37, 39);
         Location loc2 = loc.extend(fakeGenome);
@@ -1061,17 +1076,17 @@ public class TestLibrary extends TestCase {
         assertThat(loc2.getRight(), equalTo(45));
         // Test edge before start on - strand.
         loc = Location.create("c1",  "-", 52, 54);
-        assertNull(loc.extend(fakeGenome));
+        assertThat(loc.extend(fakeGenome), nullValue());
         // Test edge before stop on + strand.
         loc = Location.create("c2", "+", 52, 54);
-        assertNull(loc.extend(fakeGenome));
+        assertThat(loc.extend(fakeGenome), nullValue());
         // Test edge before start on + strand.
         loc = Location.create("c2", "+", 10, 12);
         // Test internal stops.
         loc = Location.create("c3",  "+",  34, 63);
-        assertNull(loc.extend(fakeGenome));
+        assertThat(loc.extend(fakeGenome), nullValue());
         loc = Location.create("c3", "-", 7, 27);
-        assertNull(loc.extend(fakeGenome));
+        assertThat(loc.extend(fakeGenome), nullValue());
         // Stress test a real genome.
         Genome gto = new Genome(new File("data", "testLocs.gto"));
         // Test the plus strand.
@@ -1105,6 +1120,7 @@ public class TestLibrary extends TestCase {
      * @throws NoSuchAlgorithmException
      * @throws IOException
      */
+    @Test
     public void testMD5() throws NoSuchAlgorithmException, IOException {
         MD5Hex mdComputer = new MD5Hex();
         String prot = "MLHIKPYLVNQKTLHEIEKAIKKAKPNVTINSKDSELICSIPEPTAEIREEKIKNSKQVVEETRIALRTKRQDLLKKFKS";
@@ -1135,6 +1151,7 @@ public class TestLibrary extends TestCase {
     private static final String OFF_PEG_ID = "fig|43675.763.peg.443";
     private static final String OFF_CONTIG = "NODE_291_length_19898_cov_244.229";
 
+    @Test
     public void testContigUpdate() throws IOException {
         Genome myGenome = new Genome(new File("data", "bin3.gto"));
         FeatureList contigFeatures = myGenome.getContigFeatures(OLD_CONTIG);
@@ -1149,11 +1166,12 @@ public class TestLibrary extends TestCase {
     /**
      * Test GO terms.
      */
+    @Test
     public void testGoTerms() {
         GoTerm go = new GoTerm(33925);
         assertThat(go.toString(), equalTo("GO:0033925"));
         assertThat(go.getNumber(), equalTo(33925));
-        assertNull(go.getDescription());
+        assertThat(go.getDescription(), nullValue());
         GoTerm goBig = new GoTerm(GO_STRING);
         GoTerm goBig2 = new GoTerm(GO_STRING);
         assertThat(goBig.toString(), equalTo(GO_STRING));
@@ -1169,6 +1187,7 @@ public class TestLibrary extends TestCase {
      * Test GTO save/load
      * @throws IOException
      */
+    @Test
     public void testSave() throws IOException {
         File gtoFile = new File("data", "gto2.ser");
         Genome gto = new Genome(new File("data/gto_test", "243277.26.gto"));
@@ -1204,6 +1223,7 @@ public class TestLibrary extends TestCase {
     /**
      * Test ad hoc genome creation.
      */
+    @Test
     public void testGtoCreation() {
         Genome testGto = new Genome("1.1", "small test genome", "Virus", 1);
         assertThat(testGto.getId(), equalTo("1.1"));
@@ -1284,6 +1304,7 @@ public class TestLibrary extends TestCase {
     /*
      * test FASTA saving
      */
+    @Test
     public void testFastas() throws IOException {
         File fastaTemp = new File("data", "fasta.ser");
         myGto.saveDna(fastaTemp);
@@ -1344,6 +1365,7 @@ public class TestLibrary extends TestCase {
      *
      * @throws NumberFormatException
      */
+    @Test
     public void testFTypeIdNums() throws NumberFormatException {
         int nextPeg = myGto.getNextIdNum("peg");
         int nextRna = myGto.getNextIdNum("rna");
@@ -1362,7 +1384,7 @@ public class TestLibrary extends TestCase {
                 assertThat(fid, idx, lessThan(nextRna));
                 break;
             case "repeat" :
-                assertThat(fid, idx));
+                assertThat(fid, idx, lessThan(nextRepeat));
                 break;
             }
         }
