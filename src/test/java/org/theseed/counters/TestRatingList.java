@@ -10,7 +10,7 @@ import static org.theseed.test.Matchers.*;
 import java.io.IOException;
 import java.util.Iterator;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Bruce Parrello

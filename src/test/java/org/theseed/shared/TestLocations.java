@@ -23,7 +23,7 @@ import org.theseed.locations.Region;
 import org.theseed.locations.SortedLocationList;
 import org.theseed.locations.DiscreteLocationList.Edge;
 
-import junit.framework.TestCase;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Bruce Parrello
@@ -105,7 +105,7 @@ public class TestLocations extends TestCase {
         }
         Location badLoc = Location.create("yourContig", "+", 1000, 4999);
         assertFalse("Added wrong contig successfully.", newList.addLocation(badLoc));
-        assertEquals("Invalid contig ID in location list.", "myContig", newList.getContigId());
+        assertThat("Invalid contig ID in location list.", equalTo(floc), equalTo("myContig", newList.getContigId());
         // Now we need to verify that none of the stored locations overlap.
         Iterator<Location> iter = newList.iterator();
         Location prev = iter.next();
@@ -696,7 +696,7 @@ public class TestLocations extends TestCase {
         assertThat(bloc.getRegionLength(), equalTo(200));
         assertThat(bloc.getLength(), equalTo(300));
         Location floc2 = bloc.reverse();
-        assertThat(floc2, equalTo(floc));
+        assertThat(floc2));
     }
 
 }

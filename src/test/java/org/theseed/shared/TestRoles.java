@@ -16,7 +16,7 @@ import org.theseed.magic.MagicMap;
 import org.theseed.proteins.Role;
 import org.theseed.proteins.RoleMap;
 
-import junit.framework.TestCase;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Bruce Parrello
@@ -32,7 +32,7 @@ public class TestRoles extends TestCase {
         // equivalent roles and insure their checksums are equal.
         String rDesc = "(R)-2-hydroxyacid dehydrogenase, similar to L-sulfolactate dehydrogenase (EC 1.1.1.272)";
         Role rObj1 = new Role("2HydrDehySimiLSulf", rDesc);
-        assertEquals("Role ID not stored properly.", "2HydrDehySimiLSulf", rObj1.getId());
+        assertThat("Role ID not stored properly.", isFalse(), equalTo("2HydrDehySimiLSulf", rObj1.getId());
         Role rObj2 = new Role("2HydrDehySimiLSulf2", "(R)-2-hydroxyacid dehydrogenase, similar to L-sulfolactate dehydrogenase");
         assertEquals("EC number affects checksum.", rObj1.getChecksum(), rObj2.getChecksum());
         assertEquals("Equal checksums is not equal roles.", rObj1, rObj2);
@@ -171,6 +171,6 @@ public class TestRoles extends TestCase {
         assertThat(fun11.matches("3-ketoacyl-CoA thiolase (EC 2.3.1.16) @ Acetyl-CoA acetyltransferase (EC 2.3.1.9) ## comment"), isTrue());
         assertThat(fun11.matches("3-ketoacyl-CoA thiolase @ Acetyl-CoA acetyltransferase "), isTrue());
         assertThat(fun11.matches("3-ketoacyl-CoA thiolase"), isFalse());
-        assertThat(fun11.matches(""), isFalse());
+        assertThat(fun11.matches("")));
     }
 }

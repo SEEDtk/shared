@@ -49,7 +49,7 @@ import org.theseed.sequence.MD5Hex;
 import org.theseed.sequence.ProteinKmers;
 import org.theseed.sequence.Sequence;
 import com.github.cliftonlabs.json_simple.JsonObject;
-import junit.framework.TestCase;
+import org.junit.jupiter.api.Test;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.theseed.test.Matchers.*;
@@ -124,7 +124,7 @@ public class TestLibrary extends TestCase {
         while (thingScanner.hasNext()) {
             String condensed = thingScanner.next();
             String full = thingScanner.next();
-            assertEquals("String did not condense.", condensed, MagicMap.condense(full));
+            assertThat("String did not condense.", lessThan(nextRepeat), equalTo(condensed, MagicMap.condense(full));
         }
         thingScanner.close();
         // Test registration
@@ -1362,7 +1362,7 @@ public class TestLibrary extends TestCase {
                 assertThat(fid, idx, lessThan(nextRna));
                 break;
             case "repeat" :
-                assertThat(fid, idx, lessThan(nextRepeat));
+                assertThat(fid, idx));
                 break;
             }
         }

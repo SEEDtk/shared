@@ -11,7 +11,7 @@ import org.theseed.subsystems.SubsystemSpec;
 import org.theseed.subsystems.VariantId;
 import org.theseed.subsystems.VariantSpec;
 
-import junit.framework.TestCase;
+import org.junit.jupiter.api.Test;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 

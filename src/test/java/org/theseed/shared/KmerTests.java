@@ -5,6 +5,7 @@ package org.theseed.shared;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
+import static org.theseed.test.Matchers.*;
 
 import java.io.File;
 import java.io.IOException;
@@ -16,17 +17,17 @@ import org.theseed.sequence.GenomeKmers;
 import org.theseed.sequence.ProteinKmers;
 import org.theseed.sequence.SequenceKmers;
 
-import junit.framework.TestCase;
-
+import org.junit.jupiter.api.Test;
 /**
  * @author Bruce Parrello
  *
  */
-public class KmerTests extends TestCase {
+public class KmerTests {
 
     /**
      * test protein kmers
      */
+    @Test
     public void testProtKmers() {
         ProteinKmers.setKmerSize(10);
         String myProt1 = "MGMLVPLISKISDLSEEAKACVAACSSVEELDEVRGRYIGRAGALTALLA"; // 50 AA
@@ -35,12 +36,12 @@ public class KmerTests extends TestCase {
         ProteinKmers kmer1 = new ProteinKmers(myProt1);
         ProteinKmers kmer2 = new ProteinKmers(myProt2);
         ProteinKmers kmer3 = new ProteinKmers(myProt3);
-        assertEquals("Kmer1 has wrong protein.", myProt1, kmer1.getProtein());
-        assertEquals("Kmer1 has wrong count.", 41, kmer1.size());
-        assertEquals("Kmer1/kmer3 wrong similarity.", 3, kmer2.similarity(kmer3));
-        assertEquals("Similarity not commutative.", 3, kmer3.similarity(kmer2));
-        assertEquals("Kmer1 too close to kmer2.", 1.0, kmer1.distance(kmer2), 0.0);
-        assertEquals("Kmer1 too close to kmer3.", 0.95, kmer2.distance(kmer3), 0.005);
+        assertThat("Kmer1 has wrong protein.", kmer1.getProtein(), equalTo(myProt1));
+        assertThat("Kmer1 has wrong count.", kmer1.size(), equalTo(41));
+        assertThat("Kmer1/kmer3 wrong similarity.", kmer2.similarity(kmer3), equalTo(3));
+        assertThat("Similarity not commutative.", kmer3.similarity(kmer2), equalTo(3));
+        assertThat("Kmer1 too close to kmer2.", kmer1.distance(kmer2), equalTo(0.0));
+        assertThat("Kmer1 too close to kmer3.", kmer2.distance(kmer3), closeTo(0.95, 0.005));
         for (String kmer : kmer3) {
             assertThat(kmer.length(), equalTo(10));
             assertThat(myProt3, containsString(kmer));
@@ -61,6 +62,7 @@ public class KmerTests extends TestCase {
     /**
      * test DNA kmers
      */
+    @Test
     public void testDnaKmers() {
         DnaKmers.setKmerSize(12);
         String myDna1 = "ATGTTTGTTTTTCTTGTTTTATTGCCACTAGTCTCTATAACACTGCTGAC"; // 50 bp
@@ -74,10 +76,10 @@ public class KmerTests extends TestCase {
         assertThat(myDna1.toLowerCase(), equalTo(kmer1.getDna()));
         assertThat(myDna2.toLowerCase(), equalTo(kmer2.getDna()));
         assertThat(myDna3.toLowerCase(), equalTo(kmer3.getDna()));
-        assertFalse(kmer1.equals(kmer2));
-        assertFalse(kmer2.equals(kmer1));
-        assertTrue(kmer2.equals(kmer2r));
-        assertTrue(kmer2r.equals(kmer2));
+        assertThat(kmer1.equals(kmer2), isFalse());
+        assertThat(kmer2.equals(kmer1), isFalse());
+        assertThat(kmer2.equals(kmer2r), isTrue());
+        assertThat(kmer2r.equals(kmer2), isTrue());
         assertThat(kmer2.hashCode(), equalTo(kmer2r.hashCode()));
         assertThat(kmer2.distance(kmer2r), equalTo(0.0));
         assertThat(kmer1.similarity(kmer2), equalTo(10));
@@ -95,6 +97,7 @@ public class KmerTests extends TestCase {
      * @throws IOException
      * @throws NoSuchAlgorithmException
      */
+    @Test
     public void testGenomeKmers() throws IOException, NoSuchAlgorithmException {
         GenomeKmers.setKmerSize(24);
         Genome g = new Genome(new File("data/gto_test", "1005394.4.gto"));
@@ -104,8 +107,8 @@ public class KmerTests extends TestCase {
         g = new Genome(new File("data/gto_test", "1313.7002.gto"));
         GenomeKmers kmer3 = new GenomeKmers(g);
         g = null;
-        assertFalse(kmer1.equals(kmer2));
-        assertFalse(kmer2.equals(kmer3));
+        assertThat(kmer1.equals(kmer2), isFalse());
+        assertThat(kmer2.equals(kmer3), isFalse());
         assertThat(kmer1.getGenomeId(), equalTo("1005394.4"));
         assertThat(kmer2.getGenomeId(), equalTo("1313.7001"));
         assertThat(kmer3.getGenomeName(), equalTo("Streptococcus pneumoniae P210824-213"));
@@ -131,6 +134,7 @@ public class KmerTests extends TestCase {
     /**
      * test signature distances
      */
+    @Test
     public void testSignatures() {
         int[] hash1 = new int[] { 1, 3, 5, 7, 9};
         int[] hash2 = new int[] { 2, 3, 4, 6, 7, 8, 9};
@@ -144,6 +148,7 @@ public class KmerTests extends TestCase {
     /**
      * Verify that a signature array is sorted and all its elements are in range.
      */
+    @Test
     private void validateSignature(String name, int[] hash) {
         for (int i = 1; i < hash.length; i++)
             assertThat(name + "[" + i + "]", hash[i-1], lessThan(hash[i]));
@@ -152,19 +157,20 @@ public class KmerTests extends TestCase {
     /**
      * Test randomness of hashing
      */
+    @Test
     public void testHashAlgorithm() {
         int[] hashes = new int[] {	SequenceKmers.hashKmer("ABCDEFGH"), SequenceKmers.hashKmer("ABCDEFHG"), SequenceKmers.hashKmer("ACDEFGHB"),
                                     SequenceKmers.hashKmer("BCDEFGHA"), SequenceKmers.hashKmer("CDEFGHAB"), SequenceKmers.hashKmer("DEFGHABC") };
         int ups = 0;
         int downs = 0;
         for (int i = 1; i < hashes.length; i++) {
-            assertFalse(hashes[i-1] == hashes[i]);
+            assertThat(hashes[i-1] == hashes[i], isFalse());
             if (hashes[i-1] < hashes[i])
                 ups++;
             else
                 downs++;
         }
-        assertTrue(ups > 0 && downs > 0);
+        assertThat(ups > 0 && downs > 0, isTrue());
     }
 
 }

@@ -3,7 +3,7 @@
  */
 package org.theseed.reports;
 
-import junit.framework.TestCase;
+import org.junit.jupiter.api.Test;
 
 import static j2html.TagCreator.b;
 import static j2html.TagCreator.br;
@@ -24,8 +24,9 @@ import org.theseed.locations.Location;
  * @author Bruce Parrello
  *
  */
-public class HtmlTests extends TestCase {
+public class HtmlTests {
 
+    @Test
     public void testJoin() {
         String test1 = joinDelimited(Arrays.asList(b("item 1"), code("item 2"), span("item 3")), br()).render();
         assertThat(test1, equalTo("<b>item 1</b> <br> <code>item 2</code> <br> <span>item 3</span>"));
@@ -33,6 +34,7 @@ public class HtmlTests extends TestCase {
         assertThat(test1, equalTo("<b>item 1</b>, <code>item 2</code>, <span>item 3</span>"));
     }
 
+    @Test
     public void testColors() {
         Color color = Color.WHITE.darken(0.79);
         assertThat(color.html(), equalTo("#363636"));
@@ -40,6 +42,7 @@ public class HtmlTests extends TestCase {
         assertThat(color.html(), equalTo("#FF8080"));
     }
 
+    @Test
     public void testHtmlContig() {
         LinkObject linker = new LinkObject.Patric();
         HtmlFullSequence hContig = new HtmlFullSequence(1000, 2000, "Test contig");

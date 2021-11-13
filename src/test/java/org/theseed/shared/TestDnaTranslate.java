@@ -16,7 +16,7 @@ import org.theseed.locations.FLocation;
 import org.theseed.proteins.DnaTranslator;
 import org.theseed.proteins.LocationFixer;
 
-import junit.framework.TestCase;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Bruce Parrello

@@ -8,7 +8,7 @@ import static org.hamcrest.Matchers.*;
 
 import java.util.Arrays;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.theseed.io.Shuffler;
 
 /**
