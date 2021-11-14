@@ -13,6 +13,7 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.junit.jupiter.api.Test;
 
@@ -94,6 +95,37 @@ public class TestKeyedFileMap {
         assertThat(Double.isNaN(rec[0]), isTrue());
         assertThat(Double.isNaN(rec[1]), isTrue());
         assertThat(rec[2], closeTo(500.6, 0.001));
+    }
+
+    @Test
+    public void testColumnMerge() {
+        KeyedFileMap keyMap = new KeyedFileMap("key");
+        keyMap.addHeaders(Arrays.asList("a", "b", "c", "d", "e", "f"));
+        keyMap.addRecord("100", Arrays.asList("a100", "b100", "c100", "d100", "e100", "f100"));
+        keyMap.addRecord("200", Arrays.asList("a200", "b200", "c200", "d200", "e200", "f200"));
+        keyMap.addRecord("300", Arrays.asList("a300", "b300", "c300", "d300", "e300", "f300"));
+        keyMap.addRecord("400", Arrays.asList("a400", "b400", "c400", "d400", "e400", "f400"));
+        keyMap.addRecord("500", Arrays.asList("a500", "b500", "c500", "d500", "e500", "f500"));
+        keyMap.addRecord("600", Arrays.asList("a600", "b600", "c600", "d600", "e600", "f600"));
+        keyMap.addRecord("700", Arrays.asList("a700", "b700", "c700", "d700", "e700", "f700"));
+        Set<String> newHeaders = Set.of("c", "a", "d");
+        int count = keyMap.reduceCols(newHeaders);
+        assertThat(count, equalTo(3));
+        assertThat(keyMap.size(), equalTo(7));
+        // These arrays are used to verify the data.
+        String[] prefixes = new String[] { "a", "c", "d" };
+        Iterator<String> keySequence = Arrays.asList("100", "200", "300", "400", "500", "600", "700")
+                .iterator();
+         for (List<String> record : keyMap.getRecords()) {
+            String key = record.get(0);
+            assertThat(key, record.size(), equalTo(4));
+            String suffix = keySequence.next();
+            assertThat(key, equalTo(suffix));
+            for (int c = 0; c < 3; c++) {
+                String datum = record.get(c + 1);
+                assertThat(datum, equalTo(prefixes[c] + suffix));
+            }
+        }
     }
 
 }

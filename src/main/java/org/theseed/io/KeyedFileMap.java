@@ -12,6 +12,7 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.StringUtils;
@@ -164,6 +165,33 @@ public class KeyedFileMap {
      */
     public int getDupCount() {
         return this.dupCount;
+    }
+
+    /**
+     * Remove columns to match the indicated headers.  Essentially, only columns that
+     * are in the specified set will remain.  The key column is always kept.
+     *
+     * @param newCols	set of headers to keep
+     *
+     * @return the number of columns deleted
+     */
+    public int reduceCols(Set<String> newCols) {
+        int retVal = 0;
+        // Loop through the columns.  To make the deletes more efficient, we
+        // move backwards from the end.
+        for (int c = this.headers.size() - 1; c > 0; c--) {
+            String headerName = this.headers.get(c);
+            if (! newCols.contains(headerName)) {
+                // Here we must delete the column.  First, delete the header.
+                this.headers.remove(c);
+                // Now, delete the data column.
+                for (List<String> record : this.records.values())
+                    record.remove(c);
+                // Count the deleted column.
+                retVal++;
+            }
+        }
+        return retVal;
     }
 
 }
