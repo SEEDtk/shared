@@ -919,4 +919,52 @@ public class Feature implements Comparable<Feature> {
         return this.figfam;
     }
 
+    /**
+     * @return a key for a pair of feature IDs
+     *
+     * @param iFid	first feature ID
+     * @param jFid	second feature ID
+     */
+    public static String pairKey(String iFid, String jFid) {
+        StringBuilder retVal = new StringBuilder(20);
+        // Split the strings in parts.
+        String[] iParts = StringUtils.splitPreserveAllTokens(iFid, "|.");
+        String[] jParts = StringUtils.split(jFid, "|.");
+        // Prime with the fig|.
+        retVal.append("fig");
+        String delim = "|";
+        int cmp = 0;
+        // Find the first differing part.
+        int split = -1;
+        for (int k = 1; cmp == 0 && k < iParts.length; k++) {
+            cmp = iParts[k].compareTo(jParts[k]);
+            if (cmp == 0)
+                retVal.append(delim).append(iParts[k]);
+            else
+                split = k;
+            delim = ".";
+        }
+        // Now "k" points to the first difference, and "cmp" is the comparison result.
+        // Put the lexically lower string into "iParts".
+        if (cmp > 0) {
+            String[] buffer = jParts;
+            jParts = iParts;
+            iParts = buffer;
+        }
+        if (cmp != 0) {
+            // Now finish off the pairing.
+            delim = ":";
+            for (int k = split; k < iParts.length; k++) {
+                retVal.append(delim).append(iParts[k]);
+                delim = ".";
+            }
+            delim = "/";
+            for (int k = split; k < jParts.length; k++) {
+                retVal.append(delim).append(jParts[k]);
+                delim = ".";
+            }
+        }
+        return retVal.toString();
+    }
+
 }

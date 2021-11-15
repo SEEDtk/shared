@@ -3,6 +3,7 @@
  */
 package org.theseed.reports;
 
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import static j2html.TagCreator.b;
@@ -18,6 +19,8 @@ import static org.theseed.reports.HtmlUtilities.joinDelimited;
 
 import org.theseed.locations.Location;
 
+import j2html.Config;
+
 /**
  * Test the HTML features.
  *
@@ -25,6 +28,11 @@ import org.theseed.locations.Location;
  *
  */
 public class HtmlTests {
+
+    @BeforeAll
+    public static void configureHtml() {
+        Config.closeEmptyTags = true;
+    }
 
     @Test
     public void testJoin() {
