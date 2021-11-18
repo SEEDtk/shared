@@ -234,4 +234,17 @@ public class SampleTest {
         samp4 = samp4.addDelete("metL");
         assertThat(samp4.toString(), equalTo("M_0_TA1_C_asdT_metL_DmetLDppc_I_24_M1"));
     }
+
+    @Test
+    public void testNormalizing() {
+        SampleId samp1 = (new SampleId("M_0_TA1_C_asdT_pntAB-aspC_DtdhDmetL_I_24_M1")).normalizeSets();
+        assertThat(samp1.toString(), equalTo("M_0_TA1_C_asdT_aspC-pntAB_DmetLDtdh_I_24_M1"));
+        SampleId samp2 = (new SampleId("M_0_TA1_C_asdT_aspC-pntAB_DmetLDtdh_I_24_M1")).normalizeSets();
+        assertThat(samp2, equalTo(samp1));
+        assertThat(samp2.toString(), equalTo("M_0_TA1_C_asdT_aspC-pntAB_DmetLDtdh_I_24_M1"));
+        SampleId samp3 = (new SampleId("M_0_TA1_C_asdT_000_Dtdh_I_24_M1")).normalizeSets();
+        assertThat(samp3.toString(), equalTo("M_0_TA1_C_asdT_000_Dtdh_I_24_M1"));
+        samp1 = (new SampleId("M_0_TA1_C_asdT_000_DtdhDmetL_I_24_M1")).normalizeSets();
+        assertThat(samp1.toString(), equalTo("M_0_TA1_C_asdT_000_DmetLDtdh_I_24_M1"));
+    }
 }
