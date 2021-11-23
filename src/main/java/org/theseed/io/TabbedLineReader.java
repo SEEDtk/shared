@@ -361,31 +361,31 @@ public class TabbedLineReader implements Closeable, AutoCloseable, Iterable<Tabb
         return retVal;
     }
 
-	/**
-	 * @return the index of the field with the specified name
-	 * 
-	 * @param fieldName		name of the field to find (not case-sensitive)
-	 */
-	public int findColumn(String fieldName) {
-		// Convert the field to lower case so the search is case-insensitive.
-		String normalized = fieldName.toLowerCase();
-		int retVal = this.labels.length - 1;
-		// First look for a named field.
-		boolean found = false;
-		while (! found && retVal >= 0) {
-		    String label = this.labels[retVal].toLowerCase();
-		    if (normalized.contentEquals(label) ||
-		            normalized.contentEquals(StringUtils.substringAfterLast(label, "."))) {
-		        found = true;
-		    } else {
-		        retVal--;
-		    }
-		}
-		if (! found) {
-		    retVal = -1;
-		}
-		return retVal;
-	}
+    /**
+     * @return the index of the field with the specified name
+     *
+     * @param fieldName		name of the field to find (not case-sensitive)
+     */
+    public int findColumn(String fieldName) {
+        // Convert the field to lower case so the search is case-insensitive.
+        String normalized = fieldName.toLowerCase();
+        int retVal = this.labels.length - 1;
+        // Look for the named field.
+        boolean found = false;
+        while (! found && retVal >= 0) {
+            String label = this.labels[retVal].toLowerCase();
+            if (normalized.contentEquals(label) ||
+                    normalized.contentEquals(StringUtils.substringAfterLast(label, "."))) {
+                found = true;
+            } else {
+                retVal--;
+            }
+        }
+        if (! found) {
+            retVal = -1;
+        }
+        return retVal;
+    }
 
     @Override
     public void close() {

@@ -26,12 +26,16 @@ public class TestKeyedFileMap {
     @Test
     public void testCharFile() throws IOException {
         KeyedFileMap outMap = new KeyedFileMap("letter");
-        outMap.addHeaders(Arrays.asList("plant", "animal"));
+        outMap.addHeaders(Arrays.asList("main.plant", "animal"));
         outMap.addRecord("a", Arrays.asList("Apple", "Aardvark"));
         outMap.addRecord("p", Arrays.asList("Petunia", "Panther"));
         outMap.addRecord("d", Arrays.asList("Dog", "Daffodil"));
         outMap.addRecord("c", Arrays.asList("Cat", "Carrot"));
         outMap.addHeaders(Arrays.asList("machine"));
+        assertThat(outMap.width(), equalTo(4));
+        assertThat(outMap.findColumn("PLANT"), equalTo(1));
+        assertThat(outMap.findColumn("mineral"), equalTo(-1));
+        assertThat(outMap.findColumn("letter"), equalTo(0));
         Iterator<Map.Entry<String, List<String>>> iter = outMap.iterator();
         while (iter.hasNext()) {
             Map.Entry<String, List<String>> current = iter.next();
@@ -54,7 +58,7 @@ public class TestKeyedFileMap {
         outMap.write(testFile);
         try (LineReader testStream = new LineReader(testFile)) {
             String line = testStream.next();
-            assertThat(line, equalTo("letter\tplant\tanimal\tmachine"));
+            assertThat(line, equalTo("letter\tmain.plant\tanimal\tmachine"));
             line = testStream.next();
             assertThat(line, equalTo("a\tApple\tAardvark\tAbacus"));
             line = testStream.next();
@@ -126,6 +130,27 @@ public class TestKeyedFileMap {
                 assertThat(datum, equalTo(prefixes[c] + suffix));
             }
         }
+    }
+
+    @Test
+    public void testKeyedFile() throws IOException {
+        File inFile = new File("data", "keyed.txt");
+        KeyedFileMap map = new KeyedFileMap(inFile, "genome_id");
+        assertThat(map.getDupCount(), equalTo(1));
+        assertThat(map.size(), equalTo(5));
+        assertThat(map.findColumn("num"), equalTo(1));
+        assertThat(map.getHeaders(),
+                contains("genome_id", "num", "genome.genome_name", "counter.0", "fraction", "flag"));
+        List<String> record = map.getRecord("4");
+        assertThat(record, contains("4", "6", "5", "6", "7", "8"));
+        record = map.getRecord("999");
+        assertThat(record, nullValue());
+        record = map.getRecord("100.99");
+        assertThat(record, contains("100.99", "1", "name of 100.99", "10", "0.8", ""));
+        record = map.getRecord("300.30");
+        assertThat(record, contains("300.30", "3", "", "", "", ""));
+        record = map.getRecord("200.20");
+        assertThat(record, contains("200.20", "2", "name of 200.20", "-4", "12", "Y"));
     }
 
 }

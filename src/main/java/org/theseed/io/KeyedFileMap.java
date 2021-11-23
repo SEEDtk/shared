@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
+import java.util.stream.IntStream;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -39,7 +40,7 @@ public class KeyedFileMap {
     /** duplicate-key count */
     private int dupCount;
     /** double data type pattern */
-    public static final Pattern DOUBLE_PATTERN = Pattern.compile("\\s*[\\-+]?(?:\\d+(?:\\.\\d*)?|\\.\\d+)(?:[eE][\\-+]?\\d+)?");
+    public static final Pattern DOUBLE_PATTERN = Pattern.compile("\\s*[\\-+]?(?:\\d+(?:\\.\\d*)?|\\.\\d+)(?:[eE][\\-+]?\\d+)?\\s*");
 
     /**
      * Create a new, blank keyed file map.
@@ -47,6 +48,54 @@ public class KeyedFileMap {
      * @param keyName	key column name
      */
     public KeyedFileMap(String keyName) {
+        this.setup(keyName);
+    }
+
+    /**
+     * Create a keyed file map from a tab-delimited file.
+     *
+     * @param inFile	source input file
+     * @param keyCol	name of key column
+     *
+     * @throws IOException
+     */
+    public KeyedFileMap(File inFile, String keyCol) throws IOException {
+        this.setup(keyCol);
+        try (TabbedLineReader inStream = new TabbedLineReader(inFile)) {
+            // Locate the key column.
+            int keyIdx = inStream.findField(keyCol);
+            // Build the headers list.
+            String[] labels = inStream.getLabels();
+            IntStream.range(0, labels.length).filter(i -> (i != keyIdx))
+                .forEach(i -> this.headers.add(labels[i]));
+            // Loop through the data records, adding them.
+            for (TabbedLineReader.Line line : inStream) {
+                // Create the record.  We initialize it to empty strings.
+                List<String> record = new ArrayList<String>(labels.length);
+                // Get the input fields.
+                String[] fields = line.getFields();
+                // Compute the key.
+                String key = "";
+                if (fields.length > keyIdx)
+                    key = fields[keyIdx];
+                // Store the data fields.
+                for (int i = 0; i < fields.length; i++) {
+                    if (i != keyIdx)
+                        record.add(fields[i]);
+                }
+                for (int i = fields.length; i < labels.length; i++)
+                    record.add("");
+                this.addRecord(key, record);
+            }
+        }
+    }
+
+    /**
+     * Initialize this object's fields.
+     *
+     * @param keyName	name for the key field
+     */
+    private void setup(String keyName) {
         this.records = new LinkedHashMap<String, List<String>>();
         this.headers = new ArrayList<String>();
         this.headers.add(keyName);
@@ -109,10 +158,44 @@ public class KeyedFileMap {
     }
 
     /**
+     * @return the record with the specified key, or NULL if it does not exist
+     *
+     * @param key	key of the desired record
+     */
+    public List<String> getRecord(String key) {
+        return this.records.get(key);
+    }
+
+    /**
      * @return the number of records
      */
     public int size() {
         return this.records.size();
+    }
+
+    /**
+     * @return the number of columns (including the key)
+     */
+    public int width() {
+        return this.headers.size();
+    }
+
+    /**
+     * @return the column index of the column with the specified name, or -1 if none
+     *
+     * @param name	desired column name
+     */
+    public int findColumn(String name) {
+        String normalized = name.toLowerCase();
+        int retVal = -1;
+        int nCols = this.headers.size();
+        for (int i = 0; i < nCols && retVal == -1; i++) {
+            String colName = this.headers.get(i).toLowerCase();
+            if (normalized.contentEquals(colName) ||
+                    normalized.contentEquals(StringUtils.substringAfterLast(colName, ".")))
+                retVal = i;
+        }
+        return retVal;
     }
 
     /**
