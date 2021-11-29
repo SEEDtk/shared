@@ -6,6 +6,7 @@ import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -69,6 +70,8 @@ public class Feature implements Comparable<Feature> {
     private static final Pattern SEP_PATTERN = Pattern.compile("\\s+[\\/@]\\s+|\\s*;\\s+");
     /** pattern for extracting genome ID from feature ID */
     public static final Pattern FID_PARSER = Pattern.compile("fig\\|(\\d+\\.\\d+)\\.\\w+\\.\\d+");
+    /** gene name match pattern */
+    private static final Pattern GENE_NAME = Pattern.compile("[a-z]{3}(?:[A-Z])?");
 
     /**
      * @return the feature type of a feature ID.
@@ -287,6 +290,20 @@ public class Feature implements Comparable<Feature> {
         Coupling coupling = new Coupling(target, size, strength);
         if (this.couplings.contains(coupling)) this.couplings.remove(coupling);
         this.couplings.add(coupling);
+    }
+
+    /**
+     * @return the gene name for this feature
+     */
+    public String getGeneName() {
+        Optional<String> name = this.aliases.stream()
+                .filter(x -> GENE_NAME.matcher(x).matches()).findAny();
+        String retVal;
+        if (name.isPresent())
+            retVal = name.get();
+        else
+            retVal = "";
+        return retVal;
     }
 
     /**
