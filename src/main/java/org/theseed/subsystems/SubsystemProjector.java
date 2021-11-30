@@ -71,7 +71,7 @@ public class SubsystemProjector {
      *
      * @throws IOException
      */
-    public static SubsystemProjector Load(File inFile) throws IOException {
+    public static SubsystemProjector load(File inFile) throws IOException {
         SubsystemProjector retVal = new SubsystemProjector();
         try (LineReader inStream = new LineReader(inFile)) {
             // Loop through the roles.

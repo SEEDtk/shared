@@ -345,7 +345,7 @@ public class TestSubsystems {
         // Save and restore to check the role map.
         File outFile = new File("data", "projector.ser");
         projector.save(outFile);
-        SubsystemProjector loaded = SubsystemProjector.Load(outFile);
+        SubsystemProjector loaded = SubsystemProjector.load(outFile);
         assertThat(loaded.getRoleId("SSU rRNA"), equalTo(ssuRrna));
         assertThat(loaded.getRoleId("LSU rRNA"), equalTo(lsuRrna));
         // Map the test genome.
@@ -438,7 +438,7 @@ public class TestSubsystems {
         projector.addVariant(var2_4);
         File saveFile = new File("data", "projector.ser");
         projector.save(saveFile);
-        SubsystemProjector loaded = SubsystemProjector.Load(saveFile);
+        SubsystemProjector loaded = SubsystemProjector.load(saveFile);
         SubsystemSpec sub = loaded.getSubsystem("subsystem 1");
         assertThat(sub, equalTo(sub1));
         assertThat(sub.getClassifications(), contains("a1", "b1", ""));
