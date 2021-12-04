@@ -400,6 +400,20 @@ public class IoTests {
         applyTabReaderTests(tabReader);
     }
 
+    @Test
+    public void testTabbedStream() throws IOException {
+        File testFile = new File("data", "tabbed.txt");
+        try (TabbedLineReader inStream = new TabbedLineReader(testFile)) {
+            double[] nums = inStream.stream().filter(x -> ! x.get(0).isBlank())
+                    .mapToDouble(x -> x.getInt(2) * x.getDouble(3)).toArray();
+            assertThat(nums[0], closeTo(8.0, 0.0001));
+            assertThat(nums[1], closeTo(-48.0, 0.0001));
+            assertThat(nums[2], equalTo(0.0));
+            assertThat(nums[3], closeTo(30.0, 0.0001));
+            assertThat(nums.length, equalTo(4));
+        }
+    }
+
     /**
      * @param tabReader
      * @throws IOException

@@ -18,6 +18,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -560,6 +561,12 @@ public class TabbedLineReader implements Closeable, AutoCloseable, Iterable<Tabb
         return retVal;
     }
 
-
+    /**
+     * @return a stream through the lines of this file
+     */
+    public Stream<Line> stream() {
+        Stream<Line> retVal = StreamSupport.stream(this.spliterator(), false);
+        return retVal;
+    }
 
 }

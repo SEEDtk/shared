@@ -280,4 +280,20 @@ public class CountMap<K> {
         return retVal;
     }
 
+    /**
+     * Accumulate all the counted from a small map into this map.
+     *
+     * @param otherMap		other map whose counts are to be added
+     */
+    public void accumulate(CountMap<K> projCounts) {
+        projCounts.map.values().stream().forEach(x -> this.count(x.getKey(), x.getCount()));
+    }
+
+    /**
+     * @return the sum of all the counts in this map
+     */
+    public int sum() {
+        return this.map.values().stream().mapToInt(x -> x.getCount()).sum();
+    }
+
 }

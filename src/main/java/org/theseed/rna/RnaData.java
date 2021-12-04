@@ -423,6 +423,16 @@ public class RnaData implements Iterable<RnaData.Row>, Serializable {
         }
 
         /**
+         * @return TRUE if the weight at the specified index is good
+         *
+         * @param iCol	column of interest
+         */
+        public boolean isGood(int iCol) {
+            Weight w = this.getWeight(iCol);
+            return (w != null && w.exactHit && Double.isFinite(w.weight));
+        }
+
+        /**
          * @return an iterable for the good weights
          */
         public Iterable<Weight> goodWeights() {
@@ -448,16 +458,38 @@ public class RnaData implements Iterable<RnaData.Row>, Serializable {
         private Collection<Weight> weights;
 
         /**
-         * Create a good weights list.
+         * Create a simple good weights list.
          *
          * @param row	row whose weights are desired
          */
         public GoodWeights(RnaData.Row row) {
+            this.setup(row, false);
+        }
+
+        /**
+         * Create a good weights list with optional filtering.
+         *
+         * @param row	row whose weights are desired
+         * @param pure	if TRUE, bad samples will be skipped
+         */
+        public GoodWeights(RnaData.Row row, boolean pure) {
+            setup(row, pure);
+        }
+
+        /**
+         * Initialize a good weights list.
+         *
+         * @param row	row containing the weights
+         * @param pure	TRUE if only good samples should be included
+         */
+        protected void setup(RnaData.Row row, boolean pure) {
             this.weights = new ArrayList<Weight>(row.size());
             for (int i = 0; i < row.size(); i++) {
-                Weight w = row.getWeight(i);
-                if (w != null && w.exactHit && Double.isFinite(w.weight))
-                    this.weights.add(w);
+                if (! pure || RnaData.this.getJob(i).isGood()) {
+                    Weight w = row.getWeight(i);
+                    if (w != null && w.exactHit && Double.isFinite(w.weight))
+                        this.weights.add(w);
+                }
             }
         }
 
@@ -725,6 +757,15 @@ public class RnaData implements Iterable<RnaData.Row>, Serializable {
     public void updateQuality() {
         for (JobData job : this.jobs)
             job.updateQuality(this);
+    }
+
+    /**
+     * @return the sample at the specified array index
+     *
+     * @param jobIdx	index of desired job
+     */
+    public JobData getJob(int jobIdx) {
+        return this.jobs.get(jobIdx);
     }
 
 }

@@ -469,5 +469,34 @@ public class CounterTest  {
         assertThat(test.getBestValue(), equalTo(1.0));
     }
 
+    @Test
+    public void testAccumulate() {
+        CountMap<String> map1 = new CountMap<String>();
+        map1.count("AAA", 1);
+        map1.count("BBB", 2);
+        map1.count("CCC", 3);
+        assertThat(map1.sum(), equalTo(6));
+        assertThat(map1.size(), equalTo(3));
+        CountMap<String> map2 = new CountMap<String>();
+        map2.count("AAA", 10);
+        map2.count("CCC", 30);
+        map2.count("DDD", 40);
+        assertThat(map2.sum(), equalTo(80));
+        assertThat(map2.size(), equalTo(3));
+        map1.accumulate(map2);
+        assertThat(map1.size(), equalTo(4));
+        assertThat(map2.size(), equalTo(3));
+        assertThat(map1.getCount("AAA"), equalTo(11));
+        assertThat(map2.getCount("AAA"), equalTo(10));
+        assertThat(map1.getCount("BBB"), equalTo(2));
+        assertThat(map2.getCount("BBB"), equalTo(0));
+        assertThat(map1.getCount("CCC"), equalTo(33));
+        assertThat(map2.getCount("CCC"), equalTo(30));
+        assertThat(map1.getCount("DDD"), equalTo(40));
+        assertThat(map2.getCount("DDD"), equalTo(40));
+        assertThat(map1.sum(), equalTo(86));
+        assertThat(map2.sum(), equalTo(80));
+    }
+
 }
 
