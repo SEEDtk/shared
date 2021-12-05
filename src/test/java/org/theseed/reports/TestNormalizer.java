@@ -65,8 +65,5 @@ class TestNormalizer {
         assertThat(rn.getMax(), equalTo(2.7));
 
     }
-    // FIELDS
-    // TODO data members for TestNormalizer
 
-    // TODO constructors and methods for TestNormalizer
 }
