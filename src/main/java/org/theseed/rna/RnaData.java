@@ -6,6 +6,7 @@ package org.theseed.rna;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -23,6 +24,7 @@ import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -57,6 +59,18 @@ public class RnaData implements Iterable<RnaData.Row>, Serializable {
     private static final Comparator<String> SORTER = new NaturalSort();
     /** expression percent required for a good sample */
     public static double MIN_EXPRESSED = 50.0;
+
+    /**
+     * This class is a simple filter for finding RNA databases in a directory.
+     */
+    public static class FileFilter implements FilenameFilter {
+
+        @Override
+        public boolean accept(File dir, String name) {
+            return StringUtils.endsWith(name, ".tpm.ser");
+        }
+
+    }
 
     /**
      * This sub-object represents the data for a single sample.
