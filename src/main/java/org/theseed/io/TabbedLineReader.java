@@ -6,6 +6,7 @@ package org.theseed.io;
 import java.io.Closeable;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -21,6 +22,8 @@ import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This class reads from a tab-delimited file with headers.  It reads a line at a time, and in each line,
@@ -180,6 +183,8 @@ public class TabbedLineReader implements Closeable, AutoCloseable, Iterable<Tabb
     }
 
     //FIELDS
+    /** logging facility */
+    protected static Logger log = LoggerFactory.getLogger(TabbedLineReader.class);
     /** array of field names from the header */
     private String[] labels;
     /** underlying stream of lines */
@@ -275,6 +280,30 @@ public class TabbedLineReader implements Closeable, AutoCloseable, Iterable<Tabb
      */
     protected TabbedLineReader() {
     }
+
+    /**
+     * Open a tabbed line reader to read a file, or optionally the standard input.
+     *
+     * @param inFile	file to read, or NULL to read from the standard input
+     *
+     * @return the open tabbed line reader
+     *
+     * @throws IOException
+     */
+    public TabbedLineReader openInput(File inFile) throws IOException {
+        TabbedLineReader retVal;
+        if (inFile == null) {
+            log.info("Input will be taken from the standard input.");
+            retVal = new TabbedLineReader(System.in);
+        } else if (! inFile.canRead())
+            throw new FileNotFoundException("Input file " + inFile + " is not found or is unreadable.");
+        else {
+            log.info("Input will be read from {}.", inFile);
+            retVal = new TabbedLineReader(inFile);
+        }
+        return retVal;
+    }
+
 
     /**
      * Open a tabbed line reader to read a list of strings.

@@ -18,13 +18,16 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
+import java.util.TreeSet;
 
 import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.theseed.genome.Feature;
+import org.theseed.io.TabbedLineReader;
 import org.theseed.reports.NaturalSort;
 ;
 
@@ -375,8 +378,26 @@ public class RnaData implements Iterable<RnaData.Row>, Serializable {
             this.neighbor = null;
             if (neighbor != null)
                 this.neighbor = new RnaFeatureData(neighbor);
+            init();
+        }
+
+        /**
+         * Initialize the data structures of this object.
+         */
+        private void init() {
             // Clear the weights.
             this.weights = new Weight[RnaData.this.jobs.size()];
+        }
+
+        /**
+         * Create a row for a feature copied from another RNA database.
+         *
+         * @param row		source RNA database.
+         */
+        public Row(Row row) {
+            this.feat = row.feat;
+            this.neighbor = row.neighbor;
+            this.init();
         }
 
         /**
@@ -523,6 +544,37 @@ public class RnaData implements Iterable<RnaData.Row>, Serializable {
         try (FileInputStream fStream = new FileInputStream(file)) {
             ObjectInputStream oStream = new ObjectInputStream(fStream);
             retVal = (RnaData) oStream.readObject();
+        }
+        return retVal;
+    }
+
+    /**
+     * Create a new RNA data repository with the same features as this one but only a subset of
+     * the samples.  No cloning is done.  A modification to this database will have unpredictable
+     * effects on the new database.
+     */
+    public RnaData getSubset(Collection<String> samples) {
+        RnaData retVal = new RnaData();
+        // This array maps from the new database's job indices to our indices.
+        int[] idxMap = new int[samples.size()];
+        // First, we must add the jobs.
+        int pos = 0;
+        for (String sample : samples) {
+            int jobIdx = this.getColIdx(sample);
+            idxMap[pos] = jobIdx;
+            JobData sampleJob = this.getJob(jobIdx);
+            retVal.jobs.add(sampleJob);
+            retVal.colMap.put(sample, pos);
+            pos++;
+        }
+        // The job array is all filled in.  Now we can add the features.  We use the index map
+        // to guide us.
+        for (Row row : this.getRows()) {
+            Row newRow = retVal.new Row(row);
+            String fid = row.getFeat().getId();
+            for (int i = 0; i < idxMap.length; i++)
+                newRow.weights[i] = row.getWeight(idxMap[i]);
+            retVal.rowMap.put(fid, newRow);
         }
         return retVal;
     }
@@ -766,6 +818,29 @@ public class RnaData implements Iterable<RnaData.Row>, Serializable {
      */
     public JobData getJob(int jobIdx) {
         return this.jobs.get(jobIdx);
+    }
+
+    /**
+     * @return the cluster map from the specified file
+     *
+     * @param clusterFile	2-column tab-delimited file with the cluster ID in column 1 and the member name in column 2
+     *
+     * @throws IOException
+     */
+    public static Map<String, Set<String>> readClusterMap(File clusterFile) throws IOException {
+        Map<String, Set<String>> retVal;
+        try (TabbedLineReader inStream = new TabbedLineReader(clusterFile)) {
+            retVal = new HashMap<String, Set<String>>(100);
+            int count = 0;
+            for (TabbedLineReader.Line line : inStream) {
+                String cluster = line.get(0);
+                Set<String> list = retVal.computeIfAbsent(cluster, k -> new TreeSet<String>());
+                list.add(line.get(1));
+                count++;
+            }
+            log.info("{} samples found in {} clusters.", count, retVal.size());
+        }
+        return retVal;
     }
 
 }

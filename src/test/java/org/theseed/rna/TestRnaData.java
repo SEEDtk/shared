@@ -10,6 +10,7 @@ import static org.theseed.test.Matchers.*;
 import java.io.File;
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -114,7 +115,53 @@ public class TestRnaData {
             assertThat(rowF.getNeighbor(), equalTo(row.getNeighbor()));
             for (int i = 0; i < 3; i++)
                 assertThat(rowF.getWeight(i), equalTo(row.getWeight(i)));
-
+        }
+        // Now test the subset copy.
+        List<String> subset = Arrays.asList("job2", "job1");
+        RnaData subRna = testRna.getSubset(subset);
+        assertThat(subRna.rows(), equalTo(testRna.rows()));
+        assertThat(subRna.size(), equalTo(2));
+        // Verify the jobs.
+        for (RnaData.JobData subJob : subRna.jobs) {
+            RnaData.JobData testJob = testRna.getJob(subJob.getName());
+            String sample = subJob.getName();
+            assertThat(sample, testJob, not(nullValue()));
+            assertThat(sample, subJob.getBaseCount(), equalTo(testJob.getBaseCount()));
+            assertThat(sample, subJob.getCoverage(100), equalTo(testJob.getCoverage(100)));
+            assertThat(sample, subJob.getExpressedPercent(), equalTo(testJob.getExpressedPercent()));
+            assertThat(sample, subJob.getMeanReadLen(), equalTo(testJob.getMeanReadLen()));
+            assertThat(sample, subJob.getName(), equalTo(testJob.getName()));
+            assertThat(sample, subJob.getOldName(), equalTo(testJob.getOldName()));
+            assertThat(sample, subJob.getOpticalDensity(), equalTo(testJob.getOpticalDensity()));
+            assertThat(sample, subJob.getProcessingDate(), equalTo(testJob.getProcessingDate()));
+            assertThat(sample, subJob.getProduction(), equalTo(testJob.getProduction()));
+            assertThat(sample, subJob.getQuality(), equalTo(testJob.getQuality()));
+            assertThat(sample, subJob.getReadCount(), equalTo(testJob.getReadCount()));
+            assertThat(sample, subJob.isGood(), equalTo(testJob.isGood()));
+            assertThat(sample, subJob.isSuspicious(), equalTo(testJob.isSuspicious()));
+        }
+        // Verify the features.
+        for (RnaData.Row subRow : subRna.getRows()) {
+            String fid = subRow.getFeat().getId();
+            RnaData.Row testRow = testRna.getRow(fid);
+            assertThat(fid, testRow, not(nullValue()));
+            RnaFeatureData subFeat = subRow.getFeat();
+            RnaFeatureData testFeat = testRow.getFeat();
+            assertThat(fid, subFeat.getAtomicRegulon(), equalTo(testFeat.getAtomicRegulon()));
+            assertThat(fid, subFeat.getBaseLine(), equalTo(testFeat.getBaseLine()));
+            assertThat(fid, subFeat.getBNumber(), equalTo(testFeat.getBNumber()));
+            assertThat(fid, subFeat.getFunction(), equalTo(testFeat.getFunction()));
+            assertThat(fid, subFeat.getGene(), equalTo(testFeat.getGene()));
+            assertThat(fid, subFeat.getId(), equalTo(testFeat.getId()));
+            assertThat(fid, subFeat.getiModulons(), arrayContainingInAnyOrder(testFeat.getiModulons()));
+            assertThat(fid, subFeat.getLocation(), equalTo(testFeat.getLocation()));
+            assertThat(fid, subFeat.getOperon(), equalTo(testFeat.getOperon()));
+            // Verify the weights.
+            for (String jobName : subset) {
+                int subIdx = subRna.getColIdx(jobName);
+                int testIdx = testRna.getColIdx(jobName);
+                assertThat(fid + "/" + jobName, subRow.getWeight(subIdx), equalTo(testRow.getWeight(testIdx)));
+            }
         }
     }
 
