@@ -857,11 +857,4 @@ public class RnaData implements Iterable<RnaData.Row>, Serializable {
         return retVal;
     }
 
-    /**
-     * @return the jobs in this database
-     */
-    public Collection<JobData> getJobs() {
-        return this.jobs;
-    }
-
 }
