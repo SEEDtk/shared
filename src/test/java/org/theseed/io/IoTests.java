@@ -83,7 +83,7 @@ public class IoTests {
         for (TabbedLineReader.Line line : reader) {
             String label = line.get(0);
             String text = line.get(1);
-            assertThat("Text has wrong label.", StringUtils.startsWith(text, label), isTrue());
+            assertThat("Text \"" + text + "\" has wrong label.", StringUtils.startsWith(text, label));
             counts.count(label);
         }
         assertThat(counts.getCount("a"), equalTo(7));
@@ -237,6 +237,27 @@ public class IoTests {
         assertThat(test3.size(), equalTo(6));
         assertThat(test3.get(5), equalTo(300));
         assertThat(test3 == test1, isTrue());
+    }
+
+    /**
+     * Test the advanced set and get in the shuffler.
+     */
+    @Test
+    public void testShufflerExtend() {
+        Shuffler<String> test = new Shuffler<String>(10);
+        assertThat(test.get(6), nullValue());
+        test.set(3, "frog");
+        assertThat(test.get(0), nullValue());
+        assertThat(test.get(1), nullValue());
+        assertThat(test.get(2), nullValue());
+        assertThat(test.get(3), equalTo("frog"));
+        test.set(1, "dog");
+        assertThat(test.get(1), equalTo("dog"));
+        assertThat(test.size(), equalTo(4));
+        test.set(2, "hog");
+        test.set(0, "woggle bird");
+        assertThat(test, contains("woggle bird", "dog", "hog", "frog"));
+        assertThat(test.size(), equalTo(4));
     }
 
     /**

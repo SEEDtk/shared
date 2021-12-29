@@ -77,6 +77,29 @@ public class RnaFeatureData implements Comparable<RnaFeatureData>, Serializable 
     }
 
     /**
+     * Construct a feature object from basic feature information.
+     *
+     * @param fid		feature ID
+     * @param function	feature functional assignment
+     * @param loc		feature location
+     * @param gene		feature gene ID
+     * @param alias		feature alias (b-number)
+     * @param baseline	feature baseline
+     */
+    public RnaFeatureData(String fid, String function, Location loc, String gene, String alias, double baseline) {
+        this.id = fid;
+        this.function = function;
+        this.location = loc;
+        this.gene = (gene == null ? "" : gene);
+        this.bNumber = (alias == null ? "" : alias);
+        this.baseLine = baseline;
+        // Clear the group indicators.
+        this.atomicRegulon = 0;
+        this.iModulons = NO_MODULONS;
+        this.operon = "";
+    }
+
+    /**
      * This object sorts by location.
      */
     @Override

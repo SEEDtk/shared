@@ -9,7 +9,9 @@ import java.util.Random;
 
 /**
  * This is a minor extension to ArrayList that provides a method for shuffling the bulk of the array into the
- * first N positions.  It is used to make random selections from the array, then iterate them off.
+ * first N positions.  It is used to make random selections from the array, then iterate them off.  In
+ * addition, it allows the array to be initialized in random order.  If the array is too small to fit
+ * an object, it will be expanded to the proper size.
  *
  * @author Bruce Parrello
  *
@@ -64,6 +66,26 @@ public class Shuffler<T> extends ArrayList<T> {
             }
             i++;
         }
+    }
+
+    @Override
+    public T get(int idx) {
+        T retVal = null;
+        if (this.size() > idx)
+            retVal = super.get(idx);
+        return retVal;
+    }
+
+    @Override
+    public T set(int idx, T obj) {
+        if (this.size() > idx)
+            super.set(idx, obj);
+        else {
+            while (this.size() < idx)
+                this.add(null);
+            this.add(obj);
+        }
+        return obj;
     }
 
     /**
