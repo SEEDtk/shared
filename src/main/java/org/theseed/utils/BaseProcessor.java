@@ -4,6 +4,7 @@
 package org.theseed.utils;
 
 import java.io.IOException;
+import java.net.URL;
 
 import org.kohsuke.args4j.CmdLineException;
 import org.kohsuke.args4j.CmdLineParser;
@@ -12,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.LoggerContext;
+import ch.qos.logback.core.joran.util.ConfigurationWatchListUtil;
 
 /**
  * This is a simple base class for all processing methods.  It handles basic
@@ -73,7 +75,8 @@ public abstract class BaseProcessor implements ICommand {
                     logger.setLevel(Level.toLevel("TRACE"));
                     log.info("Debug logging ON.");
                 } else {
-                    log.info("Normal logging selected.");
+                    URL mainURL = ConfigurationWatchListUtil.getMainWatchURL(this.loggerContext);
+                    log.info("Normal logging selected using configuration at {}.", mainURL);
                 }
             }
         } catch (CmdLineException | ParseFailureException e) {

@@ -1,5 +1,9 @@
 package org.theseed.genome;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.commons.lang3.StringUtils;
 import org.theseed.locations.Region;
 
 import com.github.cliftonlabs.json_simple.JsonKey;
@@ -15,14 +19,23 @@ import com.github.cliftonlabs.json_simple.JsonObject;
 public class Contig implements Comparable<Contig> {
 
     // FIELDS
-
+    /** contig ID */
     private String id;
+    /** DNA sequence (not always available) */
     private String sequence;
+    /** genetic code for protein translation */
     private int geneticCode;
+    /** length of sequence (always available) */
     private int length;
+    /** accession key of contig */
     private String accession;
+    /** description of contig */
     private String description;
+    /** cached copy of reverse complement (not always available) */
     private String rSequence;
+    /** string containing nucleic acids */
+    private static final String NUCLEOTIDES = "acgtu";
+
 
     /** This enum defines the keys used and their default values.
      */
@@ -305,6 +318,43 @@ public class Contig implements Comparable<Contig> {
     @Override
     public int compareTo(Contig o) {
         return this.id.compareTo(o.id);
+    }
+
+    /**
+     * Split a DNA sequence into pieces, removing ambiguity characters.
+     *
+     * @param seq	input DNA sequence
+     */
+    public static List<String> cleanParts(String seq) {
+        List<String> retVal = new ArrayList<String>(5);
+        String normalized = seq.toLowerCase();
+        int iBreak = StringUtils.indexOfAnyBut(normalized, "acgt");
+        // We special-case no ambiguity characters because that is the most common case.
+        if (iBreak < 0)
+            retVal = List.of(normalized);
+        else {
+            // Now we have to break up the sequence.
+            retVal = new ArrayList<String>(5);
+            if (iBreak > 0)
+                retVal.add(normalized.substring(0, iBreak));
+            final int n = normalized.length();
+            int start = iBreak + 1;
+            // Now we are positioned on a bad character.
+            while (start < n) {
+                // Loop through the bad characters here.
+                while (start < n && NUCLEOTIDES.indexOf(normalized.charAt(start)) < 0)
+                    start++;
+                // Loop through the good characters here.
+                iBreak = start;
+                while (iBreak < n && NUCLEOTIDES.indexOf(normalized.charAt(iBreak)) >= 0)
+                    iBreak++;
+                // Output the substring here, then start over.
+                if (start < iBreak)
+                    retVal.add(normalized.substring(start, iBreak));
+                start = iBreak + 1;
+            }
+        }
+        return retVal;
     }
 
 }

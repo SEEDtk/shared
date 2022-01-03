@@ -951,6 +951,20 @@ public class Genome  {
     }
 
     /**
+     * Get this genome's DNA as a list of sequences.
+     *
+     * @return a list of this genomes contig's in the form of sequences
+     */
+    public List<Sequence> getSequences() {
+        List<Sequence> retVal = new ArrayList<Sequence>(this.getContigCount());
+        for (Contig contig : this.getContigs()) {
+            Sequence seq = new Sequence(contig.getId(), contig.getDescription(), contig.getSequence());
+            retVal.add(seq);
+        }
+        return retVal;
+    }
+
+    /**
      * Save this genome's proteins to the specified protein FASTA file.
      *
      * @param fastaFile		output file
