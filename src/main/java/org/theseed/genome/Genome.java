@@ -21,6 +21,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.UUID;
@@ -1214,6 +1215,23 @@ public class Genome  {
                     retVal = this.getDna(feat.getLocation());
                     this.ssuRna = retVal;
                 }
+            }
+        }
+        return retVal;
+    }
+
+    /**
+     * @return a map from each alias to its feature IDs
+     */
+    public Map<String, Set<String>> getAliasMap() {
+        var retVal = new HashMap<String, Set<String>>(this.features.size());
+        // Loop through the features.
+        for (Map.Entry<String, Feature> featEntry : this.features.entrySet()) {
+            String fid = featEntry.getKey();
+            var aliases = featEntry.getValue().getAliases();
+            for (String alias : aliases) {
+                Set<String> aliasFids = retVal.computeIfAbsent(alias, x -> new TreeSet<String>());
+                aliasFids.add(fid);
             }
         }
         return retVal;
