@@ -28,7 +28,7 @@ public class FloatList implements Iterable<Double> {
     /**
      * Construct a number list from a comma-delimited string.
      *
-     * @param inString	comma-delimited list of flkoating-point expressed as a string
+     * @param inString	comma-delimited list of floating-point expressed as a string
      */
     public FloatList(String inString) {
         this.values = Arrays.stream(StringUtils.split(inString, ',')).mapToDouble(Double::parseDouble).toArray();
@@ -156,8 +156,6 @@ public class FloatList implements Iterable<Double> {
     public double[] getValues() {
         return this.values;
     }
-
-
 
     @Override
     public String toString() {
