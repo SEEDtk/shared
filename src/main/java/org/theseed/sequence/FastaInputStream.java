@@ -5,6 +5,7 @@ package org.theseed.sequence;
 
 import java.io.Closeable;
 import java.io.File;
+import java.io.FileFilter;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -12,6 +13,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Scanner;
+import java.util.Set;
 import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.StringUtils;
@@ -29,6 +31,24 @@ public class FastaInputStream implements Iterable<Sequence>, Closeable, AutoClos
     // FIELDS
     /** underlying scanner for reading input */
     Scanner inputSource = null;
+
+    /**
+     * This is a general file filter that only accepts FASTA files.
+     */
+    public static class Fasta implements FileFilter {
+
+        /**
+         * This is the set of permissible filename extensions.
+         */
+        private static final Set<String> FASTA_ENDINGS = Set.of("fasta", "fa", "fna", "faa");
+
+        @Override
+        public boolean accept(File pathname) {
+            String ending = StringUtils.substringAfterLast(pathname.getName(), ".");
+            return FASTA_ENDINGS.contains(ending);
+        }
+
+    }
 
     /**
      * Prepare to read FASTA from an input stream.

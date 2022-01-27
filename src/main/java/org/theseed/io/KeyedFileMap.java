@@ -52,6 +52,18 @@ public class KeyedFileMap {
     }
 
     /**
+     * Create a keyed file map with the specified output columns.  The first column must be the key.
+     *
+     * @param headers	proposed headers for the new map
+     */
+    public KeyedFileMap(List<String> headers) {
+        this.setup(headers.get(0));
+        int n = headers.size();
+        if (n > 1)
+            this.addHeaders(headers.subList(1, n));
+    }
+
+    /**
      * Create a keyed file map from a tab-delimited file.
      *
      * @param inFile	source input file
@@ -128,9 +140,19 @@ public class KeyedFileMap {
         List<String> record = new ArrayList<String>(data.size() + 1);
         record.add(key);
         record.addAll(data);
+        this.addRecord(record);
+    }
+
+    /**
+     * Add a new record to the file.
+     *
+     * @param data	list of data columns, with the key first
+     */
+    public void addRecord(List<String> data) {
+        String key = data.get(0);
         if (this.records.containsKey(key))
             dupCount++;
-        this.records.put(key, record);
+        this.records.put(key, data);
     }
 
     /**
@@ -155,6 +177,13 @@ public class KeyedFileMap {
      */
     public List<String> getHeaders() {
         return this.headers;
+    }
+
+    /**
+     * @return the set of keys in this keyed file
+     */
+    public Collection<String> getKeys() {
+        return this.records.keySet();
     }
 
     /**
