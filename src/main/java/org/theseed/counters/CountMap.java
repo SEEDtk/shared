@@ -139,7 +139,7 @@ public class CountMap<K> {
     }
 
     /**
-     * @return the count for a given key
+     * @return the count for a given key (which is 0 if the key is unknown)
      *
      * @param key	key for the counter of interest
      */
