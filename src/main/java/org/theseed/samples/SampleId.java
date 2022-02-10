@@ -249,7 +249,8 @@ public class SampleId implements Comparable<SampleId> {
         retVal.fragments[INDUCE_COL] = (iptg ? "I" : "0");
         // Finally the medium.
         retVal.fragments[MEDIA_COL] = medium;
-        return retVal;
+        // Insure the inserts and deletes are normalized.
+        return retVal.normalizeSets();
     }
 
     /**
