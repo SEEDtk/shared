@@ -15,7 +15,6 @@ import org.theseed.utils.Parms;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
-import static org.theseed.test.Matchers.*;
 
 /**
  * @author Bruce Parrello
@@ -47,13 +46,13 @@ public class ParmsTest {
         MultiParms parmIterator = new MultiParms(parmFile);
         List<String> parms = parmIterator.next();
         assertThat(parms, contains("--digits", "1", "--constant", "X", "--letters", "a", "--batch"));
-        assertThat(parmIterator.hasNext(), isTrue());
+        assertThat(parmIterator.hasNext(), equalTo(true));
         parms = parmIterator.next();
         assertThat(parms, contains("--digits", "1", "--constant", "X", "--letters", "b", "--batch"));
-        assertThat(parmIterator.hasNext(), isTrue());
+        assertThat(parmIterator.hasNext(), equalTo(true));
         parms = parmIterator.next();
         assertThat(parms, contains("--digits", "1", "--constant", "X", "--letters", "c", "--batch"));
-        assertThat(parmIterator.hasNext(), isTrue());
+        assertThat(parmIterator.hasNext(), equalTo(true));
         assertThat(parmIterator.toString(), equalTo("--digits 1; --letters c"));
         HashMap<String, String> varMap = parmIterator.getVariables();
         assertThat(varMap.get("--digits"), equalTo("1"));
@@ -62,22 +61,22 @@ public class ParmsTest {
         assertThat(parmIterator.getOptions(), arrayContaining("--digits", "--letters"));
         parms = parmIterator.next();
         assertThat(parms, contains("--digits", "2", "--constant", "X", "--letters", "a", "--batch"));
-        assertThat(parmIterator.hasNext(), isTrue());
+        assertThat(parmIterator.hasNext(), equalTo(true));
         parms = parmIterator.next();
         assertThat(parms, contains("--digits", "2", "--constant", "X", "--letters", "b", "--batch"));
-        assertThat(parmIterator.hasNext(), isTrue());
+        assertThat(parmIterator.hasNext(), equalTo(true));
         parms = parmIterator.next();
         assertThat(parms, contains("--digits", "2", "--constant", "X", "--letters", "c", "--batch"));
-        assertThat(parmIterator.hasNext(), isTrue());
+        assertThat(parmIterator.hasNext(), equalTo(true));
         parms = parmIterator.next();
         assertThat(parms, contains("--digits", "3", "--constant", "X", "--letters", "a", "--batch"));
-        assertThat(parmIterator.hasNext(), isTrue());
+        assertThat(parmIterator.hasNext(), equalTo(true));
         parms = parmIterator.next();
         assertThat(parms, contains("--digits", "3", "--constant", "X", "--letters", "b", "--batch"));
-        assertThat(parmIterator.hasNext(), isTrue());
+        assertThat(parmIterator.hasNext(), equalTo(true));
         parms = parmIterator.next();
         assertThat(parms, contains("--digits", "3", "--constant", "X", "--letters", "c", "--batch"));
-        assertThat(parmIterator.hasNext(), isFalse());
+        assertThat(parmIterator.hasNext(), equalTo(false));
     }
 
     @Test
@@ -86,14 +85,14 @@ public class ParmsTest {
         MultiParms parmIterator = new MultiParms(parmFile);
         List<String> parms = parmIterator.next();
         assertThat(parms, contains("--digits", "1", "--constant", "X", "--letters", "a", "--batch"));
-        assertThat(parmIterator.hasNext(), isTrue());
+        assertThat(parmIterator.hasNext(), equalTo(true));
         parmIterator.replace("--constant", "Z");
         parms = parmIterator.next();
         assertThat(parms, contains("--digits", "1", "--constant", "Z", "--letters", "b", "--batch"));
-        assertThat(parmIterator.hasNext(), isTrue());
+        assertThat(parmIterator.hasNext(), equalTo(true));
         parms = parmIterator.next();
         assertThat(parms, contains("--digits", "1", "--constant", "Z", "--letters", "c", "--batch"));
-        assertThat(parmIterator.hasNext(), isTrue());
+        assertThat(parmIterator.hasNext(), equalTo(true));
         assertThat(parmIterator.toString(), equalTo("--digits 1; --letters c"));
         HashMap<String, String> varMap = parmIterator.getVariables();
         assertThat(varMap.get("--digits"), equalTo("1"));
@@ -102,23 +101,23 @@ public class ParmsTest {
         assertThat(parmIterator.getOptions(), arrayContaining("--digits", "--letters"));
         parms = parmIterator.next();
         assertThat(parms, contains("--digits", "2", "--constant", "Z", "--letters", "a", "--batch"));
-        assertThat(parmIterator.hasNext(), isTrue());
+        assertThat(parmIterator.hasNext(), equalTo(true));
         parms = parmIterator.next();
         assertThat(parms, contains("--digits", "2", "--constant", "Z", "--letters", "b", "--batch"));
-        assertThat(parmIterator.hasNext(), isTrue());
+        assertThat(parmIterator.hasNext(), equalTo(true));
         parms = parmIterator.next();
         assertThat(parms, contains("--digits", "2", "--constant", "Z", "--letters", "c", "--batch"));
-        assertThat(parmIterator.hasNext(), isTrue());
+        assertThat(parmIterator.hasNext(), equalTo(true));
         parmIterator.replace("--frog", "tadpole");
         parms = parmIterator.next();
         assertThat(parms, contains("--digits", "3", "--constant", "Z", "--letters", "a", "--frog", "tadpole", "--batch"));
-        assertThat(parmIterator.hasNext(), isTrue());
+        assertThat(parmIterator.hasNext(), equalTo(true));
         parms = parmIterator.next();
         assertThat(parms, contains("--digits", "3", "--constant", "Z", "--letters", "b", "--frog", "tadpole", "--batch"));
-        assertThat(parmIterator.hasNext(), isTrue());
+        assertThat(parmIterator.hasNext(), equalTo(true));
         parms = parmIterator.next();
         assertThat(parms, contains("--digits", "3", "--constant", "Z", "--letters", "c", "--frog", "tadpole", "--batch"));
-        assertThat(parmIterator.hasNext(), isFalse());
+        assertThat(parmIterator.hasNext(), equalTo(false));
     }
 
     /**

@@ -6,7 +6,6 @@ package org.theseed.test;
 import org.junit.jupiter.api.Test;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
-import static org.theseed.test.Matchers.*;
 import static org.junit.jupiter.api.Assertions.fail;
 
 /**
@@ -20,17 +19,17 @@ public class MatcherTest {
     @Test
     public void testBoolean() {
         String frog = "frog";
-        assertThat(frog.isEmpty(), isFalse());
         assertThat(frog.isEmpty(), equalTo(false));
-        assertThat(true, isTrue());
+        assertThat(frog.isEmpty(), equalTo(false));
+        assertThat(true, equalTo(true));
         try {
-            assertThat(frog.isEmpty(), isTrue());
+            assertThat(frog.isEmpty(), equalTo(true));
             fail();
         } catch (AssertionError e) {
             assertThat(e.toString(), containsString("Expected: <true>"));
         }
         try {
-            assertThat(! frog.isEmpty(), isFalse());
+            assertThat(! frog.isEmpty(), equalTo(false));
             fail();
         } catch (AssertionError e) {
             assertThat(e.toString(), containsString("Expected: <false>"));

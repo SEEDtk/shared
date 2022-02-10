@@ -5,7 +5,6 @@ package org.theseed.counters;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
-import static org.theseed.test.Matchers.*;
 
 import java.io.IOException;
 import java.util.Iterator;
@@ -54,47 +53,47 @@ public class TestRatingList {
         assertThat(ratings.getBest(), contains("C300", "D250", "E250", "P220", "B200",
                 "L150", "O120", "A100", "G070", "H060"));
         Iterator<Rating<String>> iter = ratings.iterator();
-        assertThat(iter.hasNext(), isTrue());
+        assertThat(iter.hasNext(), equalTo(true));
         Rating<String> curr = iter.next();
         assertThat(curr.getKey(), equalTo("C300"));
         assertThat(curr.getRating(), equalTo(300.0));
-        assertThat(iter.hasNext(), isTrue());
+        assertThat(iter.hasNext(), equalTo(true));
         curr = iter.next();
         assertThat(curr.getKey(), equalTo("D250"));
         assertThat(curr.getRating(), equalTo(250.0));
-        assertThat(iter.hasNext(), isTrue());
+        assertThat(iter.hasNext(), equalTo(true));
         curr = iter.next();
         assertThat(curr.getKey(), equalTo("E250"));
         assertThat(curr.getRating(), equalTo(250.0));
-        assertThat(iter.hasNext(), isTrue());
+        assertThat(iter.hasNext(), equalTo(true));
         curr = iter.next();
         assertThat(curr.getKey(), equalTo("P220"));
         assertThat(curr.getRating(), equalTo(220.0));
-        assertThat(iter.hasNext(), isTrue());
+        assertThat(iter.hasNext(), equalTo(true));
         curr = iter.next();
         assertThat(curr.getKey(), equalTo("B200"));
         assertThat(curr.getRating(), equalTo(200.0));
-        assertThat(iter.hasNext(), isTrue());
+        assertThat(iter.hasNext(), equalTo(true));
         curr = iter.next();
         assertThat(curr.getKey(), equalTo("L150"));
         assertThat(curr.getRating(), equalTo(150.0));
-        assertThat(iter.hasNext(), isTrue());
+        assertThat(iter.hasNext(), equalTo(true));
         curr = iter.next();
         assertThat(curr.getKey(), equalTo("O120"));
         assertThat(curr.getRating(), equalTo(120.0));
-        assertThat(iter.hasNext(), isTrue());
+        assertThat(iter.hasNext(), equalTo(true));
         curr = iter.next();
         assertThat(curr.getKey(), equalTo("A100"));
         assertThat(curr.getRating(), equalTo(100.0));
-        assertThat(iter.hasNext(), isTrue());
+        assertThat(iter.hasNext(), equalTo(true));
         curr = iter.next();
         assertThat(curr.getKey(), equalTo("G070"));
         assertThat(curr.getRating(), equalTo(70.0));
-        assertThat(iter.hasNext(), isTrue());
+        assertThat(iter.hasNext(), equalTo(true));
         curr = iter.next();
         assertThat(curr.getKey(), equalTo("H060"));
         assertThat(curr.getRating(), equalTo(60.0));
-        assertThat(iter.hasNext(), isFalse());
+        assertThat(iter.hasNext(), equalTo(false));
     }
 
 }

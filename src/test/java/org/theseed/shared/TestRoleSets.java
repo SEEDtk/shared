@@ -6,7 +6,6 @@ package org.theseed.shared;
 import org.junit.jupiter.api.Test;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
-import static org.theseed.test.Matchers.*;
 
 import java.io.File;
 import java.io.IOException;
@@ -38,8 +37,8 @@ public class TestRoleSets {
         assertThat(emptySet, not(equalTo(single)));
         assertThat(emptySet.toString(), equalTo(""));
         Iterator<String> emptyIter = emptySet.iterator();
-        assertThat(emptyIter.hasNext(), isFalse());
-        assertThat(emptySet.isEmpty(), isTrue());
+        assertThat(emptyIter.hasNext(), equalTo(false));
+        assertThat(emptySet.isEmpty(), equalTo(true));
     }
 
     @Test
@@ -59,13 +58,13 @@ public class TestRoleSets {
         variant.setCell(1, projector);
         variant.setCell(3, projector);
         projector.addVariant(variant);
-        assertThat(variant.matches(roleMap), isTrue());
+        assertThat(variant.matches(roleMap), equalTo(true));
         variant = new VariantSpec(subsystem, "2");
         variant.setCell(1,  projector);
         variant.setCell(3, projector);
         variant.setCell(4, projector);
         projector.addVariant(variant);
-        assertThat(variant.matches(roleMap), isFalse());
+        assertThat(variant.matches(roleMap), equalTo(false));
         projector.project(gto);
         SubsystemRow projected = gto.getSubsystem("Test subsystem");
         assertThat(projected.getVariantCode(), equalTo("1"));
@@ -97,24 +96,24 @@ public class TestRoleSets {
         assertThat(set2.compareTo(set3), lessThan(0));
         assertThat(set1.compareTo(set4), lessThan(0));
         assertThat(set2.compareTo(set1), greaterThan(0));
-        assertThat(set3.isEmpty(), isTrue());
-        assertThat(set1.isEmpty(), isFalse());
-        assertThat(set2.isEmpty(), isFalse());
+        assertThat(set3.isEmpty(), equalTo(true));
+        assertThat(set1.isEmpty(), equalTo(false));
+        assertThat(set2.isEmpty(), equalTo(false));
         Iterator<String> iter = set4.iterator();
-        assertThat(iter.hasNext(), isTrue());
+        assertThat(iter.hasNext(), equalTo(true));
         assertThat(iter.next(), equalTo("Bbbb"));
-        assertThat(iter.hasNext(), isTrue());
+        assertThat(iter.hasNext(), equalTo(true));
         assertThat(iter.next(), equalTo("Cccc"));
-        assertThat(iter.hasNext(), isFalse());
+        assertThat(iter.hasNext(), equalTo(false));
         assertThat(set1.size(), equalTo(2));
         assertThat(set2.size(), equalTo(1));
         RoleSet[] roleArray = new RoleSet[] { set5, set4, set3, set1, set2 };
         assertThat(RoleSet.min(roleArray), equalTo("Aaaa"));
-        assertThat(set1.contains(set2), isFalse());
-        assertThat(set4.contains(set2), isTrue());
-        assertThat(set4.contains(set1), isFalse());
-        assertThat(set1.contains(set3), isTrue());
-        assertThat(set3.contains(set1), isFalse());
-        assertThat(set5.contains(set6), isTrue());
+        assertThat(set1.contains(set2), equalTo(false));
+        assertThat(set4.contains(set2), equalTo(true));
+        assertThat(set4.contains(set1), equalTo(false));
+        assertThat(set1.contains(set3), equalTo(true));
+        assertThat(set3.contains(set1), equalTo(false));
+        assertThat(set5.contains(set6), equalTo(true));
     }
 }

@@ -5,7 +5,6 @@ package org.theseed.shared;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
-import static org.theseed.test.Matchers.*;
 
 import java.io.File;
 import java.io.IOException;
@@ -44,10 +43,10 @@ public class TestRoles {
         Role rObj4 = new Role("2HydrDehySimiLSulf4", "(R)-2-hydroxyacid dehydrogenase (EC 1.1.1.272), similar to L-sulfolactate dehydrogenase");
         assertThat("Role checksums affected by EC position.", rObj4, equalTo(rObj1));
         Role rObj5 = new Role("2HydrDehySimiLSulf5", "(R)-2-hydroxyacid dehydrogenase similar to L-sulfolactate dehydrogenase");
-        assertThat(rObj5.matches("(r)-2-hydroxyacid dehydrogenase, similar to L-sulfolactate dehydrogenase"), isTrue());
-        assertThat(rObj5.matches("(R)-2-hydroxyacid dehydrogenase similar to L-sulfolactate Dehydrogenase"), isTrue());
-        assertThat(rObj5.matches("(R)-3-hydroxyacid dehydrogenase similar to L-sulfolactate Dehydrogenase"), isFalse());
-        assertThat(rObj4.matches("Phenylalanyl tRNA synthetase alpha chain"), isFalse());
+        assertThat(rObj5.matches("(r)-2-hydroxyacid dehydrogenase, similar to L-sulfolactate dehydrogenase"), equalTo(true));
+        assertThat(rObj5.matches("(R)-2-hydroxyacid dehydrogenase similar to L-sulfolactate Dehydrogenase"), equalTo(true));
+        assertThat(rObj5.matches("(R)-3-hydroxyacid dehydrogenase similar to L-sulfolactate Dehydrogenase"), equalTo(false));
+        assertThat(rObj4.matches("Phenylalanyl tRNA synthetase alpha chain"), equalTo(false));
         assertThat("Role checksum affected by comma.", rObj5, equalTo(rObj1));
     }
 
@@ -82,8 +81,8 @@ public class TestRoles {
             assertThat("Registered ID did not read back.", magicTable.getName(roleId), equalTo(roleDesc));
         }
         roleScanner.close();
-        assertThat("PheS not found.", magicTable.containsKey("PhenTrnaSyntAlph"), isTrue());
-        assertThat("Known bad key found.", magicTable.containsKey("PhenTrnaSyntGamm"), isFalse());
+        assertThat("PheS not found.", magicTable.containsKey("PhenTrnaSyntAlph"), equalTo(true));
+        assertThat("Known bad key found.", magicTable.containsKey("PhenTrnaSyntGamm"), equalTo(false));
         String modifiedRole = "3-keto-L-gulonate-6-phosphate decarboxylase UlaK putative (L-ascorbate utilization protein D) (EC 4.1.1.85)";
         Role newRole = magicTable.findOrInsert(modifiedRole);
         assertThat("Wrong ID assigned for modified role.", newRole.getId(), equalTo("3KetoLGulo6PhosDeca6"));
@@ -96,7 +95,7 @@ public class TestRoles {
         assertThat("Unique role was re-inserted.", findRole,sameInstance(newRole));
         modifiedRole = "Unique (old) role string without numbers";
         findRole = magicTable.findOrInsert(modifiedRole);
-        assertThat("Parenthetical did not change role ID.", findRole != newRole, isTrue());
+        assertThat("Parenthetical did not change role ID.", findRole != newRole, equalTo(true));
         assertThat("Wrong ID assigned for parenthetical role.", findRole.getId(), equalTo("UniqRoleStriWith2"));
         assertThat("Parenthetical role did not read back.", magicTable.getItem("UniqRoleStriWith2"),sameInstance(findRole));
         modifiedRole = "Unique (newer) role string without numbers";
@@ -123,9 +122,9 @@ public class TestRoles {
         // Test on-the-fly registration.
         RoleMap goodRoles = new RoleMap();
         goodRoles.register("Role 1", "Role 2", "Role 3");
-        assertThat("Role 1 not found", goodRoles.containsName("role 1"), isTrue());
-        assertThat("Role 2 not found", goodRoles.containsName("role 2"), isTrue());
-        assertThat("Role 3 not found", goodRoles.containsName("role 3"), isTrue());
+        assertThat("Role 1 not found", goodRoles.containsName("role 1"), equalTo(true));
+        assertThat("Role 2 not found", goodRoles.containsName("role 2"), equalTo(true));
+        assertThat("Role 3 not found", goodRoles.containsName("role 3"), equalTo(true));
     }
 
     /**
@@ -170,11 +169,11 @@ public class TestRoles {
         Function fun10 = map1.findOrInsert("3-ketoacyl-CoA thiolase (EC 2.3.1.16) @ Acetyl-CoA acetyltransferase (EC 2.3.1.9)");
         Function fun11 = map1.findOrInsert("3-ketoacyl-CoA thiolase @ Acetyl-CoA acetyltransferase (EC 2.3.1.9)");
         assertThat(fun10, equalTo(fun11));
-        assertThat(fun10.matches("3-ketoacyl-CoA thiolase (EC 2.3.1.16) @ Acetyl-CoA acetyltransferase (EC 2.3.1.9) ## comment"), isTrue());
-        assertThat(fun10.matches("3-ketoacyl-CoA thiolase @ Acetyl-CoA acetyltransferase "), isTrue());
-        assertThat(fun11.matches("3-ketoacyl-CoA thiolase (EC 2.3.1.16) @ Acetyl-CoA acetyltransferase (EC 2.3.1.9) ## comment"), isTrue());
-        assertThat(fun11.matches("3-ketoacyl-CoA thiolase @ Acetyl-CoA acetyltransferase "), isTrue());
-        assertThat(fun11.matches("3-ketoacyl-CoA thiolase"), isFalse());
-        assertThat(fun11.matches(""), isFalse());
+        assertThat(fun10.matches("3-ketoacyl-CoA thiolase (EC 2.3.1.16) @ Acetyl-CoA acetyltransferase (EC 2.3.1.9) ## comment"), equalTo(true));
+        assertThat(fun10.matches("3-ketoacyl-CoA thiolase @ Acetyl-CoA acetyltransferase "), equalTo(true));
+        assertThat(fun11.matches("3-ketoacyl-CoA thiolase (EC 2.3.1.16) @ Acetyl-CoA acetyltransferase (EC 2.3.1.9) ## comment"), equalTo(true));
+        assertThat(fun11.matches("3-ketoacyl-CoA thiolase @ Acetyl-CoA acetyltransferase "), equalTo(true));
+        assertThat(fun11.matches("3-ketoacyl-CoA thiolase"), equalTo(false));
+        assertThat(fun11.matches(""), equalTo(false));
     }
 }

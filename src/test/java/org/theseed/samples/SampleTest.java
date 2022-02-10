@@ -5,7 +5,6 @@ package org.theseed.samples;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
-import static org.theseed.test.Matchers.*;
 
 import java.io.File;
 import java.io.IOException;
@@ -45,7 +44,7 @@ public class SampleTest {
                 if (line.contains("pta-thrABC"))
                     assertThat(sample.getFragment(2), equalTo("TA1"));
                 if (line.contains("plus"))
-                    assertThat(sample.isIPTG(), isTrue());
+                    assertThat(sample.isIPTG(), equalTo(true));
                 log.info("Translation of {} = {}.", line, sample.toString());
             }
         }
@@ -80,10 +79,10 @@ public class SampleTest {
         assertThat(samp2.getTimePoint(), equalTo(4.5));
         assertThat(samp2, lessThan(samp1));
         assertThat(samp2.getDeletes(), contains("asd", "dapA"));
-        assertThat(samp2.isIPTG(), isTrue());
+        assertThat(samp2.isIPTG(), equalTo(true));
         samp2 = new SampleId("7_0_0_A_asdO_000_D000_0_12_M1");
         assertThat(samp2.getDeletes().size(), equalTo(0));
-        assertThat(samp2.isIPTG(), isFalse());
+        assertThat(samp2.isIPTG(), equalTo(false));
         SampleId samp3 = new SampleId("7_0_0_A_asdO_000_D000_0_12_M1_rep1");
         assertThat(samp2.repBaseId(), equalTo(samp3.repBaseId()));
         samp1 = new SampleId("M_0_TA1_C_asdT_pntAB-aspC-ppc_DtdhDmetLDdapA_I_24_M1");
@@ -205,11 +204,11 @@ public class SampleTest {
         assertThat(samp2.genericOperon(), equalTo("M_X_X_X_asdT_rhtA_Dtdh_I_24_M1"));
         SampleId samp1X = new SampleId("M_0_TA1_C_X_rhtA-metL_Dtdh_I_24_M1");
         SampleId samp2X = new SampleId("X_D_TAasd_P_asdT_rhtA_Dtdh_I_24_M1");
-        assertThat(samp1.matches(samp1X), isTrue());
-        assertThat(samp1.matches(samp2X), isFalse());
-        assertThat(samp2.matches(samp2X), isTrue());
-        assertThat(samp2.matches(samp1X), isFalse());
-        assertThat(samp1X.matches(samp2X), isFalse());
+        assertThat(samp1.matches(samp1X), equalTo(true));
+        assertThat(samp1.matches(samp2X), equalTo(false));
+        assertThat(samp2.matches(samp2X), equalTo(true));
+        assertThat(samp2.matches(samp1X), equalTo(false));
+        assertThat(samp1X.matches(samp2X), equalTo(false));
     }
 
     @Test

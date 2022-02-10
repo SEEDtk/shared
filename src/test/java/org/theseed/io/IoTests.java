@@ -5,7 +5,6 @@ package org.theseed.io;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
-import static org.theseed.test.Matchers.*;
 import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.File;
@@ -130,7 +129,7 @@ public class IoTests {
         line = reader.next();
         assertThat(line.get(0), equalTo("b"));
         assertThat(line.get(1), equalTo("b2"));
-        assertThat(reader.hasNext(), isFalse());
+        assertThat(reader.hasNext(), equalTo(false));
         reader.close();
         outStream = new BalancedOutputStream(1.2, testFile);
         BalancedOutputStream.setBufferMax(600);
@@ -187,17 +186,17 @@ public class IoTests {
             assertThat(test1.get(i), equalTo(i));
         // Test the limited iterator.
         Iterator<Integer> limited = test1.limitedIter(5);
-        assertThat(limited.hasNext(), isTrue());
+        assertThat(limited.hasNext(), equalTo(true));
         assertThat(limited.next(), equalTo(0));
-        assertThat(limited.hasNext(), isTrue());
+        assertThat(limited.hasNext(), equalTo(true));
         assertThat(limited.next(), equalTo(1));
-        assertThat(limited.hasNext(), isTrue());
+        assertThat(limited.hasNext(), equalTo(true));
         assertThat(limited.next(), equalTo(2));
-        assertThat(limited.hasNext(), isTrue());
+        assertThat(limited.hasNext(), equalTo(true));
         assertThat(limited.next(), equalTo(3));
-        assertThat(limited.hasNext(), isTrue());
+        assertThat(limited.hasNext(), equalTo(true));
         assertThat(limited.next(), equalTo(4));
-        assertThat(limited.hasNext(), isFalse());
+        assertThat(limited.hasNext(), equalTo(false));
         // Test the shuffling.
         test1.shuffle(50);
         for (int i = 0; i < 100; i++) {
@@ -236,7 +235,7 @@ public class IoTests {
         Shuffler<Integer> test3 = test1.add1(300);
         assertThat(test3.size(), equalTo(6));
         assertThat(test3.get(5), equalTo(300));
-        assertThat(test3 == test1, isTrue());
+        assertThat(test3 == test1, equalTo(true));
     }
 
     /**
@@ -401,15 +400,15 @@ public class IoTests {
         assertThat("Wrong value in column 0 of line 1", line.get(0), equalTo("100.99"));
         assertThat("Wrong value in column 2 of line 1", line.getInt(2), equalTo(10));
         assertThat("Wrong value in column 3 of line 1", line.getDouble(3), closeTo(0.8, 0.0001));
-        assertThat("Boolean adjustment fail in line 1", line.getFlag(4), isFalse());
+        assertThat("Boolean adjustment fail in line 1", line.getFlag(4), equalTo(false));
         assertThat("Line input not working", line.getAll(), equalTo("100.99\tname of 100.99\t10\t0.8"));
         line = tabReader.next();
         assertThat("Wrong value in column 2 of line 2", line.getInt(2), equalTo(-4));
         assertThat("Wrong value in column 3 of line 2", line.getDouble(3), equalTo(12.0));
-        assertThat("Wrong value in column 4 of line 2", line.getFlag(4), isTrue());
+        assertThat("Wrong value in column 4 of line 2", line.getFlag(4), equalTo(true));
         line = tabReader.next();
-        assertThat("Wrong value in column 4 of line 3", line.getFlag(4), isFalse());
-        assertThat("End of file not detected", tabReader.hasNext(), isFalse());
+        assertThat("Wrong value in column 4 of line 3", line.getFlag(4), equalTo(false));
+        assertThat("End of file not detected", tabReader.hasNext(), equalTo(false));
         assertThat("Error reading past end-of-file", tabReader.next(), nullValue());
         tabReader.close();
         // Try with a string list.
@@ -470,17 +469,17 @@ public class IoTests {
         assertThat("Wrong value in column 0 of line 1", line.get(0), equalTo("100.99"));
         assertThat("Wrong value in column 2 of line 1", line.getInt(2), equalTo(10));
         assertThat("Wrong value in column 3 of line 1", line.getDouble(3), closeTo(0.8, 0.0001));
-        assertThat("Boolean adjustment fail in line 1", line.getFlag(4), isFalse());
+        assertThat("Boolean adjustment fail in line 1", line.getFlag(4), equalTo(false));
         assertThat("Line input not working", line.getAll(), equalTo("100.99\tname of 100.99\t10\t0.8"));
         line = tabReader.next();
         assertThat("Wrong value in column 2 of line 2", line.getInt(2), equalTo(-4));
         assertThat("Wrong value in column 3 of line 2", line.getDouble(3), equalTo(12.0));
-        assertThat("Wrong value in column 4 of line 2", line.getFlag(4), isTrue());
+        assertThat("Wrong value in column 4 of line 2", line.getFlag(4), equalTo(true));
         line = tabReader.next();
-        assertThat("Wrong value in column 4 of line 3", line.getFlag(4), isFalse());
+        assertThat("Wrong value in column 4 of line 3", line.getFlag(4), equalTo(false));
         line = tabReader.next();
         assertThat("Blank column failure.", line.getInt(2), equalTo(5));
-        assertThat("End of file not detected", tabReader.hasNext(), isFalse());
+        assertThat("End of file not detected", tabReader.hasNext(), equalTo(false));
         assertThat("Error reading past end-of-file", tabReader.next(), nullValue());
         tabReader.close();
     }
@@ -495,12 +494,12 @@ public class IoTests {
         // Start with an empty file.
         File emptyFile = new File("data", "empty.fa");
         try (LineReader reader = new LineReader(emptyFile)) {
-            assertThat(reader.hasNext(), isFalse());
+            assertThat(reader.hasNext(), equalTo(false));
         }
         // Try a regular file as a stream.
         InputStream inStream = new FileInputStream(new File("data", "lines.txt"));
         try (LineReader reader = new LineReader(inStream)) {
-            assertThat(reader.hasNext(), isTrue());
+            assertThat(reader.hasNext(), equalTo(true));
             List<String> lines = new ArrayList<String>(5);
             for (String line : reader)
                 lines.add(line);
@@ -511,9 +510,9 @@ public class IoTests {
         }
         File badFile = new File("data", "nosuchfile.bad");
         try (LineReader reader = new LineReader(badFile)) {
-            assertThat("Opened an invalid file.", false, isTrue());
+            assertThat("Opened an invalid file.", false, equalTo(true));
         } catch (IOException e) {
-            assertThat(true, isTrue());
+            assertThat(true, equalTo(true));
         }
     }
 
@@ -650,98 +649,98 @@ public class IoTests {
         File testFile = new File("data", "lrTest.tbl");
         LineReader testStream = new LineReader(testFile);
         Iterator<String[]> iter2 = testStream.new SectionIter("//", "\t");
-        assertThat(iter2.hasNext(), isTrue());
+        assertThat(iter2.hasNext(), equalTo(true));
         assertThat(iter2.next(), arrayContaining("a", "a1", "a2"));
-        assertThat(iter2.hasNext(), isTrue());
+        assertThat(iter2.hasNext(), equalTo(true));
         assertThat(iter2.next(), arrayContaining("b", "b1", "b2"));
-        assertThat(iter2.hasNext(), isFalse());
-        assertThat(iter2.hasNext(), isFalse());
+        assertThat(iter2.hasNext(), equalTo(false));
+        assertThat(iter2.hasNext(), equalTo(false));
         iter2 = testStream.new SectionIter("//", "\t");
-        assertThat(iter2.hasNext(), isTrue());
+        assertThat(iter2.hasNext(), equalTo(true));
         assertThat(iter2.next(), arrayContaining("c", "", "c2", "", ""));
-        assertThat(iter2.hasNext(), isTrue());
+        assertThat(iter2.hasNext(), equalTo(true));
         assertThat(iter2.next(), arrayContaining("d", "d2"));
-        assertThat(iter2.hasNext(), isFalse());
+        assertThat(iter2.hasNext(), equalTo(false));
         iter2 = testStream.new SectionIter("//", "\t");
-        assertThat(iter2.hasNext(), isFalse());
+        assertThat(iter2.hasNext(), equalTo(false));
         iter2 = testStream.new SectionIter("//", "\t");
-        assertThat(iter2.hasNext(), isTrue());
+        assertThat(iter2.hasNext(), equalTo(true));
         assertThat(iter2.next(), arrayContaining("e", "e1", "", "e2"));
-        assertThat(iter2.hasNext(), isFalse());
+        assertThat(iter2.hasNext(), equalTo(false));
         testStream.close();
         testStream = new LineReader(testFile);
         Iterator<String> iter = testStream.iterator();
         testStream.skipSection("//");
-        assertThat(iter.hasNext(), isTrue());
+        assertThat(iter.hasNext(), equalTo(true));
         assertThat(iter.next(), equalTo("c\t\tc2\t\t"));
         testStream.skipSection("//");
-        assertThat(iter.hasNext(), isTrue());
+        assertThat(iter.hasNext(), equalTo(true));
         assertThat(iter.next(), equalTo("//"));
         testStream.skipSection("//");
-        assertThat(iter.hasNext(), isFalse());
+        assertThat(iter.hasNext(), equalTo(false));
         testStream.close();
         testStream = new LineReader(testFile);
         testStream.skipSection("//");
         iter2 = testStream.new SectionIter(null, "\t");
-        assertThat(iter2.hasNext(), isTrue());
+        assertThat(iter2.hasNext(), equalTo(true));
         assertThat(iter2.next(), arrayContaining("c", "", "c2", "", ""));
-        assertThat(iter2.hasNext(), isTrue());
+        assertThat(iter2.hasNext(), equalTo(true));
         assertThat(iter2.next(), arrayContaining("d", "d2"));
-        assertThat(iter2.hasNext(), isTrue());
+        assertThat(iter2.hasNext(), equalTo(true));
         assertThat(iter2.next(), arrayContaining("//"));
-        assertThat(iter2.hasNext(), isTrue());
+        assertThat(iter2.hasNext(), equalTo(true));
         assertThat(iter2.next(), arrayContaining("//"));
-        assertThat(iter2.hasNext(), isTrue());
+        assertThat(iter2.hasNext(), equalTo(true));
         assertThat(iter2.next(), arrayContaining("e", "e1", "", "e2"));
-        assertThat(iter2.hasNext(), isFalse());
+        assertThat(iter2.hasNext(), equalTo(false));
         testStream.close();
         testFile = new File("data", "lrtest.csv");
         testStream = new LineReader(testFile);
         iter2 = testStream.new SectionIter("//", ",");
-        assertThat(iter2.hasNext(), isTrue());
+        assertThat(iter2.hasNext(), equalTo(true));
         assertThat(iter2.next(), arrayContaining("a", "a1", "a2"));
-        assertThat(iter2.hasNext(), isTrue());
+        assertThat(iter2.hasNext(), equalTo(true));
         assertThat(iter2.next(), arrayContaining("b", "b1", "b2"));
-        assertThat(iter2.hasNext(), isFalse());
-        assertThat(iter2.hasNext(), isFalse());
+        assertThat(iter2.hasNext(), equalTo(false));
+        assertThat(iter2.hasNext(), equalTo(false));
         iter2 = testStream.new SectionIter("//", ",");
-        assertThat(iter2.hasNext(), isTrue());
+        assertThat(iter2.hasNext(), equalTo(true));
         assertThat(iter2.next(), arrayContaining("c", "", "c2", "", ""));
-        assertThat(iter2.hasNext(), isTrue());
+        assertThat(iter2.hasNext(), equalTo(true));
         assertThat(iter2.next(), arrayContaining("d", "d2"));
-        assertThat(iter2.hasNext(), isFalse());
+        assertThat(iter2.hasNext(), equalTo(false));
         iter2 = testStream.new SectionIter("//", ",");
-        assertThat(iter2.hasNext(), isFalse());
+        assertThat(iter2.hasNext(), equalTo(false));
         iter2 = testStream.new SectionIter("//", ",");
-        assertThat(iter2.hasNext(), isTrue());
+        assertThat(iter2.hasNext(), equalTo(true));
         assertThat(iter2.next(), arrayContaining("e", "e1", "", "e2"));
-        assertThat(iter2.hasNext(), isFalse());
+        assertThat(iter2.hasNext(), equalTo(false));
         testStream.close();
         testStream = new LineReader(testFile);
         iter = testStream.iterator();
         testStream.skipSection("//");
-        assertThat(iter.hasNext(), isTrue());
+        assertThat(iter.hasNext(), equalTo(true));
         assertThat(iter.next(), equalTo("c,,c2,,"));
         testStream.skipSection("//");
-        assertThat(iter.hasNext(), isTrue());
+        assertThat(iter.hasNext(), equalTo(true));
         assertThat(iter.next(), equalTo("//"));
         testStream.skipSection("//");
-        assertThat(iter.hasNext(), isFalse());
+        assertThat(iter.hasNext(), equalTo(false));
         testStream.close();
         testStream = new LineReader(testFile);
         testStream.skipSection("//");
         iter2 = testStream.new SectionIter(null, ",");
-        assertThat(iter2.hasNext(), isTrue());
+        assertThat(iter2.hasNext(), equalTo(true));
         assertThat(iter2.next(), arrayContaining("c", "", "c2", "", ""));
-        assertThat(iter2.hasNext(), isTrue());
+        assertThat(iter2.hasNext(), equalTo(true));
         assertThat(iter2.next(), arrayContaining("d", "d2"));
-        assertThat(iter2.hasNext(), isTrue());
+        assertThat(iter2.hasNext(), equalTo(true));
         assertThat(iter2.next(), arrayContaining("//"));
-        assertThat(iter2.hasNext(), isTrue());
+        assertThat(iter2.hasNext(), equalTo(true));
         assertThat(iter2.next(), arrayContaining("//"));
-        assertThat(iter2.hasNext(), isTrue());
+        assertThat(iter2.hasNext(), equalTo(true));
         assertThat(iter2.next(), arrayContaining("e", "e1", "", "e2"));
-        assertThat(iter2.hasNext(), isFalse());
+        assertThat(iter2.hasNext(), equalTo(false));
         testStream.close();
     }
 

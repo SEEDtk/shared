@@ -5,7 +5,6 @@ package org.theseed.counters;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
-import static org.theseed.test.Matchers.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -215,16 +214,16 @@ public class CounterTest  {
         // Start with an empty list.
         IntegerList newList = new IntegerList();
         assertThat(newList.size(), equalTo(0));
-        assertThat(newList.isEmpty(), isTrue());
-        assertThat(newList.hasNext(), isFalse());
+        assertThat(newList.isEmpty(), equalTo(true));
+        assertThat(newList.hasNext(), equalTo(false));
         assertThat(newList.toString(), equalTo(""));
         assertThat(newList.original(), equalTo(""));
         assertThat(newList.last(), equalTo(0));
         // Repeat with an empty string.
         newList = new IntegerList("");
         assertThat(newList.size(), equalTo(0));
-        assertThat(newList.isEmpty(), isTrue());
-        assertThat(newList.hasNext(), isFalse());
+        assertThat(newList.isEmpty(), equalTo(true));
+        assertThat(newList.hasNext(), equalTo(false));
         assertThat(newList.toString(), equalTo(""));
         assertThat(newList.original(), equalTo(""));
         // Use the default feature.
@@ -253,29 +252,29 @@ public class CounterTest  {
         assertThat(newList.next(), equalTo(0));
         // Reset to the first and traverse again, using hasnext checks.
         newList.reset();
-        assertThat(newList.hasNext(), isTrue());
+        assertThat(newList.hasNext(), equalTo(true));
         assertThat(newList.next(), equalTo(4));
-        assertThat(newList.hasNext(), isTrue());
+        assertThat(newList.hasNext(), equalTo(true));
         assertThat(newList.next(), equalTo(6));
-        assertThat(newList.hasNext(), isTrue());
+        assertThat(newList.hasNext(), equalTo(true));
         assertThat(newList.next(), equalTo(8));
-        assertThat(newList.hasNext(), isTrue());
+        assertThat(newList.hasNext(), equalTo(true));
         assertThat(newList.next(), equalTo(10));
-        assertThat(newList.hasNext(), isFalse());
+        assertThat(newList.hasNext(), equalTo(false));
         assertThat(newList.next(), equalTo(0));
         assertThat(newList.toString(), equalTo("4, 6, 8, 10"));
         assertThat(newList.original(), equalTo("4,6,8,10"));
         // Iterate through the list.
         Iterator<Integer> iter = newList.new Iter();
-        assertThat(iter.hasNext(), isTrue());
+        assertThat(iter.hasNext(), equalTo(true));
         assertThat(iter.next(), equalTo(4));
-        assertThat(iter.hasNext(), isTrue());
+        assertThat(iter.hasNext(), equalTo(true));
         assertThat(iter.next(), equalTo(6));
-        assertThat(iter.hasNext(), isTrue());
+        assertThat(iter.hasNext(), equalTo(true));
         assertThat(iter.next(), equalTo(8));
-        assertThat(iter.hasNext(), isTrue());
+        assertThat(iter.hasNext(), equalTo(true));
         assertThat(iter.next(), equalTo(10));
-        assertThat(iter.hasNext(), isFalse());
+        assertThat(iter.hasNext(), equalTo(false));
         // Test softnext.
         newList.reset();
         assertThat(newList.softNext(), equalTo(4));
@@ -302,16 +301,16 @@ public class CounterTest  {
         // Start with an empty list.
         FloatList newList = new FloatList();
         assertThat(newList.size(), equalTo(0));
-        assertThat(newList.isEmpty(), isTrue());
-        assertThat(newList.hasNext(), isFalse());
+        assertThat(newList.isEmpty(), equalTo(true));
+        assertThat(newList.hasNext(), equalTo(false));
         assertThat(newList.toString(), equalTo(""));
         assertThat(newList.original(), equalTo(""));
         assertThat(newList.last(), equalTo(0.0));
         // Repeat with an empty string.
         newList = new FloatList("");
         assertThat(newList.size(), equalTo(0));
-        assertThat(newList.isEmpty(), isTrue());
-        assertThat(newList.hasNext(), isFalse());
+        assertThat(newList.isEmpty(), equalTo(true));
+        assertThat(newList.hasNext(), equalTo(false));
         assertThat(newList.toString(), equalTo(""));
         assertThat(newList.original(), equalTo(""));
         // Use the default feature.
@@ -340,29 +339,29 @@ public class CounterTest  {
         assertThat(newList.next(), equalTo(0.0));
         // Reset to the first and traverse again, using hasnext checks.
         newList.reset();
-        assertThat(newList.hasNext(), isTrue());
+        assertThat(newList.hasNext(), equalTo(true));
         assertThat(newList.next(), closeTo(0.4, 1e-6));
-        assertThat(newList.hasNext(), isTrue());
+        assertThat(newList.hasNext(), equalTo(true));
         assertThat(newList.next(), closeTo(0.6, 1e-6));
-        assertThat(newList.hasNext(), isTrue());
+        assertThat(newList.hasNext(), equalTo(true));
         assertThat(newList.next(), closeTo(0.8, 1e-6));
-        assertThat(newList.hasNext(), isTrue());
+        assertThat(newList.hasNext(), equalTo(true));
         assertThat(newList.next(), closeTo(0.1, 1e-6));
-        assertThat(newList.hasNext(), isFalse());
+        assertThat(newList.hasNext(), equalTo(false));
         assertThat(newList.next(), equalTo(0.0));
         assertThat(newList.toString(), equalTo("0.4, 0.6, 0.8, 0.1"));
         assertThat(newList.original(), equalTo("0.4,0.6,0.8,0.1"));
         // Iterate through the list.
         Iterator<Double> iter = newList.new Iter();
-        assertThat(iter.hasNext(), isTrue());
+        assertThat(iter.hasNext(), equalTo(true));
         assertThat(iter.next(), closeTo(0.4, 1e-6));
-        assertThat(iter.hasNext(), isTrue());
+        assertThat(iter.hasNext(), equalTo(true));
         assertThat(iter.next(), closeTo(0.6, 1e-6));
-        assertThat(iter.hasNext(), isTrue());
+        assertThat(iter.hasNext(), equalTo(true));
         assertThat(iter.next(), closeTo(0.8, 1e-6));
-        assertThat(iter.hasNext(), isTrue());
+        assertThat(iter.hasNext(), equalTo(true));
         assertThat(iter.next(), closeTo(0.1, 1e-6));
-        assertThat(iter.hasNext(), isFalse());
+        assertThat(iter.hasNext(), equalTo(false));
         // Test softnext.
         newList.reset();
         assertThat(newList.softNext(), closeTo(0.4, 1e-6));

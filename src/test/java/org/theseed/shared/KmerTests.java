@@ -5,7 +5,6 @@ package org.theseed.shared;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
-import static org.theseed.test.Matchers.*;
 
 import java.io.File;
 import java.io.IOException;
@@ -76,10 +75,10 @@ public class KmerTests {
         assertThat(myDna1.toLowerCase(), equalTo(kmer1.getDna()));
         assertThat(myDna2.toLowerCase(), equalTo(kmer2.getDna()));
         assertThat(myDna3.toLowerCase(), equalTo(kmer3.getDna()));
-        assertThat(kmer1.equals(kmer2), isFalse());
-        assertThat(kmer2.equals(kmer1), isFalse());
-        assertThat(kmer2.equals(kmer2r), isTrue());
-        assertThat(kmer2r.equals(kmer2), isTrue());
+        assertThat(kmer1.equals(kmer2), equalTo(false));
+        assertThat(kmer2.equals(kmer1), equalTo(false));
+        assertThat(kmer2.equals(kmer2r), equalTo(true));
+        assertThat(kmer2r.equals(kmer2), equalTo(true));
         assertThat(kmer2.hashCode(), equalTo(kmer2r.hashCode()));
         assertThat(kmer2.distance(kmer2r), equalTo(0.0));
         assertThat(kmer1.similarity(kmer2), equalTo(10));
@@ -107,8 +106,8 @@ public class KmerTests {
         g = new Genome(new File("data/gto_test", "1313.7002.gto"));
         GenomeKmers kmer3 = new GenomeKmers(g);
         g = null;
-        assertThat(kmer1.equals(kmer2), isFalse());
-        assertThat(kmer2.equals(kmer3), isFalse());
+        assertThat(kmer1.equals(kmer2), equalTo(false));
+        assertThat(kmer2.equals(kmer3), equalTo(false));
         assertThat(kmer1.getGenomeId(), equalTo("1005394.4"));
         assertThat(kmer2.getGenomeId(), equalTo("1313.7001"));
         assertThat(kmer3.getGenomeName(), equalTo("Streptococcus pneumoniae P210824-213"));
@@ -164,13 +163,13 @@ public class KmerTests {
         int ups = 0;
         int downs = 0;
         for (int i = 1; i < hashes.length; i++) {
-            assertThat(hashes[i-1] == hashes[i], isFalse());
+            assertThat(hashes[i-1] == hashes[i], equalTo(false));
             if (hashes[i-1] < hashes[i])
                 ups++;
             else
                 downs++;
         }
-        assertThat(ups > 0 && downs > 0, isTrue());
+        assertThat(ups > 0 && downs > 0, equalTo(true));
     }
 
 }

@@ -15,7 +15,6 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
-import static org.theseed.test.Matchers.*;
 
 import java.io.File;
 import java.io.IOException;
@@ -47,16 +46,16 @@ public class TestSubsystems {
         Shuffler<VariantId> variants = new Shuffler<VariantId>(4).add1(varID).add1(varID2).add1(varID3);
         variants.sort(null);
         assertThat(variants, contains(varID, varID3, varID2));
-        assertThat(varID.isActive(), isFalse());
-        assertThat(varID2.isActive(), isTrue());
+        assertThat(varID.isActive(), equalTo(false));
+        assertThat(varID2.isActive(), equalTo(true));
         varID2.setCode("-1");
         assertThat(varID2.getCode(), equalTo("-1"));
         assertThat(varID2, not(equalTo(varID4)));
-        assertThat(varID2.isActive(), isFalse());
+        assertThat(varID2.isActive(), equalTo(false));
         varID2.setCode("*2");
-        assertThat(varID2.isActive(), isTrue());
+        assertThat(varID2.isActive(), equalTo(true));
         varID2.setCode("*-1");
-        assertThat(varID2.isActive(), isFalse());
+        assertThat(varID2.isActive(), equalTo(false));
     }
 
     /**
@@ -193,13 +192,13 @@ public class TestSubsystems {
         variant.setCell(4, projector);
         assertThat(variant.getKeyRole(), equalTo("16sRrnaNMeth"));
         assertThat(variant.getCellCount(), equalTo(5));
-        assertThat(variant.isRedundant(variant2), isTrue());
+        assertThat(variant.isRedundant(variant2), equalTo(true));
         VariantSpec variant3 = new VariantSpec(subsystem, "active");
-        assertThat(variant.isRedundant(variant3), isTrue());
-        assertThat(variant3.isRedundant(variant), isTrue());
+        assertThat(variant.isRedundant(variant3), equalTo(true));
+        assertThat(variant3.isRedundant(variant), equalTo(true));
         SubsystemSpec sub2 = new SubsystemSpec("Funny subsystem");
         variant3 = new VariantSpec(sub2, "likely");
-        assertThat(variant.isRedundant(variant3), isFalse());
+        assertThat(variant.isRedundant(variant3), equalTo(false));
         sub2 = new SubsystemSpec(subsystem.getName());
         sub2.addRole("16S rRNA (guanine(966)-N(2))-methyltransferase (EC 2.1.1.171)");
         sub2.addRole("Cell-division-associated, ABC-transporter-like signaling protein FtsE");
@@ -216,19 +215,19 @@ public class TestSubsystems {
         assertThat(variant4, equalTo(variant));
         assertThat(variant4.compareTo(variant), equalTo(0));
         assertThat(variant.compareTo(variant4), equalTo(0));
-        assertThat(projector.addVariant(variant), isTrue());
-        assertThat(projector.addVariant(variant4), isFalse());
+        assertThat(projector.addVariant(variant), equalTo(true));
+        assertThat(projector.addVariant(variant4), equalTo(false));
         // Test matching and projecting using the genome family map.
         Genome gto = new Genome(new File("data/gto_test", "1313.7001.gto"));
         Map<String, Set<String>> familyMap = projector.computeRoleMap(gto);
-        assertThat(variant.matches(familyMap), isTrue());
-        assertThat(variant2.matches(familyMap), isFalse());
+        assertThat(variant.matches(familyMap), equalTo(true));
+        assertThat(variant2.matches(familyMap), equalTo(false));
         // Get the current subsystem row for this subsystem.
         SubsystemRow current = gto.getSubsystem(variant.getName());
         // Clear the genome's subsystems.
         gto.clearSubsystems();
         SubsystemRow created = variant.instantiate(gto, familyMap);
-        assertThat(created == gto.getSubsystem(variant.getName()), isTrue());
+        assertThat(created == gto.getSubsystem(variant.getName()), equalTo(true));
         assertThat(created.getName(), equalTo(variant.getName()));
         assertThat(created.getVariantCode(), equalTo(variant.getCode()));
         assertThat(created.getClassifications(), contains("", "Clustering-based subsystems", "Cell Division"));
@@ -352,10 +351,10 @@ public class TestSubsystems {
         Genome gto = new Genome(new File("data","123214.3.gto"));
         Map<String, Set<String>> familyMap = projector.computeRoleMap(gto);
         // Test matching.
-        assertThat(var1.matches(familyMap), isTrue());
-        assertThat(var2.matches(familyMap), isTrue());
-        assertThat(var3.matches(familyMap), isTrue());
-        assertThat(var4.matches(familyMap), isFalse());
+        assertThat(var1.matches(familyMap), equalTo(true));
+        assertThat(var2.matches(familyMap), equalTo(true));
+        assertThat(var3.matches(familyMap), equalTo(true));
+        assertThat(var4.matches(familyMap), equalTo(false));
         // Test projection.
         projector.project(gto);
         assertThat(gto.getSubsystems().size(), equalTo(2));

@@ -5,7 +5,6 @@ package org.theseed.io;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
-import static org.theseed.test.Matchers.*;
 
 import java.io.File;
 import java.io.IOException;
@@ -65,7 +64,7 @@ public class TestKeyedFileMap {
             assertThat(line, equalTo("d\tDog\tDaffodil\t"));
             line = testStream.next();
             assertThat(line, equalTo("c\tCat\tCarrot\tClock"));
-            assertThat(testStream.hasNext(), isFalse());
+            assertThat(testStream.hasNext(), equalTo(false));
         }
     }
 
@@ -80,24 +79,24 @@ public class TestKeyedFileMap {
         keyMap.addRecord("e", Arrays.asList("", "500.6"));
         List<double[]> numRecords = keyMap.getRecordNumbers();
         double[] rec = numRecords.get(0);
-        assertThat(Double.isNaN(rec[0]), isTrue());
+        assertThat(Double.isNaN(rec[0]), equalTo(true));
         assertThat(rec[1], closeTo(100.5, 0.001));
         assertThat(rec[2], closeTo(100.6, 0.001));
         rec = numRecords.get(1);
-        assertThat(Double.isNaN(rec[0]), isTrue());
+        assertThat(Double.isNaN(rec[0]), equalTo(true));
         assertThat(rec[1], closeTo(200.5, 0.001));
-        assertThat(Double.isNaN(rec[2]), isTrue());
+        assertThat(Double.isNaN(rec[2]), equalTo(true));
         rec = numRecords.get(2);
-        assertThat(Double.isNaN(rec[0]), isTrue());
-        assertThat(Double.isNaN(rec[1]), isTrue());
+        assertThat(Double.isNaN(rec[0]), equalTo(true));
+        assertThat(Double.isNaN(rec[1]), equalTo(true));
         assertThat(rec[2], closeTo(300.6, 0.001));
         rec = numRecords.get(3);
-        assertThat(Double.isNaN(rec[0]), isTrue());
+        assertThat(Double.isNaN(rec[0]), equalTo(true));
         assertThat(rec[1], closeTo(400.5, 0.001));
         assertThat(rec[2], closeTo(400.6, 0.001));
         rec = numRecords.get(4);
-        assertThat(Double.isNaN(rec[0]), isTrue());
-        assertThat(Double.isNaN(rec[1]), isTrue());
+        assertThat(Double.isNaN(rec[0]), equalTo(true));
+        assertThat(Double.isNaN(rec[1]), equalTo(true));
         assertThat(rec[2], closeTo(500.6, 0.001));
     }
 

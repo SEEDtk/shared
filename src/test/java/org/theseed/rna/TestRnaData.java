@@ -5,7 +5,6 @@ package org.theseed.rna;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
-import static org.theseed.test.Matchers.*;
 
 import java.io.File;
 import java.io.IOException;
@@ -64,7 +63,7 @@ public class TestRnaData {
         assertThat(fX.getOperon(), equalTo("secMA-mutT"));
         RnaData.Weight weightX = rowX.getWeight(0);
         assertThat(weightX.getWeight(), equalTo(101.0));
-        assertThat(weightX.isExactHit(), isFalse());
+        assertThat(weightX.isExactHit(), equalTo(false));
         fX = rowX.getNeighbor();
         assertThat(fX.getId(), equalTo(f2.getId()));
         rowX = iter.next();
@@ -81,17 +80,17 @@ public class TestRnaData {
         List<RnaData.JobData> fileJobs = fileRna.getSamples();
         assertThat(fileJobs, contains(jobs.toArray()));
         Optional<RnaData.JobData> job1Check = jobs.stream().filter(x -> x.getName().contentEquals("job1")).findFirst();
-        assertThat(job1Check.isPresent(), isTrue());
+        assertThat(job1Check.isPresent(), equalTo(true));
         RnaData.JobData job1 = job1Check.get();
         assertThat(job1.getName(), equalTo("job1"));
         assertThat(job1.getProduction(), equalTo(1.0));
-        assertThat(job1.isSuspicious(), isTrue());
+        assertThat(job1.isSuspicious(), equalTo(true));
         assertThat(job1.getBaseCount(), equalTo(1000000L));
         assertThat(job1.getReadCount(), equalTo(1000));
         assertThat(job1.getProcessingDate(), equalTo(LocalDate.of(2021, 1, 11)));
         assertThat(job1.getQuality(), closeTo(11.1, 0.001));
         Optional<RnaData.JobData> jobFCheck = fileJobs.stream().filter(x -> x.getName().contentEquals("job1")).findFirst();
-        assertThat(jobFCheck.isPresent(), isTrue());
+        assertThat(jobFCheck.isPresent(), equalTo(true));
         RnaData.JobData jobF = jobFCheck.get();
         assertThat(job1.getOldName(), equalTo("old1"));
         assertThat(jobF.getOldName(), equalTo("old1"));

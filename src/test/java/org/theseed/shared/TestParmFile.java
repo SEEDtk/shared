@@ -5,7 +5,6 @@ package org.theseed.shared;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
-import static org.theseed.test.Matchers.*;
 
 import java.io.File;
 import java.io.IOException;
@@ -29,7 +28,7 @@ public class TestParmFile {
     @Test
     public void testPattern() {
         Matcher m = ParmFile.LINE_PATTERN.matcher("--prefer SCORE\t# optimization preference");
-        assertThat(m.matches(), isTrue());
+        assertThat(m.matches(), equalTo(true));
         assertThat(m.group(1), nullValue());
         assertThat(m.group(2), equalTo("prefer"));
         assertThat(m.group(3), equalTo("SCORE"));
@@ -40,7 +39,7 @@ public class TestParmFile {
         assertThat(parts[1], equalTo("## comment 2"));
         assertThat(parts[2], equalTo("--prefer SCORE\t# optimization preference"));
         m = ParmFile.LINE_PATTERN.matcher("--prefer SCORE");
-        assertThat(m.matches(), isTrue());
+        assertThat(m.matches(), equalTo(true));
         assertThat(m.group(1), nullValue());
         assertThat(m.group(2), equalTo("prefer"));
         assertThat(m.group(3), equalTo("SCORE"));
@@ -48,7 +47,7 @@ public class TestParmFile {
         desc = new ParmDescriptor(m, Collections.emptyList());
         assertThat(desc.toString(), equalTo("--prefer SCORE"));
         m = ParmFile.LINE_PATTERN.matcher("--balanced 2, 3, 4\t# number of hidden layers (overrides widths)");
-        assertThat(m.matches(), isTrue());
+        assertThat(m.matches(), equalTo(true));
         assertThat(m.group(1), nullValue());
         assertThat(m.group(2), equalTo("balanced"));
         assertThat(m.group(3), equalTo("2, 3, 4"));
@@ -56,7 +55,7 @@ public class TestParmFile {
         desc = new ParmDescriptor(m, Collections.emptyList());
         assertThat(desc.toString(), equalTo("--balanced 2, 3, 4\t# number of hidden layers (overrides widths)"));
         m = ParmFile.LINE_PATTERN.matcher("# --raw\t# suppress input normalization");
-        assertThat(m.matches(), isTrue());
+        assertThat(m.matches(), equalTo(true));
         assertThat(m.group(1), equalTo("# "));
         assertThat(m.group(2), equalTo("raw"));
         assertThat(m.group(3), nullValue());
@@ -64,13 +63,13 @@ public class TestParmFile {
         desc = new ParmDescriptor(m, Collections.emptyList());
         assertThat(desc.toString(), equalTo("# --raw \t# suppress input normalization"));
         m = ParmFile.LINE_PATTERN.matcher(desc.toString());
-        assertThat(m.matches(), isTrue());
+        assertThat(m.matches(), equalTo(true));
         assertThat(m.group(1), equalTo("# "));
         assertThat(m.group(2), equalTo("raw"));
         assertThat(m.group(3), nullValue());
         assertThat(m.group(4), equalTo("suppress input normalization"));
         m = ParmFile.LINE_PATTERN.matcher("# --meta \t# comma-delimited list of meta-data columns");
-        assertThat(m.matches(), isTrue());
+        assertThat(m.matches(), equalTo(true));
         assertThat(m.group(1), equalTo("# "));
         assertThat(m.group(2), equalTo("meta"));
         assertThat(m.group(3), nullValue());
@@ -84,7 +83,7 @@ public class TestParmFile {
         ParmFile parms = new ParmFile(parmFile);
         ParmDescriptor data = parms.get("method");
         assertThat(data.getName(), equalTo("method"));
-        assertThat(data.isCommented(), isFalse());
+        assertThat(data.isCommented(), equalTo(false));
         assertThat(data.getValue(), equalTo("EPOCH"));
         assertThat(data.getDescription(), equalTo("training set processing method"));
         assertThat(parms.get("frog"), nullValue());
