@@ -94,6 +94,13 @@ public class SampleTest {
         samp3 = new SampleId("M_0_TA1_C_asdT_pntAB-ppc-aspC_DtdhDmetLDdapA_I_24_M1");
         assertThat(samp1, equalTo(samp3));
         assertThat(samp1.compareTo(samp3), equalTo(0));
+        samp2 = new SampleId("M_0_TA1_C_asdT_pntAB-ppc_DtdhDmetLDdapA_I_24_M1");
+        assertThat(samp1.isSameBase(samp2), equalTo(true));
+        assertThat(samp1.isSameBase(samp3), equalTo(true));
+        samp2 = new SampleId("M_0_TA1_C_asdT_pntAB-aspC-ppc-pyc_DtdhDmetLDdapA_I_24_M1");
+        assertThat(samp1.isSameBase(samp2), equalTo(true));
+        samp2 = new SampleId("M_0_TA1_C_asdT_pntAB-aspC-ppc_DtdhDmetLDdapA_0_24_M1");
+        assertThat(samp1.isSameBase(samp2), equalTo(false));
     }
 
     @Test

@@ -47,14 +47,14 @@ num	old_strain	sample	IPTG	time	medium
 46	277dthrABCdasddtdh pwt2.1.1	7_D_Tasd_P_asdD_000_Dtdh_I_6_M1	I	6	M1
 47	277dthrABCdasddtdh pwt2.1.1	7_D_Tasd_P_asdD_000_Dtdh_I_12_M1	I	12	M1
 48	277dthrABCdasddtdh pwt2.1.1	7_D_Tasd_P_asdD_000_Dtdh_I_24_M1	I	24	M1
-49	277dthrABCdasddtdhdlysC pwt2.1.1	7_D_Tasd_P_asdD_000_DtdhDlysC_0_4p5_M1	0	4.5	M1
-50	277dthrABCdasddtdhdlysC pwt2.1.1	7_D_Tasd_P_asdD_000_DtdhDlysC_0_6_M1	0	6	M1
-51	277dthrABCdasddtdhdlysC pwt2.1.1	7_D_Tasd_P_asdD_000_DtdhDlysC_0_12_M1	0	12	M1
-52	277dthrABCdasddtdhdlysC pwt2.1.1	7_D_Tasd_P_asdD_000_DtdhDlysC_0_24_M1	0	24	M1
-53	277dthrABCdasddtdhdlysC pwt2.1.1	7_D_Tasd_P_asdD_000_DtdhDlysC_I_4p5_M1	I	4.5	M1
-54	277dthrABCdasddtdhdlysC pwt2.1.1	7_D_Tasd_P_asdD_000_DtdhDlysC_I_6_M1	I	6	M1
-55	277dthrABCdasddtdhdlysC pwt2.1.1	7_D_Tasd_P_asdD_000_DtdhDlysC_I_12_M1	I	12	M1
-56	277dthrABCdasddtdhdlysC pwt2.1.1	7_D_Tasd_P_asdD_000_DtdhDlysC_I_24_M1	I	24	M1
+49	277dthrABCdasddtdhdlysC pwt2.1.1	7_D_Tasd_P_asdD_000_DlysCDtdh_0_4p5_M1	0	4.5	M1
+50	277dthrABCdasddtdhdlysC pwt2.1.1	7_D_Tasd_P_asdD_000_DlysCDtdh_0_6_M1	0	6	M1
+51	277dthrABCdasddtdhdlysC pwt2.1.1	7_D_Tasd_P_asdD_000_DlysCDtdh_0_12_M1	0	12	M1
+52	277dthrABCdasddtdhdlysC pwt2.1.1	7_D_Tasd_P_asdD_000_DlysCDtdh_0_24_M1	0	24	M1
+53	277dthrABCdasddtdhdlysC pwt2.1.1	7_D_Tasd_P_asdD_000_DlysCDtdh_I_4p5_M1	I	4.5	M1
+54	277dthrABCdasddtdhdlysC pwt2.1.1	7_D_Tasd_P_asdD_000_DlysCDtdh_I_6_M1	I	6	M1
+55	277dthrABCdasddtdhdlysC pwt2.1.1	7_D_Tasd_P_asdD_000_DlysCDtdh_I_12_M1	I	12	M1
+56	277dthrABCdasddtdhdlysC pwt2.1.1	7_D_Tasd_P_asdD_000_DlysCDtdh_I_24_M1	I	24	M1
 57	277DthrABCDasdDdapA pwt2.1.1 +pyc	7_D_Tasd_P_asdD_pyc_DdapA_0_4p5_M1	0	4.5	M1
 58	277DthrABCDasdDdapA pwt2.1.1 +pyc	7_D_Tasd_P_asdD_pyc_DdapA_0_6_M1	0	6	M1
 59	277DthrABCDasdDdapA pwt2.1.1 +pyc	7_D_Tasd_P_asdD_pyc_DdapA_0_12_M1	0	12	M1
@@ -103,30 +103,30 @@ num	old_strain	sample	IPTG	time	medium
 102	277DthrABCDasdDtdh pwt2.1.1 +pyc	7_D_Tasd_P_asdD_pyc_Dtdh_I_6_M1	I	6	M1
 103	277DthrABCDasdDtdh pwt2.1.1 +pyc	7_D_Tasd_P_asdD_pyc_Dtdh_I_12_M1	I	12	M1
 104	277DthrABCDasdDtdh pwt2.1.1 +pyc	7_D_Tasd_P_asdD_pyc_Dtdh_I_24_M1	I	24	M1
-105	277DthrABCDasdDtdhDdapA pwt2.1.1 +pyc	7_D_Tasd_P_asdD_pyc_DtdhDdapA_0_4p5_M1	0	4.5	M1
-106	277DthrABCDasdDtdhDdapA pwt2.1.1 +pyc	7_D_Tasd_P_asdD_pyc_DtdhDdapA_0_6_M1	0	6	M1
-107	277DthrABCDasdDtdhDdapA pwt2.1.1 +pyc	7_D_Tasd_P_asdD_pyc_DtdhDdapA_0_12_M1	0	12	M1
-108	277DthrABCDasdDtdhDdapA pwt2.1.1 +pyc	7_D_Tasd_P_asdD_pyc_DtdhDdapA_0_24_M1	0	24	M1
-109	277DthrABCDasdDtdhDdapA pwt2.1.1 +pyc	7_D_Tasd_P_asdD_pyc_DtdhDdapA_I_4p5_M1	I	4.5	M1
-110	277DthrABCDasdDtdhDdapA pwt2.1.1 +pyc	7_D_Tasd_P_asdD_pyc_DtdhDdapA_I_6_M1	I	6	M1
-111	277DthrABCDasdDtdhDdapA pwt2.1.1 +pyc	7_D_Tasd_P_asdD_pyc_DtdhDdapA_I_12_M1	I	12	M1
-112	277DthrABCDasdDtdhDdapA pwt2.1.1 +pyc	7_D_Tasd_P_asdD_pyc_DtdhDdapA_I_24_M1	I	24	M1
-113	277DthrABCDasdDtdhDlysC pwt2.1.1 +pyc	7_D_Tasd_P_asdD_pyc_DtdhDlysC_0_4p5_M1	0	4.5	M1
-114	277DthrABCDasdDtdhDlysC pwt2.1.1 +pyc	7_D_Tasd_P_asdD_pyc_DtdhDlysC_0_6_M1	0	6	M1
-115	277DthrABCDasdDtdhDlysC pwt2.1.1 +pyc	7_D_Tasd_P_asdD_pyc_DtdhDlysC_0_12_M1	0	12	M1
-116	277DthrABCDasdDtdhDlysC pwt2.1.1 +pyc	7_D_Tasd_P_asdD_pyc_DtdhDlysC_0_24_M1	0	24	M1
-117	277DthrABCDasdDtdhDlysC pwt2.1.1 +pyc	7_D_Tasd_P_asdD_pyc_DtdhDlysC_I_4p5_M1	I	4.5	M1
-118	277DthrABCDasdDtdhDlysC pwt2.1.1 +pyc	7_D_Tasd_P_asdD_pyc_DtdhDlysC_I_6_M1	I	6	M1
-119	277DthrABCDasdDtdhDlysC pwt2.1.1 +pyc	7_D_Tasd_P_asdD_pyc_DtdhDlysC_I_12_M1	I	12	M1
-120	277DthrABCDasdDtdhDlysC pwt2.1.1 +pyc	7_D_Tasd_P_asdD_pyc_DtdhDlysC_I_24_M1	I	24	M1
-121	277DthrABCDasdDtdhDrhtA pwt2.1.1 +pyc	7_D_Tasd_P_asdD_pyc_DtdhDrhtA_0_4p5_M1	0	4.5	M1
-122	277DthrABCDasdDtdhDrhtA pwt2.1.1 +pyc	7_D_Tasd_P_asdD_pyc_DtdhDrhtA_0_6_M1	0	6	M1
-123	277DthrABCDasdDtdhDrhtA pwt2.1.1 +pyc	7_D_Tasd_P_asdD_pyc_DtdhDrhtA_0_12_M1	0	12	M1
-124	277DthrABCDasdDtdhDrhtA pwt2.1.1 +pyc	7_D_Tasd_P_asdD_pyc_DtdhDrhtA_0_24_M1	0	24	M1
-125	277DthrABCDasdDtdhDrhtA pwt2.1.1 +pyc	7_D_Tasd_P_asdD_pyc_DtdhDrhtA_I_4p5_M1	I	4.5	M1
-126	277DthrABCDasdDtdhDrhtA pwt2.1.1 +pyc	7_D_Tasd_P_asdD_pyc_DtdhDrhtA_I_6_M1	I	6	M1
-127	277DthrABCDasdDtdhDrhtA pwt2.1.1 +pyc	7_D_Tasd_P_asdD_pyc_DtdhDrhtA_I_12_M1	I	12	M1
-128	277DthrABCDasdDtdhDrhtA pwt2.1.1 +pyc	7_D_Tasd_P_asdD_pyc_DtdhDrhtA_I_24_M1	I	24	M1
+105	277DthrABCDasdDtdhDdapA pwt2.1.1 +pyc	7_D_Tasd_P_asdD_pyc_DdapADtdh_0_4p5_M1	0	4.5	M1
+106	277DthrABCDasdDtdhDdapA pwt2.1.1 +pyc	7_D_Tasd_P_asdD_pyc_DdapADtdh_0_6_M1	0	6	M1
+107	277DthrABCDasdDtdhDdapA pwt2.1.1 +pyc	7_D_Tasd_P_asdD_pyc_DdapADtdh_0_12_M1	0	12	M1
+108	277DthrABCDasdDtdhDdapA pwt2.1.1 +pyc	7_D_Tasd_P_asdD_pyc_DdapADtdh_0_24_M1	0	24	M1
+109	277DthrABCDasdDtdhDdapA pwt2.1.1 +pyc	7_D_Tasd_P_asdD_pyc_DdapADtdh_I_4p5_M1	I	4.5	M1
+110	277DthrABCDasdDtdhDdapA pwt2.1.1 +pyc	7_D_Tasd_P_asdD_pyc_DdapADtdh_I_6_M1	I	6	M1
+111	277DthrABCDasdDtdhDdapA pwt2.1.1 +pyc	7_D_Tasd_P_asdD_pyc_DdapADtdh_I_12_M1	I	12	M1
+112	277DthrABCDasdDtdhDdapA pwt2.1.1 +pyc	7_D_Tasd_P_asdD_pyc_DdapADtdh_I_24_M1	I	24	M1
+113	277DthrABCDasdDtdhDlysC pwt2.1.1 +pyc	7_D_Tasd_P_asdD_pyc_DlysCDtdh_0_4p5_M1	0	4.5	M1
+114	277DthrABCDasdDtdhDlysC pwt2.1.1 +pyc	7_D_Tasd_P_asdD_pyc_DlysCDtdh_0_6_M1	0	6	M1
+115	277DthrABCDasdDtdhDlysC pwt2.1.1 +pyc	7_D_Tasd_P_asdD_pyc_DlysCDtdh_0_12_M1	0	12	M1
+116	277DthrABCDasdDtdhDlysC pwt2.1.1 +pyc	7_D_Tasd_P_asdD_pyc_DlysCDtdh_0_24_M1	0	24	M1
+117	277DthrABCDasdDtdhDlysC pwt2.1.1 +pyc	7_D_Tasd_P_asdD_pyc_DlysCDtdh_I_4p5_M1	I	4.5	M1
+118	277DthrABCDasdDtdhDlysC pwt2.1.1 +pyc	7_D_Tasd_P_asdD_pyc_DlysCDtdh_I_6_M1	I	6	M1
+119	277DthrABCDasdDtdhDlysC pwt2.1.1 +pyc	7_D_Tasd_P_asdD_pyc_DlysCDtdh_I_12_M1	I	12	M1
+120	277DthrABCDasdDtdhDlysC pwt2.1.1 +pyc	7_D_Tasd_P_asdD_pyc_DlysCDtdh_I_24_M1	I	24	M1
+121	277DthrABCDasdDtdhDrhtA pwt2.1.1 +pyc	7_D_Tasd_P_asdD_pyc_DrhtADtdh_0_4p5_M1	0	4.5	M1
+122	277DthrABCDasdDtdhDrhtA pwt2.1.1 +pyc	7_D_Tasd_P_asdD_pyc_DrhtADtdh_0_6_M1	0	6	M1
+123	277DthrABCDasdDtdhDrhtA pwt2.1.1 +pyc	7_D_Tasd_P_asdD_pyc_DrhtADtdh_0_12_M1	0	12	M1
+124	277DthrABCDasdDtdhDrhtA pwt2.1.1 +pyc	7_D_Tasd_P_asdD_pyc_DrhtADtdh_0_24_M1	0	24	M1
+125	277DthrABCDasdDtdhDrhtA pwt2.1.1 +pyc	7_D_Tasd_P_asdD_pyc_DrhtADtdh_I_4p5_M1	I	4.5	M1
+126	277DthrABCDasdDtdhDrhtA pwt2.1.1 +pyc	7_D_Tasd_P_asdD_pyc_DrhtADtdh_I_6_M1	I	6	M1
+127	277DthrABCDasdDtdhDrhtA pwt2.1.1 +pyc	7_D_Tasd_P_asdD_pyc_DrhtADtdh_I_12_M1	I	12	M1
+128	277DthrABCDasdDtdhDrhtA pwt2.1.1 +pyc	7_D_Tasd_P_asdD_pyc_DrhtADtdh_I_24_M1	I	24	M1
 129	277DthrABCDasdDdapA pwt2.1.1 +rhtA	7_D_Tasd_P_asdD_rhtA_DdapA_0_4p5_M1	0	4.5	M1
 130	277DthrABCDasdDdapA pwt2.1.1 +rhtA	7_D_Tasd_P_asdD_rhtA_DdapA_0_6_M1	0	6	M1
 131	277DthrABCDasdDdapA pwt2.1.1 +rhtA	7_D_Tasd_P_asdD_rhtA_DdapA_0_12_M1	0	12	M1
@@ -191,30 +191,30 @@ num	old_strain	sample	IPTG	time	medium
 190	277DthrABCDasdDtdh pwt2.1.1 +rhtA	7_D_Tasd_P_asdD_rhtA_Dtdh_I_6_M1	I	6	M1
 191	277DthrABCDasdDtdh pwt2.1.1 +rhtA	7_D_Tasd_P_asdD_rhtA_Dtdh_I_12_M1	I	12	M1
 192	277DthrABCDasdDtdh pwt2.1.1 +rhtA	7_D_Tasd_P_asdD_rhtA_Dtdh_I_24_M1	I	24	M1
-193	277DthrABCDasdDtdhDdapA pwt2.1.1 +rhtA	7_D_Tasd_P_asdD_rhtA_DtdhDdapA_0_4p5_M1	0	4.5	M1
-194	277DthrABCDasdDtdhDdapA pwt2.1.1 +rhtA	7_D_Tasd_P_asdD_rhtA_DtdhDdapA_0_6_M1	0	6	M1
-195	277DthrABCDasdDtdhDdapA pwt2.1.1 +rhtA	7_D_Tasd_P_asdD_rhtA_DtdhDdapA_0_12_M1	0	12	M1
-196	277DthrABCDasdDtdhDdapA pwt2.1.1 +rhtA	7_D_Tasd_P_asdD_rhtA_DtdhDdapA_0_24_M1	0	24	M1
-197	277DthrABCDasdDtdhDdapA pwt2.1.1 +rhtA	7_D_Tasd_P_asdD_rhtA_DtdhDdapA_I_4p5_M1	I	4.5	M1
-198	277DthrABCDasdDtdhDdapA pwt2.1.1 +rhtA	7_D_Tasd_P_asdD_rhtA_DtdhDdapA_I_6_M1	I	6	M1
-199	277DthrABCDasdDtdhDdapA pwt2.1.1 +rhtA	7_D_Tasd_P_asdD_rhtA_DtdhDdapA_I_12_M1	I	12	M1
-200	277DthrABCDasdDtdhDdapA pwt2.1.1 +rhtA	7_D_Tasd_P_asdD_rhtA_DtdhDdapA_I_24_M1	I	24	M1
-201	277DthrABCDasdDtdhDlysC pwt2.1.1 +rhtA	7_D_Tasd_P_asdD_rhtA_DtdhDlysC_0_4p5_M1	0	4.5	M1
-202	277DthrABCDasdDtdhDlysC pwt2.1.1 +rhtA	7_D_Tasd_P_asdD_rhtA_DtdhDlysC_0_6_M1	0	6	M1
-203	277DthrABCDasdDtdhDlysC pwt2.1.1 +rhtA	7_D_Tasd_P_asdD_rhtA_DtdhDlysC_0_12_M1	0	12	M1
-204	277DthrABCDasdDtdhDlysC pwt2.1.1 +rhtA	7_D_Tasd_P_asdD_rhtA_DtdhDlysC_0_24_M1	0	24	M1
-205	277DthrABCDasdDtdhDlysC pwt2.1.1 +rhtA	7_D_Tasd_P_asdD_rhtA_DtdhDlysC_I_4p5_M1	I	4.5	M1
-206	277DthrABCDasdDtdhDlysC pwt2.1.1 +rhtA	7_D_Tasd_P_asdD_rhtA_DtdhDlysC_I_6_M1	I	6	M1
-207	277DthrABCDasdDtdhDlysC pwt2.1.1 +rhtA	7_D_Tasd_P_asdD_rhtA_DtdhDlysC_I_12_M1	I	12	M1
-208	277DthrABCDasdDtdhDlysC pwt2.1.1 +rhtA	7_D_Tasd_P_asdD_rhtA_DtdhDlysC_I_24_M1	I	24	M1
-209	277DthrABCDasdDtdhDrhtA pwt2.1.1 +rhtA	7_D_Tasd_P_asdD_rhtA_DtdhDrhtA_0_4p5_M1	0	4.5	M1
-210	277DthrABCDasdDtdhDrhtA pwt2.1.1 +rhtA	7_D_Tasd_P_asdD_rhtA_DtdhDrhtA_0_6_M1	0	6	M1
-211	277DthrABCDasdDtdhDrhtA pwt2.1.1 +rhtA	7_D_Tasd_P_asdD_rhtA_DtdhDrhtA_0_12_M1	0	12	M1
-212	277DthrABCDasdDtdhDrhtA pwt2.1.1 +rhtA	7_D_Tasd_P_asdD_rhtA_DtdhDrhtA_0_24_M1	0	24	M1
-213	277DthrABCDasdDtdhDrhtA pwt2.1.1 +rhtA	7_D_Tasd_P_asdD_rhtA_DtdhDrhtA_I_4p5_M1	I	4.5	M1
-214	277DthrABCDasdDtdhDrhtA pwt2.1.1 +rhtA	7_D_Tasd_P_asdD_rhtA_DtdhDrhtA_I_6_M1	I	6	M1
-215	277DthrABCDasdDtdhDrhtA pwt2.1.1 +rhtA	7_D_Tasd_P_asdD_rhtA_DtdhDrhtA_I_12_M1	I	12	M1
-216	277DthrABCDasdDtdhDrhtA pwt2.1.1 +rhtA	7_D_Tasd_P_asdD_rhtA_DtdhDrhtA_I_24_M1	I	24	M1
+193	277DthrABCDasdDtdhDdapA pwt2.1.1 +rhtA	7_D_Tasd_P_asdD_rhtA_DdapADtdh_0_4p5_M1	0	4.5	M1
+194	277DthrABCDasdDtdhDdapA pwt2.1.1 +rhtA	7_D_Tasd_P_asdD_rhtA_DdapADtdh_0_6_M1	0	6	M1
+195	277DthrABCDasdDtdhDdapA pwt2.1.1 +rhtA	7_D_Tasd_P_asdD_rhtA_DdapADtdh_0_12_M1	0	12	M1
+196	277DthrABCDasdDtdhDdapA pwt2.1.1 +rhtA	7_D_Tasd_P_asdD_rhtA_DdapADtdh_0_24_M1	0	24	M1
+197	277DthrABCDasdDtdhDdapA pwt2.1.1 +rhtA	7_D_Tasd_P_asdD_rhtA_DdapADtdh_I_4p5_M1	I	4.5	M1
+198	277DthrABCDasdDtdhDdapA pwt2.1.1 +rhtA	7_D_Tasd_P_asdD_rhtA_DdapADtdh_I_6_M1	I	6	M1
+199	277DthrABCDasdDtdhDdapA pwt2.1.1 +rhtA	7_D_Tasd_P_asdD_rhtA_DdapADtdh_I_12_M1	I	12	M1
+200	277DthrABCDasdDtdhDdapA pwt2.1.1 +rhtA	7_D_Tasd_P_asdD_rhtA_DdapADtdh_I_24_M1	I	24	M1
+201	277DthrABCDasdDtdhDlysC pwt2.1.1 +rhtA	7_D_Tasd_P_asdD_rhtA_DlysCDtdh_0_4p5_M1	0	4.5	M1
+202	277DthrABCDasdDtdhDlysC pwt2.1.1 +rhtA	7_D_Tasd_P_asdD_rhtA_DlysCDtdh_0_6_M1	0	6	M1
+203	277DthrABCDasdDtdhDlysC pwt2.1.1 +rhtA	7_D_Tasd_P_asdD_rhtA_DlysCDtdh_0_12_M1	0	12	M1
+204	277DthrABCDasdDtdhDlysC pwt2.1.1 +rhtA	7_D_Tasd_P_asdD_rhtA_DlysCDtdh_0_24_M1	0	24	M1
+205	277DthrABCDasdDtdhDlysC pwt2.1.1 +rhtA	7_D_Tasd_P_asdD_rhtA_DlysCDtdh_I_4p5_M1	I	4.5	M1
+206	277DthrABCDasdDtdhDlysC pwt2.1.1 +rhtA	7_D_Tasd_P_asdD_rhtA_DlysCDtdh_I_6_M1	I	6	M1
+207	277DthrABCDasdDtdhDlysC pwt2.1.1 +rhtA	7_D_Tasd_P_asdD_rhtA_DlysCDtdh_I_12_M1	I	12	M1
+208	277DthrABCDasdDtdhDlysC pwt2.1.1 +rhtA	7_D_Tasd_P_asdD_rhtA_DlysCDtdh_I_24_M1	I	24	M1
+209	277DthrABCDasdDtdhDrhtA pwt2.1.1 +rhtA	7_D_Tasd_P_asdD_rhtA_DrhtADtdh_0_4p5_M1	0	4.5	M1
+210	277DthrABCDasdDtdhDrhtA pwt2.1.1 +rhtA	7_D_Tasd_P_asdD_rhtA_DrhtADtdh_0_6_M1	0	6	M1
+211	277DthrABCDasdDtdhDrhtA pwt2.1.1 +rhtA	7_D_Tasd_P_asdD_rhtA_DrhtADtdh_0_12_M1	0	12	M1
+212	277DthrABCDasdDtdhDrhtA pwt2.1.1 +rhtA	7_D_Tasd_P_asdD_rhtA_DrhtADtdh_0_24_M1	0	24	M1
+213	277DthrABCDasdDtdhDrhtA pwt2.1.1 +rhtA	7_D_Tasd_P_asdD_rhtA_DrhtADtdh_I_4p5_M1	I	4.5	M1
+214	277DthrABCDasdDtdhDrhtA pwt2.1.1 +rhtA	7_D_Tasd_P_asdD_rhtA_DrhtADtdh_I_6_M1	I	6	M1
+215	277DthrABCDasdDtdhDrhtA pwt2.1.1 +rhtA	7_D_Tasd_P_asdD_rhtA_DrhtADtdh_I_12_M1	I	12	M1
+216	277DthrABCDasdDtdhDrhtA pwt2.1.1 +rhtA	7_D_Tasd_P_asdD_rhtA_DrhtADtdh_I_24_M1	I	24	M1
 217	277dthrABCdasd pfb6.4.3	7_D_TasdA_P_asdD_000_D000_0_4p5_M1	0	4.5	M1
 218	277dthrABCdasd pfb6.4.3	7_D_TasdA_P_asdD_000_D000_0_6_M1	0	6	M1
 219	277dthrABCdasd pfb6.4.3	7_D_TasdA_P_asdD_000_D000_0_12_M1	0	12	M1
@@ -255,14 +255,14 @@ num	old_strain	sample	IPTG	time	medium
 254	277dthrABCdasddtdh pfb6.4.3	7_D_TasdA_P_asdD_000_Dtdh_I_6_M1	I	6	M1
 255	277dthrABCdasddtdh pfb6.4.3	7_D_TasdA_P_asdD_000_Dtdh_I_12_M1	I	12	M1
 256	277dthrABCdasddtdh pfb6.4.3	7_D_TasdA_P_asdD_000_Dtdh_I_24_M1	I	24	M1
-257	277dthrABCdasddtdhdlysC pfb6.4.3	7_D_TasdA_P_asdD_000_DtdhDlysC_0_4p5_M1	0	4.5	M1
-258	277dthrABCdasddtdhdlysC pfb6.4.3	7_D_TasdA_P_asdD_000_DtdhDlysC_0_6_M1	0	6	M1
-259	277dthrABCdasddtdhdlysC pfb6.4.3	7_D_TasdA_P_asdD_000_DtdhDlysC_0_12_M1	0	12	M1
-260	277dthrABCdasddtdhdlysC pfb6.4.3	7_D_TasdA_P_asdD_000_DtdhDlysC_0_24_M1	0	24	M1
-261	277dthrABCdasddtdhdlysC pfb6.4.3	7_D_TasdA_P_asdD_000_DtdhDlysC_I_4p5_M1	I	4.5	M1
-262	277dthrABCdasddtdhdlysC pfb6.4.3	7_D_TasdA_P_asdD_000_DtdhDlysC_I_6_M1	I	6	M1
-263	277dthrABCdasddtdhdlysC pfb6.4.3	7_D_TasdA_P_asdD_000_DtdhDlysC_I_12_M1	I	12	M1
-264	277dthrABCdasddtdhdlysC pfb6.4.3	7_D_TasdA_P_asdD_000_DtdhDlysC_I_24_M1	I	24	M1
+257	277dthrABCdasddtdhdlysC pfb6.4.3	7_D_TasdA_P_asdD_000_DlysCDtdh_0_4p5_M1	0	4.5	M1
+258	277dthrABCdasddtdhdlysC pfb6.4.3	7_D_TasdA_P_asdD_000_DlysCDtdh_0_6_M1	0	6	M1
+259	277dthrABCdasddtdhdlysC pfb6.4.3	7_D_TasdA_P_asdD_000_DlysCDtdh_0_12_M1	0	12	M1
+260	277dthrABCdasddtdhdlysC pfb6.4.3	7_D_TasdA_P_asdD_000_DlysCDtdh_0_24_M1	0	24	M1
+261	277dthrABCdasddtdhdlysC pfb6.4.3	7_D_TasdA_P_asdD_000_DlysCDtdh_I_4p5_M1	I	4.5	M1
+262	277dthrABCdasddtdhdlysC pfb6.4.3	7_D_TasdA_P_asdD_000_DlysCDtdh_I_6_M1	I	6	M1
+263	277dthrABCdasddtdhdlysC pfb6.4.3	7_D_TasdA_P_asdD_000_DlysCDtdh_I_12_M1	I	12	M1
+264	277dthrABCdasddtdhdlysC pfb6.4.3	7_D_TasdA_P_asdD_000_DlysCDtdh_I_24_M1	I	24	M1
 265	277DthrABCDasd pfb6.4.3 +aceBA	7_D_TasdA_P_asdD_aceBA_D000_0_4p5_M1	0	4.5	M1
 266	277DthrABCDasd pfb6.4.3 +aceBA	7_D_TasdA_P_asdD_aceBA_D000_0_6_M1	0	6	M1
 267	277DthrABCDasd pfb6.4.3 +aceBA	7_D_TasdA_P_asdD_aceBA_D000_0_12_M1	0	12	M1
@@ -327,30 +327,30 @@ num	old_strain	sample	IPTG	time	medium
 326	277DthrABCDasdDtdh pfb6.4.3 +aceBA	7_D_TasdA_P_asdD_aceBA_Dtdh_I_6_M1	I	6	M1
 327	277DthrABCDasdDtdh pfb6.4.3 +aceBA	7_D_TasdA_P_asdD_aceBA_Dtdh_I_12_M1	I	12	M1
 328	277DthrABCDasdDtdh pfb6.4.3 +aceBA	7_D_TasdA_P_asdD_aceBA_Dtdh_I_24_M1	I	24	M1
-329	277DthrABCDasdDtdhDdapA pfb6.4.3 +aceBA	7_D_TasdA_P_asdD_aceBA_DtdhDdapA_0_4p5_M1	0	4.5	M1
-330	277DthrABCDasdDtdhDdapA pfb6.4.3 +aceBA	7_D_TasdA_P_asdD_aceBA_DtdhDdapA_0_6_M1	0	6	M1
-331	277DthrABCDasdDtdhDdapA pfb6.4.3 +aceBA	7_D_TasdA_P_asdD_aceBA_DtdhDdapA_0_12_M1	0	12	M1
-332	277DthrABCDasdDtdhDdapA pfb6.4.3 +aceBA	7_D_TasdA_P_asdD_aceBA_DtdhDdapA_0_24_M1	0	24	M1
-333	277DthrABCDasdDtdhDdapA pfb6.4.3 +aceBA	7_D_TasdA_P_asdD_aceBA_DtdhDdapA_I_4p5_M1	I	4.5	M1
-334	277DthrABCDasdDtdhDdapA pfb6.4.3 +aceBA	7_D_TasdA_P_asdD_aceBA_DtdhDdapA_I_6_M1	I	6	M1
-335	277DthrABCDasdDtdhDdapA pfb6.4.3 +aceBA	7_D_TasdA_P_asdD_aceBA_DtdhDdapA_I_12_M1	I	12	M1
-336	277DthrABCDasdDtdhDdapA pfb6.4.3 +aceBA	7_D_TasdA_P_asdD_aceBA_DtdhDdapA_I_24_M1	I	24	M1
-337	277DthrABCDasdDtdhDlysC pfb6.4.3 +aceBA	7_D_TasdA_P_asdD_aceBA_DtdhDlysC_0_4p5_M1	0	4.5	M1
-338	277DthrABCDasdDtdhDlysC pfb6.4.3 +aceBA	7_D_TasdA_P_asdD_aceBA_DtdhDlysC_0_6_M1	0	6	M1
-339	277DthrABCDasdDtdhDlysC pfb6.4.3 +aceBA	7_D_TasdA_P_asdD_aceBA_DtdhDlysC_0_12_M1	0	12	M1
-340	277DthrABCDasdDtdhDlysC pfb6.4.3 +aceBA	7_D_TasdA_P_asdD_aceBA_DtdhDlysC_0_24_M1	0	24	M1
-341	277DthrABCDasdDtdhDlysC pfb6.4.3 +aceBA	7_D_TasdA_P_asdD_aceBA_DtdhDlysC_I_4p5_M1	I	4.5	M1
-342	277DthrABCDasdDtdhDlysC pfb6.4.3 +aceBA	7_D_TasdA_P_asdD_aceBA_DtdhDlysC_I_6_M1	I	6	M1
-343	277DthrABCDasdDtdhDlysC pfb6.4.3 +aceBA	7_D_TasdA_P_asdD_aceBA_DtdhDlysC_I_12_M1	I	12	M1
-344	277DthrABCDasdDtdhDlysC pfb6.4.3 +aceBA	7_D_TasdA_P_asdD_aceBA_DtdhDlysC_I_24_M1	I	24	M1
-345	277DthrABCDasdDtdhDrhtA pfb6.4.3 +aceBA	7_D_TasdA_P_asdD_aceBA_DtdhDrhtA_0_4p5_M1	0	4.5	M1
-346	277DthrABCDasdDtdhDrhtA pfb6.4.3 +aceBA	7_D_TasdA_P_asdD_aceBA_DtdhDrhtA_0_6_M1	0	6	M1
-347	277DthrABCDasdDtdhDrhtA pfb6.4.3 +aceBA	7_D_TasdA_P_asdD_aceBA_DtdhDrhtA_0_12_M1	0	12	M1
-348	277DthrABCDasdDtdhDrhtA pfb6.4.3 +aceBA	7_D_TasdA_P_asdD_aceBA_DtdhDrhtA_0_24_M1	0	24	M1
-349	277DthrABCDasdDtdhDrhtA pfb6.4.3 +aceBA	7_D_TasdA_P_asdD_aceBA_DtdhDrhtA_I_4p5_M1	I	4.5	M1
-350	277DthrABCDasdDtdhDrhtA pfb6.4.3 +aceBA	7_D_TasdA_P_asdD_aceBA_DtdhDrhtA_I_6_M1	I	6	M1
-351	277DthrABCDasdDtdhDrhtA pfb6.4.3 +aceBA	7_D_TasdA_P_asdD_aceBA_DtdhDrhtA_I_12_M1	I	12	M1
-352	277DthrABCDasdDtdhDrhtA pfb6.4.3 +aceBA	7_D_TasdA_P_asdD_aceBA_DtdhDrhtA_I_24_M1	I	24	M1
+329	277DthrABCDasdDtdhDdapA pfb6.4.3 +aceBA	7_D_TasdA_P_asdD_aceBA_DdapADtdh_0_4p5_M1	0	4.5	M1
+330	277DthrABCDasdDtdhDdapA pfb6.4.3 +aceBA	7_D_TasdA_P_asdD_aceBA_DdapADtdh_0_6_M1	0	6	M1
+331	277DthrABCDasdDtdhDdapA pfb6.4.3 +aceBA	7_D_TasdA_P_asdD_aceBA_DdapADtdh_0_12_M1	0	12	M1
+332	277DthrABCDasdDtdhDdapA pfb6.4.3 +aceBA	7_D_TasdA_P_asdD_aceBA_DdapADtdh_0_24_M1	0	24	M1
+333	277DthrABCDasdDtdhDdapA pfb6.4.3 +aceBA	7_D_TasdA_P_asdD_aceBA_DdapADtdh_I_4p5_M1	I	4.5	M1
+334	277DthrABCDasdDtdhDdapA pfb6.4.3 +aceBA	7_D_TasdA_P_asdD_aceBA_DdapADtdh_I_6_M1	I	6	M1
+335	277DthrABCDasdDtdhDdapA pfb6.4.3 +aceBA	7_D_TasdA_P_asdD_aceBA_DdapADtdh_I_12_M1	I	12	M1
+336	277DthrABCDasdDtdhDdapA pfb6.4.3 +aceBA	7_D_TasdA_P_asdD_aceBA_DdapADtdh_I_24_M1	I	24	M1
+337	277DthrABCDasdDtdhDlysC pfb6.4.3 +aceBA	7_D_TasdA_P_asdD_aceBA_DlysCDtdh_0_4p5_M1	0	4.5	M1
+338	277DthrABCDasdDtdhDlysC pfb6.4.3 +aceBA	7_D_TasdA_P_asdD_aceBA_DlysCDtdh_0_6_M1	0	6	M1
+339	277DthrABCDasdDtdhDlysC pfb6.4.3 +aceBA	7_D_TasdA_P_asdD_aceBA_DlysCDtdh_0_12_M1	0	12	M1
+340	277DthrABCDasdDtdhDlysC pfb6.4.3 +aceBA	7_D_TasdA_P_asdD_aceBA_DlysCDtdh_0_24_M1	0	24	M1
+341	277DthrABCDasdDtdhDlysC pfb6.4.3 +aceBA	7_D_TasdA_P_asdD_aceBA_DlysCDtdh_I_4p5_M1	I	4.5	M1
+342	277DthrABCDasdDtdhDlysC pfb6.4.3 +aceBA	7_D_TasdA_P_asdD_aceBA_DlysCDtdh_I_6_M1	I	6	M1
+343	277DthrABCDasdDtdhDlysC pfb6.4.3 +aceBA	7_D_TasdA_P_asdD_aceBA_DlysCDtdh_I_12_M1	I	12	M1
+344	277DthrABCDasdDtdhDlysC pfb6.4.3 +aceBA	7_D_TasdA_P_asdD_aceBA_DlysCDtdh_I_24_M1	I	24	M1
+345	277DthrABCDasdDtdhDrhtA pfb6.4.3 +aceBA	7_D_TasdA_P_asdD_aceBA_DrhtADtdh_0_4p5_M1	0	4.5	M1
+346	277DthrABCDasdDtdhDrhtA pfb6.4.3 +aceBA	7_D_TasdA_P_asdD_aceBA_DrhtADtdh_0_6_M1	0	6	M1
+347	277DthrABCDasdDtdhDrhtA pfb6.4.3 +aceBA	7_D_TasdA_P_asdD_aceBA_DrhtADtdh_0_12_M1	0	12	M1
+348	277DthrABCDasdDtdhDrhtA pfb6.4.3 +aceBA	7_D_TasdA_P_asdD_aceBA_DrhtADtdh_0_24_M1	0	24	M1
+349	277DthrABCDasdDtdhDrhtA pfb6.4.3 +aceBA	7_D_TasdA_P_asdD_aceBA_DrhtADtdh_I_4p5_M1	I	4.5	M1
+350	277DthrABCDasdDtdhDrhtA pfb6.4.3 +aceBA	7_D_TasdA_P_asdD_aceBA_DrhtADtdh_I_6_M1	I	6	M1
+351	277DthrABCDasdDtdhDrhtA pfb6.4.3 +aceBA	7_D_TasdA_P_asdD_aceBA_DrhtADtdh_I_12_M1	I	12	M1
+352	277DthrABCDasdDtdhDrhtA pfb6.4.3 +aceBA	7_D_TasdA_P_asdD_aceBA_DrhtADtdh_I_24_M1	I	24	M1
 353	277DthrABCDasd pfb6.4.3 +aspC	7_D_TasdA_P_asdD_aspC_D000_0_4p5_M1	0	4.5	M1
 354	277DthrABCDasd pfb6.4.3 +aspC	7_D_TasdA_P_asdD_aspC_D000_0_6_M1	0	6	M1
 355	277DthrABCDasd pfb6.4.3 +aspC	7_D_TasdA_P_asdD_aspC_D000_0_12_M1	0	12	M1
@@ -415,30 +415,30 @@ num	old_strain	sample	IPTG	time	medium
 414	277DthrABCDasdDtdh pfb6.4.3 +aspC	7_D_TasdA_P_asdD_aspC_Dtdh_I_6_M1	I	6	M1
 415	277DthrABCDasdDtdh pfb6.4.3 +aspC	7_D_TasdA_P_asdD_aspC_Dtdh_I_12_M1	I	12	M1
 416	277DthrABCDasdDtdh pfb6.4.3 +aspC	7_D_TasdA_P_asdD_aspC_Dtdh_I_24_M1	I	24	M1
-417	277DthrABCDasdDtdhDdapA pfb6.4.3 +aspC	7_D_TasdA_P_asdD_aspC_DtdhDdapA_0_4p5_M1	0	4.5	M1
-418	277DthrABCDasdDtdhDdapA pfb6.4.3 +aspC	7_D_TasdA_P_asdD_aspC_DtdhDdapA_0_6_M1	0	6	M1
-419	277DthrABCDasdDtdhDdapA pfb6.4.3 +aspC	7_D_TasdA_P_asdD_aspC_DtdhDdapA_0_12_M1	0	12	M1
-420	277DthrABCDasdDtdhDdapA pfb6.4.3 +aspC	7_D_TasdA_P_asdD_aspC_DtdhDdapA_0_24_M1	0	24	M1
-421	277DthrABCDasdDtdhDdapA pfb6.4.3 +aspC	7_D_TasdA_P_asdD_aspC_DtdhDdapA_I_4p5_M1	I	4.5	M1
-422	277DthrABCDasdDtdhDdapA pfb6.4.3 +aspC	7_D_TasdA_P_asdD_aspC_DtdhDdapA_I_6_M1	I	6	M1
-423	277DthrABCDasdDtdhDdapA pfb6.4.3 +aspC	7_D_TasdA_P_asdD_aspC_DtdhDdapA_I_12_M1	I	12	M1
-424	277DthrABCDasdDtdhDdapA pfb6.4.3 +aspC	7_D_TasdA_P_asdD_aspC_DtdhDdapA_I_24_M1	I	24	M1
-425	277DthrABCDasdDtdhDlysC pfb6.4.3 +aspC	7_D_TasdA_P_asdD_aspC_DtdhDlysC_0_4p5_M1	0	4.5	M1
-426	277DthrABCDasdDtdhDlysC pfb6.4.3 +aspC	7_D_TasdA_P_asdD_aspC_DtdhDlysC_0_6_M1	0	6	M1
-427	277DthrABCDasdDtdhDlysC pfb6.4.3 +aspC	7_D_TasdA_P_asdD_aspC_DtdhDlysC_0_12_M1	0	12	M1
-428	277DthrABCDasdDtdhDlysC pfb6.4.3 +aspC	7_D_TasdA_P_asdD_aspC_DtdhDlysC_0_24_M1	0	24	M1
-429	277DthrABCDasdDtdhDlysC pfb6.4.3 +aspC	7_D_TasdA_P_asdD_aspC_DtdhDlysC_I_4p5_M1	I	4.5	M1
-430	277DthrABCDasdDtdhDlysC pfb6.4.3 +aspC	7_D_TasdA_P_asdD_aspC_DtdhDlysC_I_6_M1	I	6	M1
-431	277DthrABCDasdDtdhDlysC pfb6.4.3 +aspC	7_D_TasdA_P_asdD_aspC_DtdhDlysC_I_12_M1	I	12	M1
-432	277DthrABCDasdDtdhDlysC pfb6.4.3 +aspC	7_D_TasdA_P_asdD_aspC_DtdhDlysC_I_24_M1	I	24	M1
-433	277DthrABCDasdDtdhDrhtA pfb6.4.3 +aspC	7_D_TasdA_P_asdD_aspC_DtdhDrhtA_0_4p5_M1	0	4.5	M1
-434	277DthrABCDasdDtdhDrhtA pfb6.4.3 +aspC	7_D_TasdA_P_asdD_aspC_DtdhDrhtA_0_6_M1	0	6	M1
-435	277DthrABCDasdDtdhDrhtA pfb6.4.3 +aspC	7_D_TasdA_P_asdD_aspC_DtdhDrhtA_0_12_M1	0	12	M1
-436	277DthrABCDasdDtdhDrhtA pfb6.4.3 +aspC	7_D_TasdA_P_asdD_aspC_DtdhDrhtA_0_24_M1	0	24	M1
-437	277DthrABCDasdDtdhDrhtA pfb6.4.3 +aspC	7_D_TasdA_P_asdD_aspC_DtdhDrhtA_I_4p5_M1	I	4.5	M1
-438	277DthrABCDasdDtdhDrhtA pfb6.4.3 +aspC	7_D_TasdA_P_asdD_aspC_DtdhDrhtA_I_6_M1	I	6	M1
-439	277DthrABCDasdDtdhDrhtA pfb6.4.3 +aspC	7_D_TasdA_P_asdD_aspC_DtdhDrhtA_I_12_M1	I	12	M1
-440	277DthrABCDasdDtdhDrhtA pfb6.4.3 +aspC	7_D_TasdA_P_asdD_aspC_DtdhDrhtA_I_24_M1	I	24	M1
+417	277DthrABCDasdDtdhDdapA pfb6.4.3 +aspC	7_D_TasdA_P_asdD_aspC_DdapADtdh_0_4p5_M1	0	4.5	M1
+418	277DthrABCDasdDtdhDdapA pfb6.4.3 +aspC	7_D_TasdA_P_asdD_aspC_DdapADtdh_0_6_M1	0	6	M1
+419	277DthrABCDasdDtdhDdapA pfb6.4.3 +aspC	7_D_TasdA_P_asdD_aspC_DdapADtdh_0_12_M1	0	12	M1
+420	277DthrABCDasdDtdhDdapA pfb6.4.3 +aspC	7_D_TasdA_P_asdD_aspC_DdapADtdh_0_24_M1	0	24	M1
+421	277DthrABCDasdDtdhDdapA pfb6.4.3 +aspC	7_D_TasdA_P_asdD_aspC_DdapADtdh_I_4p5_M1	I	4.5	M1
+422	277DthrABCDasdDtdhDdapA pfb6.4.3 +aspC	7_D_TasdA_P_asdD_aspC_DdapADtdh_I_6_M1	I	6	M1
+423	277DthrABCDasdDtdhDdapA pfb6.4.3 +aspC	7_D_TasdA_P_asdD_aspC_DdapADtdh_I_12_M1	I	12	M1
+424	277DthrABCDasdDtdhDdapA pfb6.4.3 +aspC	7_D_TasdA_P_asdD_aspC_DdapADtdh_I_24_M1	I	24	M1
+425	277DthrABCDasdDtdhDlysC pfb6.4.3 +aspC	7_D_TasdA_P_asdD_aspC_DlysCDtdh_0_4p5_M1	0	4.5	M1
+426	277DthrABCDasdDtdhDlysC pfb6.4.3 +aspC	7_D_TasdA_P_asdD_aspC_DlysCDtdh_0_6_M1	0	6	M1
+427	277DthrABCDasdDtdhDlysC pfb6.4.3 +aspC	7_D_TasdA_P_asdD_aspC_DlysCDtdh_0_12_M1	0	12	M1
+428	277DthrABCDasdDtdhDlysC pfb6.4.3 +aspC	7_D_TasdA_P_asdD_aspC_DlysCDtdh_0_24_M1	0	24	M1
+429	277DthrABCDasdDtdhDlysC pfb6.4.3 +aspC	7_D_TasdA_P_asdD_aspC_DlysCDtdh_I_4p5_M1	I	4.5	M1
+430	277DthrABCDasdDtdhDlysC pfb6.4.3 +aspC	7_D_TasdA_P_asdD_aspC_DlysCDtdh_I_6_M1	I	6	M1
+431	277DthrABCDasdDtdhDlysC pfb6.4.3 +aspC	7_D_TasdA_P_asdD_aspC_DlysCDtdh_I_12_M1	I	12	M1
+432	277DthrABCDasdDtdhDlysC pfb6.4.3 +aspC	7_D_TasdA_P_asdD_aspC_DlysCDtdh_I_24_M1	I	24	M1
+433	277DthrABCDasdDtdhDrhtA pfb6.4.3 +aspC	7_D_TasdA_P_asdD_aspC_DrhtADtdh_0_4p5_M1	0	4.5	M1
+434	277DthrABCDasdDtdhDrhtA pfb6.4.3 +aspC	7_D_TasdA_P_asdD_aspC_DrhtADtdh_0_6_M1	0	6	M1
+435	277DthrABCDasdDtdhDrhtA pfb6.4.3 +aspC	7_D_TasdA_P_asdD_aspC_DrhtADtdh_0_12_M1	0	12	M1
+436	277DthrABCDasdDtdhDrhtA pfb6.4.3 +aspC	7_D_TasdA_P_asdD_aspC_DrhtADtdh_0_24_M1	0	24	M1
+437	277DthrABCDasdDtdhDrhtA pfb6.4.3 +aspC	7_D_TasdA_P_asdD_aspC_DrhtADtdh_I_4p5_M1	I	4.5	M1
+438	277DthrABCDasdDtdhDrhtA pfb6.4.3 +aspC	7_D_TasdA_P_asdD_aspC_DrhtADtdh_I_6_M1	I	6	M1
+439	277DthrABCDasdDtdhDrhtA pfb6.4.3 +aspC	7_D_TasdA_P_asdD_aspC_DrhtADtdh_I_12_M1	I	12	M1
+440	277DthrABCDasdDtdhDrhtA pfb6.4.3 +aspC	7_D_TasdA_P_asdD_aspC_DrhtADtdh_I_24_M1	I	24	M1
 441	277DthrABCDasd pfb6.4.3 +pntAB	7_D_TasdA_P_asdD_pntAB_D000_0_4p5_M1	0	4.5	M1
 442	277DthrABCDasd pfb6.4.3 +pntAB	7_D_TasdA_P_asdD_pntAB_D000_0_6_M1	0	6	M1
 443	277DthrABCDasd pfb6.4.3 +pntAB	7_D_TasdA_P_asdD_pntAB_D000_0_12_M1	0	12	M1
@@ -503,30 +503,30 @@ num	old_strain	sample	IPTG	time	medium
 502	277DthrABCDasdDtdh pfb6.4.3 +pntAB	7_D_TasdA_P_asdD_pntAB_Dtdh_I_6_M1	I	6	M1
 503	277DthrABCDasdDtdh pfb6.4.3 +pntAB	7_D_TasdA_P_asdD_pntAB_Dtdh_I_12_M1	I	12	M1
 504	277DthrABCDasdDtdh pfb6.4.3 +pntAB	7_D_TasdA_P_asdD_pntAB_Dtdh_I_24_M1	I	24	M1
-505	277DthrABCDasdDtdhDdapA pfb6.4.3 +pntAB	7_D_TasdA_P_asdD_pntAB_DtdhDdapA_0_4p5_M1	0	4.5	M1
-506	277DthrABCDasdDtdhDdapA pfb6.4.3 +pntAB	7_D_TasdA_P_asdD_pntAB_DtdhDdapA_0_6_M1	0	6	M1
-507	277DthrABCDasdDtdhDdapA pfb6.4.3 +pntAB	7_D_TasdA_P_asdD_pntAB_DtdhDdapA_0_12_M1	0	12	M1
-508	277DthrABCDasdDtdhDdapA pfb6.4.3 +pntAB	7_D_TasdA_P_asdD_pntAB_DtdhDdapA_0_24_M1	0	24	M1
-509	277DthrABCDasdDtdhDdapA pfb6.4.3 +pntAB	7_D_TasdA_P_asdD_pntAB_DtdhDdapA_I_4p5_M1	I	4.5	M1
-510	277DthrABCDasdDtdhDdapA pfb6.4.3 +pntAB	7_D_TasdA_P_asdD_pntAB_DtdhDdapA_I_6_M1	I	6	M1
-511	277DthrABCDasdDtdhDdapA pfb6.4.3 +pntAB	7_D_TasdA_P_asdD_pntAB_DtdhDdapA_I_12_M1	I	12	M1
-512	277DthrABCDasdDtdhDdapA pfb6.4.3 +pntAB	7_D_TasdA_P_asdD_pntAB_DtdhDdapA_I_24_M1	I	24	M1
-513	277DthrABCDasdDtdhDlysC pfb6.4.3 +pntAB	7_D_TasdA_P_asdD_pntAB_DtdhDlysC_0_4p5_M1	0	4.5	M1
-514	277DthrABCDasdDtdhDlysC pfb6.4.3 +pntAB	7_D_TasdA_P_asdD_pntAB_DtdhDlysC_0_6_M1	0	6	M1
-515	277DthrABCDasdDtdhDlysC pfb6.4.3 +pntAB	7_D_TasdA_P_asdD_pntAB_DtdhDlysC_0_12_M1	0	12	M1
-516	277DthrABCDasdDtdhDlysC pfb6.4.3 +pntAB	7_D_TasdA_P_asdD_pntAB_DtdhDlysC_0_24_M1	0	24	M1
-517	277DthrABCDasdDtdhDlysC pfb6.4.3 +pntAB	7_D_TasdA_P_asdD_pntAB_DtdhDlysC_I_4p5_M1	I	4.5	M1
-518	277DthrABCDasdDtdhDlysC pfb6.4.3 +pntAB	7_D_TasdA_P_asdD_pntAB_DtdhDlysC_I_6_M1	I	6	M1
-519	277DthrABCDasdDtdhDlysC pfb6.4.3 +pntAB	7_D_TasdA_P_asdD_pntAB_DtdhDlysC_I_12_M1	I	12	M1
-520	277DthrABCDasdDtdhDlysC pfb6.4.3 +pntAB	7_D_TasdA_P_asdD_pntAB_DtdhDlysC_I_24_M1	I	24	M1
-521	277DthrABCDasdDtdhDrhtA pfb6.4.3 +pntAB	7_D_TasdA_P_asdD_pntAB_DtdhDrhtA_0_4p5_M1	0	4.5	M1
-522	277DthrABCDasdDtdhDrhtA pfb6.4.3 +pntAB	7_D_TasdA_P_asdD_pntAB_DtdhDrhtA_0_6_M1	0	6	M1
-523	277DthrABCDasdDtdhDrhtA pfb6.4.3 +pntAB	7_D_TasdA_P_asdD_pntAB_DtdhDrhtA_0_12_M1	0	12	M1
-524	277DthrABCDasdDtdhDrhtA pfb6.4.3 +pntAB	7_D_TasdA_P_asdD_pntAB_DtdhDrhtA_0_24_M1	0	24	M1
-525	277DthrABCDasdDtdhDrhtA pfb6.4.3 +pntAB	7_D_TasdA_P_asdD_pntAB_DtdhDrhtA_I_4p5_M1	I	4.5	M1
-526	277DthrABCDasdDtdhDrhtA pfb6.4.3 +pntAB	7_D_TasdA_P_asdD_pntAB_DtdhDrhtA_I_6_M1	I	6	M1
-527	277DthrABCDasdDtdhDrhtA pfb6.4.3 +pntAB	7_D_TasdA_P_asdD_pntAB_DtdhDrhtA_I_12_M1	I	12	M1
-528	277DthrABCDasdDtdhDrhtA pfb6.4.3 +pntAB	7_D_TasdA_P_asdD_pntAB_DtdhDrhtA_I_24_M1	I	24	M1
+505	277DthrABCDasdDtdhDdapA pfb6.4.3 +pntAB	7_D_TasdA_P_asdD_pntAB_DdapADtdh_0_4p5_M1	0	4.5	M1
+506	277DthrABCDasdDtdhDdapA pfb6.4.3 +pntAB	7_D_TasdA_P_asdD_pntAB_DdapADtdh_0_6_M1	0	6	M1
+507	277DthrABCDasdDtdhDdapA pfb6.4.3 +pntAB	7_D_TasdA_P_asdD_pntAB_DdapADtdh_0_12_M1	0	12	M1
+508	277DthrABCDasdDtdhDdapA pfb6.4.3 +pntAB	7_D_TasdA_P_asdD_pntAB_DdapADtdh_0_24_M1	0	24	M1
+509	277DthrABCDasdDtdhDdapA pfb6.4.3 +pntAB	7_D_TasdA_P_asdD_pntAB_DdapADtdh_I_4p5_M1	I	4.5	M1
+510	277DthrABCDasdDtdhDdapA pfb6.4.3 +pntAB	7_D_TasdA_P_asdD_pntAB_DdapADtdh_I_6_M1	I	6	M1
+511	277DthrABCDasdDtdhDdapA pfb6.4.3 +pntAB	7_D_TasdA_P_asdD_pntAB_DdapADtdh_I_12_M1	I	12	M1
+512	277DthrABCDasdDtdhDdapA pfb6.4.3 +pntAB	7_D_TasdA_P_asdD_pntAB_DdapADtdh_I_24_M1	I	24	M1
+513	277DthrABCDasdDtdhDlysC pfb6.4.3 +pntAB	7_D_TasdA_P_asdD_pntAB_DlysCDtdh_0_4p5_M1	0	4.5	M1
+514	277DthrABCDasdDtdhDlysC pfb6.4.3 +pntAB	7_D_TasdA_P_asdD_pntAB_DlysCDtdh_0_6_M1	0	6	M1
+515	277DthrABCDasdDtdhDlysC pfb6.4.3 +pntAB	7_D_TasdA_P_asdD_pntAB_DlysCDtdh_0_12_M1	0	12	M1
+516	277DthrABCDasdDtdhDlysC pfb6.4.3 +pntAB	7_D_TasdA_P_asdD_pntAB_DlysCDtdh_0_24_M1	0	24	M1
+517	277DthrABCDasdDtdhDlysC pfb6.4.3 +pntAB	7_D_TasdA_P_asdD_pntAB_DlysCDtdh_I_4p5_M1	I	4.5	M1
+518	277DthrABCDasdDtdhDlysC pfb6.4.3 +pntAB	7_D_TasdA_P_asdD_pntAB_DlysCDtdh_I_6_M1	I	6	M1
+519	277DthrABCDasdDtdhDlysC pfb6.4.3 +pntAB	7_D_TasdA_P_asdD_pntAB_DlysCDtdh_I_12_M1	I	12	M1
+520	277DthrABCDasdDtdhDlysC pfb6.4.3 +pntAB	7_D_TasdA_P_asdD_pntAB_DlysCDtdh_I_24_M1	I	24	M1
+521	277DthrABCDasdDtdhDrhtA pfb6.4.3 +pntAB	7_D_TasdA_P_asdD_pntAB_DrhtADtdh_0_4p5_M1	0	4.5	M1
+522	277DthrABCDasdDtdhDrhtA pfb6.4.3 +pntAB	7_D_TasdA_P_asdD_pntAB_DrhtADtdh_0_6_M1	0	6	M1
+523	277DthrABCDasdDtdhDrhtA pfb6.4.3 +pntAB	7_D_TasdA_P_asdD_pntAB_DrhtADtdh_0_12_M1	0	12	M1
+524	277DthrABCDasdDtdhDrhtA pfb6.4.3 +pntAB	7_D_TasdA_P_asdD_pntAB_DrhtADtdh_0_24_M1	0	24	M1
+525	277DthrABCDasdDtdhDrhtA pfb6.4.3 +pntAB	7_D_TasdA_P_asdD_pntAB_DrhtADtdh_I_4p5_M1	I	4.5	M1
+526	277DthrABCDasdDtdhDrhtA pfb6.4.3 +pntAB	7_D_TasdA_P_asdD_pntAB_DrhtADtdh_I_6_M1	I	6	M1
+527	277DthrABCDasdDtdhDrhtA pfb6.4.3 +pntAB	7_D_TasdA_P_asdD_pntAB_DrhtADtdh_I_12_M1	I	12	M1
+528	277DthrABCDasdDtdhDrhtA pfb6.4.3 +pntAB	7_D_TasdA_P_asdD_pntAB_DrhtADtdh_I_24_M1	I	24	M1
 529	277DthrABCDasd pfb6.4.3 +ppc	7_D_TasdA_P_asdD_ppc_D000_0_4p5_M1	0	4.5	M1
 530	277DthrABCDasd pfb6.4.3 +ppc	7_D_TasdA_P_asdD_ppc_D000_0_6_M1	0	6	M1
 531	277DthrABCDasd pfb6.4.3 +ppc	7_D_TasdA_P_asdD_ppc_D000_0_12_M1	0	12	M1
@@ -599,14 +599,14 @@ num	old_strain	sample	IPTG	time	medium
 598	277DthrABCDasdDtdh pfb6.4.3 +pyc	7_D_TasdA_P_asdD_pyc_Dtdh_I_6_M1	I	6	M1
 599	277DthrABCDasdDtdh pfb6.4.3 +pyc	7_D_TasdA_P_asdD_pyc_Dtdh_I_12_M1	I	12	M1
 600	277DthrABCDasdDtdh pfb6.4.3 +pyc	7_D_TasdA_P_asdD_pyc_Dtdh_I_24_M1	I	24	M1
-601	277DthrABCDasdDtdhDlysC pfb6.4.3 +pyc	7_D_TasdA_P_asdD_pyc_DtdhDlysC_0_4p5_M1	0	4.5	M1
-602	277DthrABCDasdDtdhDlysC pfb6.4.3 +pyc	7_D_TasdA_P_asdD_pyc_DtdhDlysC_0_6_M1	0	6	M1
-603	277DthrABCDasdDtdhDlysC pfb6.4.3 +pyc	7_D_TasdA_P_asdD_pyc_DtdhDlysC_0_12_M1	0	12	M1
-604	277DthrABCDasdDtdhDlysC pfb6.4.3 +pyc	7_D_TasdA_P_asdD_pyc_DtdhDlysC_0_24_M1	0	24	M1
-605	277DthrABCDasdDtdhDlysC pfb6.4.3 +pyc	7_D_TasdA_P_asdD_pyc_DtdhDlysC_I_4p5_M1	I	4.5	M1
-606	277DthrABCDasdDtdhDlysC pfb6.4.3 +pyc	7_D_TasdA_P_asdD_pyc_DtdhDlysC_I_6_M1	I	6	M1
-607	277DthrABCDasdDtdhDlysC pfb6.4.3 +pyc	7_D_TasdA_P_asdD_pyc_DtdhDlysC_I_12_M1	I	12	M1
-608	277DthrABCDasdDtdhDlysC pfb6.4.3 +pyc	7_D_TasdA_P_asdD_pyc_DtdhDlysC_I_24_M1	I	24	M1
+601	277DthrABCDasdDtdhDlysC pfb6.4.3 +pyc	7_D_TasdA_P_asdD_pyc_DlysCDtdh_0_4p5_M1	0	4.5	M1
+602	277DthrABCDasdDtdhDlysC pfb6.4.3 +pyc	7_D_TasdA_P_asdD_pyc_DlysCDtdh_0_6_M1	0	6	M1
+603	277DthrABCDasdDtdhDlysC pfb6.4.3 +pyc	7_D_TasdA_P_asdD_pyc_DlysCDtdh_0_12_M1	0	12	M1
+604	277DthrABCDasdDtdhDlysC pfb6.4.3 +pyc	7_D_TasdA_P_asdD_pyc_DlysCDtdh_0_24_M1	0	24	M1
+605	277DthrABCDasdDtdhDlysC pfb6.4.3 +pyc	7_D_TasdA_P_asdD_pyc_DlysCDtdh_I_4p5_M1	I	4.5	M1
+606	277DthrABCDasdDtdhDlysC pfb6.4.3 +pyc	7_D_TasdA_P_asdD_pyc_DlysCDtdh_I_6_M1	I	6	M1
+607	277DthrABCDasdDtdhDlysC pfb6.4.3 +pyc	7_D_TasdA_P_asdD_pyc_DlysCDtdh_I_12_M1	I	12	M1
+608	277DthrABCDasdDtdhDlysC pfb6.4.3 +pyc	7_D_TasdA_P_asdD_pyc_DlysCDtdh_I_24_M1	I	24	M1
 609	277dthrABCdasd pfb6.4.3 +rhtA	7_D_TasdA_P_asdD_rhtA_D000_0_4p5_M1	0	4.5	M1
 610	277dthrABCdasd pfb6.4.3 +rhtA	7_D_TasdA_P_asdD_rhtA_D000_0_6_M1	0	6	M1
 611	277dthrABCdasd pfb6.4.3 +rhtA	7_D_TasdA_P_asdD_rhtA_D000_0_12_M1	0	12	M1
@@ -663,22 +663,22 @@ num	old_strain	sample	IPTG	time	medium
 662	277DthrABCDasdDtdh pfb6.4.3 +rhtA	7_D_TasdA_P_asdD_rhtA_Dtdh_I_6_M1	I	6	M1
 663	277DthrABCDasdDtdh pfb6.4.3 +rhtA	7_D_TasdA_P_asdD_rhtA_Dtdh_I_12_M1	I	12	M1
 664	277DthrABCDasdDtdh pfb6.4.3 +rhtA	7_D_TasdA_P_asdD_rhtA_Dtdh_I_24_M1	I	24	M1
-665	277DthrABCDasdDtdhDdapA pfb6.4.3 +rhtA	7_D_TasdA_P_asdD_rhtA_DtdhDdapA_0_4p5_M1	0	4.5	M1
-666	277DthrABCDasdDtdhDdapA pfb6.4.3 +rhtA	7_D_TasdA_P_asdD_rhtA_DtdhDdapA_0_6_M1	0	6	M1
-667	277DthrABCDasdDtdhDdapA pfb6.4.3 +rhtA	7_D_TasdA_P_asdD_rhtA_DtdhDdapA_0_12_M1	0	12	M1
-668	277DthrABCDasdDtdhDdapA pfb6.4.3 +rhtA	7_D_TasdA_P_asdD_rhtA_DtdhDdapA_0_24_M1	0	24	M1
-669	277DthrABCDasdDtdhDdapA pfb6.4.3 +rhtA	7_D_TasdA_P_asdD_rhtA_DtdhDdapA_I_4p5_M1	I	4.5	M1
-670	277DthrABCDasdDtdhDdapA pfb6.4.3 +rhtA	7_D_TasdA_P_asdD_rhtA_DtdhDdapA_I_6_M1	I	6	M1
-671	277DthrABCDasdDtdhDdapA pfb6.4.3 +rhtA	7_D_TasdA_P_asdD_rhtA_DtdhDdapA_I_12_M1	I	12	M1
-672	277DthrABCDasdDtdhDdapA pfb6.4.3 +rhtA	7_D_TasdA_P_asdD_rhtA_DtdhDdapA_I_24_M1	I	24	M1
-673	277DthrABCDasdDtdhDlysC pfb6.4.3 +rhtA	7_D_TasdA_P_asdD_rhtA_DtdhDlysC_0_4p5_M1	0	4.5	M1
-674	277DthrABCDasdDtdhDlysC pfb6.4.3 +rhtA	7_D_TasdA_P_asdD_rhtA_DtdhDlysC_0_6_M1	0	6	M1
-675	277DthrABCDasdDtdhDlysC pfb6.4.3 +rhtA	7_D_TasdA_P_asdD_rhtA_DtdhDlysC_0_12_M1	0	12	M1
-676	277DthrABCDasdDtdhDlysC pfb6.4.3 +rhtA	7_D_TasdA_P_asdD_rhtA_DtdhDlysC_0_24_M1	0	24	M1
-677	277DthrABCDasdDtdhDlysC pfb6.4.3 +rhtA	7_D_TasdA_P_asdD_rhtA_DtdhDlysC_I_4p5_M1	I	4.5	M1
-678	277DthrABCDasdDtdhDlysC pfb6.4.3 +rhtA	7_D_TasdA_P_asdD_rhtA_DtdhDlysC_I_6_M1	I	6	M1
-679	277DthrABCDasdDtdhDlysC pfb6.4.3 +rhtA	7_D_TasdA_P_asdD_rhtA_DtdhDlysC_I_12_M1	I	12	M1
-680	277DthrABCDasdDtdhDlysC pfb6.4.3 +rhtA	7_D_TasdA_P_asdD_rhtA_DtdhDlysC_I_24_M1	I	24	M1
+665	277DthrABCDasdDtdhDdapA pfb6.4.3 +rhtA	7_D_TasdA_P_asdD_rhtA_DdapADtdh_0_4p5_M1	0	4.5	M1
+666	277DthrABCDasdDtdhDdapA pfb6.4.3 +rhtA	7_D_TasdA_P_asdD_rhtA_DdapADtdh_0_6_M1	0	6	M1
+667	277DthrABCDasdDtdhDdapA pfb6.4.3 +rhtA	7_D_TasdA_P_asdD_rhtA_DdapADtdh_0_12_M1	0	12	M1
+668	277DthrABCDasdDtdhDdapA pfb6.4.3 +rhtA	7_D_TasdA_P_asdD_rhtA_DdapADtdh_0_24_M1	0	24	M1
+669	277DthrABCDasdDtdhDdapA pfb6.4.3 +rhtA	7_D_TasdA_P_asdD_rhtA_DdapADtdh_I_4p5_M1	I	4.5	M1
+670	277DthrABCDasdDtdhDdapA pfb6.4.3 +rhtA	7_D_TasdA_P_asdD_rhtA_DdapADtdh_I_6_M1	I	6	M1
+671	277DthrABCDasdDtdhDdapA pfb6.4.3 +rhtA	7_D_TasdA_P_asdD_rhtA_DdapADtdh_I_12_M1	I	12	M1
+672	277DthrABCDasdDtdhDdapA pfb6.4.3 +rhtA	7_D_TasdA_P_asdD_rhtA_DdapADtdh_I_24_M1	I	24	M1
+673	277DthrABCDasdDtdhDlysC pfb6.4.3 +rhtA	7_D_TasdA_P_asdD_rhtA_DlysCDtdh_0_4p5_M1	0	4.5	M1
+674	277DthrABCDasdDtdhDlysC pfb6.4.3 +rhtA	7_D_TasdA_P_asdD_rhtA_DlysCDtdh_0_6_M1	0	6	M1
+675	277DthrABCDasdDtdhDlysC pfb6.4.3 +rhtA	7_D_TasdA_P_asdD_rhtA_DlysCDtdh_0_12_M1	0	12	M1
+676	277DthrABCDasdDtdhDlysC pfb6.4.3 +rhtA	7_D_TasdA_P_asdD_rhtA_DlysCDtdh_0_24_M1	0	24	M1
+677	277DthrABCDasdDtdhDlysC pfb6.4.3 +rhtA	7_D_TasdA_P_asdD_rhtA_DlysCDtdh_I_4p5_M1	I	4.5	M1
+678	277DthrABCDasdDtdhDlysC pfb6.4.3 +rhtA	7_D_TasdA_P_asdD_rhtA_DlysCDtdh_I_6_M1	I	6	M1
+679	277DthrABCDasdDtdhDlysC pfb6.4.3 +rhtA	7_D_TasdA_P_asdD_rhtA_DlysCDtdh_I_12_M1	I	12	M1
+680	277DthrABCDasdDtdhDlysC pfb6.4.3 +rhtA	7_D_TasdA_P_asdD_rhtA_DlysCDtdh_I_24_M1	I	24	M1
 681	277DthrABCDasdDdapA pfb6.4.3 +rhtA	7_D_TasdA_P_asdD_rhtA_DdapA_0_4p5_M1	0	4.5	M1
 682	277DthrABCDasdDdapA pfb6.4.3 +rhtA	7_D_TasdA_P_asdD_rhtA_DdapA_0_6_M1	0	6	M1
 683	277DthrABCDasdDdapA pfb6.4.3 +rhtA	7_D_TasdA_P_asdD_rhtA_DdapA_0_12_M1	0	12	M1
@@ -687,14 +687,14 @@ num	old_strain	sample	IPTG	time	medium
 686	277DthrABCDasdDdapA pfb6.4.3 +rhtA	7_D_TasdA_P_asdD_rhtA_DdapA_I_6_M1	I	6	M1
 687	277DthrABCDasdDdapA pfb6.4.3 +rhtA	7_D_TasdA_P_asdD_rhtA_DdapA_I_12_M1	I	12	M1
 688	277DthrABCDasdDdapA pfb6.4.3 +rhtA	7_D_TasdA_P_asdD_rhtA_DdapA_I_24_M1	I	24	M1
-689	277DthrABCDasdDtdhDrhtA pfb6.4.3 +rhtA	7_D_TasdA_P_asdD_rhtA_DtdhDrhtA_0_4p5_M1	0	4.5	M1
-690	277DthrABCDasdDtdhDrhtA pfb6.4.3 +rhtA	7_D_TasdA_P_asdD_rhtA_DtdhDrhtA_0_6_M1	0	6	M1
-691	277DthrABCDasdDtdhDrhtA pfb6.4.3 +rhtA	7_D_TasdA_P_asdD_rhtA_DtdhDrhtA_0_12_M1	0	12	M1
-692	277DthrABCDasdDtdhDrhtA pfb6.4.3 +rhtA	7_D_TasdA_P_asdD_rhtA_DtdhDrhtA_0_24_M1	0	24	M1
-693	277DthrABCDasdDtdhDrhtA pfb6.4.3 +rhtA	7_D_TasdA_P_asdD_rhtA_DtdhDrhtA_I_4p5_M1	I	4.5	M1
-694	277DthrABCDasdDtdhDrhtA pfb6.4.3 +rhtA	7_D_TasdA_P_asdD_rhtA_DtdhDrhtA_I_6_M1	I	6	M1
-695	277DthrABCDasdDtdhDrhtA pfb6.4.3 +rhtA	7_D_TasdA_P_asdD_rhtA_DtdhDrhtA_I_12_M1	I	12	M1
-696	277DthrABCDasdDtdhDrhtA pfb6.4.3 +rhtA	7_D_TasdA_P_asdD_rhtA_DtdhDrhtA_I_24_M1	I	24	M1
+689	277DthrABCDasdDtdhDrhtA pfb6.4.3 +rhtA	7_D_TasdA_P_asdD_rhtA_DrhtADtdh_0_4p5_M1	0	4.5	M1
+690	277DthrABCDasdDtdhDrhtA pfb6.4.3 +rhtA	7_D_TasdA_P_asdD_rhtA_DrhtADtdh_0_6_M1	0	6	M1
+691	277DthrABCDasdDtdhDrhtA pfb6.4.3 +rhtA	7_D_TasdA_P_asdD_rhtA_DrhtADtdh_0_12_M1	0	12	M1
+692	277DthrABCDasdDtdhDrhtA pfb6.4.3 +rhtA	7_D_TasdA_P_asdD_rhtA_DrhtADtdh_0_24_M1	0	24	M1
+693	277DthrABCDasdDtdhDrhtA pfb6.4.3 +rhtA	7_D_TasdA_P_asdD_rhtA_DrhtADtdh_I_4p5_M1	I	4.5	M1
+694	277DthrABCDasdDtdhDrhtA pfb6.4.3 +rhtA	7_D_TasdA_P_asdD_rhtA_DrhtADtdh_I_6_M1	I	6	M1
+695	277DthrABCDasdDtdhDrhtA pfb6.4.3 +rhtA	7_D_TasdA_P_asdD_rhtA_DrhtADtdh_I_12_M1	I	12	M1
+696	277DthrABCDasdDtdhDrhtA pfb6.4.3 +rhtA	7_D_TasdA_P_asdD_rhtA_DrhtADtdh_I_24_M1	I	24	M1
 697	277DthrABCDasd pfb6.4.3 +zwf	7_D_TasdA_P_asdD_zwf_D000_0_4p5_M1	0	4.5	M1
 698	277DthrABCDasd pfb6.4.3 +zwf	7_D_TasdA_P_asdD_zwf_D000_0_6_M1	0	6	M1
 699	277DthrABCDasd pfb6.4.3 +zwf	7_D_TasdA_P_asdD_zwf_D000_0_12_M1	0	12	M1
@@ -759,30 +759,30 @@ num	old_strain	sample	IPTG	time	medium
 758	277DthrABCDasdDtdh pfb6.4.3 +zwf	7_D_TasdA_P_asdD_zwf_Dtdh_I_6_M1	I	6	M1
 759	277DthrABCDasdDtdh pfb6.4.3 +zwf	7_D_TasdA_P_asdD_zwf_Dtdh_I_12_M1	I	12	M1
 760	277DthrABCDasdDtdh pfb6.4.3 +zwf	7_D_TasdA_P_asdD_zwf_Dtdh_I_24_M1	I	24	M1
-761	277DthrABCDasdDtdhDdapA pfb6.4.3 +zwf	7_D_TasdA_P_asdD_zwf_DtdhDdapA_0_4p5_M1	0	4.5	M1
-762	277DthrABCDasdDtdhDdapA pfb6.4.3 +zwf	7_D_TasdA_P_asdD_zwf_DtdhDdapA_0_6_M1	0	6	M1
-763	277DthrABCDasdDtdhDdapA pfb6.4.3 +zwf	7_D_TasdA_P_asdD_zwf_DtdhDdapA_0_12_M1	0	12	M1
-764	277DthrABCDasdDtdhDdapA pfb6.4.3 +zwf	7_D_TasdA_P_asdD_zwf_DtdhDdapA_0_24_M1	0	24	M1
-765	277DthrABCDasdDtdhDdapA pfb6.4.3 +zwf	7_D_TasdA_P_asdD_zwf_DtdhDdapA_I_4p5_M1	I	4.5	M1
-766	277DthrABCDasdDtdhDdapA pfb6.4.3 +zwf	7_D_TasdA_P_asdD_zwf_DtdhDdapA_I_6_M1	I	6	M1
-767	277DthrABCDasdDtdhDdapA pfb6.4.3 +zwf	7_D_TasdA_P_asdD_zwf_DtdhDdapA_I_12_M1	I	12	M1
-768	277DthrABCDasdDtdhDdapA pfb6.4.3 +zwf	7_D_TasdA_P_asdD_zwf_DtdhDdapA_I_24_M1	I	24	M1
-769	277DthrABCDasdDtdhDlysC pfb6.4.3 +zwf	7_D_TasdA_P_asdD_zwf_DtdhDlysC_0_4p5_M1	0	4.5	M1
-770	277DthrABCDasdDtdhDlysC pfb6.4.3 +zwf	7_D_TasdA_P_asdD_zwf_DtdhDlysC_0_6_M1	0	6	M1
-771	277DthrABCDasdDtdhDlysC pfb6.4.3 +zwf	7_D_TasdA_P_asdD_zwf_DtdhDlysC_0_12_M1	0	12	M1
-772	277DthrABCDasdDtdhDlysC pfb6.4.3 +zwf	7_D_TasdA_P_asdD_zwf_DtdhDlysC_0_24_M1	0	24	M1
-773	277DthrABCDasdDtdhDlysC pfb6.4.3 +zwf	7_D_TasdA_P_asdD_zwf_DtdhDlysC_I_4p5_M1	I	4.5	M1
-774	277DthrABCDasdDtdhDlysC pfb6.4.3 +zwf	7_D_TasdA_P_asdD_zwf_DtdhDlysC_I_6_M1	I	6	M1
-775	277DthrABCDasdDtdhDlysC pfb6.4.3 +zwf	7_D_TasdA_P_asdD_zwf_DtdhDlysC_I_12_M1	I	12	M1
-776	277DthrABCDasdDtdhDlysC pfb6.4.3 +zwf	7_D_TasdA_P_asdD_zwf_DtdhDlysC_I_24_M1	I	24	M1
-777	277DthrABCDasdDtdhDrhtA pfb6.4.3 +zwf	7_D_TasdA_P_asdD_zwf_DtdhDrhtA_0_4p5_M1	0	4.5	M1
-778	277DthrABCDasdDtdhDrhtA pfb6.4.3 +zwf	7_D_TasdA_P_asdD_zwf_DtdhDrhtA_0_6_M1	0	6	M1
-779	277DthrABCDasdDtdhDrhtA pfb6.4.3 +zwf	7_D_TasdA_P_asdD_zwf_DtdhDrhtA_0_12_M1	0	12	M1
-780	277DthrABCDasdDtdhDrhtA pfb6.4.3 +zwf	7_D_TasdA_P_asdD_zwf_DtdhDrhtA_0_24_M1	0	24	M1
-781	277DthrABCDasdDtdhDrhtA pfb6.4.3 +zwf	7_D_TasdA_P_asdD_zwf_DtdhDrhtA_I_4p5_M1	I	4.5	M1
-782	277DthrABCDasdDtdhDrhtA pfb6.4.3 +zwf	7_D_TasdA_P_asdD_zwf_DtdhDrhtA_I_6_M1	I	6	M1
-783	277DthrABCDasdDtdhDrhtA pfb6.4.3 +zwf	7_D_TasdA_P_asdD_zwf_DtdhDrhtA_I_12_M1	I	12	M1
-784	277DthrABCDasdDtdhDrhtA pfb6.4.3 +zwf	7_D_TasdA_P_asdD_zwf_DtdhDrhtA_I_24_M1	I	24	M1
+761	277DthrABCDasdDtdhDdapA pfb6.4.3 +zwf	7_D_TasdA_P_asdD_zwf_DdapADtdh_0_4p5_M1	0	4.5	M1
+762	277DthrABCDasdDtdhDdapA pfb6.4.3 +zwf	7_D_TasdA_P_asdD_zwf_DdapADtdh_0_6_M1	0	6	M1
+763	277DthrABCDasdDtdhDdapA pfb6.4.3 +zwf	7_D_TasdA_P_asdD_zwf_DdapADtdh_0_12_M1	0	12	M1
+764	277DthrABCDasdDtdhDdapA pfb6.4.3 +zwf	7_D_TasdA_P_asdD_zwf_DdapADtdh_0_24_M1	0	24	M1
+765	277DthrABCDasdDtdhDdapA pfb6.4.3 +zwf	7_D_TasdA_P_asdD_zwf_DdapADtdh_I_4p5_M1	I	4.5	M1
+766	277DthrABCDasdDtdhDdapA pfb6.4.3 +zwf	7_D_TasdA_P_asdD_zwf_DdapADtdh_I_6_M1	I	6	M1
+767	277DthrABCDasdDtdhDdapA pfb6.4.3 +zwf	7_D_TasdA_P_asdD_zwf_DdapADtdh_I_12_M1	I	12	M1
+768	277DthrABCDasdDtdhDdapA pfb6.4.3 +zwf	7_D_TasdA_P_asdD_zwf_DdapADtdh_I_24_M1	I	24	M1
+769	277DthrABCDasdDtdhDlysC pfb6.4.3 +zwf	7_D_TasdA_P_asdD_zwf_DlysCDtdh_0_4p5_M1	0	4.5	M1
+770	277DthrABCDasdDtdhDlysC pfb6.4.3 +zwf	7_D_TasdA_P_asdD_zwf_DlysCDtdh_0_6_M1	0	6	M1
+771	277DthrABCDasdDtdhDlysC pfb6.4.3 +zwf	7_D_TasdA_P_asdD_zwf_DlysCDtdh_0_12_M1	0	12	M1
+772	277DthrABCDasdDtdhDlysC pfb6.4.3 +zwf	7_D_TasdA_P_asdD_zwf_DlysCDtdh_0_24_M1	0	24	M1
+773	277DthrABCDasdDtdhDlysC pfb6.4.3 +zwf	7_D_TasdA_P_asdD_zwf_DlysCDtdh_I_4p5_M1	I	4.5	M1
+774	277DthrABCDasdDtdhDlysC pfb6.4.3 +zwf	7_D_TasdA_P_asdD_zwf_DlysCDtdh_I_6_M1	I	6	M1
+775	277DthrABCDasdDtdhDlysC pfb6.4.3 +zwf	7_D_TasdA_P_asdD_zwf_DlysCDtdh_I_12_M1	I	12	M1
+776	277DthrABCDasdDtdhDlysC pfb6.4.3 +zwf	7_D_TasdA_P_asdD_zwf_DlysCDtdh_I_24_M1	I	24	M1
+777	277DthrABCDasdDtdhDrhtA pfb6.4.3 +zwf	7_D_TasdA_P_asdD_zwf_DrhtADtdh_0_4p5_M1	0	4.5	M1
+778	277DthrABCDasdDtdhDrhtA pfb6.4.3 +zwf	7_D_TasdA_P_asdD_zwf_DrhtADtdh_0_6_M1	0	6	M1
+779	277DthrABCDasdDtdhDrhtA pfb6.4.3 +zwf	7_D_TasdA_P_asdD_zwf_DrhtADtdh_0_12_M1	0	12	M1
+780	277DthrABCDasdDtdhDrhtA pfb6.4.3 +zwf	7_D_TasdA_P_asdD_zwf_DrhtADtdh_0_24_M1	0	24	M1
+781	277DthrABCDasdDtdhDrhtA pfb6.4.3 +zwf	7_D_TasdA_P_asdD_zwf_DrhtADtdh_I_4p5_M1	I	4.5	M1
+782	277DthrABCDasdDtdhDrhtA pfb6.4.3 +zwf	7_D_TasdA_P_asdD_zwf_DrhtADtdh_I_6_M1	I	6	M1
+783	277DthrABCDasdDtdhDrhtA pfb6.4.3 +zwf	7_D_TasdA_P_asdD_zwf_DrhtADtdh_I_12_M1	I	12	M1
+784	277DthrABCDasdDtdhDrhtA pfb6.4.3 +zwf	7_D_TasdA_P_asdD_zwf_DrhtADtdh_I_24_M1	I	24	M1
 785	277dthrABCdasd pfb6.4.2	7_D_TasdA1_P_asdD_000_D000_0_4p5_M1	0	4.5	M1
 786	277dthrABCdasd pfb6.4.2	7_D_TasdA1_P_asdD_000_D000_0_6_M1	0	6	M1
 787	277dthrABCdasd pfb6.4.2	7_D_TasdA1_P_asdD_000_D000_0_12_M1	0	12	M1
@@ -823,14 +823,14 @@ num	old_strain	sample	IPTG	time	medium
 822	277dthrABCdasddtdh pfb6.4.2	7_D_TasdA1_P_asdD_000_Dtdh_I_6_M1	I	6	M1
 823	277dthrABCdasddtdh pfb6.4.2	7_D_TasdA1_P_asdD_000_Dtdh_I_12_M1	I	12	M1
 824	277dthrABCdasddtdh pfb6.4.2	7_D_TasdA1_P_asdD_000_Dtdh_I_24_M1	I	24	M1
-825	277dthrABCdasddtdhdlysC pfb6.4.2	7_D_TasdA1_P_asdD_000_DtdhDlysC_0_4p5_M1	0	4.5	M1
-826	277dthrABCdasddtdhdlysC pfb6.4.2	7_D_TasdA1_P_asdD_000_DtdhDlysC_0_6_M1	0	6	M1
-827	277dthrABCdasddtdhdlysC pfb6.4.2	7_D_TasdA1_P_asdD_000_DtdhDlysC_0_12_M1	0	12	M1
-828	277dthrABCdasddtdhdlysC pfb6.4.2	7_D_TasdA1_P_asdD_000_DtdhDlysC_0_24_M1	0	24	M1
-829	277dthrABCdasddtdhdlysC pfb6.4.2	7_D_TasdA1_P_asdD_000_DtdhDlysC_I_4p5_M1	I	4.5	M1
-830	277dthrABCdasddtdhdlysC pfb6.4.2	7_D_TasdA1_P_asdD_000_DtdhDlysC_I_6_M1	I	6	M1
-831	277dthrABCdasddtdhdlysC pfb6.4.2	7_D_TasdA1_P_asdD_000_DtdhDlysC_I_12_M1	I	12	M1
-832	277dthrABCdasddtdhdlysC pfb6.4.2	7_D_TasdA1_P_asdD_000_DtdhDlysC_I_24_M1	I	24	M1
+825	277dthrABCdasddtdhdlysC pfb6.4.2	7_D_TasdA1_P_asdD_000_DlysCDtdh_0_4p5_M1	0	4.5	M1
+826	277dthrABCdasddtdhdlysC pfb6.4.2	7_D_TasdA1_P_asdD_000_DlysCDtdh_0_6_M1	0	6	M1
+827	277dthrABCdasddtdhdlysC pfb6.4.2	7_D_TasdA1_P_asdD_000_DlysCDtdh_0_12_M1	0	12	M1
+828	277dthrABCdasddtdhdlysC pfb6.4.2	7_D_TasdA1_P_asdD_000_DlysCDtdh_0_24_M1	0	24	M1
+829	277dthrABCdasddtdhdlysC pfb6.4.2	7_D_TasdA1_P_asdD_000_DlysCDtdh_I_4p5_M1	I	4.5	M1
+830	277dthrABCdasddtdhdlysC pfb6.4.2	7_D_TasdA1_P_asdD_000_DlysCDtdh_I_6_M1	I	6	M1
+831	277dthrABCdasddtdhdlysC pfb6.4.2	7_D_TasdA1_P_asdD_000_DlysCDtdh_I_12_M1	I	12	M1
+832	277dthrABCdasddtdhdlysC pfb6.4.2	7_D_TasdA1_P_asdD_000_DlysCDtdh_I_24_M1	I	24	M1
 833	277DthrABCDasdDdhaM pfb6.4.2 +pyc	7_D_TasdA1_P_asdD_pyc_DdhaM_0_4p5_M1	0	4.5	M1
 834	277DthrABCDasdDdhaM pfb6.4.2 +pyc	7_D_TasdA1_P_asdD_pyc_DdhaM_0_6_M1	0	6	M1
 835	277DthrABCDasdDdhaM pfb6.4.2 +pyc	7_D_TasdA1_P_asdD_pyc_DdhaM_0_12_M1	0	12	M1
@@ -879,22 +879,22 @@ num	old_strain	sample	IPTG	time	medium
 878	277DthrABCDasdDtdh pfb6.4.2 +pyc	7_D_TasdA1_P_asdD_pyc_Dtdh_I_6_M1	I	6	M1
 879	277DthrABCDasdDtdh pfb6.4.2 +pyc	7_D_TasdA1_P_asdD_pyc_Dtdh_I_12_M1	I	12	M1
 880	277DthrABCDasdDtdh pfb6.4.2 +pyc	7_D_TasdA1_P_asdD_pyc_Dtdh_I_24_M1	I	24	M1
-881	277DthrABCDasdDtdhDdapA pfb6.4.2 +pyc	7_D_TasdA1_P_asdD_pyc_DtdhDdapA_0_4p5_M1	0	4.5	M1
-882	277DthrABCDasdDtdhDdapA pfb6.4.2 +pyc	7_D_TasdA1_P_asdD_pyc_DtdhDdapA_0_6_M1	0	6	M1
-883	277DthrABCDasdDtdhDdapA pfb6.4.2 +pyc	7_D_TasdA1_P_asdD_pyc_DtdhDdapA_0_12_M1	0	12	M1
-884	277DthrABCDasdDtdhDdapA pfb6.4.2 +pyc	7_D_TasdA1_P_asdD_pyc_DtdhDdapA_0_24_M1	0	24	M1
-885	277DthrABCDasdDtdhDdapA pfb6.4.2 +pyc	7_D_TasdA1_P_asdD_pyc_DtdhDdapA_I_4p5_M1	I	4.5	M1
-886	277DthrABCDasdDtdhDdapA pfb6.4.2 +pyc	7_D_TasdA1_P_asdD_pyc_DtdhDdapA_I_6_M1	I	6	M1
-887	277DthrABCDasdDtdhDdapA pfb6.4.2 +pyc	7_D_TasdA1_P_asdD_pyc_DtdhDdapA_I_12_M1	I	12	M1
-888	277DthrABCDasdDtdhDdapA pfb6.4.2 +pyc	7_D_TasdA1_P_asdD_pyc_DtdhDdapA_I_24_M1	I	24	M1
-889	277DthrABCDasdDtdhDrhtA pfb6.4.2 +pyc	7_D_TasdA1_P_asdD_pyc_DtdhDrhtA_0_4p5_M1	0	4.5	M1
-890	277DthrABCDasdDtdhDrhtA pfb6.4.2 +pyc	7_D_TasdA1_P_asdD_pyc_DtdhDrhtA_0_6_M1	0	6	M1
-891	277DthrABCDasdDtdhDrhtA pfb6.4.2 +pyc	7_D_TasdA1_P_asdD_pyc_DtdhDrhtA_0_12_M1	0	12	M1
-892	277DthrABCDasdDtdhDrhtA pfb6.4.2 +pyc	7_D_TasdA1_P_asdD_pyc_DtdhDrhtA_0_24_M1	0	24	M1
-893	277DthrABCDasdDtdhDrhtA pfb6.4.2 +pyc	7_D_TasdA1_P_asdD_pyc_DtdhDrhtA_I_4p5_M1	I	4.5	M1
-894	277DthrABCDasdDtdhDrhtA pfb6.4.2 +pyc	7_D_TasdA1_P_asdD_pyc_DtdhDrhtA_I_6_M1	I	6	M1
-895	277DthrABCDasdDtdhDrhtA pfb6.4.2 +pyc	7_D_TasdA1_P_asdD_pyc_DtdhDrhtA_I_12_M1	I	12	M1
-896	277DthrABCDasdDtdhDrhtA pfb6.4.2 +pyc	7_D_TasdA1_P_asdD_pyc_DtdhDrhtA_I_24_M1	I	24	M1
+881	277DthrABCDasdDtdhDdapA pfb6.4.2 +pyc	7_D_TasdA1_P_asdD_pyc_DdapADtdh_0_4p5_M1	0	4.5	M1
+882	277DthrABCDasdDtdhDdapA pfb6.4.2 +pyc	7_D_TasdA1_P_asdD_pyc_DdapADtdh_0_6_M1	0	6	M1
+883	277DthrABCDasdDtdhDdapA pfb6.4.2 +pyc	7_D_TasdA1_P_asdD_pyc_DdapADtdh_0_12_M1	0	12	M1
+884	277DthrABCDasdDtdhDdapA pfb6.4.2 +pyc	7_D_TasdA1_P_asdD_pyc_DdapADtdh_0_24_M1	0	24	M1
+885	277DthrABCDasdDtdhDdapA pfb6.4.2 +pyc	7_D_TasdA1_P_asdD_pyc_DdapADtdh_I_4p5_M1	I	4.5	M1
+886	277DthrABCDasdDtdhDdapA pfb6.4.2 +pyc	7_D_TasdA1_P_asdD_pyc_DdapADtdh_I_6_M1	I	6	M1
+887	277DthrABCDasdDtdhDdapA pfb6.4.2 +pyc	7_D_TasdA1_P_asdD_pyc_DdapADtdh_I_12_M1	I	12	M1
+888	277DthrABCDasdDtdhDdapA pfb6.4.2 +pyc	7_D_TasdA1_P_asdD_pyc_DdapADtdh_I_24_M1	I	24	M1
+889	277DthrABCDasdDtdhDrhtA pfb6.4.2 +pyc	7_D_TasdA1_P_asdD_pyc_DrhtADtdh_0_4p5_M1	0	4.5	M1
+890	277DthrABCDasdDtdhDrhtA pfb6.4.2 +pyc	7_D_TasdA1_P_asdD_pyc_DrhtADtdh_0_6_M1	0	6	M1
+891	277DthrABCDasdDtdhDrhtA pfb6.4.2 +pyc	7_D_TasdA1_P_asdD_pyc_DrhtADtdh_0_12_M1	0	12	M1
+892	277DthrABCDasdDtdhDrhtA pfb6.4.2 +pyc	7_D_TasdA1_P_asdD_pyc_DrhtADtdh_0_24_M1	0	24	M1
+893	277DthrABCDasdDtdhDrhtA pfb6.4.2 +pyc	7_D_TasdA1_P_asdD_pyc_DrhtADtdh_I_4p5_M1	I	4.5	M1
+894	277DthrABCDasdDtdhDrhtA pfb6.4.2 +pyc	7_D_TasdA1_P_asdD_pyc_DrhtADtdh_I_6_M1	I	6	M1
+895	277DthrABCDasdDtdhDrhtA pfb6.4.2 +pyc	7_D_TasdA1_P_asdD_pyc_DrhtADtdh_I_12_M1	I	12	M1
+896	277DthrABCDasdDtdhDrhtA pfb6.4.2 +pyc	7_D_TasdA1_P_asdD_pyc_DrhtADtdh_I_24_M1	I	24	M1
 897	277DthrABCDasdDdapA pfb6.4.2 +rhtA	7_D_TasdA1_P_asdD_rhtA_DdapA_0_4p5_M1	0	4.5	M1
 898	277DthrABCDasdDdapA pfb6.4.2 +rhtA	7_D_TasdA1_P_asdD_rhtA_DdapA_0_6_M1	0	6	M1
 899	277DthrABCDasdDdapA pfb6.4.2 +rhtA	7_D_TasdA1_P_asdD_rhtA_DdapA_0_12_M1	0	12	M1
@@ -959,30 +959,30 @@ num	old_strain	sample	IPTG	time	medium
 958	277DthrABCDasdDtdh pfb6.4.2 +rhtA	7_D_TasdA1_P_asdD_rhtA_Dtdh_I_6_M1	I	6	M1
 959	277DthrABCDasdDtdh pfb6.4.2 +rhtA	7_D_TasdA1_P_asdD_rhtA_Dtdh_I_12_M1	I	12	M1
 960	277DthrABCDasdDtdh pfb6.4.2 +rhtA	7_D_TasdA1_P_asdD_rhtA_Dtdh_I_24_M1	I	24	M1
-961	277DthrABCDasdDtdhDdapA pfb6.4.2 +rhtA	7_D_TasdA1_P_asdD_rhtA_DtdhDdapA_0_4p5_M1	0	4.5	M1
-962	277DthrABCDasdDtdhDdapA pfb6.4.2 +rhtA	7_D_TasdA1_P_asdD_rhtA_DtdhDdapA_0_6_M1	0	6	M1
-963	277DthrABCDasdDtdhDdapA pfb6.4.2 +rhtA	7_D_TasdA1_P_asdD_rhtA_DtdhDdapA_0_12_M1	0	12	M1
-964	277DthrABCDasdDtdhDdapA pfb6.4.2 +rhtA	7_D_TasdA1_P_asdD_rhtA_DtdhDdapA_0_24_M1	0	24	M1
-965	277DthrABCDasdDtdhDdapA pfb6.4.2 +rhtA	7_D_TasdA1_P_asdD_rhtA_DtdhDdapA_I_4p5_M1	I	4.5	M1
-966	277DthrABCDasdDtdhDdapA pfb6.4.2 +rhtA	7_D_TasdA1_P_asdD_rhtA_DtdhDdapA_I_6_M1	I	6	M1
-967	277DthrABCDasdDtdhDdapA pfb6.4.2 +rhtA	7_D_TasdA1_P_asdD_rhtA_DtdhDdapA_I_12_M1	I	12	M1
-968	277DthrABCDasdDtdhDdapA pfb6.4.2 +rhtA	7_D_TasdA1_P_asdD_rhtA_DtdhDdapA_I_24_M1	I	24	M1
-969	277DthrABCDasdDtdhDlysC pfb6.4.2 +rhtA	7_D_TasdA1_P_asdD_rhtA_DtdhDlysC_0_4p5_M1	0	4.5	M1
-970	277DthrABCDasdDtdhDlysC pfb6.4.2 +rhtA	7_D_TasdA1_P_asdD_rhtA_DtdhDlysC_0_6_M1	0	6	M1
-971	277DthrABCDasdDtdhDlysC pfb6.4.2 +rhtA	7_D_TasdA1_P_asdD_rhtA_DtdhDlysC_0_12_M1	0	12	M1
-972	277DthrABCDasdDtdhDlysC pfb6.4.2 +rhtA	7_D_TasdA1_P_asdD_rhtA_DtdhDlysC_0_24_M1	0	24	M1
-973	277DthrABCDasdDtdhDlysC pfb6.4.2 +rhtA	7_D_TasdA1_P_asdD_rhtA_DtdhDlysC_I_4p5_M1	I	4.5	M1
-974	277DthrABCDasdDtdhDlysC pfb6.4.2 +rhtA	7_D_TasdA1_P_asdD_rhtA_DtdhDlysC_I_6_M1	I	6	M1
-975	277DthrABCDasdDtdhDlysC pfb6.4.2 +rhtA	7_D_TasdA1_P_asdD_rhtA_DtdhDlysC_I_12_M1	I	12	M1
-976	277DthrABCDasdDtdhDlysC pfb6.4.2 +rhtA	7_D_TasdA1_P_asdD_rhtA_DtdhDlysC_I_24_M1	I	24	M1
-977	277DthrABCDasdDtdhDrhtA pfb6.4.2 +rhtA	7_D_TasdA1_P_asdD_rhtA_DtdhDrhtA_0_4p5_M1	0	4.5	M1
-978	277DthrABCDasdDtdhDrhtA pfb6.4.2 +rhtA	7_D_TasdA1_P_asdD_rhtA_DtdhDrhtA_0_6_M1	0	6	M1
-979	277DthrABCDasdDtdhDrhtA pfb6.4.2 +rhtA	7_D_TasdA1_P_asdD_rhtA_DtdhDrhtA_0_12_M1	0	12	M1
-980	277DthrABCDasdDtdhDrhtA pfb6.4.2 +rhtA	7_D_TasdA1_P_asdD_rhtA_DtdhDrhtA_0_24_M1	0	24	M1
-981	277DthrABCDasdDtdhDrhtA pfb6.4.2 +rhtA	7_D_TasdA1_P_asdD_rhtA_DtdhDrhtA_I_4p5_M1	I	4.5	M1
-982	277DthrABCDasdDtdhDrhtA pfb6.4.2 +rhtA	7_D_TasdA1_P_asdD_rhtA_DtdhDrhtA_I_6_M1	I	6	M1
-983	277DthrABCDasdDtdhDrhtA pfb6.4.2 +rhtA	7_D_TasdA1_P_asdD_rhtA_DtdhDrhtA_I_12_M1	I	12	M1
-984	277DthrABCDasdDtdhDrhtA pfb6.4.2 +rhtA	7_D_TasdA1_P_asdD_rhtA_DtdhDrhtA_I_24_M1	I	24	M1
+961	277DthrABCDasdDtdhDdapA pfb6.4.2 +rhtA	7_D_TasdA1_P_asdD_rhtA_DdapADtdh_0_4p5_M1	0	4.5	M1
+962	277DthrABCDasdDtdhDdapA pfb6.4.2 +rhtA	7_D_TasdA1_P_asdD_rhtA_DdapADtdh_0_6_M1	0	6	M1
+963	277DthrABCDasdDtdhDdapA pfb6.4.2 +rhtA	7_D_TasdA1_P_asdD_rhtA_DdapADtdh_0_12_M1	0	12	M1
+964	277DthrABCDasdDtdhDdapA pfb6.4.2 +rhtA	7_D_TasdA1_P_asdD_rhtA_DdapADtdh_0_24_M1	0	24	M1
+965	277DthrABCDasdDtdhDdapA pfb6.4.2 +rhtA	7_D_TasdA1_P_asdD_rhtA_DdapADtdh_I_4p5_M1	I	4.5	M1
+966	277DthrABCDasdDtdhDdapA pfb6.4.2 +rhtA	7_D_TasdA1_P_asdD_rhtA_DdapADtdh_I_6_M1	I	6	M1
+967	277DthrABCDasdDtdhDdapA pfb6.4.2 +rhtA	7_D_TasdA1_P_asdD_rhtA_DdapADtdh_I_12_M1	I	12	M1
+968	277DthrABCDasdDtdhDdapA pfb6.4.2 +rhtA	7_D_TasdA1_P_asdD_rhtA_DdapADtdh_I_24_M1	I	24	M1
+969	277DthrABCDasdDtdhDlysC pfb6.4.2 +rhtA	7_D_TasdA1_P_asdD_rhtA_DlysCDtdh_0_4p5_M1	0	4.5	M1
+970	277DthrABCDasdDtdhDlysC pfb6.4.2 +rhtA	7_D_TasdA1_P_asdD_rhtA_DlysCDtdh_0_6_M1	0	6	M1
+971	277DthrABCDasdDtdhDlysC pfb6.4.2 +rhtA	7_D_TasdA1_P_asdD_rhtA_DlysCDtdh_0_12_M1	0	12	M1
+972	277DthrABCDasdDtdhDlysC pfb6.4.2 +rhtA	7_D_TasdA1_P_asdD_rhtA_DlysCDtdh_0_24_M1	0	24	M1
+973	277DthrABCDasdDtdhDlysC pfb6.4.2 +rhtA	7_D_TasdA1_P_asdD_rhtA_DlysCDtdh_I_4p5_M1	I	4.5	M1
+974	277DthrABCDasdDtdhDlysC pfb6.4.2 +rhtA	7_D_TasdA1_P_asdD_rhtA_DlysCDtdh_I_6_M1	I	6	M1
+975	277DthrABCDasdDtdhDlysC pfb6.4.2 +rhtA	7_D_TasdA1_P_asdD_rhtA_DlysCDtdh_I_12_M1	I	12	M1
+976	277DthrABCDasdDtdhDlysC pfb6.4.2 +rhtA	7_D_TasdA1_P_asdD_rhtA_DlysCDtdh_I_24_M1	I	24	M1
+977	277DthrABCDasdDtdhDrhtA pfb6.4.2 +rhtA	7_D_TasdA1_P_asdD_rhtA_DrhtADtdh_0_4p5_M1	0	4.5	M1
+978	277DthrABCDasdDtdhDrhtA pfb6.4.2 +rhtA	7_D_TasdA1_P_asdD_rhtA_DrhtADtdh_0_6_M1	0	6	M1
+979	277DthrABCDasdDtdhDrhtA pfb6.4.2 +rhtA	7_D_TasdA1_P_asdD_rhtA_DrhtADtdh_0_12_M1	0	12	M1
+980	277DthrABCDasdDtdhDrhtA pfb6.4.2 +rhtA	7_D_TasdA1_P_asdD_rhtA_DrhtADtdh_0_24_M1	0	24	M1
+981	277DthrABCDasdDtdhDrhtA pfb6.4.2 +rhtA	7_D_TasdA1_P_asdD_rhtA_DrhtADtdh_I_4p5_M1	I	4.5	M1
+982	277DthrABCDasdDtdhDrhtA pfb6.4.2 +rhtA	7_D_TasdA1_P_asdD_rhtA_DrhtADtdh_I_6_M1	I	6	M1
+983	277DthrABCDasdDtdhDrhtA pfb6.4.2 +rhtA	7_D_TasdA1_P_asdD_rhtA_DrhtADtdh_I_12_M1	I	12	M1
+984	277DthrABCDasdDtdhDrhtA pfb6.4.2 +rhtA	7_D_TasdA1_P_asdD_rhtA_DrhtADtdh_I_24_M1	I	24	M1
 985	926	M_0_0_0_asdO_000_D000_0_6_M1	0	6	M1
 986	926	M_0_0_0_asdO_000_D000_0_12_M1	0	12	M1
 987	926	M_0_0_0_asdO_000_D000_0_24_M1	0	24	M1
@@ -1029,30 +1029,30 @@ num	old_strain	sample	IPTG	time	medium
 1028	926dthrABCdasddrthA pwt2.1.1	M_D_Tasd_P_asdD_000_DrhtA_I_6_M1	I	6	M1
 1029	926dthrABCdasddrthA pwt2.1.1	M_D_Tasd_P_asdD_000_DrhtA_I_12_M1	I	12	M1
 1030	926dthrABCdasddrthA pwt2.1.1	M_D_Tasd_P_asdD_000_DrhtA_I_24_M1	I	24	M1
-1031	926dthrABCdasddtdhddapA pwt2.1.1	M_D_Tasd_P_asdD_000_DtdhDdapA_0_4p5_M1	0	4.5	M1
-1032	926dthrABCdasddtdhddapA pwt2.1.1	M_D_Tasd_P_asdD_000_DtdhDdapA_0_6_M1	0	6	M1
-1033	926dthrABCdasddtdhddapA pwt2.1.1	M_D_Tasd_P_asdD_000_DtdhDdapA_0_12_M1	0	12	M1
-1034	926dthrABCdasddtdhddapA pwt2.1.1	M_D_Tasd_P_asdD_000_DtdhDdapA_0_24_M1	0	24	M1
-1035	926dthrABCdasddtdhddapA pwt2.1.1	M_D_Tasd_P_asdD_000_DtdhDdapA_I_4p5_M1	I	4.5	M1
-1036	926dthrABCdasddtdhddapA pwt2.1.1	M_D_Tasd_P_asdD_000_DtdhDdapA_I_6_M1	I	6	M1
-1037	926dthrABCdasddtdhddapA pwt2.1.1	M_D_Tasd_P_asdD_000_DtdhDdapA_I_12_M1	I	12	M1
-1038	926dthrABCdasddtdhddapA pwt2.1.1	M_D_Tasd_P_asdD_000_DtdhDdapA_I_24_M1	I	24	M1
-1039	926dthrABCdasddtdhdlysA pwt2.1.1	M_D_Tasd_P_asdD_000_DtdhDlysA_0_4p5_M1	0	4.5	M1
-1040	926dthrABCdasddtdhdlysA pwt2.1.1	M_D_Tasd_P_asdD_000_DtdhDlysA_0_6_M1	0	6	M1
-1041	926dthrABCdasddtdhdlysA pwt2.1.1	M_D_Tasd_P_asdD_000_DtdhDlysA_0_12_M1	0	12	M1
-1042	926dthrABCdasddtdhdlysA pwt2.1.1	M_D_Tasd_P_asdD_000_DtdhDlysA_0_24_M1	0	24	M1
-1043	926dthrABCdasddtdhdlysA pwt2.1.1	M_D_Tasd_P_asdD_000_DtdhDlysA_I_4p5_M1	I	4.5	M1
-1044	926dthrABCdasddtdhdlysA pwt2.1.1	M_D_Tasd_P_asdD_000_DtdhDlysA_I_6_M1	I	6	M1
-1045	926dthrABCdasddtdhdlysA pwt2.1.1	M_D_Tasd_P_asdD_000_DtdhDlysA_I_12_M1	I	12	M1
-1046	926dthrABCdasddtdhdlysA pwt2.1.1	M_D_Tasd_P_asdD_000_DtdhDlysA_I_24_M1	I	24	M1
-1047	926dthrABCdasddtdhdptsG pwt2.1.1	M_D_Tasd_P_asdD_000_DtdhDptsG_0_4p5_M1	0	4.5	M1
-1048	926dthrABCdasddtdhdptsG pwt2.1.1	M_D_Tasd_P_asdD_000_DtdhDptsG_0_6_M1	0	6	M1
-1049	926dthrABCdasddtdhdptsG pwt2.1.1	M_D_Tasd_P_asdD_000_DtdhDptsG_0_12_M1	0	12	M1
-1050	926dthrABCdasddtdhdptsG pwt2.1.1	M_D_Tasd_P_asdD_000_DtdhDptsG_0_24_M1	0	24	M1
-1051	926dthrABCdasddtdhdptsG pwt2.1.1	M_D_Tasd_P_asdD_000_DtdhDptsG_I_4p5_M1	I	4.5	M1
-1052	926dthrABCdasddtdhdptsG pwt2.1.1	M_D_Tasd_P_asdD_000_DtdhDptsG_I_6_M1	I	6	M1
-1053	926dthrABCdasddtdhdptsG pwt2.1.1	M_D_Tasd_P_asdD_000_DtdhDptsG_I_12_M1	I	12	M1
-1054	926dthrABCdasddtdhdptsG pwt2.1.1	M_D_Tasd_P_asdD_000_DtdhDptsG_I_24_M1	I	24	M1
+1031	926dthrABCdasddtdhddapA pwt2.1.1	M_D_Tasd_P_asdD_000_DdapADtdh_0_4p5_M1	0	4.5	M1
+1032	926dthrABCdasddtdhddapA pwt2.1.1	M_D_Tasd_P_asdD_000_DdapADtdh_0_6_M1	0	6	M1
+1033	926dthrABCdasddtdhddapA pwt2.1.1	M_D_Tasd_P_asdD_000_DdapADtdh_0_12_M1	0	12	M1
+1034	926dthrABCdasddtdhddapA pwt2.1.1	M_D_Tasd_P_asdD_000_DdapADtdh_0_24_M1	0	24	M1
+1035	926dthrABCdasddtdhddapA pwt2.1.1	M_D_Tasd_P_asdD_000_DdapADtdh_I_4p5_M1	I	4.5	M1
+1036	926dthrABCdasddtdhddapA pwt2.1.1	M_D_Tasd_P_asdD_000_DdapADtdh_I_6_M1	I	6	M1
+1037	926dthrABCdasddtdhddapA pwt2.1.1	M_D_Tasd_P_asdD_000_DdapADtdh_I_12_M1	I	12	M1
+1038	926dthrABCdasddtdhddapA pwt2.1.1	M_D_Tasd_P_asdD_000_DdapADtdh_I_24_M1	I	24	M1
+1039	926dthrABCdasddtdhdlysA pwt2.1.1	M_D_Tasd_P_asdD_000_DlysADtdh_0_4p5_M1	0	4.5	M1
+1040	926dthrABCdasddtdhdlysA pwt2.1.1	M_D_Tasd_P_asdD_000_DlysADtdh_0_6_M1	0	6	M1
+1041	926dthrABCdasddtdhdlysA pwt2.1.1	M_D_Tasd_P_asdD_000_DlysADtdh_0_12_M1	0	12	M1
+1042	926dthrABCdasddtdhdlysA pwt2.1.1	M_D_Tasd_P_asdD_000_DlysADtdh_0_24_M1	0	24	M1
+1043	926dthrABCdasddtdhdlysA pwt2.1.1	M_D_Tasd_P_asdD_000_DlysADtdh_I_4p5_M1	I	4.5	M1
+1044	926dthrABCdasddtdhdlysA pwt2.1.1	M_D_Tasd_P_asdD_000_DlysADtdh_I_6_M1	I	6	M1
+1045	926dthrABCdasddtdhdlysA pwt2.1.1	M_D_Tasd_P_asdD_000_DlysADtdh_I_12_M1	I	12	M1
+1046	926dthrABCdasddtdhdlysA pwt2.1.1	M_D_Tasd_P_asdD_000_DlysADtdh_I_24_M1	I	24	M1
+1047	926dthrABCdasddtdhdptsG pwt2.1.1	M_D_Tasd_P_asdD_000_DptsGDtdh_0_4p5_M1	0	4.5	M1
+1048	926dthrABCdasddtdhdptsG pwt2.1.1	M_D_Tasd_P_asdD_000_DptsGDtdh_0_6_M1	0	6	M1
+1049	926dthrABCdasddtdhdptsG pwt2.1.1	M_D_Tasd_P_asdD_000_DptsGDtdh_0_12_M1	0	12	M1
+1050	926dthrABCdasddtdhdptsG pwt2.1.1	M_D_Tasd_P_asdD_000_DptsGDtdh_0_24_M1	0	24	M1
+1051	926dthrABCdasddtdhdptsG pwt2.1.1	M_D_Tasd_P_asdD_000_DptsGDtdh_I_4p5_M1	I	4.5	M1
+1052	926dthrABCdasddtdhdptsG pwt2.1.1	M_D_Tasd_P_asdD_000_DptsGDtdh_I_6_M1	I	6	M1
+1053	926dthrABCdasddtdhdptsG pwt2.1.1	M_D_Tasd_P_asdD_000_DptsGDtdh_I_12_M1	I	12	M1
+1054	926dthrABCdasddtdhdptsG pwt2.1.1	M_D_Tasd_P_asdD_000_DptsGDtdh_I_24_M1	I	24	M1
 1055	926DthrABCDasdDdapA pwt2.1.1 +pyc	M_D_Tasd_P_asdD_pyc_DdapA_0_4p5_M1	0	4.5	M1
 1056	926DthrABCDasdDdapA pwt2.1.1 +pyc	M_D_Tasd_P_asdD_pyc_DdapA_0_6_M1	0	6	M1
 1057	926DthrABCDasdDdapA pwt2.1.1 +pyc	M_D_Tasd_P_asdD_pyc_DdapA_0_12_M1	0	12	M1
@@ -1117,30 +1117,30 @@ num	old_strain	sample	IPTG	time	medium
 1116	926DthrABCDasdDtdh pwt2.1.1 +pyc	M_D_Tasd_P_asdD_pyc_Dtdh_I_6_M1	I	6	M1
 1117	926DthrABCDasdDtdh pwt2.1.1 +pyc	M_D_Tasd_P_asdD_pyc_Dtdh_I_12_M1	I	12	M1
 1118	926DthrABCDasdDtdh pwt2.1.1 +pyc	M_D_Tasd_P_asdD_pyc_Dtdh_I_24_M1	I	24	M1
-1119	926DthrABCDasdDtdhDlysA pwt2.1.1 +pyc	M_D_Tasd_P_asdD_pyc_DtdhDlysA_0_4p5_M1	0	4.5	M1
-1120	926DthrABCDasdDtdhDlysA pwt2.1.1 +pyc	M_D_Tasd_P_asdD_pyc_DtdhDlysA_0_6_M1	0	6	M1
-1121	926DthrABCDasdDtdhDlysA pwt2.1.1 +pyc	M_D_Tasd_P_asdD_pyc_DtdhDlysA_0_12_M1	0	12	M1
-1122	926DthrABCDasdDtdhDlysA pwt2.1.1 +pyc	M_D_Tasd_P_asdD_pyc_DtdhDlysA_0_24_M1	0	24	M1
-1123	926DthrABCDasdDtdhDlysA pwt2.1.1 +pyc	M_D_Tasd_P_asdD_pyc_DtdhDlysA_I_4p5_M1	I	4.5	M1
-1124	926DthrABCDasdDtdhDlysA pwt2.1.1 +pyc	M_D_Tasd_P_asdD_pyc_DtdhDlysA_I_6_M1	I	6	M1
-1125	926DthrABCDasdDtdhDlysA pwt2.1.1 +pyc	M_D_Tasd_P_asdD_pyc_DtdhDlysA_I_12_M1	I	12	M1
-1126	926DthrABCDasdDtdhDlysA pwt2.1.1 +pyc	M_D_Tasd_P_asdD_pyc_DtdhDlysA_I_24_M1	I	24	M1
-1127	926DthrABCDasdDtdhDlysCc pwt2.1.1 +pyc	M_D_Tasd_P_asdD_pyc_DtdhDlysC_0_4p5_M1	0	4.5	M1
-1128	926DthrABCDasdDtdhDlysCc pwt2.1.1 +pyc	M_D_Tasd_P_asdD_pyc_DtdhDlysC_0_6_M1	0	6	M1
-1129	926DthrABCDasdDtdhDlysCc pwt2.1.1 +pyc	M_D_Tasd_P_asdD_pyc_DtdhDlysC_0_12_M1	0	12	M1
-1130	926DthrABCDasdDtdhDlysCc pwt2.1.1 +pyc	M_D_Tasd_P_asdD_pyc_DtdhDlysC_0_24_M1	0	24	M1
-1131	926DthrABCDasdDtdhDlysCc pwt2.1.1 +pyc	M_D_Tasd_P_asdD_pyc_DtdhDlysC_I_4p5_M1	I	4.5	M1
-1132	926DthrABCDasdDtdhDlysCc pwt2.1.1 +pyc	M_D_Tasd_P_asdD_pyc_DtdhDlysC_I_6_M1	I	6	M1
-1133	926DthrABCDasdDtdhDlysCc pwt2.1.1 +pyc	M_D_Tasd_P_asdD_pyc_DtdhDlysC_I_12_M1	I	12	M1
-1134	926DthrABCDasdDtdhDlysCc pwt2.1.1 +pyc	M_D_Tasd_P_asdD_pyc_DtdhDlysC_I_24_M1	I	24	M1
-1135	926DthrABCDasdDtdhDmetL pwt2.1.1 +pyc	M_D_Tasd_P_asdD_pyc_DtdhDmetL_0_4p5_M1	0	4.5	M1
-1136	926DthrABCDasdDtdhDmetL pwt2.1.1 +pyc	M_D_Tasd_P_asdD_pyc_DtdhDmetL_0_6_M1	0	6	M1
-1137	926DthrABCDasdDtdhDmetL pwt2.1.1 +pyc	M_D_Tasd_P_asdD_pyc_DtdhDmetL_0_12_M1	0	12	M1
-1138	926DthrABCDasdDtdhDmetL pwt2.1.1 +pyc	M_D_Tasd_P_asdD_pyc_DtdhDmetL_0_24_M1	0	24	M1
-1139	926DthrABCDasdDtdhDmetL pwt2.1.1 +pyc	M_D_Tasd_P_asdD_pyc_DtdhDmetL_I_4p5_M1	I	4.5	M1
-1140	926DthrABCDasdDtdhDmetL pwt2.1.1 +pyc	M_D_Tasd_P_asdD_pyc_DtdhDmetL_I_6_M1	I	6	M1
-1141	926DthrABCDasdDtdhDmetL pwt2.1.1 +pyc	M_D_Tasd_P_asdD_pyc_DtdhDmetL_I_12_M1	I	12	M1
-1142	926DthrABCDasdDtdhDmetL pwt2.1.1 +pyc	M_D_Tasd_P_asdD_pyc_DtdhDmetL_I_24_M1	I	24	M1
+1119	926DthrABCDasdDtdhDlysA pwt2.1.1 +pyc	M_D_Tasd_P_asdD_pyc_DlysADtdh_0_4p5_M1	0	4.5	M1
+1120	926DthrABCDasdDtdhDlysA pwt2.1.1 +pyc	M_D_Tasd_P_asdD_pyc_DlysADtdh_0_6_M1	0	6	M1
+1121	926DthrABCDasdDtdhDlysA pwt2.1.1 +pyc	M_D_Tasd_P_asdD_pyc_DlysADtdh_0_12_M1	0	12	M1
+1122	926DthrABCDasdDtdhDlysA pwt2.1.1 +pyc	M_D_Tasd_P_asdD_pyc_DlysADtdh_0_24_M1	0	24	M1
+1123	926DthrABCDasdDtdhDlysA pwt2.1.1 +pyc	M_D_Tasd_P_asdD_pyc_DlysADtdh_I_4p5_M1	I	4.5	M1
+1124	926DthrABCDasdDtdhDlysA pwt2.1.1 +pyc	M_D_Tasd_P_asdD_pyc_DlysADtdh_I_6_M1	I	6	M1
+1125	926DthrABCDasdDtdhDlysA pwt2.1.1 +pyc	M_D_Tasd_P_asdD_pyc_DlysADtdh_I_12_M1	I	12	M1
+1126	926DthrABCDasdDtdhDlysA pwt2.1.1 +pyc	M_D_Tasd_P_asdD_pyc_DlysADtdh_I_24_M1	I	24	M1
+1127	926DthrABCDasdDtdhDlysCc pwt2.1.1 +pyc	M_D_Tasd_P_asdD_pyc_DlysCDtdh_0_4p5_M1	0	4.5	M1
+1128	926DthrABCDasdDtdhDlysCc pwt2.1.1 +pyc	M_D_Tasd_P_asdD_pyc_DlysCDtdh_0_6_M1	0	6	M1
+1129	926DthrABCDasdDtdhDlysCc pwt2.1.1 +pyc	M_D_Tasd_P_asdD_pyc_DlysCDtdh_0_12_M1	0	12	M1
+1130	926DthrABCDasdDtdhDlysCc pwt2.1.1 +pyc	M_D_Tasd_P_asdD_pyc_DlysCDtdh_0_24_M1	0	24	M1
+1131	926DthrABCDasdDtdhDlysCc pwt2.1.1 +pyc	M_D_Tasd_P_asdD_pyc_DlysCDtdh_I_4p5_M1	I	4.5	M1
+1132	926DthrABCDasdDtdhDlysCc pwt2.1.1 +pyc	M_D_Tasd_P_asdD_pyc_DlysCDtdh_I_6_M1	I	6	M1
+1133	926DthrABCDasdDtdhDlysCc pwt2.1.1 +pyc	M_D_Tasd_P_asdD_pyc_DlysCDtdh_I_12_M1	I	12	M1
+1134	926DthrABCDasdDtdhDlysCc pwt2.1.1 +pyc	M_D_Tasd_P_asdD_pyc_DlysCDtdh_I_24_M1	I	24	M1
+1135	926DthrABCDasdDtdhDmetL pwt2.1.1 +pyc	M_D_Tasd_P_asdD_pyc_DmetLDtdh_0_4p5_M1	0	4.5	M1
+1136	926DthrABCDasdDtdhDmetL pwt2.1.1 +pyc	M_D_Tasd_P_asdD_pyc_DmetLDtdh_0_6_M1	0	6	M1
+1137	926DthrABCDasdDtdhDmetL pwt2.1.1 +pyc	M_D_Tasd_P_asdD_pyc_DmetLDtdh_0_12_M1	0	12	M1
+1138	926DthrABCDasdDtdhDmetL pwt2.1.1 +pyc	M_D_Tasd_P_asdD_pyc_DmetLDtdh_0_24_M1	0	24	M1
+1139	926DthrABCDasdDtdhDmetL pwt2.1.1 +pyc	M_D_Tasd_P_asdD_pyc_DmetLDtdh_I_4p5_M1	I	4.5	M1
+1140	926DthrABCDasdDtdhDmetL pwt2.1.1 +pyc	M_D_Tasd_P_asdD_pyc_DmetLDtdh_I_6_M1	I	6	M1
+1141	926DthrABCDasdDtdhDmetL pwt2.1.1 +pyc	M_D_Tasd_P_asdD_pyc_DmetLDtdh_I_12_M1	I	12	M1
+1142	926DthrABCDasdDtdhDmetL pwt2.1.1 +pyc	M_D_Tasd_P_asdD_pyc_DmetLDtdh_I_24_M1	I	24	M1
 1143	926DthrABCDasdDdhaM pwt2.1.1 +rhtA	M_D_Tasd_P_asdD_rhtA_DdhaM_0_4p5_M1	0	4.5	M1
 1144	926DthrABCDasdDdhaM pwt2.1.1 +rhtA	M_D_Tasd_P_asdD_rhtA_DdhaM_0_6_M1	0	6	M1
 1145	926DthrABCDasdDdhaM pwt2.1.1 +rhtA	M_D_Tasd_P_asdD_rhtA_DdhaM_0_12_M1	0	12	M1
@@ -1189,38 +1189,38 @@ num	old_strain	sample	IPTG	time	medium
 1188	926DthrABCDasdDtdh pwt2.1.1 +rhtA	M_D_Tasd_P_asdD_rhtA_Dtdh_I_6_M1	I	6	M1
 1189	926DthrABCDasdDtdh pwt2.1.1 +rhtA	M_D_Tasd_P_asdD_rhtA_Dtdh_I_12_M1	I	12	M1
 1190	926DthrABCDasdDtdh pwt2.1.1 +rhtA	M_D_Tasd_P_asdD_rhtA_Dtdh_I_24_M1	I	24	M1
-1191	926DthrABCDasdDtdhDlysA pwt2.1.1 +rhtA	M_D_Tasd_P_asdD_rhtA_DtdhDlysA_0_4p5_M1	0	4.5	M1
-1192	926DthrABCDasdDtdhDlysA pwt2.1.1 +rhtA	M_D_Tasd_P_asdD_rhtA_DtdhDlysA_0_6_M1	0	6	M1
-1193	926DthrABCDasdDtdhDlysA pwt2.1.1 +rhtA	M_D_Tasd_P_asdD_rhtA_DtdhDlysA_0_12_M1	0	12	M1
-1194	926DthrABCDasdDtdhDlysA pwt2.1.1 +rhtA	M_D_Tasd_P_asdD_rhtA_DtdhDlysA_0_24_M1	0	24	M1
-1195	926DthrABCDasdDtdhDlysA pwt2.1.1 +rhtA	M_D_Tasd_P_asdD_rhtA_DtdhDlysA_I_4p5_M1	I	4.5	M1
-1196	926DthrABCDasdDtdhDlysA pwt2.1.1 +rhtA	M_D_Tasd_P_asdD_rhtA_DtdhDlysA_I_6_M1	I	6	M1
-1197	926DthrABCDasdDtdhDlysA pwt2.1.1 +rhtA	M_D_Tasd_P_asdD_rhtA_DtdhDlysA_I_12_M1	I	12	M1
-1198	926DthrABCDasdDtdhDlysA pwt2.1.1 +rhtA	M_D_Tasd_P_asdD_rhtA_DtdhDlysA_I_24_M1	I	24	M1
-1199	926DthrABCDasdDtdhDlysC pwt2.1.1 +rhtA	M_D_Tasd_P_asdD_rhtA_DtdhDlysC_0_4p5_M1	0	4.5	M1
-1200	926DthrABCDasdDtdhDlysC pwt2.1.1 +rhtA	M_D_Tasd_P_asdD_rhtA_DtdhDlysC_0_6_M1	0	6	M1
-1201	926DthrABCDasdDtdhDlysC pwt2.1.1 +rhtA	M_D_Tasd_P_asdD_rhtA_DtdhDlysC_0_12_M1	0	12	M1
-1202	926DthrABCDasdDtdhDlysC pwt2.1.1 +rhtA	M_D_Tasd_P_asdD_rhtA_DtdhDlysC_0_24_M1	0	24	M1
-1203	926DthrABCDasdDtdhDlysC pwt2.1.1 +rhtA	M_D_Tasd_P_asdD_rhtA_DtdhDlysC_I_4p5_M1	I	4.5	M1
-1204	926DthrABCDasdDtdhDlysC pwt2.1.1 +rhtA	M_D_Tasd_P_asdD_rhtA_DtdhDlysC_I_6_M1	I	6	M1
-1205	926DthrABCDasdDtdhDlysC pwt2.1.1 +rhtA	M_D_Tasd_P_asdD_rhtA_DtdhDlysC_I_12_M1	I	12	M1
-1206	926DthrABCDasdDtdhDlysC pwt2.1.1 +rhtA	M_D_Tasd_P_asdD_rhtA_DtdhDlysC_I_24_M1	I	24	M1
-1207	926DthrABCDasdDtdhDmetL pwt2.1.1 +rhtA	M_D_Tasd_P_asdD_rhtA_DtdhDmetL_0_4p5_M1	0	4.5	M1
-1208	926DthrABCDasdDtdhDmetL pwt2.1.1 +rhtA	M_D_Tasd_P_asdD_rhtA_DtdhDmetL_0_6_M1	0	6	M1
-1209	926DthrABCDasdDtdhDmetL pwt2.1.1 +rhtA	M_D_Tasd_P_asdD_rhtA_DtdhDmetL_0_12_M1	0	12	M1
-1210	926DthrABCDasdDtdhDmetL pwt2.1.1 +rhtA	M_D_Tasd_P_asdD_rhtA_DtdhDmetL_0_24_M1	0	24	M1
-1211	926DthrABCDasdDtdhDmetL pwt2.1.1 +rhtA	M_D_Tasd_P_asdD_rhtA_DtdhDmetL_I_4p5_M1	I	4.5	M1
-1212	926DthrABCDasdDtdhDmetL pwt2.1.1 +rhtA	M_D_Tasd_P_asdD_rhtA_DtdhDmetL_I_6_M1	I	6	M1
-1213	926DthrABCDasdDtdhDmetL pwt2.1.1 +rhtA	M_D_Tasd_P_asdD_rhtA_DtdhDmetL_I_12_M1	I	12	M1
-1214	926DthrABCDasdDtdhDmetL pwt2.1.1 +rhtA	M_D_Tasd_P_asdD_rhtA_DtdhDmetL_I_24_M1	I	24	M1
-1215	926DthrABCDasdDtdhDptsG pwt2.1.1 +rhtA	M_D_Tasd_P_asdD_rhtA_DtdhDptsG_0_4p5_M1	0	4.5	M1
-1216	926DthrABCDasdDtdhDptsG pwt2.1.1 +rhtA	M_D_Tasd_P_asdD_rhtA_DtdhDptsG_0_6_M1	0	6	M1
-1217	926DthrABCDasdDtdhDptsG pwt2.1.1 +rhtA	M_D_Tasd_P_asdD_rhtA_DtdhDptsG_0_12_M1	0	12	M1
-1218	926DthrABCDasdDtdhDptsG pwt2.1.1 +rhtA	M_D_Tasd_P_asdD_rhtA_DtdhDptsG_0_24_M1	0	24	M1
-1219	926DthrABCDasdDtdhDptsG pwt2.1.1 +rhtA	M_D_Tasd_P_asdD_rhtA_DtdhDptsG_I_4p5_M1	I	4.5	M1
-1220	926DthrABCDasdDtdhDptsG pwt2.1.1 +rhtA	M_D_Tasd_P_asdD_rhtA_DtdhDptsG_I_6_M1	I	6	M1
-1221	926DthrABCDasdDtdhDptsG pwt2.1.1 +rhtA	M_D_Tasd_P_asdD_rhtA_DtdhDptsG_I_12_M1	I	12	M1
-1222	926DthrABCDasdDtdhDptsG pwt2.1.1 +rhtA	M_D_Tasd_P_asdD_rhtA_DtdhDptsG_I_24_M1	I	24	M1
+1191	926DthrABCDasdDtdhDlysA pwt2.1.1 +rhtA	M_D_Tasd_P_asdD_rhtA_DlysADtdh_0_4p5_M1	0	4.5	M1
+1192	926DthrABCDasdDtdhDlysA pwt2.1.1 +rhtA	M_D_Tasd_P_asdD_rhtA_DlysADtdh_0_6_M1	0	6	M1
+1193	926DthrABCDasdDtdhDlysA pwt2.1.1 +rhtA	M_D_Tasd_P_asdD_rhtA_DlysADtdh_0_12_M1	0	12	M1
+1194	926DthrABCDasdDtdhDlysA pwt2.1.1 +rhtA	M_D_Tasd_P_asdD_rhtA_DlysADtdh_0_24_M1	0	24	M1
+1195	926DthrABCDasdDtdhDlysA pwt2.1.1 +rhtA	M_D_Tasd_P_asdD_rhtA_DlysADtdh_I_4p5_M1	I	4.5	M1
+1196	926DthrABCDasdDtdhDlysA pwt2.1.1 +rhtA	M_D_Tasd_P_asdD_rhtA_DlysADtdh_I_6_M1	I	6	M1
+1197	926DthrABCDasdDtdhDlysA pwt2.1.1 +rhtA	M_D_Tasd_P_asdD_rhtA_DlysADtdh_I_12_M1	I	12	M1
+1198	926DthrABCDasdDtdhDlysA pwt2.1.1 +rhtA	M_D_Tasd_P_asdD_rhtA_DlysADtdh_I_24_M1	I	24	M1
+1199	926DthrABCDasdDtdhDlysC pwt2.1.1 +rhtA	M_D_Tasd_P_asdD_rhtA_DlysCDtdh_0_4p5_M1	0	4.5	M1
+1200	926DthrABCDasdDtdhDlysC pwt2.1.1 +rhtA	M_D_Tasd_P_asdD_rhtA_DlysCDtdh_0_6_M1	0	6	M1
+1201	926DthrABCDasdDtdhDlysC pwt2.1.1 +rhtA	M_D_Tasd_P_asdD_rhtA_DlysCDtdh_0_12_M1	0	12	M1
+1202	926DthrABCDasdDtdhDlysC pwt2.1.1 +rhtA	M_D_Tasd_P_asdD_rhtA_DlysCDtdh_0_24_M1	0	24	M1
+1203	926DthrABCDasdDtdhDlysC pwt2.1.1 +rhtA	M_D_Tasd_P_asdD_rhtA_DlysCDtdh_I_4p5_M1	I	4.5	M1
+1204	926DthrABCDasdDtdhDlysC pwt2.1.1 +rhtA	M_D_Tasd_P_asdD_rhtA_DlysCDtdh_I_6_M1	I	6	M1
+1205	926DthrABCDasdDtdhDlysC pwt2.1.1 +rhtA	M_D_Tasd_P_asdD_rhtA_DlysCDtdh_I_12_M1	I	12	M1
+1206	926DthrABCDasdDtdhDlysC pwt2.1.1 +rhtA	M_D_Tasd_P_asdD_rhtA_DlysCDtdh_I_24_M1	I	24	M1
+1207	926DthrABCDasdDtdhDmetL pwt2.1.1 +rhtA	M_D_Tasd_P_asdD_rhtA_DmetLDtdh_0_4p5_M1	0	4.5	M1
+1208	926DthrABCDasdDtdhDmetL pwt2.1.1 +rhtA	M_D_Tasd_P_asdD_rhtA_DmetLDtdh_0_6_M1	0	6	M1
+1209	926DthrABCDasdDtdhDmetL pwt2.1.1 +rhtA	M_D_Tasd_P_asdD_rhtA_DmetLDtdh_0_12_M1	0	12	M1
+1210	926DthrABCDasdDtdhDmetL pwt2.1.1 +rhtA	M_D_Tasd_P_asdD_rhtA_DmetLDtdh_0_24_M1	0	24	M1
+1211	926DthrABCDasdDtdhDmetL pwt2.1.1 +rhtA	M_D_Tasd_P_asdD_rhtA_DmetLDtdh_I_4p5_M1	I	4.5	M1
+1212	926DthrABCDasdDtdhDmetL pwt2.1.1 +rhtA	M_D_Tasd_P_asdD_rhtA_DmetLDtdh_I_6_M1	I	6	M1
+1213	926DthrABCDasdDtdhDmetL pwt2.1.1 +rhtA	M_D_Tasd_P_asdD_rhtA_DmetLDtdh_I_12_M1	I	12	M1
+1214	926DthrABCDasdDtdhDmetL pwt2.1.1 +rhtA	M_D_Tasd_P_asdD_rhtA_DmetLDtdh_I_24_M1	I	24	M1
+1215	926DthrABCDasdDtdhDptsG pwt2.1.1 +rhtA	M_D_Tasd_P_asdD_rhtA_DptsGDtdh_0_4p5_M1	0	4.5	M1
+1216	926DthrABCDasdDtdhDptsG pwt2.1.1 +rhtA	M_D_Tasd_P_asdD_rhtA_DptsGDtdh_0_6_M1	0	6	M1
+1217	926DthrABCDasdDtdhDptsG pwt2.1.1 +rhtA	M_D_Tasd_P_asdD_rhtA_DptsGDtdh_0_12_M1	0	12	M1
+1218	926DthrABCDasdDtdhDptsG pwt2.1.1 +rhtA	M_D_Tasd_P_asdD_rhtA_DptsGDtdh_0_24_M1	0	24	M1
+1219	926DthrABCDasdDtdhDptsG pwt2.1.1 +rhtA	M_D_Tasd_P_asdD_rhtA_DptsGDtdh_I_4p5_M1	I	4.5	M1
+1220	926DthrABCDasdDtdhDptsG pwt2.1.1 +rhtA	M_D_Tasd_P_asdD_rhtA_DptsGDtdh_I_6_M1	I	6	M1
+1221	926DthrABCDasdDtdhDptsG pwt2.1.1 +rhtA	M_D_Tasd_P_asdD_rhtA_DptsGDtdh_I_12_M1	I	12	M1
+1222	926DthrABCDasdDtdhDptsG pwt2.1.1 +rhtA	M_D_Tasd_P_asdD_rhtA_DptsGDtdh_I_24_M1	I	24	M1
 1223	926DthrABCDasdDrthA pwt2.1.1 +rhtA	M_D_Tasd_P_asdD_rhtA_DrhtA_0_4p5_M1	0	4.5	M1
 1224	926DthrABCDasdDrthA pwt2.1.1 +rhtA	M_D_Tasd_P_asdD_rhtA_DrhtA_0_6_M1	0	6	M1
 1225	926DthrABCDasdDrthA pwt2.1.1 +rhtA	M_D_Tasd_P_asdD_rhtA_DrhtA_0_12_M1	0	12	M1
@@ -1269,30 +1269,30 @@ num	old_strain	sample	IPTG	time	medium
 1268	926dthrABCdasddrthA pfb6.4.3	M_D_TasdA_P_asdD_000_DrhtA_I_6_M1	I	6	M1
 1269	926dthrABCdasddrthA pfb6.4.3	M_D_TasdA_P_asdD_000_DrhtA_I_12_M1	I	12	M1
 1270	926dthrABCdasddrthA pfb6.4.3	M_D_TasdA_P_asdD_000_DrhtA_I_24_M1	I	24	M1
-1271	926dthrABCdasddtdhddapA pfb6.4.3	M_D_TasdA_P_asdD_000_DtdhDdapA_0_4p5_M1	0	4.5	M1
-1272	926dthrABCdasddtdhddapA pfb6.4.3	M_D_TasdA_P_asdD_000_DtdhDdapA_0_6_M1	0	6	M1
-1273	926dthrABCdasddtdhddapA pfb6.4.3	M_D_TasdA_P_asdD_000_DtdhDdapA_0_12_M1	0	12	M1
-1274	926dthrABCdasddtdhddapA pfb6.4.3	M_D_TasdA_P_asdD_000_DtdhDdapA_0_24_M1	0	24	M1
-1275	926dthrABCdasddtdhddapA pfb6.4.3	M_D_TasdA_P_asdD_000_DtdhDdapA_I_4p5_M1	I	4.5	M1
-1276	926dthrABCdasddtdhddapA pfb6.4.3	M_D_TasdA_P_asdD_000_DtdhDdapA_I_6_M1	I	6	M1
-1277	926dthrABCdasddtdhddapA pfb6.4.3	M_D_TasdA_P_asdD_000_DtdhDdapA_I_12_M1	I	12	M1
-1278	926dthrABCdasddtdhddapA pfb6.4.3	M_D_TasdA_P_asdD_000_DtdhDdapA_I_24_M1	I	24	M1
-1279	926dthrABCdasddtdhdlysA pfb6.4.3	M_D_TasdA_P_asdD_000_DtdhDlysA_0_4p5_M1	0	4.5	M1
-1280	926dthrABCdasddtdhdlysA pfb6.4.3	M_D_TasdA_P_asdD_000_DtdhDlysA_0_6_M1	0	6	M1
-1281	926dthrABCdasddtdhdlysA pfb6.4.3	M_D_TasdA_P_asdD_000_DtdhDlysA_0_12_M1	0	12	M1
-1282	926dthrABCdasddtdhdlysA pfb6.4.3	M_D_TasdA_P_asdD_000_DtdhDlysA_0_24_M1	0	24	M1
-1283	926dthrABCdasddtdhdlysA pfb6.4.3	M_D_TasdA_P_asdD_000_DtdhDlysA_I_4p5_M1	I	4.5	M1
-1284	926dthrABCdasddtdhdlysA pfb6.4.3	M_D_TasdA_P_asdD_000_DtdhDlysA_I_6_M1	I	6	M1
-1285	926dthrABCdasddtdhdlysA pfb6.4.3	M_D_TasdA_P_asdD_000_DtdhDlysA_I_12_M1	I	12	M1
-1286	926dthrABCdasddtdhdlysA pfb6.4.3	M_D_TasdA_P_asdD_000_DtdhDlysA_I_24_M1	I	24	M1
-1287	926dthrABCdasddtdhdptsG pfb6.4.3	M_D_TasdA_P_asdD_000_DtdhDptsG_0_4p5_M1	0	4.5	M1
-1288	926dthrABCdasddtdhdptsG pfb6.4.3	M_D_TasdA_P_asdD_000_DtdhDptsG_0_6_M1	0	6	M1
-1289	926dthrABCdasddtdhdptsG pfb6.4.3	M_D_TasdA_P_asdD_000_DtdhDptsG_0_12_M1	0	12	M1
-1290	926dthrABCdasddtdhdptsG pfb6.4.3	M_D_TasdA_P_asdD_000_DtdhDptsG_0_24_M1	0	24	M1
-1291	926dthrABCdasddtdhdptsG pfb6.4.3	M_D_TasdA_P_asdD_000_DtdhDptsG_I_4p5_M1	I	4.5	M1
-1292	926dthrABCdasddtdhdptsG pfb6.4.3	M_D_TasdA_P_asdD_000_DtdhDptsG_I_6_M1	I	6	M1
-1293	926dthrABCdasddtdhdptsG pfb6.4.3	M_D_TasdA_P_asdD_000_DtdhDptsG_I_12_M1	I	12	M1
-1294	926dthrABCdasddtdhdptsG pfb6.4.3	M_D_TasdA_P_asdD_000_DtdhDptsG_I_24_M1	I	24	M1
+1271	926dthrABCdasddtdhddapA pfb6.4.3	M_D_TasdA_P_asdD_000_DdapADtdh_0_4p5_M1	0	4.5	M1
+1272	926dthrABCdasddtdhddapA pfb6.4.3	M_D_TasdA_P_asdD_000_DdapADtdh_0_6_M1	0	6	M1
+1273	926dthrABCdasddtdhddapA pfb6.4.3	M_D_TasdA_P_asdD_000_DdapADtdh_0_12_M1	0	12	M1
+1274	926dthrABCdasddtdhddapA pfb6.4.3	M_D_TasdA_P_asdD_000_DdapADtdh_0_24_M1	0	24	M1
+1275	926dthrABCdasddtdhddapA pfb6.4.3	M_D_TasdA_P_asdD_000_DdapADtdh_I_4p5_M1	I	4.5	M1
+1276	926dthrABCdasddtdhddapA pfb6.4.3	M_D_TasdA_P_asdD_000_DdapADtdh_I_6_M1	I	6	M1
+1277	926dthrABCdasddtdhddapA pfb6.4.3	M_D_TasdA_P_asdD_000_DdapADtdh_I_12_M1	I	12	M1
+1278	926dthrABCdasddtdhddapA pfb6.4.3	M_D_TasdA_P_asdD_000_DdapADtdh_I_24_M1	I	24	M1
+1279	926dthrABCdasddtdhdlysA pfb6.4.3	M_D_TasdA_P_asdD_000_DlysADtdh_0_4p5_M1	0	4.5	M1
+1280	926dthrABCdasddtdhdlysA pfb6.4.3	M_D_TasdA_P_asdD_000_DlysADtdh_0_6_M1	0	6	M1
+1281	926dthrABCdasddtdhdlysA pfb6.4.3	M_D_TasdA_P_asdD_000_DlysADtdh_0_12_M1	0	12	M1
+1282	926dthrABCdasddtdhdlysA pfb6.4.3	M_D_TasdA_P_asdD_000_DlysADtdh_0_24_M1	0	24	M1
+1283	926dthrABCdasddtdhdlysA pfb6.4.3	M_D_TasdA_P_asdD_000_DlysADtdh_I_4p5_M1	I	4.5	M1
+1284	926dthrABCdasddtdhdlysA pfb6.4.3	M_D_TasdA_P_asdD_000_DlysADtdh_I_6_M1	I	6	M1
+1285	926dthrABCdasddtdhdlysA pfb6.4.3	M_D_TasdA_P_asdD_000_DlysADtdh_I_12_M1	I	12	M1
+1286	926dthrABCdasddtdhdlysA pfb6.4.3	M_D_TasdA_P_asdD_000_DlysADtdh_I_24_M1	I	24	M1
+1287	926dthrABCdasddtdhdptsG pfb6.4.3	M_D_TasdA_P_asdD_000_DptsGDtdh_0_4p5_M1	0	4.5	M1
+1288	926dthrABCdasddtdhdptsG pfb6.4.3	M_D_TasdA_P_asdD_000_DptsGDtdh_0_6_M1	0	6	M1
+1289	926dthrABCdasddtdhdptsG pfb6.4.3	M_D_TasdA_P_asdD_000_DptsGDtdh_0_12_M1	0	12	M1
+1290	926dthrABCdasddtdhdptsG pfb6.4.3	M_D_TasdA_P_asdD_000_DptsGDtdh_0_24_M1	0	24	M1
+1291	926dthrABCdasddtdhdptsG pfb6.4.3	M_D_TasdA_P_asdD_000_DptsGDtdh_I_4p5_M1	I	4.5	M1
+1292	926dthrABCdasddtdhdptsG pfb6.4.3	M_D_TasdA_P_asdD_000_DptsGDtdh_I_6_M1	I	6	M1
+1293	926dthrABCdasddtdhdptsG pfb6.4.3	M_D_TasdA_P_asdD_000_DptsGDtdh_I_12_M1	I	12	M1
+1294	926dthrABCdasddtdhdptsG pfb6.4.3	M_D_TasdA_P_asdD_000_DptsGDtdh_I_24_M1	I	24	M1
 1295	926DthrABCDasd pfb6.4.3 +aceBA	M_D_TasdA_P_asdD_aceBA_D000_0_4p5_M1	0	4.5	M1
 1296	926DthrABCDasd pfb6.4.3 +aceBA	M_D_TasdA_P_asdD_aceBA_D000_0_6_M1	0	6	M1
 1297	926DthrABCDasd pfb6.4.3 +aceBA	M_D_TasdA_P_asdD_aceBA_D000_0_12_M1	0	12	M1
@@ -1349,38 +1349,38 @@ num	old_strain	sample	IPTG	time	medium
 1348	926DthrABCDasdDtdh pfb6.4.3 +aceBA	M_D_TasdA_P_asdD_aceBA_Dtdh_I_6_M1	I	6	M1
 1349	926DthrABCDasdDtdh pfb6.4.3 +aceBA	M_D_TasdA_P_asdD_aceBA_Dtdh_I_12_M1	I	12	M1
 1350	926DthrABCDasdDtdh pfb6.4.3 +aceBA	M_D_TasdA_P_asdD_aceBA_Dtdh_I_24_M1	I	24	M1
-1351	926DthrABCDasdDtdhDdapA pfb6.4.3 +aceBA	M_D_TasdA_P_asdD_aceBA_DtdhDdapA_0_4p5_M1	0	4.5	M1
-1352	926DthrABCDasdDtdhDdapA pfb6.4.3 +aceBA	M_D_TasdA_P_asdD_aceBA_DtdhDdapA_0_6_M1	0	6	M1
-1353	926DthrABCDasdDtdhDdapA pfb6.4.3 +aceBA	M_D_TasdA_P_asdD_aceBA_DtdhDdapA_0_12_M1	0	12	M1
-1354	926DthrABCDasdDtdhDdapA pfb6.4.3 +aceBA	M_D_TasdA_P_asdD_aceBA_DtdhDdapA_0_24_M1	0	24	M1
-1355	926DthrABCDasdDtdhDdapA pfb6.4.3 +aceBA	M_D_TasdA_P_asdD_aceBA_DtdhDdapA_I_4p5_M1	I	4.5	M1
-1356	926DthrABCDasdDtdhDdapA pfb6.4.3 +aceBA	M_D_TasdA_P_asdD_aceBA_DtdhDdapA_I_6_M1	I	6	M1
-1357	926DthrABCDasdDtdhDdapA pfb6.4.3 +aceBA	M_D_TasdA_P_asdD_aceBA_DtdhDdapA_I_12_M1	I	12	M1
-1358	926DthrABCDasdDtdhDdapA pfb6.4.3 +aceBA	M_D_TasdA_P_asdD_aceBA_DtdhDdapA_I_24_M1	I	24	M1
-1359	926DthrABCDasdDtdhDlysA pfb6.4.3 +aceBA	M_D_TasdA_P_asdD_aceBA_DtdhDlysA_0_4p5_M1	0	4.5	M1
-1360	926DthrABCDasdDtdhDlysA pfb6.4.3 +aceBA	M_D_TasdA_P_asdD_aceBA_DtdhDlysA_0_6_M1	0	6	M1
-1361	926DthrABCDasdDtdhDlysA pfb6.4.3 +aceBA	M_D_TasdA_P_asdD_aceBA_DtdhDlysA_0_12_M1	0	12	M1
-1362	926DthrABCDasdDtdhDlysA pfb6.4.3 +aceBA	M_D_TasdA_P_asdD_aceBA_DtdhDlysA_0_24_M1	0	24	M1
-1363	926DthrABCDasdDtdhDlysA pfb6.4.3 +aceBA	M_D_TasdA_P_asdD_aceBA_DtdhDlysA_I_4p5_M1	I	4.5	M1
-1364	926DthrABCDasdDtdhDlysA pfb6.4.3 +aceBA	M_D_TasdA_P_asdD_aceBA_DtdhDlysA_I_6_M1	I	6	M1
-1365	926DthrABCDasdDtdhDlysA pfb6.4.3 +aceBA	M_D_TasdA_P_asdD_aceBA_DtdhDlysA_I_12_M1	I	12	M1
-1366	926DthrABCDasdDtdhDlysA pfb6.4.3 +aceBA	M_D_TasdA_P_asdD_aceBA_DtdhDlysA_I_24_M1	I	24	M1
-1367	926DthrABCDasdDtdhDlysC pfb6.4.3 +aceBA	M_D_TasdA_P_asdD_aceBA_DtdhDlysC_0_4p5_M1	0	4.5	M1
-1368	926DthrABCDasdDtdhDlysC pfb6.4.3 +aceBA	M_D_TasdA_P_asdD_aceBA_DtdhDlysC_0_6_M1	0	6	M1
-1369	926DthrABCDasdDtdhDlysC pfb6.4.3 +aceBA	M_D_TasdA_P_asdD_aceBA_DtdhDlysC_0_12_M1	0	12	M1
-1370	926DthrABCDasdDtdhDlysC pfb6.4.3 +aceBA	M_D_TasdA_P_asdD_aceBA_DtdhDlysC_0_24_M1	0	24	M1
-1371	926DthrABCDasdDtdhDlysC pfb6.4.3 +aceBA	M_D_TasdA_P_asdD_aceBA_DtdhDlysC_I_4p5_M1	I	4.5	M1
-1372	926DthrABCDasdDtdhDlysC pfb6.4.3 +aceBA	M_D_TasdA_P_asdD_aceBA_DtdhDlysC_I_6_M1	I	6	M1
-1373	926DthrABCDasdDtdhDlysC pfb6.4.3 +aceBA	M_D_TasdA_P_asdD_aceBA_DtdhDlysC_I_12_M1	I	12	M1
-1374	926DthrABCDasdDtdhDlysC pfb6.4.3 +aceBA	M_D_TasdA_P_asdD_aceBA_DtdhDlysC_I_24_M1	I	24	M1
-1375	926DthrABCDasdDtdhDptsG pfb6.4.3 +aceBA	M_D_TasdA_P_asdD_aceBA_DtdhDptsG_0_4p5_M1	0	4.5	M1
-1376	926DthrABCDasdDtdhDptsG pfb6.4.3 +aceBA	M_D_TasdA_P_asdD_aceBA_DtdhDptsG_0_6_M1	0	6	M1
-1377	926DthrABCDasdDtdhDptsG pfb6.4.3 +aceBA	M_D_TasdA_P_asdD_aceBA_DtdhDptsG_0_12_M1	0	12	M1
-1378	926DthrABCDasdDtdhDptsG pfb6.4.3 +aceBA	M_D_TasdA_P_asdD_aceBA_DtdhDptsG_0_24_M1	0	24	M1
-1379	926DthrABCDasdDtdhDptsG pfb6.4.3 +aceBA	M_D_TasdA_P_asdD_aceBA_DtdhDptsG_I_4p5_M1	I	4.5	M1
-1380	926DthrABCDasdDtdhDptsG pfb6.4.3 +aceBA	M_D_TasdA_P_asdD_aceBA_DtdhDptsG_I_6_M1	I	6	M1
-1381	926DthrABCDasdDtdhDptsG pfb6.4.3 +aceBA	M_D_TasdA_P_asdD_aceBA_DtdhDptsG_I_12_M1	I	12	M1
-1382	926DthrABCDasdDtdhDptsG pfb6.4.3 +aceBA	M_D_TasdA_P_asdD_aceBA_DtdhDptsG_I_24_M1	I	24	M1
+1351	926DthrABCDasdDtdhDdapA pfb6.4.3 +aceBA	M_D_TasdA_P_asdD_aceBA_DdapADtdh_0_4p5_M1	0	4.5	M1
+1352	926DthrABCDasdDtdhDdapA pfb6.4.3 +aceBA	M_D_TasdA_P_asdD_aceBA_DdapADtdh_0_6_M1	0	6	M1
+1353	926DthrABCDasdDtdhDdapA pfb6.4.3 +aceBA	M_D_TasdA_P_asdD_aceBA_DdapADtdh_0_12_M1	0	12	M1
+1354	926DthrABCDasdDtdhDdapA pfb6.4.3 +aceBA	M_D_TasdA_P_asdD_aceBA_DdapADtdh_0_24_M1	0	24	M1
+1355	926DthrABCDasdDtdhDdapA pfb6.4.3 +aceBA	M_D_TasdA_P_asdD_aceBA_DdapADtdh_I_4p5_M1	I	4.5	M1
+1356	926DthrABCDasdDtdhDdapA pfb6.4.3 +aceBA	M_D_TasdA_P_asdD_aceBA_DdapADtdh_I_6_M1	I	6	M1
+1357	926DthrABCDasdDtdhDdapA pfb6.4.3 +aceBA	M_D_TasdA_P_asdD_aceBA_DdapADtdh_I_12_M1	I	12	M1
+1358	926DthrABCDasdDtdhDdapA pfb6.4.3 +aceBA	M_D_TasdA_P_asdD_aceBA_DdapADtdh_I_24_M1	I	24	M1
+1359	926DthrABCDasdDtdhDlysA pfb6.4.3 +aceBA	M_D_TasdA_P_asdD_aceBA_DlysADtdh_0_4p5_M1	0	4.5	M1
+1360	926DthrABCDasdDtdhDlysA pfb6.4.3 +aceBA	M_D_TasdA_P_asdD_aceBA_DlysADtdh_0_6_M1	0	6	M1
+1361	926DthrABCDasdDtdhDlysA pfb6.4.3 +aceBA	M_D_TasdA_P_asdD_aceBA_DlysADtdh_0_12_M1	0	12	M1
+1362	926DthrABCDasdDtdhDlysA pfb6.4.3 +aceBA	M_D_TasdA_P_asdD_aceBA_DlysADtdh_0_24_M1	0	24	M1
+1363	926DthrABCDasdDtdhDlysA pfb6.4.3 +aceBA	M_D_TasdA_P_asdD_aceBA_DlysADtdh_I_4p5_M1	I	4.5	M1
+1364	926DthrABCDasdDtdhDlysA pfb6.4.3 +aceBA	M_D_TasdA_P_asdD_aceBA_DlysADtdh_I_6_M1	I	6	M1
+1365	926DthrABCDasdDtdhDlysA pfb6.4.3 +aceBA	M_D_TasdA_P_asdD_aceBA_DlysADtdh_I_12_M1	I	12	M1
+1366	926DthrABCDasdDtdhDlysA pfb6.4.3 +aceBA	M_D_TasdA_P_asdD_aceBA_DlysADtdh_I_24_M1	I	24	M1
+1367	926DthrABCDasdDtdhDlysC pfb6.4.3 +aceBA	M_D_TasdA_P_asdD_aceBA_DlysCDtdh_0_4p5_M1	0	4.5	M1
+1368	926DthrABCDasdDtdhDlysC pfb6.4.3 +aceBA	M_D_TasdA_P_asdD_aceBA_DlysCDtdh_0_6_M1	0	6	M1
+1369	926DthrABCDasdDtdhDlysC pfb6.4.3 +aceBA	M_D_TasdA_P_asdD_aceBA_DlysCDtdh_0_12_M1	0	12	M1
+1370	926DthrABCDasdDtdhDlysC pfb6.4.3 +aceBA	M_D_TasdA_P_asdD_aceBA_DlysCDtdh_0_24_M1	0	24	M1
+1371	926DthrABCDasdDtdhDlysC pfb6.4.3 +aceBA	M_D_TasdA_P_asdD_aceBA_DlysCDtdh_I_4p5_M1	I	4.5	M1
+1372	926DthrABCDasdDtdhDlysC pfb6.4.3 +aceBA	M_D_TasdA_P_asdD_aceBA_DlysCDtdh_I_6_M1	I	6	M1
+1373	926DthrABCDasdDtdhDlysC pfb6.4.3 +aceBA	M_D_TasdA_P_asdD_aceBA_DlysCDtdh_I_12_M1	I	12	M1
+1374	926DthrABCDasdDtdhDlysC pfb6.4.3 +aceBA	M_D_TasdA_P_asdD_aceBA_DlysCDtdh_I_24_M1	I	24	M1
+1375	926DthrABCDasdDtdhDptsG pfb6.4.3 +aceBA	M_D_TasdA_P_asdD_aceBA_DptsGDtdh_0_4p5_M1	0	4.5	M1
+1376	926DthrABCDasdDtdhDptsG pfb6.4.3 +aceBA	M_D_TasdA_P_asdD_aceBA_DptsGDtdh_0_6_M1	0	6	M1
+1377	926DthrABCDasdDtdhDptsG pfb6.4.3 +aceBA	M_D_TasdA_P_asdD_aceBA_DptsGDtdh_0_12_M1	0	12	M1
+1378	926DthrABCDasdDtdhDptsG pfb6.4.3 +aceBA	M_D_TasdA_P_asdD_aceBA_DptsGDtdh_0_24_M1	0	24	M1
+1379	926DthrABCDasdDtdhDptsG pfb6.4.3 +aceBA	M_D_TasdA_P_asdD_aceBA_DptsGDtdh_I_4p5_M1	I	4.5	M1
+1380	926DthrABCDasdDtdhDptsG pfb6.4.3 +aceBA	M_D_TasdA_P_asdD_aceBA_DptsGDtdh_I_6_M1	I	6	M1
+1381	926DthrABCDasdDtdhDptsG pfb6.4.3 +aceBA	M_D_TasdA_P_asdD_aceBA_DptsGDtdh_I_12_M1	I	12	M1
+1382	926DthrABCDasdDtdhDptsG pfb6.4.3 +aceBA	M_D_TasdA_P_asdD_aceBA_DptsGDtdh_I_24_M1	I	24	M1
 1383	926DthrABCDasd pfb6.4.3 +aspC	M_D_TasdA_P_asdD_aspC_D000_0_4p5_M1	0	4.5	M1
 1384	926DthrABCDasd pfb6.4.3 +aspC	M_D_TasdA_P_asdD_aspC_D000_0_6_M1	0	6	M1
 1385	926DthrABCDasd pfb6.4.3 +aspC	M_D_TasdA_P_asdD_aspC_D000_0_12_M1	0	12	M1
@@ -1437,38 +1437,38 @@ num	old_strain	sample	IPTG	time	medium
 1436	926DthrABCDasdDtdh pfb6.4.3 +aspC	M_D_TasdA_P_asdD_aspC_Dtdh_I_6_M1	I	6	M1
 1437	926DthrABCDasdDtdh pfb6.4.3 +aspC	M_D_TasdA_P_asdD_aspC_Dtdh_I_12_M1	I	12	M1
 1438	926DthrABCDasdDtdh pfb6.4.3 +aspC	M_D_TasdA_P_asdD_aspC_Dtdh_I_24_M1	I	24	M1
-1439	926DthrABCDasdDtdhDdapA pfb6.4.3 +aspC	M_D_TasdA_P_asdD_aspC_DtdhDdapA_0_4p5_M1	0	4.5	M1
-1440	926DthrABCDasdDtdhDdapA pfb6.4.3 +aspC	M_D_TasdA_P_asdD_aspC_DtdhDdapA_0_6_M1	0	6	M1
-1441	926DthrABCDasdDtdhDdapA pfb6.4.3 +aspC	M_D_TasdA_P_asdD_aspC_DtdhDdapA_0_12_M1	0	12	M1
-1442	926DthrABCDasdDtdhDdapA pfb6.4.3 +aspC	M_D_TasdA_P_asdD_aspC_DtdhDdapA_0_24_M1	0	24	M1
-1443	926DthrABCDasdDtdhDdapA pfb6.4.3 +aspC	M_D_TasdA_P_asdD_aspC_DtdhDdapA_I_4p5_M1	I	4.5	M1
-1444	926DthrABCDasdDtdhDdapA pfb6.4.3 +aspC	M_D_TasdA_P_asdD_aspC_DtdhDdapA_I_6_M1	I	6	M1
-1445	926DthrABCDasdDtdhDdapA pfb6.4.3 +aspC	M_D_TasdA_P_asdD_aspC_DtdhDdapA_I_12_M1	I	12	M1
-1446	926DthrABCDasdDtdhDdapA pfb6.4.3 +aspC	M_D_TasdA_P_asdD_aspC_DtdhDdapA_I_24_M1	I	24	M1
-1447	926DthrABCDasdDtdhDlysA pfb6.4.3 +aspC	M_D_TasdA_P_asdD_aspC_DtdhDlysA_0_4p5_M1	0	4.5	M1
-1448	926DthrABCDasdDtdhDlysA pfb6.4.3 +aspC	M_D_TasdA_P_asdD_aspC_DtdhDlysA_0_6_M1	0	6	M1
-1449	926DthrABCDasdDtdhDlysA pfb6.4.3 +aspC	M_D_TasdA_P_asdD_aspC_DtdhDlysA_0_12_M1	0	12	M1
-1450	926DthrABCDasdDtdhDlysA pfb6.4.3 +aspC	M_D_TasdA_P_asdD_aspC_DtdhDlysA_0_24_M1	0	24	M1
-1451	926DthrABCDasdDtdhDlysA pfb6.4.3 +aspC	M_D_TasdA_P_asdD_aspC_DtdhDlysA_I_4p5_M1	I	4.5	M1
-1452	926DthrABCDasdDtdhDlysA pfb6.4.3 +aspC	M_D_TasdA_P_asdD_aspC_DtdhDlysA_I_6_M1	I	6	M1
-1453	926DthrABCDasdDtdhDlysA pfb6.4.3 +aspC	M_D_TasdA_P_asdD_aspC_DtdhDlysA_I_12_M1	I	12	M1
-1454	926DthrABCDasdDtdhDlysA pfb6.4.3 +aspC	M_D_TasdA_P_asdD_aspC_DtdhDlysA_I_24_M1	I	24	M1
-1455	926DthrABCDasdDtdhDlysC pfb6.4.3 +aspC	M_D_TasdA_P_asdD_aspC_DtdhDlysC_0_4p5_M1	0	4.5	M1
-1456	926DthrABCDasdDtdhDlysC pfb6.4.3 +aspC	M_D_TasdA_P_asdD_aspC_DtdhDlysC_0_6_M1	0	6	M1
-1457	926DthrABCDasdDtdhDlysC pfb6.4.3 +aspC	M_D_TasdA_P_asdD_aspC_DtdhDlysC_0_12_M1	0	12	M1
-1458	926DthrABCDasdDtdhDlysC pfb6.4.3 +aspC	M_D_TasdA_P_asdD_aspC_DtdhDlysC_0_24_M1	0	24	M1
-1459	926DthrABCDasdDtdhDlysC pfb6.4.3 +aspC	M_D_TasdA_P_asdD_aspC_DtdhDlysC_I_4p5_M1	I	4.5	M1
-1460	926DthrABCDasdDtdhDlysC pfb6.4.3 +aspC	M_D_TasdA_P_asdD_aspC_DtdhDlysC_I_6_M1	I	6	M1
-1461	926DthrABCDasdDtdhDlysC pfb6.4.3 +aspC	M_D_TasdA_P_asdD_aspC_DtdhDlysC_I_12_M1	I	12	M1
-1462	926DthrABCDasdDtdhDlysC pfb6.4.3 +aspC	M_D_TasdA_P_asdD_aspC_DtdhDlysC_I_24_M1	I	24	M1
-1463	926DthrABCDasdDtdhDptsG pfb6.4.3 +aspC	M_D_TasdA_P_asdD_aspC_DtdhDptsG_0_4p5_M1	0	4.5	M1
-1464	926DthrABCDasdDtdhDptsG pfb6.4.3 +aspC	M_D_TasdA_P_asdD_aspC_DtdhDptsG_0_6_M1	0	6	M1
-1465	926DthrABCDasdDtdhDptsG pfb6.4.3 +aspC	M_D_TasdA_P_asdD_aspC_DtdhDptsG_0_12_M1	0	12	M1
-1466	926DthrABCDasdDtdhDptsG pfb6.4.3 +aspC	M_D_TasdA_P_asdD_aspC_DtdhDptsG_0_24_M1	0	24	M1
-1467	926DthrABCDasdDtdhDptsG pfb6.4.3 +aspC	M_D_TasdA_P_asdD_aspC_DtdhDptsG_I_4p5_M1	I	4.5	M1
-1468	926DthrABCDasdDtdhDptsG pfb6.4.3 +aspC	M_D_TasdA_P_asdD_aspC_DtdhDptsG_I_6_M1	I	6	M1
-1469	926DthrABCDasdDtdhDptsG pfb6.4.3 +aspC	M_D_TasdA_P_asdD_aspC_DtdhDptsG_I_12_M1	I	12	M1
-1470	926DthrABCDasdDtdhDptsG pfb6.4.3 +aspC	M_D_TasdA_P_asdD_aspC_DtdhDptsG_I_24_M1	I	24	M1
+1439	926DthrABCDasdDtdhDdapA pfb6.4.3 +aspC	M_D_TasdA_P_asdD_aspC_DdapADtdh_0_4p5_M1	0	4.5	M1
+1440	926DthrABCDasdDtdhDdapA pfb6.4.3 +aspC	M_D_TasdA_P_asdD_aspC_DdapADtdh_0_6_M1	0	6	M1
+1441	926DthrABCDasdDtdhDdapA pfb6.4.3 +aspC	M_D_TasdA_P_asdD_aspC_DdapADtdh_0_12_M1	0	12	M1
+1442	926DthrABCDasdDtdhDdapA pfb6.4.3 +aspC	M_D_TasdA_P_asdD_aspC_DdapADtdh_0_24_M1	0	24	M1
+1443	926DthrABCDasdDtdhDdapA pfb6.4.3 +aspC	M_D_TasdA_P_asdD_aspC_DdapADtdh_I_4p5_M1	I	4.5	M1
+1444	926DthrABCDasdDtdhDdapA pfb6.4.3 +aspC	M_D_TasdA_P_asdD_aspC_DdapADtdh_I_6_M1	I	6	M1
+1445	926DthrABCDasdDtdhDdapA pfb6.4.3 +aspC	M_D_TasdA_P_asdD_aspC_DdapADtdh_I_12_M1	I	12	M1
+1446	926DthrABCDasdDtdhDdapA pfb6.4.3 +aspC	M_D_TasdA_P_asdD_aspC_DdapADtdh_I_24_M1	I	24	M1
+1447	926DthrABCDasdDtdhDlysA pfb6.4.3 +aspC	M_D_TasdA_P_asdD_aspC_DlysADtdh_0_4p5_M1	0	4.5	M1
+1448	926DthrABCDasdDtdhDlysA pfb6.4.3 +aspC	M_D_TasdA_P_asdD_aspC_DlysADtdh_0_6_M1	0	6	M1
+1449	926DthrABCDasdDtdhDlysA pfb6.4.3 +aspC	M_D_TasdA_P_asdD_aspC_DlysADtdh_0_12_M1	0	12	M1
+1450	926DthrABCDasdDtdhDlysA pfb6.4.3 +aspC	M_D_TasdA_P_asdD_aspC_DlysADtdh_0_24_M1	0	24	M1
+1451	926DthrABCDasdDtdhDlysA pfb6.4.3 +aspC	M_D_TasdA_P_asdD_aspC_DlysADtdh_I_4p5_M1	I	4.5	M1
+1452	926DthrABCDasdDtdhDlysA pfb6.4.3 +aspC	M_D_TasdA_P_asdD_aspC_DlysADtdh_I_6_M1	I	6	M1
+1453	926DthrABCDasdDtdhDlysA pfb6.4.3 +aspC	M_D_TasdA_P_asdD_aspC_DlysADtdh_I_12_M1	I	12	M1
+1454	926DthrABCDasdDtdhDlysA pfb6.4.3 +aspC	M_D_TasdA_P_asdD_aspC_DlysADtdh_I_24_M1	I	24	M1
+1455	926DthrABCDasdDtdhDlysC pfb6.4.3 +aspC	M_D_TasdA_P_asdD_aspC_DlysCDtdh_0_4p5_M1	0	4.5	M1
+1456	926DthrABCDasdDtdhDlysC pfb6.4.3 +aspC	M_D_TasdA_P_asdD_aspC_DlysCDtdh_0_6_M1	0	6	M1
+1457	926DthrABCDasdDtdhDlysC pfb6.4.3 +aspC	M_D_TasdA_P_asdD_aspC_DlysCDtdh_0_12_M1	0	12	M1
+1458	926DthrABCDasdDtdhDlysC pfb6.4.3 +aspC	M_D_TasdA_P_asdD_aspC_DlysCDtdh_0_24_M1	0	24	M1
+1459	926DthrABCDasdDtdhDlysC pfb6.4.3 +aspC	M_D_TasdA_P_asdD_aspC_DlysCDtdh_I_4p5_M1	I	4.5	M1
+1460	926DthrABCDasdDtdhDlysC pfb6.4.3 +aspC	M_D_TasdA_P_asdD_aspC_DlysCDtdh_I_6_M1	I	6	M1
+1461	926DthrABCDasdDtdhDlysC pfb6.4.3 +aspC	M_D_TasdA_P_asdD_aspC_DlysCDtdh_I_12_M1	I	12	M1
+1462	926DthrABCDasdDtdhDlysC pfb6.4.3 +aspC	M_D_TasdA_P_asdD_aspC_DlysCDtdh_I_24_M1	I	24	M1
+1463	926DthrABCDasdDtdhDptsG pfb6.4.3 +aspC	M_D_TasdA_P_asdD_aspC_DptsGDtdh_0_4p5_M1	0	4.5	M1
+1464	926DthrABCDasdDtdhDptsG pfb6.4.3 +aspC	M_D_TasdA_P_asdD_aspC_DptsGDtdh_0_6_M1	0	6	M1
+1465	926DthrABCDasdDtdhDptsG pfb6.4.3 +aspC	M_D_TasdA_P_asdD_aspC_DptsGDtdh_0_12_M1	0	12	M1
+1466	926DthrABCDasdDtdhDptsG pfb6.4.3 +aspC	M_D_TasdA_P_asdD_aspC_DptsGDtdh_0_24_M1	0	24	M1
+1467	926DthrABCDasdDtdhDptsG pfb6.4.3 +aspC	M_D_TasdA_P_asdD_aspC_DptsGDtdh_I_4p5_M1	I	4.5	M1
+1468	926DthrABCDasdDtdhDptsG pfb6.4.3 +aspC	M_D_TasdA_P_asdD_aspC_DptsGDtdh_I_6_M1	I	6	M1
+1469	926DthrABCDasdDtdhDptsG pfb6.4.3 +aspC	M_D_TasdA_P_asdD_aspC_DptsGDtdh_I_12_M1	I	12	M1
+1470	926DthrABCDasdDtdhDptsG pfb6.4.3 +aspC	M_D_TasdA_P_asdD_aspC_DptsGDtdh_I_24_M1	I	24	M1
 1471	926DthrABCDasd pfb6.4.3 +pntAB	M_D_TasdA_P_asdD_pntAB_D000_0_4p5_M1	0	4.5	M1
 1472	926DthrABCDasd pfb6.4.3 +pntAB	M_D_TasdA_P_asdD_pntAB_D000_0_6_M1	0	6	M1
 1473	926DthrABCDasd pfb6.4.3 +pntAB	M_D_TasdA_P_asdD_pntAB_D000_0_12_M1	0	12	M1
@@ -1525,38 +1525,38 @@ num	old_strain	sample	IPTG	time	medium
 1524	926DthrABCDasdDtdh pfb6.4.3 +pntAB	M_D_TasdA_P_asdD_pntAB_Dtdh_I_6_M1	I	6	M1
 1525	926DthrABCDasdDtdh pfb6.4.3 +pntAB	M_D_TasdA_P_asdD_pntAB_Dtdh_I_12_M1	I	12	M1
 1526	926DthrABCDasdDtdh pfb6.4.3 +pntAB	M_D_TasdA_P_asdD_pntAB_Dtdh_I_24_M1	I	24	M1
-1527	926DthrABCDasdDtdhDdapA pfb6.4.3 +pntAB	M_D_TasdA_P_asdD_pntAB_DtdhDdapA_0_4p5_M1	0	4.5	M1
-1528	926DthrABCDasdDtdhDdapA pfb6.4.3 +pntAB	M_D_TasdA_P_asdD_pntAB_DtdhDdapA_0_6_M1	0	6	M1
-1529	926DthrABCDasdDtdhDdapA pfb6.4.3 +pntAB	M_D_TasdA_P_asdD_pntAB_DtdhDdapA_0_12_M1	0	12	M1
-1530	926DthrABCDasdDtdhDdapA pfb6.4.3 +pntAB	M_D_TasdA_P_asdD_pntAB_DtdhDdapA_0_24_M1	0	24	M1
-1531	926DthrABCDasdDtdhDdapA pfb6.4.3 +pntAB	M_D_TasdA_P_asdD_pntAB_DtdhDdapA_I_4p5_M1	I	4.5	M1
-1532	926DthrABCDasdDtdhDdapA pfb6.4.3 +pntAB	M_D_TasdA_P_asdD_pntAB_DtdhDdapA_I_6_M1	I	6	M1
-1533	926DthrABCDasdDtdhDdapA pfb6.4.3 +pntAB	M_D_TasdA_P_asdD_pntAB_DtdhDdapA_I_12_M1	I	12	M1
-1534	926DthrABCDasdDtdhDdapA pfb6.4.3 +pntAB	M_D_TasdA_P_asdD_pntAB_DtdhDdapA_I_24_M1	I	24	M1
-1535	926DthrABCDasdDtdhDlysA pfb6.4.3 +pntAB	M_D_TasdA_P_asdD_pntAB_DtdhDlysA_0_4p5_M1	0	4.5	M1
-1536	926DthrABCDasdDtdhDlysA pfb6.4.3 +pntAB	M_D_TasdA_P_asdD_pntAB_DtdhDlysA_0_6_M1	0	6	M1
-1537	926DthrABCDasdDtdhDlysA pfb6.4.3 +pntAB	M_D_TasdA_P_asdD_pntAB_DtdhDlysA_0_12_M1	0	12	M1
-1538	926DthrABCDasdDtdhDlysA pfb6.4.3 +pntAB	M_D_TasdA_P_asdD_pntAB_DtdhDlysA_0_24_M1	0	24	M1
-1539	926DthrABCDasdDtdhDlysA pfb6.4.3 +pntAB	M_D_TasdA_P_asdD_pntAB_DtdhDlysA_I_4p5_M1	I	4.5	M1
-1540	926DthrABCDasdDtdhDlysA pfb6.4.3 +pntAB	M_D_TasdA_P_asdD_pntAB_DtdhDlysA_I_6_M1	I	6	M1
-1541	926DthrABCDasdDtdhDlysA pfb6.4.3 +pntAB	M_D_TasdA_P_asdD_pntAB_DtdhDlysA_I_12_M1	I	12	M1
-1542	926DthrABCDasdDtdhDlysA pfb6.4.3 +pntAB	M_D_TasdA_P_asdD_pntAB_DtdhDlysA_I_24_M1	I	24	M1
-1543	926DthrABCDasdDtdhDlysC pfb6.4.3 +pntAB	M_D_TasdA_P_asdD_pntAB_DtdhDlysC_0_4p5_M1	0	4.5	M1
-1544	926DthrABCDasdDtdhDlysC pfb6.4.3 +pntAB	M_D_TasdA_P_asdD_pntAB_DtdhDlysC_0_6_M1	0	6	M1
-1545	926DthrABCDasdDtdhDlysC pfb6.4.3 +pntAB	M_D_TasdA_P_asdD_pntAB_DtdhDlysC_0_12_M1	0	12	M1
-1546	926DthrABCDasdDtdhDlysC pfb6.4.3 +pntAB	M_D_TasdA_P_asdD_pntAB_DtdhDlysC_0_24_M1	0	24	M1
-1547	926DthrABCDasdDtdhDlysC pfb6.4.3 +pntAB	M_D_TasdA_P_asdD_pntAB_DtdhDlysC_I_4p5_M1	I	4.5	M1
-1548	926DthrABCDasdDtdhDlysC pfb6.4.3 +pntAB	M_D_TasdA_P_asdD_pntAB_DtdhDlysC_I_6_M1	I	6	M1
-1549	926DthrABCDasdDtdhDlysC pfb6.4.3 +pntAB	M_D_TasdA_P_asdD_pntAB_DtdhDlysC_I_12_M1	I	12	M1
-1550	926DthrABCDasdDtdhDlysC pfb6.4.3 +pntAB	M_D_TasdA_P_asdD_pntAB_DtdhDlysC_I_24_M1	I	24	M1
-1551	926DthrABCDasdDtdhDptsG pfb6.4.3 +pntAB	M_D_TasdA_P_asdD_pntAB_DtdhDptsG_0_4p5_M1	0	4.5	M1
-1552	926DthrABCDasdDtdhDptsG pfb6.4.3 +pntAB	M_D_TasdA_P_asdD_pntAB_DtdhDptsG_0_6_M1	0	6	M1
-1553	926DthrABCDasdDtdhDptsG pfb6.4.3 +pntAB	M_D_TasdA_P_asdD_pntAB_DtdhDptsG_0_12_M1	0	12	M1
-1554	926DthrABCDasdDtdhDptsG pfb6.4.3 +pntAB	M_D_TasdA_P_asdD_pntAB_DtdhDptsG_0_24_M1	0	24	M1
-1555	926DthrABCDasdDtdhDptsG pfb6.4.3 +pntAB	M_D_TasdA_P_asdD_pntAB_DtdhDptsG_I_4p5_M1	I	4.5	M1
-1556	926DthrABCDasdDtdhDptsG pfb6.4.3 +pntAB	M_D_TasdA_P_asdD_pntAB_DtdhDptsG_I_6_M1	I	6	M1
-1557	926DthrABCDasdDtdhDptsG pfb6.4.3 +pntAB	M_D_TasdA_P_asdD_pntAB_DtdhDptsG_I_12_M1	I	12	M1
-1558	926DthrABCDasdDtdhDptsG pfb6.4.3 +pntAB	M_D_TasdA_P_asdD_pntAB_DtdhDptsG_I_24_M1	I	24	M1
+1527	926DthrABCDasdDtdhDdapA pfb6.4.3 +pntAB	M_D_TasdA_P_asdD_pntAB_DdapADtdh_0_4p5_M1	0	4.5	M1
+1528	926DthrABCDasdDtdhDdapA pfb6.4.3 +pntAB	M_D_TasdA_P_asdD_pntAB_DdapADtdh_0_6_M1	0	6	M1
+1529	926DthrABCDasdDtdhDdapA pfb6.4.3 +pntAB	M_D_TasdA_P_asdD_pntAB_DdapADtdh_0_12_M1	0	12	M1
+1530	926DthrABCDasdDtdhDdapA pfb6.4.3 +pntAB	M_D_TasdA_P_asdD_pntAB_DdapADtdh_0_24_M1	0	24	M1
+1531	926DthrABCDasdDtdhDdapA pfb6.4.3 +pntAB	M_D_TasdA_P_asdD_pntAB_DdapADtdh_I_4p5_M1	I	4.5	M1
+1532	926DthrABCDasdDtdhDdapA pfb6.4.3 +pntAB	M_D_TasdA_P_asdD_pntAB_DdapADtdh_I_6_M1	I	6	M1
+1533	926DthrABCDasdDtdhDdapA pfb6.4.3 +pntAB	M_D_TasdA_P_asdD_pntAB_DdapADtdh_I_12_M1	I	12	M1
+1534	926DthrABCDasdDtdhDdapA pfb6.4.3 +pntAB	M_D_TasdA_P_asdD_pntAB_DdapADtdh_I_24_M1	I	24	M1
+1535	926DthrABCDasdDtdhDlysA pfb6.4.3 +pntAB	M_D_TasdA_P_asdD_pntAB_DlysADtdh_0_4p5_M1	0	4.5	M1
+1536	926DthrABCDasdDtdhDlysA pfb6.4.3 +pntAB	M_D_TasdA_P_asdD_pntAB_DlysADtdh_0_6_M1	0	6	M1
+1537	926DthrABCDasdDtdhDlysA pfb6.4.3 +pntAB	M_D_TasdA_P_asdD_pntAB_DlysADtdh_0_12_M1	0	12	M1
+1538	926DthrABCDasdDtdhDlysA pfb6.4.3 +pntAB	M_D_TasdA_P_asdD_pntAB_DlysADtdh_0_24_M1	0	24	M1
+1539	926DthrABCDasdDtdhDlysA pfb6.4.3 +pntAB	M_D_TasdA_P_asdD_pntAB_DlysADtdh_I_4p5_M1	I	4.5	M1
+1540	926DthrABCDasdDtdhDlysA pfb6.4.3 +pntAB	M_D_TasdA_P_asdD_pntAB_DlysADtdh_I_6_M1	I	6	M1
+1541	926DthrABCDasdDtdhDlysA pfb6.4.3 +pntAB	M_D_TasdA_P_asdD_pntAB_DlysADtdh_I_12_M1	I	12	M1
+1542	926DthrABCDasdDtdhDlysA pfb6.4.3 +pntAB	M_D_TasdA_P_asdD_pntAB_DlysADtdh_I_24_M1	I	24	M1
+1543	926DthrABCDasdDtdhDlysC pfb6.4.3 +pntAB	M_D_TasdA_P_asdD_pntAB_DlysCDtdh_0_4p5_M1	0	4.5	M1
+1544	926DthrABCDasdDtdhDlysC pfb6.4.3 +pntAB	M_D_TasdA_P_asdD_pntAB_DlysCDtdh_0_6_M1	0	6	M1
+1545	926DthrABCDasdDtdhDlysC pfb6.4.3 +pntAB	M_D_TasdA_P_asdD_pntAB_DlysCDtdh_0_12_M1	0	12	M1
+1546	926DthrABCDasdDtdhDlysC pfb6.4.3 +pntAB	M_D_TasdA_P_asdD_pntAB_DlysCDtdh_0_24_M1	0	24	M1
+1547	926DthrABCDasdDtdhDlysC pfb6.4.3 +pntAB	M_D_TasdA_P_asdD_pntAB_DlysCDtdh_I_4p5_M1	I	4.5	M1
+1548	926DthrABCDasdDtdhDlysC pfb6.4.3 +pntAB	M_D_TasdA_P_asdD_pntAB_DlysCDtdh_I_6_M1	I	6	M1
+1549	926DthrABCDasdDtdhDlysC pfb6.4.3 +pntAB	M_D_TasdA_P_asdD_pntAB_DlysCDtdh_I_12_M1	I	12	M1
+1550	926DthrABCDasdDtdhDlysC pfb6.4.3 +pntAB	M_D_TasdA_P_asdD_pntAB_DlysCDtdh_I_24_M1	I	24	M1
+1551	926DthrABCDasdDtdhDptsG pfb6.4.3 +pntAB	M_D_TasdA_P_asdD_pntAB_DptsGDtdh_0_4p5_M1	0	4.5	M1
+1552	926DthrABCDasdDtdhDptsG pfb6.4.3 +pntAB	M_D_TasdA_P_asdD_pntAB_DptsGDtdh_0_6_M1	0	6	M1
+1553	926DthrABCDasdDtdhDptsG pfb6.4.3 +pntAB	M_D_TasdA_P_asdD_pntAB_DptsGDtdh_0_12_M1	0	12	M1
+1554	926DthrABCDasdDtdhDptsG pfb6.4.3 +pntAB	M_D_TasdA_P_asdD_pntAB_DptsGDtdh_0_24_M1	0	24	M1
+1555	926DthrABCDasdDtdhDptsG pfb6.4.3 +pntAB	M_D_TasdA_P_asdD_pntAB_DptsGDtdh_I_4p5_M1	I	4.5	M1
+1556	926DthrABCDasdDtdhDptsG pfb6.4.3 +pntAB	M_D_TasdA_P_asdD_pntAB_DptsGDtdh_I_6_M1	I	6	M1
+1557	926DthrABCDasdDtdhDptsG pfb6.4.3 +pntAB	M_D_TasdA_P_asdD_pntAB_DptsGDtdh_I_12_M1	I	12	M1
+1558	926DthrABCDasdDtdhDptsG pfb6.4.3 +pntAB	M_D_TasdA_P_asdD_pntAB_DptsGDtdh_I_24_M1	I	24	M1
 1559	926dthrABCdasd pfb6.4.3 +pyc	M_D_TasdA_P_asdD_pyc_D000_0_4p5_M1	0	4.5	M1
 1560	926dthrABCdasd pfb6.4.3 +pyc	M_D_TasdA_P_asdD_pyc_D000_0_6_M1	0	6	M1
 1561	926dthrABCdasd pfb6.4.3 +pyc	M_D_TasdA_P_asdD_pyc_D000_0_12_M1	0	12	M1
@@ -1621,30 +1621,30 @@ num	old_strain	sample	IPTG	time	medium
 1620	926DthrABCDasdDtdh pfb6.4.3 +pyc	M_D_TasdA_P_asdD_pyc_Dtdh_I_6_M1	I	6	M1
 1621	926DthrABCDasdDtdh pfb6.4.3 +pyc	M_D_TasdA_P_asdD_pyc_Dtdh_I_12_M1	I	12	M1
 1622	926DthrABCDasdDtdh pfb6.4.3 +pyc	M_D_TasdA_P_asdD_pyc_Dtdh_I_24_M1	I	24	M1
-1623	926DthrABCDasdDtdhDdapA pfb6.4.3 +pyc	M_D_TasdA_P_asdD_pyc_DtdhDdapA_0_4p5_M1	0	4.5	M1
-1624	926DthrABCDasdDtdhDdapA pfb6.4.3 +pyc	M_D_TasdA_P_asdD_pyc_DtdhDdapA_0_6_M1	0	6	M1
-1625	926DthrABCDasdDtdhDdapA pfb6.4.3 +pyc	M_D_TasdA_P_asdD_pyc_DtdhDdapA_0_12_M1	0	12	M1
-1626	926DthrABCDasdDtdhDdapA pfb6.4.3 +pyc	M_D_TasdA_P_asdD_pyc_DtdhDdapA_0_24_M1	0	24	M1
-1627	926DthrABCDasdDtdhDdapA pfb6.4.3 +pyc	M_D_TasdA_P_asdD_pyc_DtdhDdapA_I_4p5_M1	I	4.5	M1
-1628	926DthrABCDasdDtdhDdapA pfb6.4.3 +pyc	M_D_TasdA_P_asdD_pyc_DtdhDdapA_I_6_M1	I	6	M1
-1629	926DthrABCDasdDtdhDdapA pfb6.4.3 +pyc	M_D_TasdA_P_asdD_pyc_DtdhDdapA_I_12_M1	I	12	M1
-1630	926DthrABCDasdDtdhDdapA pfb6.4.3 +pyc	M_D_TasdA_P_asdD_pyc_DtdhDdapA_I_24_M1	I	24	M1
-1631	926DthrABCDasdDtdhDlysA pfb6.4.3 +pyc	M_D_TasdA_P_asdD_pyc_DtdhDlysA_0_4p5_M1	0	4.5	M1
-1632	926DthrABCDasdDtdhDlysA pfb6.4.3 +pyc	M_D_TasdA_P_asdD_pyc_DtdhDlysA_0_6_M1	0	6	M1
-1633	926DthrABCDasdDtdhDlysA pfb6.4.3 +pyc	M_D_TasdA_P_asdD_pyc_DtdhDlysA_0_12_M1	0	12	M1
-1634	926DthrABCDasdDtdhDlysA pfb6.4.3 +pyc	M_D_TasdA_P_asdD_pyc_DtdhDlysA_0_24_M1	0	24	M1
-1635	926DthrABCDasdDtdhDlysA pfb6.4.3 +pyc	M_D_TasdA_P_asdD_pyc_DtdhDlysA_I_4p5_M1	I	4.5	M1
-1636	926DthrABCDasdDtdhDlysA pfb6.4.3 +pyc	M_D_TasdA_P_asdD_pyc_DtdhDlysA_I_6_M1	I	6	M1
-1637	926DthrABCDasdDtdhDlysA pfb6.4.3 +pyc	M_D_TasdA_P_asdD_pyc_DtdhDlysA_I_12_M1	I	12	M1
-1638	926DthrABCDasdDtdhDlysA pfb6.4.3 +pyc	M_D_TasdA_P_asdD_pyc_DtdhDlysA_I_24_M1	I	24	M1
-1639	926DthrABCDasdDtdhDptsG pfb6.4.3 +pyc	M_D_TasdA_P_asdD_pyc_DtdhDptsG_0_4p5_M1	0	4.5	M1
-1640	926DthrABCDasdDtdhDptsG pfb6.4.3 +pyc	M_D_TasdA_P_asdD_pyc_DtdhDptsG_0_6_M1	0	6	M1
-1641	926DthrABCDasdDtdhDptsG pfb6.4.3 +pyc	M_D_TasdA_P_asdD_pyc_DtdhDptsG_0_12_M1	0	12	M1
-1642	926DthrABCDasdDtdhDptsG pfb6.4.3 +pyc	M_D_TasdA_P_asdD_pyc_DtdhDptsG_0_24_M1	0	24	M1
-1643	926DthrABCDasdDtdhDptsG pfb6.4.3 +pyc	M_D_TasdA_P_asdD_pyc_DtdhDptsG_I_4p5_M1	I	4.5	M1
-1644	926DthrABCDasdDtdhDptsG pfb6.4.3 +pyc	M_D_TasdA_P_asdD_pyc_DtdhDptsG_I_6_M1	I	6	M1
-1645	926DthrABCDasdDtdhDptsG pfb6.4.3 +pyc	M_D_TasdA_P_asdD_pyc_DtdhDptsG_I_12_M1	I	12	M1
-1646	926DthrABCDasdDtdhDptsG pfb6.4.3 +pyc	M_D_TasdA_P_asdD_pyc_DtdhDptsG_I_24_M1	I	24	M1
+1623	926DthrABCDasdDtdhDdapA pfb6.4.3 +pyc	M_D_TasdA_P_asdD_pyc_DdapADtdh_0_4p5_M1	0	4.5	M1
+1624	926DthrABCDasdDtdhDdapA pfb6.4.3 +pyc	M_D_TasdA_P_asdD_pyc_DdapADtdh_0_6_M1	0	6	M1
+1625	926DthrABCDasdDtdhDdapA pfb6.4.3 +pyc	M_D_TasdA_P_asdD_pyc_DdapADtdh_0_12_M1	0	12	M1
+1626	926DthrABCDasdDtdhDdapA pfb6.4.3 +pyc	M_D_TasdA_P_asdD_pyc_DdapADtdh_0_24_M1	0	24	M1
+1627	926DthrABCDasdDtdhDdapA pfb6.4.3 +pyc	M_D_TasdA_P_asdD_pyc_DdapADtdh_I_4p5_M1	I	4.5	M1
+1628	926DthrABCDasdDtdhDdapA pfb6.4.3 +pyc	M_D_TasdA_P_asdD_pyc_DdapADtdh_I_6_M1	I	6	M1
+1629	926DthrABCDasdDtdhDdapA pfb6.4.3 +pyc	M_D_TasdA_P_asdD_pyc_DdapADtdh_I_12_M1	I	12	M1
+1630	926DthrABCDasdDtdhDdapA pfb6.4.3 +pyc	M_D_TasdA_P_asdD_pyc_DdapADtdh_I_24_M1	I	24	M1
+1631	926DthrABCDasdDtdhDlysA pfb6.4.3 +pyc	M_D_TasdA_P_asdD_pyc_DlysADtdh_0_4p5_M1	0	4.5	M1
+1632	926DthrABCDasdDtdhDlysA pfb6.4.3 +pyc	M_D_TasdA_P_asdD_pyc_DlysADtdh_0_6_M1	0	6	M1
+1633	926DthrABCDasdDtdhDlysA pfb6.4.3 +pyc	M_D_TasdA_P_asdD_pyc_DlysADtdh_0_12_M1	0	12	M1
+1634	926DthrABCDasdDtdhDlysA pfb6.4.3 +pyc	M_D_TasdA_P_asdD_pyc_DlysADtdh_0_24_M1	0	24	M1
+1635	926DthrABCDasdDtdhDlysA pfb6.4.3 +pyc	M_D_TasdA_P_asdD_pyc_DlysADtdh_I_4p5_M1	I	4.5	M1
+1636	926DthrABCDasdDtdhDlysA pfb6.4.3 +pyc	M_D_TasdA_P_asdD_pyc_DlysADtdh_I_6_M1	I	6	M1
+1637	926DthrABCDasdDtdhDlysA pfb6.4.3 +pyc	M_D_TasdA_P_asdD_pyc_DlysADtdh_I_12_M1	I	12	M1
+1638	926DthrABCDasdDtdhDlysA pfb6.4.3 +pyc	M_D_TasdA_P_asdD_pyc_DlysADtdh_I_24_M1	I	24	M1
+1639	926DthrABCDasdDtdhDptsG pfb6.4.3 +pyc	M_D_TasdA_P_asdD_pyc_DptsGDtdh_0_4p5_M1	0	4.5	M1
+1640	926DthrABCDasdDtdhDptsG pfb6.4.3 +pyc	M_D_TasdA_P_asdD_pyc_DptsGDtdh_0_6_M1	0	6	M1
+1641	926DthrABCDasdDtdhDptsG pfb6.4.3 +pyc	M_D_TasdA_P_asdD_pyc_DptsGDtdh_0_12_M1	0	12	M1
+1642	926DthrABCDasdDtdhDptsG pfb6.4.3 +pyc	M_D_TasdA_P_asdD_pyc_DptsGDtdh_0_24_M1	0	24	M1
+1643	926DthrABCDasdDtdhDptsG pfb6.4.3 +pyc	M_D_TasdA_P_asdD_pyc_DptsGDtdh_I_4p5_M1	I	4.5	M1
+1644	926DthrABCDasdDtdhDptsG pfb6.4.3 +pyc	M_D_TasdA_P_asdD_pyc_DptsGDtdh_I_6_M1	I	6	M1
+1645	926DthrABCDasdDtdhDptsG pfb6.4.3 +pyc	M_D_TasdA_P_asdD_pyc_DptsGDtdh_I_12_M1	I	12	M1
+1646	926DthrABCDasdDtdhDptsG pfb6.4.3 +pyc	M_D_TasdA_P_asdD_pyc_DptsGDtdh_I_24_M1	I	24	M1
 1647	926DthrABCDasdDdhaM pfb6.4.3 +rhtA	M_D_TasdA_P_asdD_rhtA_DdhaM_0_4p5_M1	0	4.5	M1
 1648	926DthrABCDasdDdhaM pfb6.4.3 +rhtA	M_D_TasdA_P_asdD_rhtA_DdhaM_0_6_M1	0	6	M1
 1649	926DthrABCDasdDdhaM pfb6.4.3 +rhtA	M_D_TasdA_P_asdD_rhtA_DdhaM_0_12_M1	0	12	M1
@@ -1693,38 +1693,38 @@ num	old_strain	sample	IPTG	time	medium
 1692	926DthrABCDasdDtdh pfb6.4.3 +rhtA	M_D_TasdA_P_asdD_rhtA_Dtdh_I_6_M1	I	6	M1
 1693	926DthrABCDasdDtdh pfb6.4.3 +rhtA	M_D_TasdA_P_asdD_rhtA_Dtdh_I_12_M1	I	12	M1
 1694	926DthrABCDasdDtdh pfb6.4.3 +rhtA	M_D_TasdA_P_asdD_rhtA_Dtdh_I_24_M1	I	24	M1
-1695	926DthrABCDasdDtdhDdapA pfb6.4.3 +rhtA	M_D_TasdA_P_asdD_rhtA_DtdhDdapA_0_4p5_M1	0	4.5	M1
-1696	926DthrABCDasdDtdhDdapA pfb6.4.3 +rhtA	M_D_TasdA_P_asdD_rhtA_DtdhDdapA_0_6_M1	0	6	M1
-1697	926DthrABCDasdDtdhDdapA pfb6.4.3 +rhtA	M_D_TasdA_P_asdD_rhtA_DtdhDdapA_0_12_M1	0	12	M1
-1698	926DthrABCDasdDtdhDdapA pfb6.4.3 +rhtA	M_D_TasdA_P_asdD_rhtA_DtdhDdapA_0_24_M1	0	24	M1
-1699	926DthrABCDasdDtdhDdapA pfb6.4.3 +rhtA	M_D_TasdA_P_asdD_rhtA_DtdhDdapA_I_4p5_M1	I	4.5	M1
-1700	926DthrABCDasdDtdhDdapA pfb6.4.3 +rhtA	M_D_TasdA_P_asdD_rhtA_DtdhDdapA_I_6_M1	I	6	M1
-1701	926DthrABCDasdDtdhDdapA pfb6.4.3 +rhtA	M_D_TasdA_P_asdD_rhtA_DtdhDdapA_I_12_M1	I	12	M1
-1702	926DthrABCDasdDtdhDdapA pfb6.4.3 +rhtA	M_D_TasdA_P_asdD_rhtA_DtdhDdapA_I_24_M1	I	24	M1
-1703	926DthrABCDasdDtdhDlysA pfb6.4.3 +rhtA	M_D_TasdA_P_asdD_rhtA_DtdhDlysA_0_4p5_M1	0	4.5	M1
-1704	926DthrABCDasdDtdhDlysA pfb6.4.3 +rhtA	M_D_TasdA_P_asdD_rhtA_DtdhDlysA_0_6_M1	0	6	M1
-1705	926DthrABCDasdDtdhDlysA pfb6.4.3 +rhtA	M_D_TasdA_P_asdD_rhtA_DtdhDlysA_0_12_M1	0	12	M1
-1706	926DthrABCDasdDtdhDlysA pfb6.4.3 +rhtA	M_D_TasdA_P_asdD_rhtA_DtdhDlysA_0_24_M1	0	24	M1
-1707	926DthrABCDasdDtdhDlysA pfb6.4.3 +rhtA	M_D_TasdA_P_asdD_rhtA_DtdhDlysA_I_4p5_M1	I	4.5	M1
-1708	926DthrABCDasdDtdhDlysA pfb6.4.3 +rhtA	M_D_TasdA_P_asdD_rhtA_DtdhDlysA_I_6_M1	I	6	M1
-1709	926DthrABCDasdDtdhDlysA pfb6.4.3 +rhtA	M_D_TasdA_P_asdD_rhtA_DtdhDlysA_I_12_M1	I	12	M1
-1710	926DthrABCDasdDtdhDlysA pfb6.4.3 +rhtA	M_D_TasdA_P_asdD_rhtA_DtdhDlysA_I_24_M1	I	24	M1
-1711	926DthrABCDasdDtdhDlysC pfb6.4.3 +rhtA	M_D_TasdA_P_asdD_rhtA_DtdhDlysC_0_4p5_M1	0	4.5	M1
-1712	926DthrABCDasdDtdhDlysC pfb6.4.3 +rhtA	M_D_TasdA_P_asdD_rhtA_DtdhDlysC_0_6_M1	0	6	M1
-1713	926DthrABCDasdDtdhDlysC pfb6.4.3 +rhtA	M_D_TasdA_P_asdD_rhtA_DtdhDlysC_0_12_M1	0	12	M1
-1714	926DthrABCDasdDtdhDlysC pfb6.4.3 +rhtA	M_D_TasdA_P_asdD_rhtA_DtdhDlysC_0_24_M1	0	24	M1
-1715	926DthrABCDasdDtdhDlysC pfb6.4.3 +rhtA	M_D_TasdA_P_asdD_rhtA_DtdhDlysC_I_4p5_M1	I	4.5	M1
-1716	926DthrABCDasdDtdhDlysC pfb6.4.3 +rhtA	M_D_TasdA_P_asdD_rhtA_DtdhDlysC_I_6_M1	I	6	M1
-1717	926DthrABCDasdDtdhDlysC pfb6.4.3 +rhtA	M_D_TasdA_P_asdD_rhtA_DtdhDlysC_I_12_M1	I	12	M1
-1718	926DthrABCDasdDtdhDlysC pfb6.4.3 +rhtA	M_D_TasdA_P_asdD_rhtA_DtdhDlysC_I_24_M1	I	24	M1
-1719	926DthrABCDasdDtdhDptsG pfb6.4.3 +rhtA	M_D_TasdA_P_asdD_rhtA_DtdhDptsG_0_4p5_M1	0	4.5	M1
-1720	926DthrABCDasdDtdhDptsG pfb6.4.3 +rhtA	M_D_TasdA_P_asdD_rhtA_DtdhDptsG_0_6_M1	0	6	M1
-1721	926DthrABCDasdDtdhDptsG pfb6.4.3 +rhtA	M_D_TasdA_P_asdD_rhtA_DtdhDptsG_0_12_M1	0	12	M1
-1722	926DthrABCDasdDtdhDptsG pfb6.4.3 +rhtA	M_D_TasdA_P_asdD_rhtA_DtdhDptsG_0_24_M1	0	24	M1
-1723	926DthrABCDasdDtdhDptsG pfb6.4.3 +rhtA	M_D_TasdA_P_asdD_rhtA_DtdhDptsG_I_4p5_M1	I	4.5	M1
-1724	926DthrABCDasdDtdhDptsG pfb6.4.3 +rhtA	M_D_TasdA_P_asdD_rhtA_DtdhDptsG_I_6_M1	I	6	M1
-1725	926DthrABCDasdDtdhDptsG pfb6.4.3 +rhtA	M_D_TasdA_P_asdD_rhtA_DtdhDptsG_I_12_M1	I	12	M1
-1726	926DthrABCDasdDtdhDptsG pfb6.4.3 +rhtA	M_D_TasdA_P_asdD_rhtA_DtdhDptsG_I_24_M1	I	24	M1
+1695	926DthrABCDasdDtdhDdapA pfb6.4.3 +rhtA	M_D_TasdA_P_asdD_rhtA_DdapADtdh_0_4p5_M1	0	4.5	M1
+1696	926DthrABCDasdDtdhDdapA pfb6.4.3 +rhtA	M_D_TasdA_P_asdD_rhtA_DdapADtdh_0_6_M1	0	6	M1
+1697	926DthrABCDasdDtdhDdapA pfb6.4.3 +rhtA	M_D_TasdA_P_asdD_rhtA_DdapADtdh_0_12_M1	0	12	M1
+1698	926DthrABCDasdDtdhDdapA pfb6.4.3 +rhtA	M_D_TasdA_P_asdD_rhtA_DdapADtdh_0_24_M1	0	24	M1
+1699	926DthrABCDasdDtdhDdapA pfb6.4.3 +rhtA	M_D_TasdA_P_asdD_rhtA_DdapADtdh_I_4p5_M1	I	4.5	M1
+1700	926DthrABCDasdDtdhDdapA pfb6.4.3 +rhtA	M_D_TasdA_P_asdD_rhtA_DdapADtdh_I_6_M1	I	6	M1
+1701	926DthrABCDasdDtdhDdapA pfb6.4.3 +rhtA	M_D_TasdA_P_asdD_rhtA_DdapADtdh_I_12_M1	I	12	M1
+1702	926DthrABCDasdDtdhDdapA pfb6.4.3 +rhtA	M_D_TasdA_P_asdD_rhtA_DdapADtdh_I_24_M1	I	24	M1
+1703	926DthrABCDasdDtdhDlysA pfb6.4.3 +rhtA	M_D_TasdA_P_asdD_rhtA_DlysADtdh_0_4p5_M1	0	4.5	M1
+1704	926DthrABCDasdDtdhDlysA pfb6.4.3 +rhtA	M_D_TasdA_P_asdD_rhtA_DlysADtdh_0_6_M1	0	6	M1
+1705	926DthrABCDasdDtdhDlysA pfb6.4.3 +rhtA	M_D_TasdA_P_asdD_rhtA_DlysADtdh_0_12_M1	0	12	M1
+1706	926DthrABCDasdDtdhDlysA pfb6.4.3 +rhtA	M_D_TasdA_P_asdD_rhtA_DlysADtdh_0_24_M1	0	24	M1
+1707	926DthrABCDasdDtdhDlysA pfb6.4.3 +rhtA	M_D_TasdA_P_asdD_rhtA_DlysADtdh_I_4p5_M1	I	4.5	M1
+1708	926DthrABCDasdDtdhDlysA pfb6.4.3 +rhtA	M_D_TasdA_P_asdD_rhtA_DlysADtdh_I_6_M1	I	6	M1
+1709	926DthrABCDasdDtdhDlysA pfb6.4.3 +rhtA	M_D_TasdA_P_asdD_rhtA_DlysADtdh_I_12_M1	I	12	M1
+1710	926DthrABCDasdDtdhDlysA pfb6.4.3 +rhtA	M_D_TasdA_P_asdD_rhtA_DlysADtdh_I_24_M1	I	24	M1
+1711	926DthrABCDasdDtdhDlysC pfb6.4.3 +rhtA	M_D_TasdA_P_asdD_rhtA_DlysCDtdh_0_4p5_M1	0	4.5	M1
+1712	926DthrABCDasdDtdhDlysC pfb6.4.3 +rhtA	M_D_TasdA_P_asdD_rhtA_DlysCDtdh_0_6_M1	0	6	M1
+1713	926DthrABCDasdDtdhDlysC pfb6.4.3 +rhtA	M_D_TasdA_P_asdD_rhtA_DlysCDtdh_0_12_M1	0	12	M1
+1714	926DthrABCDasdDtdhDlysC pfb6.4.3 +rhtA	M_D_TasdA_P_asdD_rhtA_DlysCDtdh_0_24_M1	0	24	M1
+1715	926DthrABCDasdDtdhDlysC pfb6.4.3 +rhtA	M_D_TasdA_P_asdD_rhtA_DlysCDtdh_I_4p5_M1	I	4.5	M1
+1716	926DthrABCDasdDtdhDlysC pfb6.4.3 +rhtA	M_D_TasdA_P_asdD_rhtA_DlysCDtdh_I_6_M1	I	6	M1
+1717	926DthrABCDasdDtdhDlysC pfb6.4.3 +rhtA	M_D_TasdA_P_asdD_rhtA_DlysCDtdh_I_12_M1	I	12	M1
+1718	926DthrABCDasdDtdhDlysC pfb6.4.3 +rhtA	M_D_TasdA_P_asdD_rhtA_DlysCDtdh_I_24_M1	I	24	M1
+1719	926DthrABCDasdDtdhDptsG pfb6.4.3 +rhtA	M_D_TasdA_P_asdD_rhtA_DptsGDtdh_0_4p5_M1	0	4.5	M1
+1720	926DthrABCDasdDtdhDptsG pfb6.4.3 +rhtA	M_D_TasdA_P_asdD_rhtA_DptsGDtdh_0_6_M1	0	6	M1
+1721	926DthrABCDasdDtdhDptsG pfb6.4.3 +rhtA	M_D_TasdA_P_asdD_rhtA_DptsGDtdh_0_12_M1	0	12	M1
+1722	926DthrABCDasdDtdhDptsG pfb6.4.3 +rhtA	M_D_TasdA_P_asdD_rhtA_DptsGDtdh_0_24_M1	0	24	M1
+1723	926DthrABCDasdDtdhDptsG pfb6.4.3 +rhtA	M_D_TasdA_P_asdD_rhtA_DptsGDtdh_I_4p5_M1	I	4.5	M1
+1724	926DthrABCDasdDtdhDptsG pfb6.4.3 +rhtA	M_D_TasdA_P_asdD_rhtA_DptsGDtdh_I_6_M1	I	6	M1
+1725	926DthrABCDasdDtdhDptsG pfb6.4.3 +rhtA	M_D_TasdA_P_asdD_rhtA_DptsGDtdh_I_12_M1	I	12	M1
+1726	926DthrABCDasdDtdhDptsG pfb6.4.3 +rhtA	M_D_TasdA_P_asdD_rhtA_DptsGDtdh_I_24_M1	I	24	M1
 1727	926dthrABCdasd pfb6.4.3 +rhtA	M_D_TasdA_P_asdD_rhtA_D000_0_4p5_M1	0	4.5	M1
 1728	926dthrABCdasd pfb6.4.3 +rhtA	M_D_TasdA_P_asdD_rhtA_D000_0_6_M1	0	6	M1
 1729	926dthrABCdasd pfb6.4.3 +rhtA	M_D_TasdA_P_asdD_rhtA_D000_0_12_M1	0	12	M1
@@ -1797,38 +1797,38 @@ num	old_strain	sample	IPTG	time	medium
 1796	926DthrABCDasdDtdh pfb6.4.3 +zwf	M_D_TasdA_P_asdD_zwf_Dtdh_I_6_M1	I	6	M1
 1797	926DthrABCDasdDtdh pfb6.4.3 +zwf	M_D_TasdA_P_asdD_zwf_Dtdh_I_12_M1	I	12	M1
 1798	926DthrABCDasdDtdh pfb6.4.3 +zwf	M_D_TasdA_P_asdD_zwf_Dtdh_I_24_M1	I	24	M1
-1799	926DthrABCDasdDtdhDdapA pfb6.4.3 +zwf	M_D_TasdA_P_asdD_zwf_DtdhDdapA_0_4p5_M1	0	4.5	M1
-1800	926DthrABCDasdDtdhDdapA pfb6.4.3 +zwf	M_D_TasdA_P_asdD_zwf_DtdhDdapA_0_6_M1	0	6	M1
-1801	926DthrABCDasdDtdhDdapA pfb6.4.3 +zwf	M_D_TasdA_P_asdD_zwf_DtdhDdapA_0_12_M1	0	12	M1
-1802	926DthrABCDasdDtdhDdapA pfb6.4.3 +zwf	M_D_TasdA_P_asdD_zwf_DtdhDdapA_0_24_M1	0	24	M1
-1803	926DthrABCDasdDtdhDdapA pfb6.4.3 +zwf	M_D_TasdA_P_asdD_zwf_DtdhDdapA_I_4p5_M1	I	4.5	M1
-1804	926DthrABCDasdDtdhDdapA pfb6.4.3 +zwf	M_D_TasdA_P_asdD_zwf_DtdhDdapA_I_6_M1	I	6	M1
-1805	926DthrABCDasdDtdhDdapA pfb6.4.3 +zwf	M_D_TasdA_P_asdD_zwf_DtdhDdapA_I_12_M1	I	12	M1
-1806	926DthrABCDasdDtdhDdapA pfb6.4.3 +zwf	M_D_TasdA_P_asdD_zwf_DtdhDdapA_I_24_M1	I	24	M1
-1807	926DthrABCDasdDtdhDlysA pfb6.4.3 +zwf	M_D_TasdA_P_asdD_zwf_DtdhDlysA_0_4p5_M1	0	4.5	M1
-1808	926DthrABCDasdDtdhDlysA pfb6.4.3 +zwf	M_D_TasdA_P_asdD_zwf_DtdhDlysA_0_6_M1	0	6	M1
-1809	926DthrABCDasdDtdhDlysA pfb6.4.3 +zwf	M_D_TasdA_P_asdD_zwf_DtdhDlysA_0_12_M1	0	12	M1
-1810	926DthrABCDasdDtdhDlysA pfb6.4.3 +zwf	M_D_TasdA_P_asdD_zwf_DtdhDlysA_0_24_M1	0	24	M1
-1811	926DthrABCDasdDtdhDlysA pfb6.4.3 +zwf	M_D_TasdA_P_asdD_zwf_DtdhDlysA_I_4p5_M1	I	4.5	M1
-1812	926DthrABCDasdDtdhDlysA pfb6.4.3 +zwf	M_D_TasdA_P_asdD_zwf_DtdhDlysA_I_6_M1	I	6	M1
-1813	926DthrABCDasdDtdhDlysA pfb6.4.3 +zwf	M_D_TasdA_P_asdD_zwf_DtdhDlysA_I_12_M1	I	12	M1
-1814	926DthrABCDasdDtdhDlysA pfb6.4.3 +zwf	M_D_TasdA_P_asdD_zwf_DtdhDlysA_I_24_M1	I	24	M1
-1815	926DthrABCDasdDtdhDlysC pfb6.4.3 +zwf	M_D_TasdA_P_asdD_zwf_DtdhDlysC_0_4p5_M1	0	4.5	M1
-1816	926DthrABCDasdDtdhDlysC pfb6.4.3 +zwf	M_D_TasdA_P_asdD_zwf_DtdhDlysC_0_6_M1	0	6	M1
-1817	926DthrABCDasdDtdhDlysC pfb6.4.3 +zwf	M_D_TasdA_P_asdD_zwf_DtdhDlysC_0_12_M1	0	12	M1
-1818	926DthrABCDasdDtdhDlysC pfb6.4.3 +zwf	M_D_TasdA_P_asdD_zwf_DtdhDlysC_0_24_M1	0	24	M1
-1819	926DthrABCDasdDtdhDlysC pfb6.4.3 +zwf	M_D_TasdA_P_asdD_zwf_DtdhDlysC_I_4p5_M1	I	4.5	M1
-1820	926DthrABCDasdDtdhDlysC pfb6.4.3 +zwf	M_D_TasdA_P_asdD_zwf_DtdhDlysC_I_6_M1	I	6	M1
-1821	926DthrABCDasdDtdhDlysC pfb6.4.3 +zwf	M_D_TasdA_P_asdD_zwf_DtdhDlysC_I_12_M1	I	12	M1
-1822	926DthrABCDasdDtdhDlysC pfb6.4.3 +zwf	M_D_TasdA_P_asdD_zwf_DtdhDlysC_I_24_M1	I	24	M1
-1823	926DthrABCDasdDtdhDptsG pfb6.4.3 +zwf	M_D_TasdA_P_asdD_zwf_DtdhDptsG_0_4p5_M1	0	4.5	M1
-1824	926DthrABCDasdDtdhDptsG pfb6.4.3 +zwf	M_D_TasdA_P_asdD_zwf_DtdhDptsG_0_6_M1	0	6	M1
-1825	926DthrABCDasdDtdhDptsG pfb6.4.3 +zwf	M_D_TasdA_P_asdD_zwf_DtdhDptsG_0_12_M1	0	12	M1
-1826	926DthrABCDasdDtdhDptsG pfb6.4.3 +zwf	M_D_TasdA_P_asdD_zwf_DtdhDptsG_0_24_M1	0	24	M1
-1827	926DthrABCDasdDtdhDptsG pfb6.4.3 +zwf	M_D_TasdA_P_asdD_zwf_DtdhDptsG_I_4p5_M1	I	4.5	M1
-1828	926DthrABCDasdDtdhDptsG pfb6.4.3 +zwf	M_D_TasdA_P_asdD_zwf_DtdhDptsG_I_6_M1	I	6	M1
-1829	926DthrABCDasdDtdhDptsG pfb6.4.3 +zwf	M_D_TasdA_P_asdD_zwf_DtdhDptsG_I_12_M1	I	12	M1
-1830	926DthrABCDasdDtdhDptsG pfb6.4.3 +zwf	M_D_TasdA_P_asdD_zwf_DtdhDptsG_I_24_M1	I	24	M1
+1799	926DthrABCDasdDtdhDdapA pfb6.4.3 +zwf	M_D_TasdA_P_asdD_zwf_DdapADtdh_0_4p5_M1	0	4.5	M1
+1800	926DthrABCDasdDtdhDdapA pfb6.4.3 +zwf	M_D_TasdA_P_asdD_zwf_DdapADtdh_0_6_M1	0	6	M1
+1801	926DthrABCDasdDtdhDdapA pfb6.4.3 +zwf	M_D_TasdA_P_asdD_zwf_DdapADtdh_0_12_M1	0	12	M1
+1802	926DthrABCDasdDtdhDdapA pfb6.4.3 +zwf	M_D_TasdA_P_asdD_zwf_DdapADtdh_0_24_M1	0	24	M1
+1803	926DthrABCDasdDtdhDdapA pfb6.4.3 +zwf	M_D_TasdA_P_asdD_zwf_DdapADtdh_I_4p5_M1	I	4.5	M1
+1804	926DthrABCDasdDtdhDdapA pfb6.4.3 +zwf	M_D_TasdA_P_asdD_zwf_DdapADtdh_I_6_M1	I	6	M1
+1805	926DthrABCDasdDtdhDdapA pfb6.4.3 +zwf	M_D_TasdA_P_asdD_zwf_DdapADtdh_I_12_M1	I	12	M1
+1806	926DthrABCDasdDtdhDdapA pfb6.4.3 +zwf	M_D_TasdA_P_asdD_zwf_DdapADtdh_I_24_M1	I	24	M1
+1807	926DthrABCDasdDtdhDlysA pfb6.4.3 +zwf	M_D_TasdA_P_asdD_zwf_DlysADtdh_0_4p5_M1	0	4.5	M1
+1808	926DthrABCDasdDtdhDlysA pfb6.4.3 +zwf	M_D_TasdA_P_asdD_zwf_DlysADtdh_0_6_M1	0	6	M1
+1809	926DthrABCDasdDtdhDlysA pfb6.4.3 +zwf	M_D_TasdA_P_asdD_zwf_DlysADtdh_0_12_M1	0	12	M1
+1810	926DthrABCDasdDtdhDlysA pfb6.4.3 +zwf	M_D_TasdA_P_asdD_zwf_DlysADtdh_0_24_M1	0	24	M1
+1811	926DthrABCDasdDtdhDlysA pfb6.4.3 +zwf	M_D_TasdA_P_asdD_zwf_DlysADtdh_I_4p5_M1	I	4.5	M1
+1812	926DthrABCDasdDtdhDlysA pfb6.4.3 +zwf	M_D_TasdA_P_asdD_zwf_DlysADtdh_I_6_M1	I	6	M1
+1813	926DthrABCDasdDtdhDlysA pfb6.4.3 +zwf	M_D_TasdA_P_asdD_zwf_DlysADtdh_I_12_M1	I	12	M1
+1814	926DthrABCDasdDtdhDlysA pfb6.4.3 +zwf	M_D_TasdA_P_asdD_zwf_DlysADtdh_I_24_M1	I	24	M1
+1815	926DthrABCDasdDtdhDlysC pfb6.4.3 +zwf	M_D_TasdA_P_asdD_zwf_DlysCDtdh_0_4p5_M1	0	4.5	M1
+1816	926DthrABCDasdDtdhDlysC pfb6.4.3 +zwf	M_D_TasdA_P_asdD_zwf_DlysCDtdh_0_6_M1	0	6	M1
+1817	926DthrABCDasdDtdhDlysC pfb6.4.3 +zwf	M_D_TasdA_P_asdD_zwf_DlysCDtdh_0_12_M1	0	12	M1
+1818	926DthrABCDasdDtdhDlysC pfb6.4.3 +zwf	M_D_TasdA_P_asdD_zwf_DlysCDtdh_0_24_M1	0	24	M1
+1819	926DthrABCDasdDtdhDlysC pfb6.4.3 +zwf	M_D_TasdA_P_asdD_zwf_DlysCDtdh_I_4p5_M1	I	4.5	M1
+1820	926DthrABCDasdDtdhDlysC pfb6.4.3 +zwf	M_D_TasdA_P_asdD_zwf_DlysCDtdh_I_6_M1	I	6	M1
+1821	926DthrABCDasdDtdhDlysC pfb6.4.3 +zwf	M_D_TasdA_P_asdD_zwf_DlysCDtdh_I_12_M1	I	12	M1
+1822	926DthrABCDasdDtdhDlysC pfb6.4.3 +zwf	M_D_TasdA_P_asdD_zwf_DlysCDtdh_I_24_M1	I	24	M1
+1823	926DthrABCDasdDtdhDptsG pfb6.4.3 +zwf	M_D_TasdA_P_asdD_zwf_DptsGDtdh_0_4p5_M1	0	4.5	M1
+1824	926DthrABCDasdDtdhDptsG pfb6.4.3 +zwf	M_D_TasdA_P_asdD_zwf_DptsGDtdh_0_6_M1	0	6	M1
+1825	926DthrABCDasdDtdhDptsG pfb6.4.3 +zwf	M_D_TasdA_P_asdD_zwf_DptsGDtdh_0_12_M1	0	12	M1
+1826	926DthrABCDasdDtdhDptsG pfb6.4.3 +zwf	M_D_TasdA_P_asdD_zwf_DptsGDtdh_0_24_M1	0	24	M1
+1827	926DthrABCDasdDtdhDptsG pfb6.4.3 +zwf	M_D_TasdA_P_asdD_zwf_DptsGDtdh_I_4p5_M1	I	4.5	M1
+1828	926DthrABCDasdDtdhDptsG pfb6.4.3 +zwf	M_D_TasdA_P_asdD_zwf_DptsGDtdh_I_6_M1	I	6	M1
+1829	926DthrABCDasdDtdhDptsG pfb6.4.3 +zwf	M_D_TasdA_P_asdD_zwf_DptsGDtdh_I_12_M1	I	12	M1
+1830	926DthrABCDasdDtdhDptsG pfb6.4.3 +zwf	M_D_TasdA_P_asdD_zwf_DptsGDtdh_I_24_M1	I	24	M1
 1831	926dthrABCdasdddhaM pfb6.4.2	M_D_TasdA1_P_asdD_000_DdhaM_0_4p5_M1	0	4.5	M1
 1832	926dthrABCdasdddhaM pfb6.4.2	M_D_TasdA1_P_asdD_000_DdhaM_0_6_M1	0	6	M1
 1833	926dthrABCdasdddhaM pfb6.4.2	M_D_TasdA1_P_asdD_000_DdhaM_0_12_M1	0	12	M1
@@ -1861,30 +1861,30 @@ num	old_strain	sample	IPTG	time	medium
 1860	926dthrABCdasddrthA pfb6.4.2	M_D_TasdA1_P_asdD_000_DrhtA_I_6_M1	I	6	M1
 1861	926dthrABCdasddrthA pfb6.4.2	M_D_TasdA1_P_asdD_000_DrhtA_I_12_M1	I	12	M1
 1862	926dthrABCdasddrthA pfb6.4.2	M_D_TasdA1_P_asdD_000_DrhtA_I_24_M1	I	24	M1
-1863	926dthrABCdasddtdhddapA pfb6.4.2	M_D_TasdA1_P_asdD_000_DtdhDdapA_0_4p5_M1	0	4.5	M1
-1864	926dthrABCdasddtdhddapA pfb6.4.2	M_D_TasdA1_P_asdD_000_DtdhDdapA_0_6_M1	0	6	M1
-1865	926dthrABCdasddtdhddapA pfb6.4.2	M_D_TasdA1_P_asdD_000_DtdhDdapA_0_12_M1	0	12	M1
-1866	926dthrABCdasddtdhddapA pfb6.4.2	M_D_TasdA1_P_asdD_000_DtdhDdapA_0_24_M1	0	24	M1
-1867	926dthrABCdasddtdhddapA pfb6.4.2	M_D_TasdA1_P_asdD_000_DtdhDdapA_I_4p5_M1	I	4.5	M1
-1868	926dthrABCdasddtdhddapA pfb6.4.2	M_D_TasdA1_P_asdD_000_DtdhDdapA_I_6_M1	I	6	M1
-1869	926dthrABCdasddtdhddapA pfb6.4.2	M_D_TasdA1_P_asdD_000_DtdhDdapA_I_12_M1	I	12	M1
-1870	926dthrABCdasddtdhddapA pfb6.4.2	M_D_TasdA1_P_asdD_000_DtdhDdapA_I_24_M1	I	24	M1
-1871	926dthrABCdasddtdhdlysA pfb6.4.2	M_D_TasdA1_P_asdD_000_DtdhDlysA_0_4p5_M1	0	4.5	M1
-1872	926dthrABCdasddtdhdlysA pfb6.4.2	M_D_TasdA1_P_asdD_000_DtdhDlysA_0_6_M1	0	6	M1
-1873	926dthrABCdasddtdhdlysA pfb6.4.2	M_D_TasdA1_P_asdD_000_DtdhDlysA_0_12_M1	0	12	M1
-1874	926dthrABCdasddtdhdlysA pfb6.4.2	M_D_TasdA1_P_asdD_000_DtdhDlysA_0_24_M1	0	24	M1
-1875	926dthrABCdasddtdhdlysA pfb6.4.2	M_D_TasdA1_P_asdD_000_DtdhDlysA_I_4p5_M1	I	4.5	M1
-1876	926dthrABCdasddtdhdlysA pfb6.4.2	M_D_TasdA1_P_asdD_000_DtdhDlysA_I_6_M1	I	6	M1
-1877	926dthrABCdasddtdhdlysA pfb6.4.2	M_D_TasdA1_P_asdD_000_DtdhDlysA_I_12_M1	I	12	M1
-1878	926dthrABCdasddtdhdlysA pfb6.4.2	M_D_TasdA1_P_asdD_000_DtdhDlysA_I_24_M1	I	24	M1
-1879	926dthrABCdasddtdhdptsG pfb6.4.2	M_D_TasdA1_P_asdD_000_DtdhDptsG_0_4p5_M1	0	4.5	M1
-1880	926dthrABCdasddtdhdptsG pfb6.4.2	M_D_TasdA1_P_asdD_000_DtdhDptsG_0_6_M1	0	6	M1
-1881	926dthrABCdasddtdhdptsG pfb6.4.2	M_D_TasdA1_P_asdD_000_DtdhDptsG_0_12_M1	0	12	M1
-1882	926dthrABCdasddtdhdptsG pfb6.4.2	M_D_TasdA1_P_asdD_000_DtdhDptsG_0_24_M1	0	24	M1
-1883	926dthrABCdasddtdhdptsG pfb6.4.2	M_D_TasdA1_P_asdD_000_DtdhDptsG_I_4p5_M1	I	4.5	M1
-1884	926dthrABCdasddtdhdptsG pfb6.4.2	M_D_TasdA1_P_asdD_000_DtdhDptsG_I_6_M1	I	6	M1
-1885	926dthrABCdasddtdhdptsG pfb6.4.2	M_D_TasdA1_P_asdD_000_DtdhDptsG_I_12_M1	I	12	M1
-1886	926dthrABCdasddtdhdptsG pfb6.4.2	M_D_TasdA1_P_asdD_000_DtdhDptsG_I_24_M1	I	24	M1
+1863	926dthrABCdasddtdhddapA pfb6.4.2	M_D_TasdA1_P_asdD_000_DdapADtdh_0_4p5_M1	0	4.5	M1
+1864	926dthrABCdasddtdhddapA pfb6.4.2	M_D_TasdA1_P_asdD_000_DdapADtdh_0_6_M1	0	6	M1
+1865	926dthrABCdasddtdhddapA pfb6.4.2	M_D_TasdA1_P_asdD_000_DdapADtdh_0_12_M1	0	12	M1
+1866	926dthrABCdasddtdhddapA pfb6.4.2	M_D_TasdA1_P_asdD_000_DdapADtdh_0_24_M1	0	24	M1
+1867	926dthrABCdasddtdhddapA pfb6.4.2	M_D_TasdA1_P_asdD_000_DdapADtdh_I_4p5_M1	I	4.5	M1
+1868	926dthrABCdasddtdhddapA pfb6.4.2	M_D_TasdA1_P_asdD_000_DdapADtdh_I_6_M1	I	6	M1
+1869	926dthrABCdasddtdhddapA pfb6.4.2	M_D_TasdA1_P_asdD_000_DdapADtdh_I_12_M1	I	12	M1
+1870	926dthrABCdasddtdhddapA pfb6.4.2	M_D_TasdA1_P_asdD_000_DdapADtdh_I_24_M1	I	24	M1
+1871	926dthrABCdasddtdhdlysA pfb6.4.2	M_D_TasdA1_P_asdD_000_DlysADtdh_0_4p5_M1	0	4.5	M1
+1872	926dthrABCdasddtdhdlysA pfb6.4.2	M_D_TasdA1_P_asdD_000_DlysADtdh_0_6_M1	0	6	M1
+1873	926dthrABCdasddtdhdlysA pfb6.4.2	M_D_TasdA1_P_asdD_000_DlysADtdh_0_12_M1	0	12	M1
+1874	926dthrABCdasddtdhdlysA pfb6.4.2	M_D_TasdA1_P_asdD_000_DlysADtdh_0_24_M1	0	24	M1
+1875	926dthrABCdasddtdhdlysA pfb6.4.2	M_D_TasdA1_P_asdD_000_DlysADtdh_I_4p5_M1	I	4.5	M1
+1876	926dthrABCdasddtdhdlysA pfb6.4.2	M_D_TasdA1_P_asdD_000_DlysADtdh_I_6_M1	I	6	M1
+1877	926dthrABCdasddtdhdlysA pfb6.4.2	M_D_TasdA1_P_asdD_000_DlysADtdh_I_12_M1	I	12	M1
+1878	926dthrABCdasddtdhdlysA pfb6.4.2	M_D_TasdA1_P_asdD_000_DlysADtdh_I_24_M1	I	24	M1
+1879	926dthrABCdasddtdhdptsG pfb6.4.2	M_D_TasdA1_P_asdD_000_DptsGDtdh_0_4p5_M1	0	4.5	M1
+1880	926dthrABCdasddtdhdptsG pfb6.4.2	M_D_TasdA1_P_asdD_000_DptsGDtdh_0_6_M1	0	6	M1
+1881	926dthrABCdasddtdhdptsG pfb6.4.2	M_D_TasdA1_P_asdD_000_DptsGDtdh_0_12_M1	0	12	M1
+1882	926dthrABCdasddtdhdptsG pfb6.4.2	M_D_TasdA1_P_asdD_000_DptsGDtdh_0_24_M1	0	24	M1
+1883	926dthrABCdasddtdhdptsG pfb6.4.2	M_D_TasdA1_P_asdD_000_DptsGDtdh_I_4p5_M1	I	4.5	M1
+1884	926dthrABCdasddtdhdptsG pfb6.4.2	M_D_TasdA1_P_asdD_000_DptsGDtdh_I_6_M1	I	6	M1
+1885	926dthrABCdasddtdhdptsG pfb6.4.2	M_D_TasdA1_P_asdD_000_DptsGDtdh_I_12_M1	I	12	M1
+1886	926dthrABCdasddtdhdptsG pfb6.4.2	M_D_TasdA1_P_asdD_000_DptsGDtdh_I_24_M1	I	24	M1
 1887	926DthrABCDasdDdapA pfb6.4.2 +pyc	M_D_TasdA1_P_asdD_pyc_DdapA_0_4p5_M1	0	4.5	M1
 1888	926DthrABCDasdDdapA pfb6.4.2 +pyc	M_D_TasdA1_P_asdD_pyc_DdapA_0_6_M1	0	6	M1
 1889	926DthrABCDasdDdapA pfb6.4.2 +pyc	M_D_TasdA1_P_asdD_pyc_DdapA_0_12_M1	0	12	M1
@@ -1949,22 +1949,22 @@ num	old_strain	sample	IPTG	time	medium
 1948	926DthrABCDasdDtdh pfb6.4.2 +pyc	M_D_TasdA1_P_asdD_pyc_Dtdh_I_6_M1	I	6	M1
 1949	926DthrABCDasdDtdh pfb6.4.2 +pyc	M_D_TasdA1_P_asdD_pyc_Dtdh_I_12_M1	I	12	M1
 1950	926DthrABCDasdDtdh pfb6.4.2 +pyc	M_D_TasdA1_P_asdD_pyc_Dtdh_I_24_M1	I	24	M1
-1951	926DthrABCDasdDtdhDlysCc pfb6.4.2 +pyc	M_D_TasdA1_P_asdD_pyc_DtdhDlysC_0_4p5_M1	0	4.5	M1
-1952	926DthrABCDasdDtdhDlysCc pfb6.4.2 +pyc	M_D_TasdA1_P_asdD_pyc_DtdhDlysC_0_6_M1	0	6	M1
-1953	926DthrABCDasdDtdhDlysCc pfb6.4.2 +pyc	M_D_TasdA1_P_asdD_pyc_DtdhDlysC_0_12_M1	0	12	M1
-1954	926DthrABCDasdDtdhDlysCc pfb6.4.2 +pyc	M_D_TasdA1_P_asdD_pyc_DtdhDlysC_0_24_M1	0	24	M1
-1955	926DthrABCDasdDtdhDlysCc pfb6.4.2 +pyc	M_D_TasdA1_P_asdD_pyc_DtdhDlysC_I_4p5_M1	I	4.5	M1
-1956	926DthrABCDasdDtdhDlysCc pfb6.4.2 +pyc	M_D_TasdA1_P_asdD_pyc_DtdhDlysC_I_6_M1	I	6	M1
-1957	926DthrABCDasdDtdhDlysCc pfb6.4.2 +pyc	M_D_TasdA1_P_asdD_pyc_DtdhDlysC_I_12_M1	I	12	M1
-1958	926DthrABCDasdDtdhDlysCc pfb6.4.2 +pyc	M_D_TasdA1_P_asdD_pyc_DtdhDlysC_I_24_M1	I	24	M1
-1959	926DthrABCDasdDtdhDmetL pfb6.4.2 +pyc	M_D_TasdA1_P_asdD_pyc_DtdhDmetL_0_4p5_M1	0	4.5	M1
-1960	926DthrABCDasdDtdhDmetL pfb6.4.2 +pyc	M_D_TasdA1_P_asdD_pyc_DtdhDmetL_0_6_M1	0	6	M1
-1961	926DthrABCDasdDtdhDmetL pfb6.4.2 +pyc	M_D_TasdA1_P_asdD_pyc_DtdhDmetL_0_12_M1	0	12	M1
-1962	926DthrABCDasdDtdhDmetL pfb6.4.2 +pyc	M_D_TasdA1_P_asdD_pyc_DtdhDmetL_0_24_M1	0	24	M1
-1963	926DthrABCDasdDtdhDmetL pfb6.4.2 +pyc	M_D_TasdA1_P_asdD_pyc_DtdhDmetL_I_4p5_M1	I	4.5	M1
-1964	926DthrABCDasdDtdhDmetL pfb6.4.2 +pyc	M_D_TasdA1_P_asdD_pyc_DtdhDmetL_I_6_M1	I	6	M1
-1965	926DthrABCDasdDtdhDmetL pfb6.4.2 +pyc	M_D_TasdA1_P_asdD_pyc_DtdhDmetL_I_12_M1	I	12	M1
-1966	926DthrABCDasdDtdhDmetL pfb6.4.2 +pyc	M_D_TasdA1_P_asdD_pyc_DtdhDmetL_I_24_M1	I	24	M1
+1951	926DthrABCDasdDtdhDlysCc pfb6.4.2 +pyc	M_D_TasdA1_P_asdD_pyc_DlysCDtdh_0_4p5_M1	0	4.5	M1
+1952	926DthrABCDasdDtdhDlysCc pfb6.4.2 +pyc	M_D_TasdA1_P_asdD_pyc_DlysCDtdh_0_6_M1	0	6	M1
+1953	926DthrABCDasdDtdhDlysCc pfb6.4.2 +pyc	M_D_TasdA1_P_asdD_pyc_DlysCDtdh_0_12_M1	0	12	M1
+1954	926DthrABCDasdDtdhDlysCc pfb6.4.2 +pyc	M_D_TasdA1_P_asdD_pyc_DlysCDtdh_0_24_M1	0	24	M1
+1955	926DthrABCDasdDtdhDlysCc pfb6.4.2 +pyc	M_D_TasdA1_P_asdD_pyc_DlysCDtdh_I_4p5_M1	I	4.5	M1
+1956	926DthrABCDasdDtdhDlysCc pfb6.4.2 +pyc	M_D_TasdA1_P_asdD_pyc_DlysCDtdh_I_6_M1	I	6	M1
+1957	926DthrABCDasdDtdhDlysCc pfb6.4.2 +pyc	M_D_TasdA1_P_asdD_pyc_DlysCDtdh_I_12_M1	I	12	M1
+1958	926DthrABCDasdDtdhDlysCc pfb6.4.2 +pyc	M_D_TasdA1_P_asdD_pyc_DlysCDtdh_I_24_M1	I	24	M1
+1959	926DthrABCDasdDtdhDmetL pfb6.4.2 +pyc	M_D_TasdA1_P_asdD_pyc_DmetLDtdh_0_4p5_M1	0	4.5	M1
+1960	926DthrABCDasdDtdhDmetL pfb6.4.2 +pyc	M_D_TasdA1_P_asdD_pyc_DmetLDtdh_0_6_M1	0	6	M1
+1961	926DthrABCDasdDtdhDmetL pfb6.4.2 +pyc	M_D_TasdA1_P_asdD_pyc_DmetLDtdh_0_12_M1	0	12	M1
+1962	926DthrABCDasdDtdhDmetL pfb6.4.2 +pyc	M_D_TasdA1_P_asdD_pyc_DmetLDtdh_0_24_M1	0	24	M1
+1963	926DthrABCDasdDtdhDmetL pfb6.4.2 +pyc	M_D_TasdA1_P_asdD_pyc_DmetLDtdh_I_4p5_M1	I	4.5	M1
+1964	926DthrABCDasdDtdhDmetL pfb6.4.2 +pyc	M_D_TasdA1_P_asdD_pyc_DmetLDtdh_I_6_M1	I	6	M1
+1965	926DthrABCDasdDtdhDmetL pfb6.4.2 +pyc	M_D_TasdA1_P_asdD_pyc_DmetLDtdh_I_12_M1	I	12	M1
+1966	926DthrABCDasdDtdhDmetL pfb6.4.2 +pyc	M_D_TasdA1_P_asdD_pyc_DmetLDtdh_I_24_M1	I	24	M1
 1967	926DthrABCDasdDdapA pfb6.4.2 +rhtA	M_D_TasdA1_P_asdD_rhtA_DdapA_0_4p5_M1	0	4.5	M1
 1968	926DthrABCDasdDdapA pfb6.4.2 +rhtA	M_D_TasdA1_P_asdD_rhtA_DdapA_0_6_M1	0	6	M1
 1969	926DthrABCDasdDdapA pfb6.4.2 +rhtA	M_D_TasdA1_P_asdD_rhtA_DdapA_0_12_M1	0	12	M1
@@ -2021,22 +2021,22 @@ num	old_strain	sample	IPTG	time	medium
 2020	926DthrABCDasdDtdh pfb6.4.2 +rhtA	M_D_TasdA1_P_asdD_rhtA_Dtdh_I_6_M1	I	6	M1
 2021	926DthrABCDasdDtdh pfb6.4.2 +rhtA	M_D_TasdA1_P_asdD_rhtA_Dtdh_I_12_M1	I	12	M1
 2022	926DthrABCDasdDtdh pfb6.4.2 +rhtA	M_D_TasdA1_P_asdD_rhtA_Dtdh_I_24_M1	I	24	M1
-2023	926DthrABCDasdDtdhDdapA pfb6.4.2 +rhtA	M_D_TasdA1_P_asdD_rhtA_DtdhDdapA_0_4p5_M1	0	4.5	M1
-2024	926DthrABCDasdDtdhDdapA pfb6.4.2 +rhtA	M_D_TasdA1_P_asdD_rhtA_DtdhDdapA_0_6_M1	0	6	M1
-2025	926DthrABCDasdDtdhDdapA pfb6.4.2 +rhtA	M_D_TasdA1_P_asdD_rhtA_DtdhDdapA_0_12_M1	0	12	M1
-2026	926DthrABCDasdDtdhDdapA pfb6.4.2 +rhtA	M_D_TasdA1_P_asdD_rhtA_DtdhDdapA_0_24_M1	0	24	M1
-2027	926DthrABCDasdDtdhDdapA pfb6.4.2 +rhtA	M_D_TasdA1_P_asdD_rhtA_DtdhDdapA_I_4p5_M1	I	4.5	M1
-2028	926DthrABCDasdDtdhDdapA pfb6.4.2 +rhtA	M_D_TasdA1_P_asdD_rhtA_DtdhDdapA_I_6_M1	I	6	M1
-2029	926DthrABCDasdDtdhDdapA pfb6.4.2 +rhtA	M_D_TasdA1_P_asdD_rhtA_DtdhDdapA_I_12_M1	I	12	M1
-2030	926DthrABCDasdDtdhDdapA pfb6.4.2 +rhtA	M_D_TasdA1_P_asdD_rhtA_DtdhDdapA_I_24_M1	I	24	M1
-2031	926DthrABCDasdDtdhDlysC pfb6.4.2 +rhtA	M_D_TasdA1_P_asdD_rhtA_DtdhDlysC_0_4p5_M1	0	4.5	M1
-2032	926DthrABCDasdDtdhDlysC pfb6.4.2 +rhtA	M_D_TasdA1_P_asdD_rhtA_DtdhDlysC_0_6_M1	0	6	M1
-2033	926DthrABCDasdDtdhDlysC pfb6.4.2 +rhtA	M_D_TasdA1_P_asdD_rhtA_DtdhDlysC_0_12_M1	0	12	M1
-2034	926DthrABCDasdDtdhDlysC pfb6.4.2 +rhtA	M_D_TasdA1_P_asdD_rhtA_DtdhDlysC_0_24_M1	0	24	M1
-2035	926DthrABCDasdDtdhDlysC pfb6.4.2 +rhtA	M_D_TasdA1_P_asdD_rhtA_DtdhDlysC_I_4p5_M1	I	4.5	M1
-2036	926DthrABCDasdDtdhDlysC pfb6.4.2 +rhtA	M_D_TasdA1_P_asdD_rhtA_DtdhDlysC_I_6_M1	I	6	M1
-2037	926DthrABCDasdDtdhDlysC pfb6.4.2 +rhtA	M_D_TasdA1_P_asdD_rhtA_DtdhDlysC_I_12_M1	I	12	M1
-2038	926DthrABCDasdDtdhDlysC pfb6.4.2 +rhtA	M_D_TasdA1_P_asdD_rhtA_DtdhDlysC_I_24_M1	I	24	M1
+2023	926DthrABCDasdDtdhDdapA pfb6.4.2 +rhtA	M_D_TasdA1_P_asdD_rhtA_DdapADtdh_0_4p5_M1	0	4.5	M1
+2024	926DthrABCDasdDtdhDdapA pfb6.4.2 +rhtA	M_D_TasdA1_P_asdD_rhtA_DdapADtdh_0_6_M1	0	6	M1
+2025	926DthrABCDasdDtdhDdapA pfb6.4.2 +rhtA	M_D_TasdA1_P_asdD_rhtA_DdapADtdh_0_12_M1	0	12	M1
+2026	926DthrABCDasdDtdhDdapA pfb6.4.2 +rhtA	M_D_TasdA1_P_asdD_rhtA_DdapADtdh_0_24_M1	0	24	M1
+2027	926DthrABCDasdDtdhDdapA pfb6.4.2 +rhtA	M_D_TasdA1_P_asdD_rhtA_DdapADtdh_I_4p5_M1	I	4.5	M1
+2028	926DthrABCDasdDtdhDdapA pfb6.4.2 +rhtA	M_D_TasdA1_P_asdD_rhtA_DdapADtdh_I_6_M1	I	6	M1
+2029	926DthrABCDasdDtdhDdapA pfb6.4.2 +rhtA	M_D_TasdA1_P_asdD_rhtA_DdapADtdh_I_12_M1	I	12	M1
+2030	926DthrABCDasdDtdhDdapA pfb6.4.2 +rhtA	M_D_TasdA1_P_asdD_rhtA_DdapADtdh_I_24_M1	I	24	M1
+2031	926DthrABCDasdDtdhDlysC pfb6.4.2 +rhtA	M_D_TasdA1_P_asdD_rhtA_DlysCDtdh_0_4p5_M1	0	4.5	M1
+2032	926DthrABCDasdDtdhDlysC pfb6.4.2 +rhtA	M_D_TasdA1_P_asdD_rhtA_DlysCDtdh_0_6_M1	0	6	M1
+2033	926DthrABCDasdDtdhDlysC pfb6.4.2 +rhtA	M_D_TasdA1_P_asdD_rhtA_DlysCDtdh_0_12_M1	0	12	M1
+2034	926DthrABCDasdDtdhDlysC pfb6.4.2 +rhtA	M_D_TasdA1_P_asdD_rhtA_DlysCDtdh_0_24_M1	0	24	M1
+2035	926DthrABCDasdDtdhDlysC pfb6.4.2 +rhtA	M_D_TasdA1_P_asdD_rhtA_DlysCDtdh_I_4p5_M1	I	4.5	M1
+2036	926DthrABCDasdDtdhDlysC pfb6.4.2 +rhtA	M_D_TasdA1_P_asdD_rhtA_DlysCDtdh_I_6_M1	I	6	M1
+2037	926DthrABCDasdDtdhDlysC pfb6.4.2 +rhtA	M_D_TasdA1_P_asdD_rhtA_DlysCDtdh_I_12_M1	I	12	M1
+2038	926DthrABCDasdDtdhDlysC pfb6.4.2 +rhtA	M_D_TasdA1_P_asdD_rhtA_DlysCDtdh_I_24_M1	I	24	M1
 2039	926DthrABCDasdDrthA pfb6.4.2 +rhtA	M_D_TasdA1_P_asdD_rhtA_DrhtA_0_4p5_M1	0	4.5	M1
 2040	926DthrABCDasdDrthA pfb6.4.2 +rhtA	M_D_TasdA1_P_asdD_rhtA_DrhtA_0_6_M1	0	6	M1
 2041	926DthrABCDasdDrthA pfb6.4.2 +rhtA	M_D_TasdA1_P_asdD_rhtA_DrhtA_0_12_M1	0	12	M1
@@ -2046,4 +2046,4 @@ num	old_strain	sample	IPTG	time	medium
 2045	926DthrABCDasdDrthA pfb6.4.2 +rhtA	M_D_TasdA1_P_asdD_rhtA_DrhtA_I_12_M1	I	12	M1
 2046	926DthrABCDasdDrthA pfb6.4.2 +rhtA	M_D_TasdA1_P_asdD_rhtA_DrhtA_I_24_M1	I	24	M1
 2047	277DthrABCDasdDmetL pwt2.1.1 ppyc plasmid	7_D_Tasd_P_asdD_pyc_DmetL_I_24_M1	I	24	M1
-2048	926 Dtdh DmetL ptac-thrABC ptac-asd ppc	M_0_TA1_C_asdT_ppc_DtdhDmetL_I_12_M1	i	12	M1
+2048	926 Dtdh DmetL ptac-thrABC ptac-asd ppc	M_0_TA1_C_asdT_ppc_DmetLDtdh_I_12_M1	i	12	M1

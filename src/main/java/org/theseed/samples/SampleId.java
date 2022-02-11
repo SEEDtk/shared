@@ -982,4 +982,17 @@ public class SampleId implements Comparable<SampleId> {
                 ! this.fragments[DELETE_COL].contentEquals("D000"));
     }
 
+    /**
+     * @return TRUE if this sample is identical to the other except for inserts and deletes
+     *
+     * @param other		other sample to check
+     */
+    public boolean isSameBase(SampleId other) {
+        boolean retVal = true;
+        for (int i = 0; i < NORMAL_SIZE && retVal; i++) {
+            if (i != INSERT_COL && i != DELETE_COL)
+                retVal = this.fragments[i].contentEquals(other.fragments[i]);
+        }
+        return retVal;
+    }
 }
