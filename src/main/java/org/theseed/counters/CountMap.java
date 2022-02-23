@@ -296,4 +296,13 @@ public class CountMap<K> {
         return this.map.values().stream().mapToInt(x -> x.getCount()).sum();
     }
 
+    /**
+     * Remove a count from the map.
+     *
+     * @param key	key of the count
+     */
+    public void remove(K key) {
+        this.map.remove(key);
+    }
+
 }
