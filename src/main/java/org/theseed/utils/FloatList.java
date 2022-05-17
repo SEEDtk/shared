@@ -176,7 +176,7 @@ public class FloatList implements Iterable<Double> {
         return this.new Iter();
     }
 
-    /** Integer iterator for this class */
+    /** Double iterator for this class */
     public class Iter implements Iterator<Double> {
 
         public Iter() {
