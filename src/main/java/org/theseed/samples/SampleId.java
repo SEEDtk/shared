@@ -19,6 +19,7 @@ import java.util.stream.Stream;
 
 import org.apache.commons.lang3.RegExUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.theseed.counters.CountMap;
 
 /**
  * This class represents a sample ID.  A sample ID consists of 10 to 11 identification fields separated by underscores.
@@ -994,5 +995,27 @@ public class SampleId implements Comparable<SampleId> {
                 retVal = this.fragments[i].contentEquals(other.fragments[i]);
         }
         return retVal;
+    }
+
+    /**
+     * Count the components of this sample in the specified count map.
+     *
+     * @param counter	count map in which this sample is to be counted
+     */
+    public void countParts(CountMap<String> counter) {
+        // Strain and ASD are simple.
+        counter.count(this.fragments[STRAIN_COL]);
+        counter.count(this.fragments[ASD_COL]);
+        // Only count the custom operon if there is one.
+        if (! this.fragments[OPERON_COL].contentEquals("0"))
+            counter.count(this.fragments[OPERON_COL]);
+        // Count IPTG if it is present.
+        if (this.isIPTG())
+            counter.count("+IPTG");
+        // Count the time interval.  Note the "T" prefix to make it easier to spot.
+        counter.count("hr" + this.fragments[TIME_COL]);
+        // Process the inserts and deletes.
+        this.getInserts().stream().forEach(x -> counter.count("I" + x));
+        this.getDeletes().stream().forEach(x -> counter.count("D" + x));
     }
 }
