@@ -7,6 +7,7 @@ import java.io.File;
 import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -19,7 +20,6 @@ import java.util.stream.Stream;
 
 import org.apache.commons.lang3.RegExUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.theseed.counters.CountMap;
 
 /**
  * This class represents a sample ID.  A sample ID consists of 10 to 11 identification fields separated by underscores.
@@ -998,24 +998,27 @@ public class SampleId implements Comparable<SampleId> {
     }
 
     /**
-     * Count the components of this sample in the specified count map.
+     * Get the components of this sample.
      *
-     * @param counter	count map in which this sample is to be counted
+     * @param consumer	operation to process the component string
      */
-    public void countParts(CountMap<String> counter) {
+    public Collection<String> getComponents() {
+        List<String> retVal = new ArrayList<String>(FRAGMENT_DESCRIPTIONS.length + 20);
         // Strain and ASD are simple.
-        counter.count(this.fragments[STRAIN_COL]);
-        counter.count(this.fragments[ASD_COL]);
-        // Only count the custom operon if there is one.
+        retVal.add(this.fragments[STRAIN_COL]);
+        retVal.add(this.fragments[ASD_COL]);
+        // Only include the custom operon if there is one.
         if (! this.fragments[OPERON_COL].contentEquals("0"))
-            counter.count(this.fragments[OPERON_COL]);
-        // Count IPTG if it is present.
+            retVal.add(this.fragments[OPERON_COL]);
+        // Include IPTG if it is present.
         if (this.isIPTG())
-            counter.count("+IPTG");
-        // Count the time interval.  Note the "T" prefix to make it easier to spot.
-        counter.count("hr" + this.fragments[TIME_COL]);
+            retVal.add("+IPTG");
+        // Include the time interval.  Note the "hr" prefix to make it easier to spot.
+        retVal.add("hr" + this.fragments[TIME_COL]);
         // Process the inserts and deletes.
-        this.getInserts().stream().forEach(x -> counter.count("I" + x));
-        this.getDeletes().stream().forEach(x -> counter.count("D" + x));
+        this.getInserts().stream().forEach(x -> retVal.add("I" + x));
+        this.getDeletes().stream().forEach(x -> retVal.add("D" + x));
+        // Return the stream.
+        return retVal;
     }
 }
