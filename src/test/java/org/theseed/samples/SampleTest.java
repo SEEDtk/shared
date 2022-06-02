@@ -10,6 +10,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.Set;
+import java.util.TreeMap;
 
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
@@ -252,5 +253,51 @@ public class SampleTest {
         assertThat(samp3.toString(), equalTo("M_0_TA1_C_asdT_000_Dtdh_I_24_M1"));
         samp1 = (new SampleId("M_0_TA1_C_asdT_000_DtdhDmetL_I_24_M1")).normalizeSets();
         assertThat(samp1.toString(), equalTo("M_0_TA1_C_asdT_000_DmetLDtdh_I_24_M1"));
+    }
+
+    @Test
+    public void testPartialParse() {
+        SampleId samp1 = SampleId.translate("926A DmetL", 24, false, "M1");
+        String[] fragments1 = samp1.getStrainFragments();
+        assertThat(fragments1[SampleId.STRAIN_COL], equalTo("M"));
+        assertThat(fragments1[SampleId.ASD_COL], equalTo("asdO"));
+        assertThat(fragments1[SampleId.OPERON_COL], equalTo("TA1"));
+        assertThat(fragments1[SampleId.DELETE_COL], equalTo("DmetL"));
+        assertThat(fragments1[SampleId.INSERT_COL], equalTo("000"));
+        samp1 = SampleId.translate("926B DmetL Dtdh", 24, false, "M1");
+        fragments1 = samp1.getStrainFragments();
+        assertThat(fragments1[SampleId.STRAIN_COL], equalTo("M"));
+        assertThat(fragments1[SampleId.ASD_COL], equalTo("asdT"));
+        assertThat(fragments1[SampleId.OPERON_COL], equalTo("TA1"));
+        assertThat(fragments1[SampleId.DELETE_COL], equalTo("DmetLDtdh"));
+        assertThat(fragments1[SampleId.INSERT_COL], equalTo("000"));
+        SampleId samp2 = SampleId.translate("926B DmetL Dtdh +pntAB", 12.0, true, "M1");
+        SampleId samp3 = SampleId.translate("926B DmetL Dtdh", 12.0, true, "M1");
+        SampleId samp4 = SampleId.translate("926B DmetL", 24.0, false, "M1");
+        SampleId samp5 = SampleId.translate("926B DmetL Dtdh DdapA", 24.0, false, "M1");
+        SampleId samp6 = SampleId.translate("926A DmetL Dtdh", 24, false, "M1");
+        SampleId samp7 = SampleId.translate("277B DmetL Dtdh", 24, false, "M1");
+        assertThat(samp2.isSameChromosome(samp1), equalTo(true));
+        assertThat(samp3.isSameChromosome(samp1), equalTo(true));
+        assertThat(samp4.isSameChromosome(samp1), equalTo(false));
+        assertThat(samp5.isSameChromosome(samp1), equalTo(false));
+        assertThat(samp6.isSameChromosome(samp1), equalTo(false));
+        assertThat(samp7.isSameChromosome(samp1), equalTo(false));
+        // Now test a chromosome map.
+        var testMap = new TreeMap<SampleId, Integer>(new SampleId.ChromoSort());
+        testMap.put(samp1, 1);
+        testMap.put(samp2, 2);
+        testMap.put(samp3, 3);
+        testMap.put(samp4, 4);
+        testMap.put(samp5, 5);
+        testMap.put(samp6, 6);
+        testMap.put(samp7, 7);
+        assertThat(testMap.get(samp1), equalTo(3));
+        assertThat(testMap.get(samp2), equalTo(3));
+        assertThat(testMap.get(samp3), equalTo(3));
+        assertThat(testMap.get(samp4), equalTo(4));
+        assertThat(testMap.get(samp5), equalTo(5));
+        assertThat(testMap.get(samp6), equalTo(6));
+        assertThat(testMap.get(samp7), equalTo(7));
     }
 }

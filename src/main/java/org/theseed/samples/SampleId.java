@@ -8,9 +8,12 @@ import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Comparator;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -94,6 +97,13 @@ public class SampleId implements Comparable<SampleId> {
             new AbstractMap.SimpleEntry<>("277w1", StringUtils.split("7_0_T_C_asdO", '_')),
             new AbstractMap.SimpleEntry<>("926-44", StringUtils.split("M_0_T_C_asdO", '_')),
             new AbstractMap.SimpleEntry<>("926-41", StringUtils.split("M_0_T_C_asdO", '_')),
+            new AbstractMap.SimpleEntry<>("277-44", StringUtils.split("7_0_T_C_asdO", '_')),
+            new AbstractMap.SimpleEntry<>("277-41", StringUtils.split("7_0_T_C_asdO", '_')),
+            new AbstractMap.SimpleEntry<>("926A", StringUtils.split("M_0_TA1_C_asdO", '_')),
+            new AbstractMap.SimpleEntry<>("926B", StringUtils.split("M_0_TA1_C_asdT", '_')),
+            new AbstractMap.SimpleEntry<>("277A", StringUtils.split("7_0_TA1_C_asdO", '_')),
+            new AbstractMap.SimpleEntry<>("277B", StringUtils.split("7_0_TA1_C_asdT", '_')),
+            new AbstractMap.SimpleEntry<>("277fb1", StringUtils.split("7_0_TA1_C_asdO", '_')),
             new AbstractMap.SimpleEntry<>("926fb1", StringUtils.split("M_0_TA1_C_asdO", '_'))
             ).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
     /** set of invalid deletion proteins */
@@ -699,9 +709,9 @@ public class SampleId implements Comparable<SampleId> {
     /**
      * @return the deletion set for this sample
      */
-    public Set<String> getDeletes() {
+    public SortedSet<String> getDeletes() {
         String deletes = this.fragments[DELETE_COL];
-        Set<String> retVal = parseDeletes(deletes);
+        SortedSet<String> retVal = parseDeletes(deletes);
         return retVal;
     }
 
@@ -710,8 +720,8 @@ public class SampleId implements Comparable<SampleId> {
      *
      * @param deletes	delete string to parse
      */
-    public static Set<String> parseDeletes(String deletes) {
-        Set<String> retVal = new TreeSet<String>();
+    public static SortedSet<String> parseDeletes(String deletes) {
+        SortedSet<String> retVal = new TreeSet<String>();
         if (! deletes.contentEquals("D000")) {
             String[] parts = StringUtils.split(deletes, 'D');
             for (String part : parts)
@@ -998,6 +1008,50 @@ public class SampleId implements Comparable<SampleId> {
     }
 
     /**
+     * @return TRUE if this sample is strain-identical to the other except for inserts
+     *
+     * @param other		other sample to check
+     */
+    public boolean isSameChromosome(SampleId other) {
+        return this.compareChromosome(other) == 0;
+    }
+
+    /**
+     * Compare this sample's chromosome with the specified other sample's chromosome.
+     *
+     * @param other		other sample to check
+     *
+     * @return 	a negative value if this sample's chromosome is less, a positive value if the other's is less,
+     * 			or zero if both chromosomes are the same
+     */
+    public int compareChromosome(SampleId other) {
+        int retVal = this.fragments[STRAIN_COL].compareTo(other.fragments[STRAIN_COL]);
+        if (retVal == 0) {
+            retVal = this.fragments[OPERON_COL].compareTo(other.fragments[OPERON_COL]);
+            if (retVal == 0) {
+                retVal = this.fragments[ASD_COL].compareTo(other.fragments[ASD_COL]);
+                if (retVal == 0) {
+                    // Now we must compare the delete sets.
+                    var thisDels = this.getDeletes();
+                    var otherDels = other.getDeletes();
+                    retVal = thisDels.size() - otherDels.size();
+                    if (retVal == 0) {
+                        // Here we know both sets are the same size.  Find the first differing element.
+                        Iterator<String> thisIter = thisDels.iterator();
+                        Iterator<String> otherIter = otherDels.iterator();
+                        while (retVal == 0 && thisIter.hasNext()) {
+                            String thisProt = thisIter.next();
+                            String otherProt = otherIter.next();
+                            retVal = thisProt.compareTo(otherProt);
+                        }
+                    }
+                }
+            }
+        }
+        return retVal;
+    }
+
+    /**
      * Get the components of this sample.
      *
      * @param consumer	operation to process the component string
@@ -1020,5 +1074,19 @@ public class SampleId implements Comparable<SampleId> {
         this.getDeletes().stream().forEach(x -> retVal.add("D" + x));
         // Return the stream.
         return retVal;
+    }
+
+    /**'
+     * This is a comparator for sorting by chromosome structure.  Note that many different samples
+     * will compare equal using this comparator, since the inserts, time point, and medium are
+     * allowed to change.
+     */
+    public static class ChromoSort implements Comparator<SampleId> {
+
+        @Override
+        public int compare(SampleId o1, SampleId o2) {
+            return o1.compareChromosome(o2);
+        }
+
     }
 }
