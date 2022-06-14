@@ -46,6 +46,16 @@ public class Function extends MagicObject {
         super(null, funDesc);
     }
 
+    /**
+     * Create a function object with a specific ID and description.
+     *
+     * @param funId		function ID
+     * @param funDesc	function description
+     */
+    public Function(String funId, String funDesc) {
+        super(funId, funDesc);
+    }
+
     @Override
     protected String normalize() {
         return this.normalize(this.getName());
