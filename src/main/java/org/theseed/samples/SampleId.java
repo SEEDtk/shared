@@ -92,13 +92,13 @@ public class SampleId implements Comparable<SampleId> {
             ).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
     /** map of strain IDs for non-plasmid strains */
     private static final Map<String, String[]> CHROMO_MAP = Stream.of(
-            new AbstractMap.SimpleEntry<>("277-14", StringUtils.split("7_0_TA1_C_asdO", '_')),
+            new AbstractMap.SimpleEntry<>("277x14", StringUtils.split("7_0_TA1_C_asdO", '_')),
             new AbstractMap.SimpleEntry<>("277wt1", StringUtils.split("7_0_T_C_asdO", '_')),
             new AbstractMap.SimpleEntry<>("277w1", StringUtils.split("7_0_T_C_asdO", '_')),
-            new AbstractMap.SimpleEntry<>("926-44", StringUtils.split("M_0_T_C_asdO", '_')),
-            new AbstractMap.SimpleEntry<>("926-41", StringUtils.split("M_0_T_C_asdO", '_')),
-            new AbstractMap.SimpleEntry<>("277-44", StringUtils.split("7_0_T_C_asdO", '_')),
-            new AbstractMap.SimpleEntry<>("277-41", StringUtils.split("7_0_T_C_asdO", '_')),
+            new AbstractMap.SimpleEntry<>("926x44", StringUtils.split("M_0_T_C_asdO", '_')),
+            new AbstractMap.SimpleEntry<>("926x41", StringUtils.split("M_0_T_C_asdO", '_')),
+            new AbstractMap.SimpleEntry<>("277x44", StringUtils.split("7_0_T_C_asdO", '_')),
+            new AbstractMap.SimpleEntry<>("277x41", StringUtils.split("7_0_T_C_asdO", '_')),
             new AbstractMap.SimpleEntry<>("926A", StringUtils.split("M_0_TA1_C_asdO", '_')),
             new AbstractMap.SimpleEntry<>("926B", StringUtils.split("M_0_TA1_C_asdT", '_')),
             new AbstractMap.SimpleEntry<>("277A", StringUtils.split("7_0_TA1_C_asdO", '_')),
@@ -127,6 +127,12 @@ public class SampleId implements Comparable<SampleId> {
     private static final String[] STRANGE_PROTEINS = new String[] { "ppc", "pyc", "zwf", "pntab", "aceba", "tdh" };
     /** default time point */
     public static String DEFAULT_TIME = "9";
+    /** list of hyphenated words that need fixing */
+    private static final String[] HYPHENATED_WORDS =
+            new String[] { "277-14", "926-44", "926-41", "277-44", "277-41", "ptac-asd", "ptac-thrABC", "ptac-thrabc" };
+    /** list of corrected versions of hyphenated words */
+    private static final String[] CORRECTED_WORDS =
+            new String[] { "277x14", "926x44", "926x41", "277x44", "277x41", "ptacasd", "ptacthrABC", "ptacthrabc" };
 
     /**
      * Construct a sample ID from an ID string.
@@ -343,7 +349,7 @@ public class SampleId implements Comparable<SampleId> {
         SampleId retVal;
         // Here we have a valid name.  First, separate out the deletes.
         String strainId = parts[0];
-        String deletes = "D000";
+        String deletes = "";
         int deleteLoc = strainId.indexOf('D');
         if (deleteLoc >= 0) {
             deletes = fixDeletes(StringUtils.substring(strainId, deleteLoc));
@@ -357,8 +363,15 @@ public class SampleId implements Comparable<SampleId> {
         // Run through the modifiers.
         for (int i = 4; i < parts.length; i++) {
             String modifier = parts[i];
-            insert = retVal.parseModifier(insert, modifier);
+            // Check for a singleton delete.  Otherwise, this is an insert or a plasmid.
+            if (modifier.startsWith("D"))
+                deletes += modifier;
+            else
+                insert = retVal.parseModifier(insert, modifier);
         }
+        // Put in the null delete.
+        if (deletes.isEmpty())
+            deletes = "D000";
         // If no plasmid on a 277, we add an A in the location slot.
         if (retVal.fragments[0].equals("7") && retVal.fragments[3].equals("0"))
             retVal.fragments[3] = "A";
@@ -390,19 +403,16 @@ public class SampleId implements Comparable<SampleId> {
         if (plasmidInfo != null)
             System.arraycopy(plasmidInfo, 0, this.fragments, 1, plasmidInfo.length);
         else switch (modifier) {
-        case "ptac-thrABC" :
-        case "ptac-thrabc" :
         case "ptacthrABC" :
         case "ptacthrabc" :
             this.fragments[2] = "TA1";
             this.fragments[3] = "C";
             break;
-        case "ptac-asd" :
         case "ptacasd" :
             this.fragments[4] = "asdT";
             break;
         default :
-            // Here we have an insert.  Split out the pieces.  This is brutal parsing since there are no delimiters.
+            // Split out the pieces.  This is brutal parsing since there are no delimiters.
             String[] prots = splitProteins(modifier);
             for (String prot : prots) {
                 if (insert.contentEquals("000"))
@@ -529,10 +539,15 @@ public class SampleId implements Comparable<SampleId> {
                 timePoint += "p5";
             reducedName = reducedName.substring(0, m.start()) + reducedName.substring(m.end());
         }
+        // Fix hyphens in the middle of names.
+        reducedName = StringUtils.replaceEach(reducedName, HYPHENATED_WORDS, CORRECTED_WORDS);
+        // Convert unexpected hyphens to underscores.
+        reducedName = StringUtils.replaceChars(reducedName, '-', '_');
         // Strip off the RNA suffix.  If this fails, we fail the whole match.
         String[] retVal = null;
         m = RNA_SUFFIX.matcher(reducedName);
         if (m.find()) {
+            // Remove the RNA suffix and extract the sample ID number.
             reducedName = reducedName.substring(0, m.start());
             String sampleNum = m.group(1);
             // Now split the file name into pieces.
@@ -618,6 +633,8 @@ public class SampleId implements Comparable<SampleId> {
                     StringUtils.replaceChars(plasmid, "._", "--") +
                     retVal.substring(m.end());
         }
+        // Remove extra hyphens.
+        retVal = StringUtils.replace(retVal, "-_", "_");
         return retVal;
     }
 
