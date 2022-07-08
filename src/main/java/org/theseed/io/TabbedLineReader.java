@@ -128,6 +128,26 @@ public class TabbedLineReader implements Closeable, AutoCloseable, Iterable<Tabb
         }
 
         /**
+         * @return a (possibly invalid) floating-point number in the indexed column
+         *
+         * An invalid numeric value or an empty value returns NaN.
+         *
+         * @param idx	index (0-based) of the column in question, as returned by findField
+         */
+        public double getDoubleSafe(int idx) {
+            double retVal;
+            String colValue = this.fields[idx];
+            if (colValue.isEmpty())
+                retVal = Double.NaN;
+            else try {
+                retVal = Double.parseDouble(colValue);
+            } catch (NumberFormatException e) {
+                retVal = Double.NaN;
+            }
+            return retVal;
+        }
+
+        /**
          * @return the boolean value in the indexed column
          *
          * An empty column or a value of "0" indicates FALSE.  Everything else is TRUE.
