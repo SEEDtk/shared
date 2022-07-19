@@ -256,6 +256,18 @@ public class SampleTest {
     }
 
     @Test
+    public void testChromosomes() {
+        SampleId samp1 = (new SampleId("M_0_TA1_C_asdT_pntAB-aspC_DtdhDmetL_I_24_M1")).normalizeSets();
+        assertThat(samp1.toChromosome(), equalTo("M_0_TA1_C_asdT_DmetLDtdh"));
+        SampleId samp2 = (new SampleId("M_0_TA1_C_asdT_aspC-pntAB_DmetLDtdh_I_24_M1")).normalizeSets();
+        assertThat(samp2.toChromosome(), equalTo("M_0_TA1_C_asdT_DmetLDtdh"));
+        SampleId samp3 = (new SampleId("M_0_TA1_C_asdT_000_Dtdh_I_24_M1")).normalizeSets();
+        assertThat(samp3.toChromosome(), equalTo("M_0_TA1_C_asdT_Dtdh"));
+        samp1 = (new SampleId("M_0_TA1_C_asdT_000_DtdhDmetL_I_24_M1")).normalizeSets();
+        assertThat(samp1.toChromosome(), equalTo("M_0_TA1_C_asdT_DmetLDtdh"));
+    }
+
+    @Test
     public void testPartialParse() {
         SampleId samp1 = SampleId.translate("926A DmetL", 24, false, "M1");
         String[] fragments1 = samp1.getStrainFragments();

@@ -674,7 +674,7 @@ public class SampleId implements Comparable<SampleId> {
      * @return a negative value if the first set is less, positive if it is more, 0 if they
      * 		   are the same
      */
-    private static int setCompare(Set<String> set1, Set<String> set2) {
+    public static int setCompare(Set<String> set1, Set<String> set2) {
         // Smaller sets compare less.
         int retVal = set1.size() - set2.size();
         if (retVal == 0) {
@@ -1106,4 +1106,12 @@ public class SampleId implements Comparable<SampleId> {
         }
 
     }
+
+    /**
+     * @return the chromosome-only portion of the strain name
+     */
+    public String toChromosome() {
+        return IntStream.range(0, ASD_COL + 1).mapToObj(i -> this.fragments[i]).collect(Collectors.joining("_", "", "_" + this.fragments[DELETE_COL]));
+    }
+
 }
