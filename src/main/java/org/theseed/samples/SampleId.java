@@ -845,7 +845,7 @@ public class SampleId implements Comparable<SampleId> {
      * @param newVal	new value
      */
     public String replaceFragment(int col, String newVal) {
-        String retVal = IntStream.range(0, NORMAL_SIZE).mapToObj(i -> (i == col ? newVal : this.fragments[i])).collect(Collectors.joining("_"));
+        String retVal = IntStream.range(0, this.fragments.length).mapToObj(i -> (i == col ? newVal : this.fragments[i])).collect(Collectors.joining("_"));
         return retVal;
     }
 
@@ -1112,6 +1112,13 @@ public class SampleId implements Comparable<SampleId> {
      */
     public String toChromosome() {
         return IntStream.range(0, ASD_COL + 1).mapToObj(i -> this.fragments[i]).collect(Collectors.joining("_", "", "_" + this.fragments[DELETE_COL]));
+    }
+
+    /**
+     * Force IPTG on in this sample.
+     */
+    public void setIptg() {
+        this.fragments[INDUCE_COL] = "I";
     }
 
 }
