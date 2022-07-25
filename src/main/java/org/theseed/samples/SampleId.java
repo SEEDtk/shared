@@ -1005,9 +1005,21 @@ public class SampleId implements Comparable<SampleId> {
      * @return TRUE if this is a constructed strain
      */
     public boolean isConstructed() {
-        return (! this.fragments[OPERON_COL].contentEquals("0") ||
-                ! this.fragments[INSERT_COL].contentEquals("000") ||
-                ! this.fragments[DELETE_COL].contentEquals("D000"));
+        final String[] pieces = this.fragments;
+        boolean retVal = checkConstructed(pieces);
+        return retVal;
+    }
+
+    /**
+     * @return TRUE if the specified strain/sample fragments indicate a constructed strain, else FALSE
+     *
+     * @param pieces	array containing fragments of a sample or strain ID
+     */
+    protected static boolean checkConstructed(final String[] pieces) {
+        boolean retVal = ! pieces[OPERON_COL].contentEquals("0") ||
+                ! pieces[INSERT_COL].contentEquals("000") ||
+                ! pieces[DELETE_COL].contentEquals("D000");
+        return retVal;
     }
 
     /**
@@ -1119,6 +1131,16 @@ public class SampleId implements Comparable<SampleId> {
      */
     public void setIptg() {
         this.fragments[INDUCE_COL] = "I";
+    }
+
+    /**
+     * @return TRUE if the specified sample is a constructed strain
+     *
+     * @param sampleString	string containing the strain ID
+     */
+    public static boolean isConstructed(String strainString) {
+        String[] fragments = StringUtils.split(strainString, '_');
+        return checkConstructed(fragments);
     }
 
 }
