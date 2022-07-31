@@ -1,4 +1,5 @@
 num	old_strain	sample	IPTG	time	medium
+2048	926 Dtdh DmetL ptac-thrABC ptac-asd ppc	M_0_TA1_C_asdT_ppc_DmetLDtdh_I_12_M1	i	12	M1
 1	277	7_0_0_A_asdO_000_D000_0_4p5_M1	0	4.5	M1
 2	277	7_0_0_A_asdO_000_D000_0_6_M1	0	6	M1
 3	277	7_0_0_A_asdO_000_D000_0_12_M1	0	12	M1
@@ -2046,4 +2047,3 @@ num	old_strain	sample	IPTG	time	medium
 2045	926DthrABCDasdDrthA pfb6.4.2 +rhtA	M_D_TasdA1_P_asdD_rhtA_DrhtA_I_12_M1	I	12	M1
 2046	926DthrABCDasdDrthA pfb6.4.2 +rhtA	M_D_TasdA1_P_asdD_rhtA_DrhtA_I_24_M1	I	24	M1
 2047	277DthrABCDasdDmetL pwt2.1.1 ppyc plasmid	7_D_Tasd_P_asdD_pyc_DmetL_I_24_M1	I	24	M1
-2048	926 Dtdh DmetL ptac-thrABC ptac-asd ppc	M_0_TA1_C_asdT_ppc_DmetLDtdh_I_12_M1	i	12	M1

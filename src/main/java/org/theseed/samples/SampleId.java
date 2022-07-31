@@ -23,6 +23,8 @@ import java.util.stream.Stream;
 
 import org.apache.commons.lang3.RegExUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This class represents a sample ID.  A sample ID consists of 10 to 11 identification fields separated by underscores.
@@ -34,6 +36,8 @@ import org.apache.commons.lang3.StringUtils;
 public class SampleId implements Comparable<SampleId> {
 
     // FIELDS
+    /** logging facility */
+    protected static Logger log = LoggerFactory.getLogger(SampleId.class);
     /** array of segments */
     private String[] fragments;
     /** time point */
@@ -71,6 +75,9 @@ public class SampleId implements Comparable<SampleId> {
             new AbstractMap.SimpleEntry<>("pfb6-4-3", StringUtils.split("D_TasdA_P_asdD", '_')),
             new AbstractMap.SimpleEntry<>("277-14", StringUtils.split("0_TA1_C_asdO", '_'))
             ).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+    /** map of plasmids that may need translating inside filenames */
+    private static final Map<String, String> FILE_NAME_PLASMID_MAP = PLASMID_MAP.keySet().stream()
+            .collect(Collectors.toMap(x -> StringUtils.replaceChars(x, '-', '_'), x -> x));
     /** map of mis-spelled protein names */
     private static final Map<String, String> PROTEIN_ERRORS = Stream.of(
             new AbstractMap.SimpleEntry<>("rthA", "rhtA"),
@@ -129,7 +136,8 @@ public class SampleId implements Comparable<SampleId> {
     public static String DEFAULT_TIME = "9";
     /** list of hyphenated words that need fixing */
     private static final String[] HYPHENATED_WORDS =
-            new String[] { "277-14", "926-44", "926-41", "277-44", "277-41", "ptac-asd", "ptac-thrABC", "ptac-thrabc" };
+            new String[] { "277-14", "926-44", "926-41", "277-44", "277-41", "ptac-asd", "ptac-thrABC", "ptac-thrabc",
+                    };
     /** list of corrected versions of hyphenated words */
     private static final String[] CORRECTED_WORDS =
             new String[] { "277x14", "926x44", "926x41", "277x44", "277x41", "ptacasd", "ptacthrABC", "ptacthrabc" };
@@ -213,7 +221,6 @@ public class SampleId implements Comparable<SampleId> {
             pieces[0] = parts[0];
             deleteString.append("D" + parts[1]);
         }
-        // The first piece is the host.
         retVal.parseHost(pieces[0]);
         // Now we loop through the modifiers.  A modifier can be a plasmid specification, a deletion,
         // or an insert.  A leading plus sign is removed.  Note that the term "plasmid" is obsolete,
@@ -405,10 +412,13 @@ public class SampleId implements Comparable<SampleId> {
         else switch (modifier) {
         case "ptacthrABC" :
         case "ptacthrabc" :
+        case "ptac-thrABC" :
+        case "ptac-thrabc" :
             this.fragments[2] = "TA1";
             this.fragments[3] = "C";
             break;
         case "ptacasd" :
+        case "ptac-asd" :
             this.fragments[4] = "asdT";
             break;
         default :
@@ -458,11 +468,12 @@ public class SampleId implements Comparable<SampleId> {
      * @param strainId	strain identifier to parse (with deletes removed)
      */
     private void parseHost(String strainId) {
-        String host = HOST_MAP.get(strainId);
-
+        // Convert the hyphens to "x" just in case.
+        String hostId = StringUtils.replaceChars(strainId, '-', 'x');
+        String host = HOST_MAP.get(hostId);
         if (host == null) {
             // If the host is not found, check for an artificial host, which contains operon adjustments built in.
-            String[] plasmidInfo = CHROMO_MAP.get(strainId);
+            String[] plasmidInfo = CHROMO_MAP.get(hostId);
             if (plasmidInfo == null)
                 throw new IllegalArgumentException("Invalid host name \"" + strainId + "\".");
             else {
@@ -541,8 +552,6 @@ public class SampleId implements Comparable<SampleId> {
         }
         // Fix hyphens in the middle of names.
         reducedName = StringUtils.replaceEach(reducedName, HYPHENATED_WORDS, CORRECTED_WORDS);
-        // Convert unexpected hyphens to underscores.
-        reducedName = StringUtils.replaceChars(reducedName, '-', '_');
         // Strip off the RNA suffix.  If this fails, we fail the whole match.
         String[] retVal = null;
         m = RNA_SUFFIX.matcher(reducedName);
@@ -615,6 +624,8 @@ public class SampleId implements Comparable<SampleId> {
         retVal = StringUtils.replaceOnce(retVal, "D_lysC", "DlysC");
         retVal = StringUtils.replaceOnce(retVal, "926_lysC", "926DlysC");
         retVal = StringUtils.replace(retVal, "Dtd_h", "Dtdh");
+        for (var nameMapEntry : FILE_NAME_PLASMID_MAP.entrySet())
+            retVal = StringUtils.replaceOnce(retVal, nameMapEntry.getKey(), nameMapEntry.getValue());
         // Fix the delete glitch.  This is caused by the weird untranslatable unicode character.
         Matcher m = DELETE_GLITCH.matcher(retVal);
         if (m.matches())
