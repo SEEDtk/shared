@@ -48,7 +48,7 @@ public class RnaData implements Iterable<RnaData.Row>, Serializable {
     /** object version ID */
     private static final long serialVersionUID = 3381600661613511530L;
     /** list of sample descriptors */
-    List<JobData> jobs;
+    protected List<JobData> jobs;
     /** map of features to data rows */
     private Map<String, Row> rowMap;
     /** map of job names to column indices */
@@ -644,8 +644,13 @@ public class RnaData implements Iterable<RnaData.Row>, Serializable {
      * @param neighbor	nearest neighbor
      */
     public Row getRow(Feature feat, Feature neighbor) {
-        RnaFeatureData fData = new RnaFeatureData(feat);
-        Row retVal = this.rowMap.computeIfAbsent(feat.getId(), f -> new Row(fData, neighbor));
+        final String fid = feat.getId();
+        Row retVal = this.rowMap.get(fid);
+        if (retVal == null) {
+            RnaFeatureData fData = new RnaFeatureData(feat);
+            retVal = new Row(fData, neighbor);
+            this.rowMap.put(fid, retVal);
+        }
         return retVal;
     }
 
