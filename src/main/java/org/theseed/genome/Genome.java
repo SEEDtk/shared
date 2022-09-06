@@ -291,6 +291,7 @@ public class Genome  {
         // Determine the type of links to generate.
         switch (string) {
         case "PATRIC" :
+        case "BV-BRC" :
             this.linker = new LinkObject.Patric();
             break;
         case "CORE" :
@@ -299,6 +300,14 @@ public class Genome  {
         default:
             this.linker = new LinkObject.None();
         }
+    }
+
+    /**
+     * Log a warning if the home location is unknown.
+     */
+    public void checkHome() {
+        if (this.linker instanceof LinkObject.None)
+            log.warn("Links are disabled for unknown home database \"{}\".", this.home);
     }
 
     /**

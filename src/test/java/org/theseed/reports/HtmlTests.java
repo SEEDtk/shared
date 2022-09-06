@@ -3,7 +3,6 @@
  */
 package org.theseed.reports;
 
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import static j2html.TagCreator.b;
@@ -29,8 +28,7 @@ import j2html.Config;
  */
 public class HtmlTests {
 
-    @BeforeAll
-    public static void configureHtml() {
+    public HtmlTests() {
         Config.closeEmptyTags = true;
     }
 

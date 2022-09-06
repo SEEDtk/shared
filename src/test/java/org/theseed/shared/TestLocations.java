@@ -23,7 +23,6 @@ import org.theseed.locations.Location;
 import org.theseed.locations.Region;
 import org.theseed.locations.SortedLocationList;
 import org.theseed.locations.DiscreteLocationList.Edge;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -34,8 +33,7 @@ public class TestLocations {
 
     private static Genome myGto = null;
 
-    @BeforeAll
-    public static void setup() throws IOException {
+    public TestLocations() throws IOException {
         myGto = new Genome(new File("data/gto_test", "1313.7001.gto"));
     }
 

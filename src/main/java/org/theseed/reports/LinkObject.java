@@ -77,13 +77,13 @@ public abstract class LinkObject {
      */
     public static class Patric extends LinkObject {
 
-        private static final String GENOME_VIEW_LINK = "https://www.patricbrc.org/view/Genome/%s";
+        private static final String GENOME_VIEW_LINK = "https://www.bv-brc.org/view/Genome/%s";
 
-        private static final String FEATURE_CR_LINK = "https://www.patricbrc.org/view/Feature/%s#view_tab=compareRegionViewer";
+        private static final String FEATURE_CR_LINK = "https://www.bv-brc.org/view/Feature/%s#view_tab=compareRegionViewer";
 
-        private static final String FEATURE_VIEW_LINK = "https://www.patricbrc.org/view/Feature/%s";
+        private static final String FEATURE_VIEW_LINK = "https://www.bv-brc.org/view/Feature/%s";
 
-        private static final String FEATURE_LIST_LINK = "https://www.patricbrc.org/view/FeatureList/?in(patric_id,(\"%s\"))";
+        private static final String FEATURE_LIST_LINK = "https://www.bv-brc.org/view/FeatureList/?in(patric_id,(\"%s\"))";
 
         @Override
         public ContainerTag genomeLink(String genomeId, DomContent element) {
