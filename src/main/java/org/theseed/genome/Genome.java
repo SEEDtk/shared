@@ -1104,14 +1104,37 @@ public class Genome  {
     }
 
     /**
-     * Remove the specified feature from this genome.  No ancillary references are removed, so if the
-     * feature is in a coupling or a subsystem, the genome will become out of whack.
+     * Remove the specified feature from this genome.  This may cause a subsystem to become invalid.
+     * Currently, the only way to fix this is to re-project the genome's subsystems.
      *
-     * @param feat	feature to remove.
+     * @param feat	feature to remove
+     *
+     * @return TRUE if successful, FALSE if a subsystem becomes invalid
      */
-    public void deleteFeature(Feature feat) {
+    public boolean deleteFeature(Feature feat) {
         String fid = feat.getId();
+        boolean retVal = feat.disconnect();
         this.features.remove(fid);
+        return retVal;
+    }
+
+    /**
+     * Remove the specified contig from this genome.  This also deletes all the features on the contig.  It
+     * may cause a subsystem to become invalid, in which case the subsystems will have to be re-projected.
+     *
+     * @param contig	contig to remove
+     *
+     * @return TRUE if successful, FALSE if a subsystem becomes invalid
+     */
+    public boolean deleteContig(Contig contig) {
+        String contigId = contig.getId();
+        boolean retVal = true;
+        for (Feature feat : this.getContigFeatures(contigId)) {
+            boolean ok = this.deleteFeature(feat);
+            if (! ok) retVal = false;
+        }
+        this.contigs.remove(contigId);
+        return retVal;
     }
 
     /**
@@ -1220,13 +1243,22 @@ public class Genome  {
                 // If this is an RNA and it is longer than the current sequence AND it has an SSU rRNA
                 // functional assignment, we save its DNA as the SSU rRNA for this genome.
                 if (feat.getType().contentEquals("rna") && feat.getLocation().getLength() > retVal.length() &&
-                        SSU_R_RNA.matcher(feat.getPegFunction()).find()) {
+                        isSSURole(feat)) {
                     retVal = this.getDna(feat.getLocation());
                     this.ssuRna = retVal;
                 }
             }
         }
         return retVal;
+    }
+
+    /**
+     * @return TRUE if the specified feature's role indicates it is an SSU, else FALSE
+     *
+     * @param feat		feature in question
+     */
+    public static boolean isSSURole(Feature feat) {
+        return SSU_R_RNA.matcher(feat.getPegFunction()).find();
     }
 
     /**

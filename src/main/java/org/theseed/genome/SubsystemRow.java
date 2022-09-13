@@ -103,6 +103,27 @@ public class SubsystemRow implements Comparable<SubsystemRow> {
             return retVal;
         }
 
+        /**
+         * @return TRUE if the specified feature is implemented by this role
+         *
+         * @param fid	ID of feature to check
+         */
+        public boolean isUsed(String fid) {
+            return this.fids.contains(fid);
+        }
+
+        /**
+         * Remove the specified feature from this subsystem row.
+         *
+         * @param fid	ID of the feature to remove
+         *
+         * @return TRUE if the subsystem is still valid, FALSE if the role is no longer implemented
+         */
+        protected boolean disconnectFeature(String fid) {
+            this.fids.remove(fid);
+            return ! this.fids.isEmpty();
+        }
+
         @Override
         public int hashCode() {
             final int prime = 31;

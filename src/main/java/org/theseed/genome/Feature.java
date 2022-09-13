@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -60,7 +61,7 @@ public class Feature implements Comparable<Feature> {
     private Collection<String> aliases;
     /** genome containing this feature */
     private Genome parent;
-    /** list of functionall-coupled features */
+    /** list of functionally-coupled features */
     private SortedSet<Coupling> couplings;
     /** subsystem membership data */
     private Set<SubsystemRow.Role> subsystemRoles;
@@ -854,6 +855,14 @@ public class Feature implements Comparable<Feature> {
     }
 
     /**
+     * @return TRUE if this feature is the sole instance of a subsystem role, else FALSE
+     */
+    public boolean isSubsystemLocked() {
+        boolean retVal = this.subsystemRoles.stream().anyMatch(x -> x.getFeatures().size() <= 1);
+        return retVal;
+    }
+
+    /**
      * Connect this feature to a subsystem role.
      *
      * @param role		role to which this feature is connected
@@ -861,6 +870,7 @@ public class Feature implements Comparable<Feature> {
     protected void connectSubsystem(SubsystemRow.Role role) {
         this.subsystemRoles.add(role);
     }
+
 
     /**
      * @return the upstream gap region of this feature
@@ -927,6 +937,33 @@ public class Feature implements Comparable<Feature> {
             this.figfam = ffam;
         else
             this.figfam = null;
+    }
+
+    /**
+     * Disconnect this feature from all couplings and subsystems.  This may cause a subsystem to
+     * become invalid.
+     *
+     * @return TRUE if all subsystems are still valid, else FALSE
+     */
+    protected boolean disconnect() {
+        boolean retVal = true;
+        // First, disconnect the couplings from the coupled features.
+        for (Coupling coupling : this.couplings) {
+            Feature other = this.parent.getFeature(coupling.getTarget());
+            // Find the coupling to this feature and remove it.
+            Iterator<Coupling> iter = other.couplings.iterator();
+            while (iter.hasNext()) {
+                Coupling otherCoupling = iter.next();
+                if (otherCoupling.getTarget().contentEquals(this.id))
+                    iter.remove();
+            }
+        }
+        // Next, delete this feature from all the subsystems.
+        for (var subRole : this.subsystemRoles) {
+            if (! subRole.disconnectFeature(this.id)) retVal = false;
+        }
+        // Return the success indicator.
+        return retVal;
     }
 
     /**

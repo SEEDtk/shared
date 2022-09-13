@@ -35,6 +35,8 @@ public abstract class Location implements Comparable<Location>, Cloneable {
     protected boolean valid;
     /** pattern for parsing location strings */
     private static Pattern LOCATION_STRING = Pattern.compile("(.+)([+\\-])\\[(.+)\\]");
+    /** acceptable distance for an edge indication in a contig */
+    protected static final int CONTIG_EDGE = 5;
 
 
     /**
@@ -995,5 +997,15 @@ public abstract class Location implements Comparable<Location>, Cloneable {
      * @return a SEED-style location string for this location
      */
     public abstract String toSeedString();
+
+    /**
+     * @return TRUE if this location starts near the edge of a contig
+     */
+    public abstract boolean isEdgeStart(Contig contig);
+
+    /**
+     * @return TRUE if this location ends near the edge of a contig
+     */
+    public abstract boolean isEdgeEnd(Contig contig);
 
 }

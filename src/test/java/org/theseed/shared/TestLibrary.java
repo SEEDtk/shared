@@ -6,6 +6,7 @@ package org.theseed.shared;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -38,6 +39,7 @@ import org.theseed.locations.FLocation;
 import org.theseed.locations.Frame;
 import org.theseed.locations.Location;
 import org.theseed.magic.MagicMap;
+import org.theseed.magic.MagicObject;
 import org.theseed.proteins.CodonSet;
 import org.theseed.proteins.Role;
 import org.theseed.proteins.RoleMap;
@@ -1444,5 +1446,100 @@ public class TestLibrary {
         }
     }
 
+    public static class Thing extends MagicObject implements Comparable<Thing> {
+
+        /**
+         * serialization object type ID
+         */
+        private static final long serialVersionUID = -5855290474686618053L;
+
+        /** Create a blank thing. */
+        public Thing() { }
+
+        /** Create a new thing with a given ID and description. */
+        public Thing(String thingId, String thingDesc) {
+            super(thingId, thingDesc);
+        }
+
+        @Override
+        protected String normalize() {
+            // Convert all sequences of non-word characters to a single space and lower-case it.
+            String retVal = this.getName().replaceAll("\\W+", " ").toLowerCase();
+            return retVal;
+        }
+
+        @Override
+        public int compareTo(Thing o) {
+            return super.compareTo(o);
+        }
+
+    }
+
+    public static class ThingMap extends MagicMap<Thing> {
+
+        public ThingMap() {
+            super(new Thing());
+        }
+
+        /**
+         * Find the named thing.  If it does not exist, a new thing will be created.
+         *
+         * @param thingDesc	the thing name
+         *
+         * @return	a Thing object for the thing
+         */
+        public Thing findOrInsert(String thingDesc) {
+            Thing retVal = this.getByName(thingDesc);
+            if (retVal == null) {
+                // Create a thing without an ID.
+                retVal = new Thing(null, thingDesc);
+                // Store it in the map to create the ID.
+                this.put(retVal);
+            }
+            return retVal;
+        }
+
+        public void save(File saveFile) {
+            try {
+                PrintWriter printer = new PrintWriter(saveFile);
+                for (Thing thing : this.objectValues()) {
+                    printer.format("%s\t%s%n", thing.getId(), thing.getName());
+                }
+                printer.close();
+            } catch (IOException e) {
+                throw new RuntimeException("Error saving thing map.", e);
+            }
+        }
+
+        public static ThingMap load(File loadFile) {
+            ThingMap retVal = new ThingMap();
+            try {
+                Scanner reader = new Scanner(loadFile);
+                while (reader.hasNext()) {
+                    String myLine = reader.nextLine();
+                    String[] fields = StringUtils.splitByWholeSeparator(myLine, "\t", 2);
+                    Thing newThing = new Thing(fields[0], fields[1]);
+                    retVal.put(newThing);
+                }
+                reader.close();
+            } catch (IOException e) {
+                throw new RuntimeException("Error loading thing map.", e);
+            }
+            return retVal;
+        }
+
+        /**
+         * Add an alias for an existing ID.
+         *
+         * @param id	ID to get the alias
+         * @param name	name string to be made an alias
+         */
+        public void addAlias(String id, String name) {
+            Thing altThing = new Thing(id, name);
+            this.register(altThing);
+        }
+
+
+    }
 
 }

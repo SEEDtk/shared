@@ -244,4 +244,15 @@ public class FLocation extends Location {
         return retVal.toString();
     }
 
+    @Override
+    public boolean isEdgeEnd(Contig contig) {
+        return this.getEnd() + CONTIG_EDGE > contig.length();
+    }
+
+    @Override
+    public boolean isEdgeStart(Contig contig) {
+        return this.getBegin() <= CONTIG_EDGE;
+    }
+
+
 }

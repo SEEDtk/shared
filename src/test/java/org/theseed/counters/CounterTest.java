@@ -6,6 +6,9 @@ package org.theseed.counters;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -16,7 +19,8 @@ import java.util.SortedSet;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.ArrayUtils;
-import org.theseed.shared.Thing;
+import org.theseed.magic.MagicMap;
+import org.theseed.magic.MagicObject;
 import org.theseed.utils.FloatList;
 import org.theseed.utils.IntegerList;
 import org.theseed.utils.SizeList;
@@ -495,6 +499,73 @@ public class CounterTest  {
         assertThat(map2.getCount("DDD"), equalTo(40));
         assertThat(map1.sum(), equalTo(86));
         assertThat(map2.sum(), equalTo(80));
+    }
+
+    public static class Thing extends MagicObject implements Comparable<Thing> {
+
+        /**
+         * serialization object type ID
+         */
+        private static final long serialVersionUID = -5855290474686618053L;
+
+        /** Create a blank thing. */
+        public Thing() { }
+
+        /** Create a new thing with a given ID and description. */
+        public Thing(String thingId, String thingDesc) {
+            super(thingId, thingDesc);
+        }
+
+        @Override
+        protected String normalize() {
+            // Convert all sequences of non-word characters to a single space and lower-case it.
+            String retVal = this.getName().replaceAll("\\W+", " ").toLowerCase();
+            return retVal;
+        }
+
+        @Override
+        public int compareTo(Thing o) {
+            return super.compareTo(o);
+        }
+
+    }
+
+    public static class ThingMap extends MagicMap<Thing> {
+
+        public ThingMap() {
+            super(new Thing());
+        }
+
+        /**
+         * Find the named thing.  If it does not exist, a new thing will be created.
+         *
+         * @param thingDesc	the thing name
+         *
+         * @return	a Thing object for the thing
+         */
+        public Thing findOrInsert(String thingDesc) {
+            Thing retVal = this.getByName(thingDesc);
+            if (retVal == null) {
+                // Create a thing without an ID.
+                retVal = new Thing(null, thingDesc);
+                // Store it in the map to create the ID.
+                this.put(retVal);
+            }
+            return retVal;
+        }
+
+        public void save(File saveFile) {
+            try {
+                PrintWriter printer = new PrintWriter(saveFile);
+                for (Thing thing : this.objectValues()) {
+                    printer.format("%s\t%s%n", thing.getId(), thing.getName());
+                }
+                printer.close();
+            } catch (IOException e) {
+                throw new RuntimeException("Error saving thing map.", e);
+            }
+        }
+
     }
 
 }
