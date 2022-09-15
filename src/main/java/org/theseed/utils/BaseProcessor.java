@@ -33,6 +33,8 @@ public abstract class BaseProcessor implements ICommand {
     private String[] options;
     /** logging context */
     private LoggerContext loggerContext;
+    /** invocation command (set by subclass at its discretion) */
+    private String commandString;
 
     // COMMAND-LINE OPTIONS
 
@@ -49,6 +51,7 @@ public abstract class BaseProcessor implements ICommand {
      */
     public BaseProcessor() {
         this.startTime = System.currentTimeMillis();
+        this.commandString = "(unknown)";
     }
 
     @Override
@@ -128,6 +131,22 @@ public abstract class BaseProcessor implements ICommand {
      */
     public String[] getOptions() {
         return options;
+    }
+
+    /**
+     * @return the saved command string
+     */
+    public String getCommandString() {
+        return this.commandString;
+    }
+
+    /**
+     * Save a command string for logging purposes.
+     *
+     * @param commandString the command string to save
+     */
+    public void setCommandString(String commandString) {
+        this.commandString = commandString;
     }
 
 }

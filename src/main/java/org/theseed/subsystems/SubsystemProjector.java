@@ -268,7 +268,7 @@ public class SubsystemProjector {
     }
 
     /**
-     * Project subsystems into a genome.
+     * Project subsystems into a genome.  Existing subsystems are all cleared before the genome is updated.
      *
      * @param genome	genome into which subsystems should be projected
      */

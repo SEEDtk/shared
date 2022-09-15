@@ -95,6 +95,8 @@ public class Genome  {
     private Map<String, String> accessionMap;
     /** SSU-rRNA sequence (NULL if unknown, empty if not present */
     private String ssuRna;
+    /** analysis event log */
+    private List<AnalysisEvent> events;
     /** match pattern for SSU rRNA */
     public static final Pattern SSU_R_RNA = Pattern.compile("SSU\\s+rRNA|Small\\s+Subunit\\s+(?:Ribosomal\\s+r)?RNA|ssuRNA|16S\\s+(?:r(?:ibosomal\\s+)?)?RNA", Pattern.CASE_INSENSITIVE);
     /** refseq location format */
@@ -116,6 +118,7 @@ public class Genome  {
         FEATURES(noEntries),
         CLOSE_GENOMES(noEntries),
         SSU_RRNA(null),
+        ANALYSIS_EVENTS(noEntries),
         // PATRIC fields
         GENOME_ID("0"),
         GENOME_NAME("unknown organism"),
@@ -233,6 +236,13 @@ public class Genome  {
         for (JsonObject contigObj : contigList) {
             Contig contig = new Contig(contigObj);
             this.contigs.put(contig.getId(), contig);
+        }
+        // We need any analysis events.
+        Collection<JsonObject> events = this.gto.getCollectionOrDefault(GenomeKeys.ANALYSIS_EVENTS);
+        this.events = new ArrayList<AnalysisEvent>();
+        for (JsonObject eventObj : events) {
+            AnalysisEvent event = new AnalysisEvent(eventObj);
+            this.events.add(event);
         }
         // Finally, the subsystems.
         Collection<JsonObject> subList = this.gto.getCollectionOrDefault(GenomeKeys.SUBSYSTEMS);
@@ -551,6 +561,10 @@ public class Genome  {
         JsonArray jclose = new JsonArray();
         for (CloseGenome close : this.closeGenomes) jclose.add(close.toJson());
         retVal.put(GenomeKeys.CLOSE_GENOMES.getKey(), jclose);
+        // Add the events.
+        JsonArray jEvents = new JsonArray();
+        for (AnalysisEvent event : this.events) jEvents.add(event.toJson());
+        retVal.put(GenomeKeys.ANALYSIS_EVENTS.getKey(), jEvents);
         // Add the subsystems.
         JsonArray jsubs = new JsonArray();
         for (SubsystemRow subRow : this.subsystems.values()) jsubs.add(subRow.toJson());
@@ -1276,6 +1290,22 @@ public class Genome  {
             }
         }
         return retVal;
+    }
+
+    /**
+     * @return the list of analysis events
+     */
+    public List<AnalysisEvent> getEvents() {
+        return this.events;
+    }
+
+    /**
+     * Add a new analysis event to this genome.
+     *
+     * @param event		new event to add
+     */
+    public void addEvent(AnalysisEvent event) {
+        this.events.add(event);
     }
 
 }
