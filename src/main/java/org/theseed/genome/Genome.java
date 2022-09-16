@@ -97,6 +97,8 @@ public class Genome  {
     private String ssuRna;
     /** analysis event log */
     private List<AnalysisEvent> events;
+    /** quality descriptor */
+    private JsonObject quality;
     /** match pattern for SSU rRNA */
     public static final Pattern SSU_R_RNA = Pattern.compile("SSU\\s+rRNA|Small\\s+Subunit\\s+(?:Ribosomal\\s+r)?RNA|ssuRNA|16S\\s+(?:r(?:ibosomal\\s+)?)?RNA", Pattern.CASE_INSENSITIVE);
     /** refseq location format */
@@ -119,6 +121,7 @@ public class Genome  {
         CLOSE_GENOMES(noEntries),
         SSU_RRNA(null),
         ANALYSIS_EVENTS(noEntries),
+        QUALITY(null),
         // PATRIC fields
         GENOME_ID("0"),
         GENOME_NAME("unknown organism"),
@@ -216,6 +219,10 @@ public class Genome  {
         this.source = this.gto.getStringOrDefault(GenomeKeys.SOURCE);
         this.sourceId = this.gto.getStringOrDefault(GenomeKeys.SOURCE_ID);
         this.ssuRna = this.gto.getStringOrDefault(GenomeKeys.SSU_RRNA);
+        // Get the quality object.
+        this.quality = this.gto.getMapOrDefault(GenomeKeys.QUALITY);
+        if (this.quality == null)
+            this.quality = new JsonObject();
         // Extract the lineage IDs.
         Collection<JsonArray> lineageArray = this.gto.getCollectionOrDefault(GenomeKeys.NCBI_LINEAGE);
         this.lineage = lineageArray.stream().map(x -> new TaxItem(x)).toArray(n -> new TaxItem[n]);
@@ -285,6 +292,12 @@ public class Genome  {
         this.subsystems = new HashMap<String, SubsystemRow>();
         // Create a blank original GTO.
         this.gto = new JsonObject();
+        // Create a blank quality object.
+        this.quality = new JsonObject();
+        // Create an empty lineage.
+        this.lineage = new TaxItem[0];
+        // Create an empty event list.
+        this.events = new ArrayList<AnalysisEvent>();
         // Denote the genome has no home.
         this.setHome("none");
         // Denote no accession map has been built.
@@ -569,6 +582,8 @@ public class Genome  {
         JsonArray jsubs = new JsonArray();
         for (SubsystemRow subRow : this.subsystems.values()) jsubs.add(subRow.toJson());
         retVal.put(GenomeKeys.SUBSYSTEMS.getKey(), jsubs);
+        // Store the quality object.
+        retVal.put(GenomeKeys.QUALITY.getKey(), this.quality);
         // Return the rebuilt GTO.
         return retVal;
     }
@@ -806,31 +821,6 @@ public class Genome  {
      */
     public String getHome() {
         return home;
-    }
-
-    /**
-     * @return the ID of the reference genome used to create this one from a metagenome, or NULL
-     * 		   if there is none
-     */
-    public String getBinRefGenomeId() {
-        String retVal = null;
-        for (CloseGenome closeSpec : this.closeGenomes) {
-            if (closeSpec.getMethod().contentEquals("bins_generate"))
-                retVal = closeSpec.genomeId;
-        }
-        return retVal;
-    }
-
-    /**
-     * @return the weighted coverage of this genome, if it was generated from a metagenome, else 0
-     */
-    public double getBinCoverage() {
-        double retVal = 0.0;
-        for (CloseGenome closeSpec : this.closeGenomes) {
-            if (closeSpec.getMethod().contentEquals("bins_generate"))
-                retVal = closeSpec.getCloseness();
-        }
-        return retVal;
     }
 
     /**
@@ -1226,6 +1216,13 @@ public class Genome  {
      */
     public boolean hasQuality() {
         return this.gto.containsKey("quality");
+    }
+
+    /**
+     * @return the quality object for this GTO, creating one if none exists yet
+     */
+    public JsonObject getQuality() {
+        return this.quality;
     }
 
     /**

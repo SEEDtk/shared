@@ -1018,12 +1018,6 @@ public class TestLibrary {
         int fCount = 0;
         for (@SuppressWarnings("unused") Feature f : testGenome.getFeatures()) fCount++;
         assertThat(fCount, equalTo(0));
-        // Test metagenome binning properties.
-        assertThat(testGenome.getBinRefGenomeId(), nullValue());
-        assertThat(testGenome.getBinCoverage(), equalTo(0.0));
-        testGenome = new Genome(new File("data", "bin3.gto"));
-        assertThat(testGenome.getBinRefGenomeId(), equalTo("43675.15"));
-        assertThat(testGenome.getBinCoverage(), closeTo(173.920, 0.0005));
         Genome testOther = new Genome(new File("data", "bin3a.gto"));
         assertThat(testGenome.identical(testGenome), equalTo(true));
         assertThat(testGenome.identical(null), equalTo(false));
