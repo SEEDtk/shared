@@ -55,6 +55,14 @@ public class GenomeEval {
     public static final int NAME_COL = ArrayUtils.indexOf(DEFAULT_HEADERS, "Name");
     /** index of the lineage column */
     public static final int LINEAGE_COL = ArrayUtils.indexOf(DEFAULT_HEADERS, "Taxonomy");
+    /** minimum fine consistency */
+    public static final double MIN_CONSISTENCY = 85.0;
+    /** maximumum hypothetical percent  */
+    public static final double MAX_HYPOTHETICAL = 70.0;
+    /** minimum completeness */
+    public static final double MIN_COMPLETENESS = 80.0;
+    /** maximum contamination */
+    public static final double MAX_CONTAMINATION = 10.0;
 
     /**
      * @return TRUE if the specified contamination percent indicates a clean genome
@@ -62,7 +70,7 @@ public class GenomeEval {
      * @param contam	contamination percent
      */
     public static boolean indicatesClean(double contam) {
-        return (contam < 10.0);
+        return (contam < MAX_CONTAMINATION);
     }
 
     /**
@@ -71,7 +79,7 @@ public class GenomeEval {
      * @param fine	fine consistency percent
      */
     public static boolean indicatesConsistent(double fine) {
-        return (fine >= 85.0);
+        return (fine >= MIN_CONSISTENCY);
     }
 
     /**
@@ -80,7 +88,7 @@ public class GenomeEval {
      * @param comp	completeness percent
      */
     public static boolean indicatesComplete(double comp) {
-        return (comp >= 80.0);
+        return (comp >= MIN_COMPLETENESS);
     }
 
     /**
@@ -89,7 +97,7 @@ public class GenomeEval {
      * @param hypo	percent of proteins that are hypothetical
      */
     public static boolean indicatesUnderstood(double hypo) {
-        return (hypo <= 70.0);
+        return (hypo <= MAX_HYPOTHETICAL);
     }
 
     /**
