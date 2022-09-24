@@ -105,6 +105,8 @@ public class Genome  {
     private static final Pattern ACCESSION_LOCATION = Pattern.compile("(\\w+):(\\d+)-(\\d+)");
     /** empty list used as a default intermediate value for cases where the contigs or features are missing */
     private static final Collection<JsonObject> noEntries = new ArrayList<JsonObject>();
+    /** minimum length of a bad ambiguity run in an SSU */
+    private static final String BAD_AMBIGUITY_RUN = "nnnnn";
 
     /** This enum defines the keys used and their default values.
      */
@@ -1249,18 +1251,29 @@ public class Genome  {
         if (retVal == null) {
             // Here we have to search for the sequence.
             this.ssuRna = "";
-            retVal = "";
             for (Feature feat : this.features.values()) {
                 // If this is an RNA and it is longer than the current sequence AND it has an SSU rRNA
                 // functional assignment, we save its DNA as the SSU rRNA for this genome.
-                if (feat.getType().contentEquals("rna") && feat.getLocation().getLength() > retVal.length() &&
+                if (feat.getType().contentEquals("rna") && feat.getLocation().getLength() > this.ssuRna.length() &&
                         isSSURole(feat)) {
-                    retVal = this.getDna(feat.getLocation());
-                    this.ssuRna = retVal;
+                    String ssu = this.getDna(feat.getLocation());
+                    // Insure there is not a bad ambiguity run.
+                    if (isValidSsuRRna(ssu))
+                        this.ssuRna = ssu;
                 }
             }
+            retVal = this.ssuRna;
         }
         return retVal;
+    }
+
+    /**
+     * @return TRUE if an SSU is acceptable, FALSE if it is corrupted
+     *
+     * @param ssu	SSU sequence to check
+     */
+    public static boolean isValidSsuRRna(String ssu) {
+        return ! StringUtils.contains(ssu, BAD_AMBIGUITY_RUN);
     }
 
     /**

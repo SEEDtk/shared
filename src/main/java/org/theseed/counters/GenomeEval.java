@@ -12,6 +12,7 @@ import java.util.TreeSet;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.theseed.io.TabbedLineReader;
 
 /**
@@ -98,6 +99,15 @@ public class GenomeEval {
      */
     public static boolean indicatesUnderstood(double hypo) {
         return (hypo <= MAX_HYPOTHETICAL);
+    }
+
+    public static String getHeader(boolean haveCompleteness) {
+        String retVal;
+        if (haveCompleteness)
+            retVal = StringUtils.join(DEFAULT_HEADERS, '\t');
+        else
+            retVal = StringUtils.join(DEFAULT_HEADERS, '\t', 0, COMPLETE_COL);
+        return retVal;
     }
 
     /**
