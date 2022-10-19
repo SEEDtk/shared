@@ -1022,7 +1022,7 @@ public class TestLibrary {
         assertThat(testGenome.identical(testGenome), equalTo(true));
         assertThat(testGenome.identical(null), equalTo(false));
         assertThat(testGenome.identical(testOther), equalTo(false));
-        assertThat(testGenome.identical(smallGenome), equalTo(false));
+        assertThat(testGenome.identical(smallGenome), equalTo(true));
     }
 
     /**
