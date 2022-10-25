@@ -35,4 +35,12 @@ public class MatcherTest {
             assertThat(e.toString(), containsString("Expected: <false>"));
         }
     }
+
+    @Test
+    public void testEnv() {
+        String missing = System.getenv("FROGGER");
+        assertThat(missing, nullValue());
+        String found = System.getenv("HOME");
+        assertThat(found, not(nullValue()));
+    }
 }
