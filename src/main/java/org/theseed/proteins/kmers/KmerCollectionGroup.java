@@ -168,6 +168,26 @@ public class KmerCollectionGroup {
     }
 
     /**
+     * Find the genome closest to the specified sequence other than the specified genome and
+     * return the name and distance.  This is used to find the best genome for comparison.
+     *
+     * @param seqProt	sequence to check
+     * @param genomeId	ID of the genome containing the sequence
+     *
+     * @return a Result object containing the group name and distance
+     */
+    public Result getBestComparator(String seqProt, String genomeId) {
+        Result retVal = new Result();
+        for (String grp : this.sequenceLists.keySet()) {
+            if (! grp.contentEquals(genomeId)) {
+                double distance = this.getDistance(seqProt, grp);
+                retVal.merge(grp, distance);
+            }
+        }
+        return retVal;
+    }
+
+    /**
      * @return the number of groups in this object
      */
     public int size() {
