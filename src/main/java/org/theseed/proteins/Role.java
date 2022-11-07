@@ -45,11 +45,10 @@ public class Role extends MagicObject implements Comparable<Role> {
      */
     public Role() { }
 
-    @Override
     /** Compute the normalized version of the role description. */
     protected String normalize() {
         String retVal = this.getName();
-        retVal = normalize(retVal);
+        retVal = this.normalize(retVal);
         return retVal;
     }
 
@@ -58,6 +57,7 @@ public class Role extends MagicObject implements Comparable<Role> {
      *
      * @param roleDesc		role description to normalize
      */
+    @Override
     protected String normalize(String roleDesc) {
         // Extract the EC and TC numbers.
         String ecNum = null;

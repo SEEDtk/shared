@@ -258,6 +258,13 @@ public class TestLibrary {
         assertThat(phenSet, containsInAnyOrder("alias second Phenylalanyl role string", "alias third Phenylalanyl role string",
                 "Phenylalanyl-tRNA synthetase domain protein (Bsu YtpR)"));
         assertThat(count, equalTo(11462));
+        // Test the get-all
+        List<Thing> phenList = magicTable.getAllById("PhenTrnaSyntDoma");
+        assertThat(phenList.size(), equalTo(3));
+        for (Thing thing : phenList) {
+            assertThat(thing.getId(), equalTo("PhenTrnaSyntDoma"));
+            assertThat(phenSet, hasItem(thing.getName()));
+        }
     }
 
     private static final String myProtein = "MNERYQCLKTKEYQALLSSKGRQIFAKRKIDMKSVFGQIKVCLGYKRCHLRGKRQVRIDMGFILMANNLLKYNKRKRQN";
@@ -1456,15 +1463,15 @@ public class TestLibrary {
         }
 
         @Override
-        protected String normalize() {
-            // Convert all sequences of non-word characters to a single space and lower-case it.
-            String retVal = this.getName().replaceAll("\\W+", " ").toLowerCase();
-            return retVal;
+        public int compareTo(Thing o) {
+            return super.compareTo(o);
         }
 
         @Override
-        public int compareTo(Thing o) {
-            return super.compareTo(o);
+        protected String normalize(String name) {
+            // Convert all sequences of non-word characters to a single space and lower-case it.
+            String retVal = name.replaceAll("\\W+", " ").toLowerCase();
+            return retVal;
         }
 
     }

@@ -39,7 +39,7 @@ public class MagicMap<T extends MagicObject> implements Map<String, String>, Ite
     private Map<String, T> idMapper;
     /** map from checksums to objects */
     private Map<LongPair, T> checkMapper;
-    /** dummy object for lookups */
+    /** dummy object for lookups (this object CANNOT be modified; we just use it to call methods) */
     private T searchObj;
     /** list of aliases */
     private List<T> aliases;
@@ -56,8 +56,6 @@ public class MagicMap<T extends MagicObject> implements Map<String, String>, Ite
 
     /**
      * Create a new, blank magic ID table.
-     *
-     * @param searchObject	dummy object that can be used for searching
      */
     public MagicMap(T searchObject) {
         this.suffixMapper = new CountMap<String>();
@@ -318,10 +316,8 @@ public class MagicMap<T extends MagicObject> implements Map<String, String>, Ite
      * @param name	name of the desired object
      */
     public T getByName(String name) {
-        // Store the name in our handy search object.
-        searchObj.setName(name);
         // Get the checksum.
-        LongPair checksum = searchObj.getChecksum();
+        LongPair checksum = searchObj.getChecksum(name);
         // Try to find it in the checksum map.
         T retVal = this.checkMapper.get(checksum);
         return retVal;
@@ -388,6 +384,29 @@ public class MagicMap<T extends MagicObject> implements Map<String, String>, Ite
     @Override
     public int size() {
         return this.idMapper.size();
+    }
+
+    /**
+     * Find the list of all objects associated with a particular ID
+     *
+     * @param key	ID to process
+     *
+     * @return a (possibly empty) list of all the aliases for an ID, with the primary first
+     */
+    public List<T> getAllById(String key) {
+        // Create an empty return list.
+        List<T> retVal = new ArrayList<T>(5);
+        // Get the primary.
+        T obj = this.getItem(key);
+        if (obj != null) {
+            retVal.add(obj);
+            // Search for aliases.
+            for (T alias : this.aliases) {
+                if (alias.getId().contentEquals(key))
+                    retVal.add(alias);
+            }
+        }
+        return retVal;
     }
 
     /**

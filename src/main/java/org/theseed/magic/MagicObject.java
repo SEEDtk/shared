@@ -25,9 +25,6 @@ public abstract class MagicObject implements Serializable {
     /** default seed */
     private static final int SEED = 1842724469;
 
-    /** work buffer */
-    private static final byte[] WORK_BUFFER = new byte[19];
-
     /** regex for common punctuation */
     static private final String PUNCTUATION = ",\\.;:";
 
@@ -45,7 +42,6 @@ public abstract class MagicObject implements Serializable {
     public MagicObject(String id, String name) {
         this.id = id;
         this.name = name;
-        this.checksum = new LongPair();
         this.setChecksum();
     }
 
@@ -53,8 +49,19 @@ public abstract class MagicObject implements Serializable {
      * Compute the checksum for this magic object.
      */
     private void setChecksum() {
-        String normalized = this.normalize();
-        this.checksum = checksumOf(normalized);
+        this.checksum = this.getChecksum(this.name);
+    }
+
+    /**
+     * Compute the checksum for a specified name.  This method CANNOT modify the object.
+     *
+     * @param name		name to checksum
+     *
+     * @return the desired checksum
+     */
+    public LongPair getChecksum(String name) {
+        String normalized = this.normalize(name);
+        return this.checksumOf(normalized);
     }
 
     /**
@@ -64,7 +71,8 @@ public abstract class MagicObject implements Serializable {
      */
     protected LongPair checksumOf(String normalized) {
         LongPair retVal = new LongPair();
-        MurmurHash3.murmurhash3_x64_128(normalized, 0, normalized.length(), SEED, WORK_BUFFER, retVal);
+        final byte[] workBuffer = new byte[19];
+        MurmurHash3.murmurhash3_x64_128(normalized, 0, normalized.length(), SEED, workBuffer, retVal);
         return retVal;
     }
 
@@ -99,10 +107,22 @@ public abstract class MagicObject implements Serializable {
     }
 
     /**
-     * @return a normalized version of the object name that can be used to
-     * 		   compute the checksum
+     * @return the normalized version of the object name
      */
-    protected abstract String normalize();
+    protected String normalize() {
+        String retVal = this.getName();
+        retVal = this.normalize(retVal);
+        return retVal;
+    }
+
+    /**
+     * This is the normalization engine.  It CANNOT modify the object.
+     *
+     * @param name	name to normalize
+     *
+     * @return the normalized version of a name
+     */
+    protected abstract String normalize(String name);
 
     @Override
     public String toString() {

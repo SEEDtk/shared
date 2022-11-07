@@ -66,14 +66,6 @@ public class SubsystemRowDescriptor extends MagicObject {
         magicTable.put(this);
     }
 
-    @Override
-    protected String normalize() {
-        // A tiny difference in a subsystem name is always significant, so there is no normalizing.
-        // Seriously, curators will add extra spaces or capitalize differently to indicate a new
-        // version of an existing system.
-        return this.getName();
-    }
-
     /**
      * Write this object to an output file.
      *
@@ -107,6 +99,14 @@ public class SubsystemRowDescriptor extends MagicObject {
             }
             log.info("{} subsystems written for {}.", count, genome);
         }
+    }
+
+    @Override
+    protected String normalize(String name) {
+        // A tiny difference in a subsystem name is always significant, so there is no normalizing.
+        // Seriously, curators will add extra spaces or capitalize differently to indicate a new
+        // version of an existing system.
+        return name;
     }
 
 }

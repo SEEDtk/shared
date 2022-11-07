@@ -517,15 +517,15 @@ public class CounterTest  {
         }
 
         @Override
-        protected String normalize() {
-            // Convert all sequences of non-word characters to a single space and lower-case it.
-            String retVal = this.getName().replaceAll("\\W+", " ").toLowerCase();
-            return retVal;
+        public int compareTo(Thing o) {
+            return super.compareTo(o);
         }
 
         @Override
-        public int compareTo(Thing o) {
-            return super.compareTo(o);
+        protected String normalize(String name) {
+            // Convert all sequences of non-word characters to a single space and lower-case it.
+            String retVal = name.replaceAll("\\W+", " ").toLowerCase();
+            return retVal;
         }
 
     }
