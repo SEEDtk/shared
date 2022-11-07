@@ -824,9 +824,13 @@ public class TestLibrary {
         List<Role> found = testFeat.getUsefulRoles(goodRoles);
         assertThat("Useful role count wrong.", found.size(), equalTo(1));
         assertThat("Wrong useful role returned", found.get(0).getId(), equalTo("PhosForm"));
+        boolean boolCheck = testFeat.isInteresting(goodRoles);
+        assertThat(boolCheck, equalTo(true));
         testFeat = myGto.getFeature("fig|1313.7001.peg.1190");
         found = testFeat.getUsefulRoles(goodRoles);
         assertThat("Useful role found in useless peg.", found.size(), equalTo(0));
+        boolCheck = testFeat.isInteresting(goodRoles);
+        assertThat(boolCheck, equalTo(false));
         // Test hypotheticals
         assertThat(Feature.isHypothetical("hypothetical protein"), equalTo(true));
         assertThat(Feature.isHypothetical(null), equalTo(true));
@@ -834,6 +838,24 @@ public class TestLibrary {
         assertThat(Feature.isHypothetical("Hypothetical protein # with comment"), equalTo(true));
         assertThat(Feature.isHypothetical("Normal function # hypothetical protein"), equalTo(false));
         assertThat(Feature.isHypothetical("May some day be a putative function"), equalTo(false));
+    }
+
+    /**
+     * Test GenomeKmers algorithm
+     */
+    @Test
+    public void scanTest() {
+        final int K = 21;
+        var seq = "atgaccacgctctcgtggacccacgaggtgggcgagccgaagccgtagcgcatgatgacctcgaagacactgatcgccatggcggcgaagaccagccaggcggcaccgcgggcgcaccacaccacgccacggtcgaaggtgctgcgcacgggatcggggaccgtggtggtctcgccggacgtcgggccggcaagctcgtcctcatgtttcaaagtgcgattgtccttgtctatcgaaggggacatgtttcct";
+        var rSeq = Contig.reverse(seq);
+        final int len = seq.length();
+        final int n = len - K;
+        for (int i = 0; i < n; i++) {
+            String plus = seq.substring(i, i + K);
+            String minus = rSeq.substring(n - i, len - i);
+            assertThat(Integer.toString(i), Contig.reverse(plus), equalTo(minus));
+        }
+
     }
 
     /**

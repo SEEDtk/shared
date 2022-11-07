@@ -579,6 +579,20 @@ public class Feature implements Comparable<Feature> {
     }
 
     /**
+     * This a version of "getUsefulROles" for just deciding if a feature is interesting based
+     * on its roles.  It is slightly faster than the other method, and more convenient.
+     *
+     * @param map		role map containing all useful roles
+     *
+     * @return TRUE if the roles in this feature are also found in the specified role map
+     */
+    public boolean isInteresting(RoleMap map) {
+        String[] roleNames = rolesOfFunction(this.function);
+        boolean retVal = Arrays.stream(roleNames).anyMatch(x -> map.getByName(x) != null);
+        return retVal;
+    }
+
+    /**
      * @return a list of the useful roles in a functional assignment
      *
      * @param map		role map containing all useful roles

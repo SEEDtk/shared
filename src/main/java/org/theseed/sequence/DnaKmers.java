@@ -32,6 +32,7 @@ public class DnaKmers extends SequenceKmers {
      */
     public DnaKmers() {
         this.original = "";
+        this.kmerSet = new HashSet<String>();
     }
 
     /**

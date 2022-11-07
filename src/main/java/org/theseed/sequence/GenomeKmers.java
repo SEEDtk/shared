@@ -34,7 +34,8 @@ public class GenomeKmers extends SequenceKmers {
 
     /**
      * Create a kmer object for a genome.  This can be used to determine genome
-     * similarity.
+     * similarity.  Note that we only need one version of each kmer, since we
+     * are comparing whole, double-stranded genomes.
      *
      * @param genome	genome to convert into kmers
      *
@@ -53,11 +54,14 @@ public class GenomeKmers extends SequenceKmers {
         // Process the contigs.
         for (Contig contig : genome.getContigs()) {
             String seq = contig.getSequence();
-            int n = seq.length() - K;
+            String rSeq = contig.getRSequence();
+            final int len = seq.length();
+            final int n = len - K;
             for (int i = 0; i < n; i++) {
                 String plus = seq.substring(i, i + K);
-                String minus = Contig.reverse(plus);
-                if (plus.compareTo(minus) > 0) plus = minus;
+                String minus = rSeq.substring(n - i, len - i);
+                if (plus.compareTo(minus) > 0)
+                    plus = minus;
                 this.kmerSet.add(plus);
             }
         }
