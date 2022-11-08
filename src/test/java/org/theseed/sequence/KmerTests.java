@@ -66,6 +66,7 @@ public class KmerTests {
         String myDna2 = "atgtttgtaatcgttgttttattgccagtagtagtagtcagcagtgttaa";
         String myDna2r = "TTAACACTGCTGACTACTACTACTGGCAATAAAACAACGATTACAAACAT"; // rev of 2
         String myDna3 = "ATGTTTGTTTTTCTTGTTTTATTGCCACTA"; // 30 bp
+        String myDna4 = "ATGTTTGTTTTTCTTGTTTTATTGATGTTTGTTTTTCTTGTTTTATTGCCACTA";
         DnaKmers kmer1 = new DnaKmers(myDna1, 12);
         assertThat(kmer1.getK(), equalTo(12));
         DnaKmers.setKmerSize(12);
@@ -88,6 +89,18 @@ public class KmerTests {
         assertThat(kmer3.similarity(kmer1), equalTo(38));
         assertThat(kmer1.distance(kmer2), closeTo(0.932, 0.001));
         assertThat(kmer1.distance(kmer3), closeTo(0.513, 0.001));
+        RnaKmers.setKmerSize(20);
+        assertThat(DnaKmers.kmerSize(), equalTo(12));
+        RnaKmers k1 = new RnaKmers(20);
+        assertThat(k1.getLen(), equalTo(0));
+        k1.addSequence(myDna1);
+        k1.addSequence(myDna3);
+        assertThat(k1.getLen(), equalTo(myDna1.length()));
+        RnaKmers k2 = new RnaKmers(myDna4);
+        assertThat(k2.getK(), equalTo(20));
+        double d = k1.distance(k2);
+        assertThat(d, closeTo(0.78, 0.001));
+        assertThat(k2.distance(k1), equalTo(d));
     }
 
 

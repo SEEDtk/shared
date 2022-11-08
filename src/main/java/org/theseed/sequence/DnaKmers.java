@@ -29,15 +29,6 @@ public class DnaKmers extends SequenceKmers {
     private String original;
 
     /**
-     * Create an empty DNA kmer hash.
-     */
-    public DnaKmers() {
-        this.original = "";
-        this.kmerSet = new HashSet<String>();
-        this.K = defaultK;
-    }
-
-    /**
      * Create kmers for a single DNA sequence.
      *
      * @param dna	dna sequence to process
@@ -66,15 +57,6 @@ public class DnaKmers extends SequenceKmers {
     private void setup(String dna) {
         int cap = 8 * (dna.length() < K ? K : dna.length()) / 3 + 1;
         this.kmerSet = new HashSet<String>(cap);
-        this.addSequence(dna);
-    }
-
-    /**
-     * Add the kmers for a new sequence to this one.
-     *
-     * @param dna		DNA sequence to add
-     */
-    public void addSequence(String dna) {
         // Get the reverse complement.
         this.original = dna.toLowerCase();
         String rDna = Contig.reverse(this.original);

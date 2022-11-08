@@ -10,7 +10,7 @@ public abstract class SequenceKmers implements Iterable<String> {
     // FIELDS
 
     /** similarity score for identical proteins */
-    public static final int INFINITY = 9999;
+    public static final int INFINITY = Integer.MAX_VALUE;
 
     /** default seed */
     private static final int SEED = 1842724469;
@@ -28,17 +28,14 @@ public abstract class SequenceKmers implements Iterable<String> {
     public int similarity(SequenceKmers other) {
         int retVal = 0;
         if (this.sequence.contentEquals(other.sequence)) {
-            // Identical proteins.  Use the fake infinity.  This will be
+            // Identical sequences.  Use the fake infinity.  This will be
             // higher than the highest possible for the sequence, since the maximum otherwise
-            // is length - K.  We need to do this so that proteins with long X runs are
+            // is length - K.  We need to do this so that sequences with long X runs are
             // equal to themselves.
-            retVal = ProteinKmers.INFINITY;
+            retVal = INFINITY;
         } else {
-            for (String kmer : other.kmerSet) {
-                if (this.kmerSet.contains(kmer)) {
-                    retVal++;
-                }
-            }
+            long count = this.kmerSet.parallelStream().filter(x -> other.contains(x)).count();
+            retVal = (int) count;
         }
         return retVal;
     }
