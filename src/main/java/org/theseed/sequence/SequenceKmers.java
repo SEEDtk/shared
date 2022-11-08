@@ -44,6 +44,11 @@ public abstract class SequenceKmers implements Iterable<String> {
     }
 
     /**
+     * @return the kmer size
+     */
+    public abstract int getK();
+
+    /**
      * @return the Jaccard distance between two proteins
      *
      * @param other		the sequence-kmers object for the other sequence

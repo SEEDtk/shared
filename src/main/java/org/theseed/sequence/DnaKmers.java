@@ -21,9 +21,10 @@ public class DnaKmers extends SequenceKmers {
 
     // FIELDS
 
-    /** current kmer size */
-    private static int K = 24;
-
+    /** default kmer size */
+    private static int defaultK = 24;
+    /** kmer size */
+    private final int K;
     /** original DNA sequence */
     private String original;
 
@@ -33,6 +34,7 @@ public class DnaKmers extends SequenceKmers {
     public DnaKmers() {
         this.original = "";
         this.kmerSet = new HashSet<String>();
+        this.K = defaultK;
     }
 
     /**
@@ -41,6 +43,27 @@ public class DnaKmers extends SequenceKmers {
      * @param dna	dna sequence to process
      */
     public DnaKmers(String dna) {
+        this.K = defaultK;
+        setup(dna);
+    }
+
+    /**
+     * Create kmers for a single DNA sequence with a specified kmer size.
+     *
+     * @param dna		dna sequence to process
+     * @param kSize		kmer size to use
+     */
+    public DnaKmers(String dna, int kSize) {
+        this.K = kSize;
+        setup(dna);
+    }
+
+    /**
+     * Initialize the kmers.
+     *
+     * @param dna	DNA sequence to process
+     */
+    private void setup(String dna) {
         int cap = 8 * (dna.length() < K ? K : dna.length()) / 3 + 1;
         this.kmerSet = new HashSet<String>(cap);
         this.addSequence(dna);
@@ -70,14 +93,14 @@ public class DnaKmers extends SequenceKmers {
      * @param kSize	proposed new kmer size
      */
     public static void setKmerSize(int kSize) {
-        K = kSize;
+        defaultK = kSize;
     }
 
     /**
      * @return the current DNA kmer size
      */
     public static int kmerSize() {
-        return K;
+        return defaultK;
     }
 
     /**
@@ -92,6 +115,11 @@ public class DnaKmers extends SequenceKmers {
      */
     public int getLen() {
         return this.original.length();
+    }
+
+    @Override
+    public int getK() {
+        return this.K;
     }
 
 

@@ -1,7 +1,7 @@
 /**
  *
  */
-package org.theseed.shared;
+package org.theseed.sequence;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
@@ -11,11 +11,6 @@ import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 
 import org.theseed.genome.Genome;
-import org.theseed.sequence.DnaKmers;
-import org.theseed.sequence.GenomeKmers;
-import org.theseed.sequence.ProteinKmers;
-import org.theseed.sequence.SequenceKmers;
-
 import org.junit.jupiter.api.Test;
 /**
  * @author Bruce Parrello
@@ -28,13 +23,16 @@ public class KmerTests {
      */
     @Test
     public void testProtKmers() {
-        ProteinKmers.setKmerSize(10);
+        ProteinKmers.setKmerSize(12);
         String myProt1 = "MGMLVPLISKISDLSEEAKACVAACSSVEELDEVRGRYIGRAGALTALLA"; // 50 AA
         String myProt2 = "MDINLFKEELEELAKKAKHMLNETASKNDLEQVKVSLLGKKGLLTLQSAA";
         String myProt3 = "MDINLFKEELKHMLNETASKKGLLTLQSA"; // 30 AA
-        ProteinKmers kmer1 = new ProteinKmers(myProt1);
-        ProteinKmers kmer2 = new ProteinKmers(myProt2);
-        ProteinKmers kmer3 = new ProteinKmers(myProt3);
+        ProteinKmers kmer0 = new ProteinKmers(myProt1);
+        assertThat(kmer0.getK(), equalTo(12));
+        ProteinKmers kmer1 = new ProteinKmers(myProt1, 10);
+        assertThat(kmer1.getK(), equalTo(10));
+        ProteinKmers kmer2 = new ProteinKmers(myProt2, kmer1.getK());
+        ProteinKmers kmer3 = new ProteinKmers(myProt3, kmer1.getK());
         assertThat("Kmer1 has wrong protein.", kmer1.getProtein(), equalTo(myProt1));
         assertThat("Kmer1 has wrong count.", kmer1.size(), equalTo(41));
         assertThat("Kmer1/kmer3 wrong similarity.", kmer2.similarity(kmer3), equalTo(3));
@@ -63,13 +61,16 @@ public class KmerTests {
      */
     @Test
     public void testDnaKmers() {
-        DnaKmers.setKmerSize(12);
+        DnaKmers.setKmerSize(14);
         String myDna1 = "ATGTTTGTTTTTCTTGTTTTATTGCCACTAGTCTCTATAACACTGCTGAC"; // 50 bp
         String myDna2 = "atgtttgtaatcgttgttttattgccagtagtagtagtcagcagtgttaa";
         String myDna2r = "TTAACACTGCTGACTACTACTACTGGCAATAAAACAACGATTACAAACAT"; // rev of 2
         String myDna3 = "ATGTTTGTTTTTCTTGTTTTATTGCCACTA"; // 30 bp
-        DnaKmers kmer1 = new DnaKmers(myDna1);
+        DnaKmers kmer1 = new DnaKmers(myDna1, 12);
+        assertThat(kmer1.getK(), equalTo(12));
+        DnaKmers.setKmerSize(12);
         DnaKmers kmer2 = new DnaKmers(myDna2);
+        assertThat(kmer2.getK(), equalTo(12));
         DnaKmers kmer2r = new DnaKmers(myDna2r);
         DnaKmers kmer3 = new DnaKmers(myDna3);
         assertThat(myDna1.toLowerCase(), equalTo(kmer1.getDna()));
@@ -98,14 +99,16 @@ public class KmerTests {
      */
     @Test
     public void testGenomeKmers() throws IOException, NoSuchAlgorithmException {
-        GenomeKmers.setKmerSize(24);
+        GenomeKmers.setKmerSize(28);
         Genome g = new Genome(new File("data/gto_test", "1005394.4.gto"));
-        GenomeKmers kmer1 = new GenomeKmers(g);
+        GenomeKmers kmer1 = new GenomeKmers(g, 24);
+        assertThat(kmer1.getK(), equalTo(24));
         g = new Genome(new File("data/gto_test", "1313.7001.gto"));
+        GenomeKmers.setKmerSize(24);
         GenomeKmers kmer2 = new GenomeKmers(g);
+        assertThat(kmer2.getK(), equalTo(24));
         g = new Genome(new File("data/gto_test", "1313.7002.gto"));
         GenomeKmers kmer3 = new GenomeKmers(g);
-        g = null;
         assertThat(kmer1.equals(kmer2), equalTo(false));
         assertThat(kmer2.equals(kmer3), equalTo(false));
         assertThat(kmer1.getGenomeId(), equalTo("1005394.4"));

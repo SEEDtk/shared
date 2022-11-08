@@ -13,7 +13,8 @@ import org.theseed.genome.Genome;
 /**
  * This class tracks kmers for whole genomes.  In this case, we do not store the whole sequence; rather, we
  * keep the MD5 of the genome sequence along with the kmers.  The kmers are stored for both strands of each
- * contig.  (This is why the subclass does not have a sequence-retrieval method.)
+ * contig; however, since we are comparing whole genomes, we only store one version of each kmer (the lexically
+ * lowest).  There is no sequence-retrieval method, since it really does not apply.
  *
  *
  * @author Bruce Parrello
@@ -23,19 +24,17 @@ public class GenomeKmers extends SequenceKmers {
 
     // FIELDS
 
+    /** default kmer size */
+    private static int defaultK = 24;
     /** current kmer size */
-    private static int K = 24;
-
+    private final int K;
     /** ID of the genome represented */
     private String genomeId;
-
     /** name of the genome represented */
     private String genomeName;
 
     /**
-     * Create a kmer object for a genome.  This can be used to determine genome
-     * similarity.  Note that we only need one version of each kmer, since we
-     * are comparing whole, double-stranded genomes.
+     * Create a kmer object for a genome.
      *
      * @param genome	genome to convert into kmers
      *
@@ -43,6 +42,33 @@ public class GenomeKmers extends SequenceKmers {
      * @throws UnsupportedEncodingException
      */
     public GenomeKmers(Genome genome) throws NoSuchAlgorithmException, UnsupportedEncodingException {
+        this.K = defaultK;
+        setup(genome);
+    }
+
+    /**
+     * Create a kmer object for a genome with a specified kmer size.
+     *
+     * @param genome	genome to convert into kmers
+     * @param kSize		kmer size to use
+     *
+     * @throws NoSuchAlgorithmException
+     * @throws UnsupportedEncodingException
+     */
+    public GenomeKmers(Genome genome, int kSize) throws NoSuchAlgorithmException, UnsupportedEncodingException {
+        this.K = kSize;
+        setup(genome);
+    }
+
+    /**
+     * Initialize the kmer object for a genome.
+     *
+     * @param genome	genome whose DNA is to be parsed
+     *
+     * @throws NoSuchAlgorithmException
+     * @throws UnsupportedEncodingException
+     */
+    private void setup(Genome genome) throws NoSuchAlgorithmException, UnsupportedEncodingException {
         // Store the genome MD5 as the identifying sequence.
         MD5Hex md5Computer = new MD5Hex();
         this.sequence = md5Computer.sequenceMD5(genome);
@@ -73,14 +99,14 @@ public class GenomeKmers extends SequenceKmers {
      * @param kSize	proposed new kmer size
      */
     public static void setKmerSize(int kSize) {
-        K = kSize;
+        defaultK = kSize;
     }
 
     /**
      * @return the current genome kmer size
      */
     public static int kmerSize() {
-        return K;
+        return defaultK;
     }
 
     /**
@@ -95,6 +121,11 @@ public class GenomeKmers extends SequenceKmers {
      */
     public String getGenomeName() {
         return this.genomeName;
+    }
+
+    @Override
+    public int getK() {
+        return this.K;
     }
 
 }
