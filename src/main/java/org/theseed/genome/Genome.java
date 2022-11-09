@@ -129,7 +129,7 @@ public class Genome  {
         GENOME_NAME("unknown organism"),
         TAXON_LINEAGE_IDS(noEntries),
         TAXON_ID(2),
-        KINGDOM("Bacteria"),
+        SUPERKINGDOM("Bacteria"),
         SOURCE(null),
         SOURCE_ID(null),
         HOME("none"),
@@ -539,7 +539,7 @@ public class Genome  {
      */
     public JsonObject toJson() {
         // In case there is old data that we don't support, we start with the original
-        // json object we read it.  If there is none, we create it.
+        // json object we read in.  If there is none, we create it.
         JsonObject retVal = this.gto;
         if (retVal == null) {
             retVal = new JsonObject();
@@ -701,7 +701,7 @@ public class Genome  {
              this.lineage[i] = taxRecords.get(i);
         }
         // Compute the domain.
-        this.domain = genomeData.getStringOrDefault(GenomeKeys.KINGDOM);
+        this.domain = genomeData.getStringOrDefault(GenomeKeys.SUPERKINGDOM);
         // Denote this is a PATRIC genome.
         this.setHome("PATRIC");
     }
