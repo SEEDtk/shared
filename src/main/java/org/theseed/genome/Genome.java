@@ -472,12 +472,16 @@ public class Genome  {
      */
     public String getDna(Location loc) {
         String retVal = "";
-        Contig contig = this.getContig(loc.getContigId());
-        for (Region region : loc.getRegions()) {
-            retVal += contig.getDna(region);
-        }
-        if (loc.getDir() == '-') {
-            retVal = Contig.reverse(retVal);
+        if (loc != null) {
+            Contig contig = this.getContig(loc.getContigId());
+            if (contig != null) {
+                for (Region region : loc.getRegions()) {
+                    retVal += contig.getDna(region);
+                }
+                if (loc.getDir() == '-') {
+                    retVal = Contig.reverse(retVal);
+                }
+            }
         }
         return retVal;
     }

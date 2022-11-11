@@ -988,6 +988,13 @@ public class Feature implements Comparable<Feature> {
     }
 
     /**
+     * @return the DNA for this feature
+     */
+    public String getDna() {
+        return this.parent.getDna(this.location);
+    }
+
+    /**
      * @return a key for a pair of feature IDs
      *
      * @param iFid	first feature ID

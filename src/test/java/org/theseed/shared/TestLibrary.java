@@ -333,6 +333,7 @@ public class TestLibrary {
         assertThat("Incorrect protein for sample feature (seqtype).", Feature.SeqType.PROTEIN.get(myFeature), equalTo(myProtein));
         assertThat("Incorrect protein length for sample feature.", myFeature.getProteinLength(), equalTo(myProtein.length()));
         assertThat("Incorrect DNA for sample feature.", myGto.getDna("fig|1313.7001.peg.758"), equalTo(myDna1));
+        assertThat("Incorrect DNA for sample feature.", myFeature.getDna(), equalTo(myDna1));
         assertThat("Incorrect DNA for sample feature.", Feature.SeqType.DNA.get(myFeature), equalTo(myDna1));
         assertThat("Incorrect local family for sample feature.", myFeature.getPlfam(), equalTo("PLF_1301_00010583"));
         assertThat("Incorrect global family for sample feature.", myFeature.getPgfam(), equalTo("PGF_07475842"));
