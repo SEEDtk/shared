@@ -69,7 +69,7 @@ public abstract class BasePipeProcessor extends BaseReportProcessor {
     }
 
     /**
-     * Process key information in the input stream.
+     * Process key information in the input stream.  This is always called after "validatePipeParms".
      *
      * @param inputStream	open input stream
      *
@@ -78,7 +78,7 @@ public abstract class BasePipeProcessor extends BaseReportProcessor {
     protected abstract void validatePipeInput(TabbedLineReader inputStream) throws IOException;
 
     /**
-     * Perform parameter validation for the subclass.
+     * Perform parameter validation for the subclass.  This is always called before "validatePipeInput".
      *
      * @throws IOException
      * @throws ParseFailureException
