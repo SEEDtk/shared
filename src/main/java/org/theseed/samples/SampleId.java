@@ -210,55 +210,62 @@ public class SampleId implements Comparable<SampleId> {
     public static SampleId translate(String strain, double time, boolean iptg, String medium) {
         SampleId retVal = new SampleId();
         retVal.fragments = new String[NORMAL_SIZE];
-        // Erase the leading NRRL (if any).
-        strain = StringUtils.removeStartIgnoreCase(strain, "nrrl ");
-        // Break the strain name into pieces.
-        String[] pieces = StringUtils.split(strain);
-        // Remove deletes from the host name and add them to the master delete string.
-        StringBuffer deleteString = new StringBuffer(40);
-        String parts[] = StringUtils.split(pieces[0], "dD", 2);
-        if (parts.length > 1) {
-            pieces[0] = parts[0];
-            deleteString.append("D" + parts[1]);
-        }
-        retVal.parseHost(pieces[0]);
-        // Now we loop through the modifiers.  A modifier can be a plasmid specification, a deletion,
-        // or an insert.  A leading plus sign is removed.  Note that the term "plasmid" is obsolete,
-        // as some plasmids are actually direct modification to the chromosome.  There is, alas, too much
-        // use of the word to let go now.
-        String insert = "000";
-        for (int i = 1; i < pieces.length; i++) {
-            String piece = pieces[i].toLowerCase();
-            if (piece.charAt(0) == 'd') {
-                // Here we have a deletion.  Add it to the delete string.
-                deleteString.append(piece);
-            } else if (piece.contentEquals("plasmid")) {
-                // The word "plasmid" is just a comment.
-            } else {
-                // Remove any leading plus sign.
-                if (piece.charAt(0) == '+')
-                    piece = piece.substring(1);
-                // Fix periods.  A plasmid can be specified with periods or hyphens, and we
-                // prefer hyphens.
-                piece = StringUtils.replaceChars(piece, '.', '-');
-                insert = retVal.parseModifier(insert, piece);
+        // Determine the basic strain format.  If it begins with "str ", then it is new-style.  Otherwise,
+        // it is old-style.
+        if (StringUtils.startsWith(strain, "str ")) {
+            String[] pieces = StringUtils.split(StringUtils.removeStart(strain, "str "), '_');
+            System.arraycopy(pieces, 0, retVal.fragments, 0, pieces.length);
+        } else {
+            // Erase the leading NRRL (if any).
+            strain = StringUtils.removeStartIgnoreCase(strain, "nrrl ");
+            // Break the strain name into pieces.
+            String[] pieces = StringUtils.split(strain);
+            // Remove deletes from the host name and add them to the master delete string.
+            StringBuffer deleteString = new StringBuffer(40);
+            String parts[] = StringUtils.split(pieces[0], "dD", 2);
+            if (parts.length > 1) {
+                pieces[0] = parts[0];
+                deleteString.append("D" + parts[1]);
             }
+            retVal.parseHost(pieces[0]);
+            // Now we loop through the modifiers.  A modifier can be a plasmid specification, a deletion,
+            // or an insert.  A leading plus sign is removed.  Note that the term "plasmid" is obsolete,
+            // as some plasmids are actually direct modification to the chromosome.  There is, alas, too much
+            // use of the word to let go now.
+            String insert = "000";
+            for (int i = 1; i < pieces.length; i++) {
+                String piece = pieces[i].toLowerCase();
+                if (piece.charAt(0) == 'd') {
+                    // Here we have a deletion.  Add it to the delete string.
+                    deleteString.append(piece);
+                } else if (piece.contentEquals("plasmid")) {
+                    // The word "plasmid" is just a comment.
+                } else {
+                    // Remove any leading plus sign.
+                    if (piece.charAt(0) == '+')
+                        piece = piece.substring(1);
+                    // Fix periods.  A plasmid can be specified with periods or hyphens, and we
+                    // prefer hyphens.
+                    piece = StringUtils.replaceChars(piece, '.', '-');
+                    insert = retVal.parseModifier(insert, piece);
+                }
+            }
+            // Make the 277 adjustment.
+            if (pieces[0].contentEquals("277") && retVal.fragments[3].contentEquals("0"))
+                retVal.fragments[3] = "A";
+            // Now process the deletions.
+            String deletions = deleteString.toString();
+            if (deletions.isEmpty())
+                retVal.fragments[DELETE_COL] = "D000";
+            else {
+                // Here we have real deletes to process.
+                String fixedDeleteSpec = fixDeletes(deletions);
+                retVal.fragments[DELETE_COL] = fixedDeleteSpec;
+            }
+            // Next we process the protein insert.
+            retVal.fragments[INSERT_COL] = insert;
         }
-        // Make the 277 adjustment.
-        if (pieces[0].contentEquals("277") && retVal.fragments[3].contentEquals("0"))
-            retVal.fragments[3] = "A";
-        // Now process the deletions.
-        String deletions = deleteString.toString();
-        if (deletions.isEmpty())
-            retVal.fragments[DELETE_COL] = "D000";
-        else {
-            // Here we have real deletes to process.
-            String fixedDeleteSpec = fixDeletes(deletions);
-            retVal.fragments[DELETE_COL] = fixedDeleteSpec;
-        }
-        // Next we process the protein insert.
-        retVal.fragments[INSERT_COL] = insert;
-        // Now we save the time.
+        // With the strain defined, we save the time.
         retVal.timePoint = time;
         String timeString;
         if (Double.isNaN(time))
