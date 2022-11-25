@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-import org.theseed.io.Shuffler;
+import org.theseed.counters.Shuffler;
 
 import j2html.tags.ContainerTag;
 import static j2html.TagCreator.*;

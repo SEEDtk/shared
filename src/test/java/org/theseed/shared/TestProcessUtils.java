@@ -12,7 +12,7 @@ import java.io.IOException;
 import java.util.List;
 
 import org.apache.commons.lang3.SystemUtils;
-import org.theseed.io.Shuffler;
+import org.theseed.counters.Shuffler;
 import org.theseed.utils.ProcessUtils;
 
 /**

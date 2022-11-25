@@ -14,9 +14,9 @@ import java.util.regex.Matcher;
 
 import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.Test;
+import org.theseed.counters.Shuffler;
 import org.theseed.io.ParmDescriptor;
 import org.theseed.io.ParmFile;
-import org.theseed.io.Shuffler;
 import org.theseed.utils.MultiParms;
 
 /**

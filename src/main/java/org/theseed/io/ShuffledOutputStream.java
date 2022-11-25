@@ -10,6 +10,8 @@ import java.io.PrintStream;
 import java.io.UncheckedIOException;
 import java.util.Iterator;
 
+import org.theseed.counters.Shuffler;
+
 /**
  * This is a variation of BalancedOutputStream for the case where there are two classes.  In this case,
  * the fuzz factor can be any number greater than or equal to 1.0.  The label is placed at the start

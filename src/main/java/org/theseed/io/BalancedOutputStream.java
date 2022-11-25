@@ -14,6 +14,7 @@ import java.util.Map;
 import java.util.Random;
 
 import org.theseed.counters.CountMap;
+import org.theseed.counters.Shuffler;
 
 /**
  * This is a wrapper class that produces an output stream balanced by class.  When writing a record,

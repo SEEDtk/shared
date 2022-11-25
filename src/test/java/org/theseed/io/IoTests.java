@@ -19,6 +19,7 @@ import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
 import org.theseed.counters.CountMap;
+import org.theseed.counters.Shuffler;
 import org.junit.jupiter.api.Test;
 
 /**
