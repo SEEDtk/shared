@@ -24,7 +24,7 @@ class TestDeletes {
 
 
     @Test
-    void test() throws IOException {
+    void testDeletes() throws IOException {
         File gFile = new File("data", "test.good.gto");
         Genome testGenome = new Genome(gFile);
         // Delete a safe feature.

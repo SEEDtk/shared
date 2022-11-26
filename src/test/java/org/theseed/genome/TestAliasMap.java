@@ -26,7 +26,7 @@ class TestAliasMap {
 
 
     @Test
-    void test() throws IOException {
+    void testAliasMap() throws IOException {
         Genome genome = new Genome(new File("data", "MG1655-wild.gto"));
         var aliasMap = genome.getAliasMap();
         assertThat(aliasMap.get("hslU"), hasItems("fig|511145.183.peg.4025"));

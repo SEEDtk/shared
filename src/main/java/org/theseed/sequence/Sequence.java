@@ -3,6 +3,8 @@
  */
 package org.theseed.sequence;
 
+import org.theseed.genome.Contig;
+
 /**
  * This class represents a record from a FASTA file.  It contains a sequence,
  * a label, and a comment.
@@ -25,7 +27,6 @@ public class Sequence {
         this.comment = "";
         this.sequence = "";
     }
-
 
     /**
      * Construct a sequence from known strings.
@@ -90,6 +91,13 @@ public class Sequence {
         this.sequence = sequence;
     }
 
+    /**
+     * @return a new sequence object with the reverse complement of this one (DNA sequences only, obviously)
+     */
+    public Sequence reverse() {
+        String rev = Contig.reverse(this.sequence);
+        return new Sequence(this.label, this.comment, rev);
+    }
 
     @Override
     public int hashCode() {

@@ -20,7 +20,7 @@ import com.github.cliftonlabs.json_simple.JsonObject;
 class TestQuality {
 
     @Test
-    void test() throws IOException {
+    void testQualityJson() throws IOException {
         Genome gto = new Genome(new File("data", "test.good.gto"));
         JsonObject quality = gto.getQuality();
         assertThat(quality.get("genome_quality"), equalTo("Good"));

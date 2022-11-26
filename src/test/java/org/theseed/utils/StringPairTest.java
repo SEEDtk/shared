@@ -11,7 +11,7 @@ import org.junit.jupiter.api.Test;
 class StringPairTest {
 
     @Test
-    void test() {
+    void testStringPairs() {
         var pair1 = new StringPair("ABC", "DEF");
         var pair2 = new StringPair("DEF", "ABC");
         var pair3 = new StringPair(null, null);

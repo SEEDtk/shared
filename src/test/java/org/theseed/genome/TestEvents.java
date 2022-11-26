@@ -27,7 +27,7 @@ class TestEvents {
     protected static Logger log = LoggerFactory.getLogger(TestEvents.class);
 
     @Test
-    void test() throws IOException {
+    void testGenomeEvents() throws IOException {
         File gFile = new File("data", "test.good.gto");
         Genome genome = new Genome(gFile);
         var events = genome.getEvents();

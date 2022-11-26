@@ -57,8 +57,9 @@ public abstract class BaseInputProcessor extends BaseProcessor {
         }
         try {
             this.validateReaderInput(this.inStream);
-        } finally {
+        } catch (IOException e) {
             this.inStream.close();
+            throw new IOException(e);
         }
         return true;
     }

@@ -18,7 +18,7 @@ import org.junit.jupiter.api.Test;
 public class TestRatingList {
 
     @Test
-    public void test() throws IOException {
+    public void testRatingList() throws IOException {
         RatingList<String> ratings = new RatingList<String>(10);
         assertThat(ratings.size(), equalTo(0));
         ratings.add("A100", 100.0);

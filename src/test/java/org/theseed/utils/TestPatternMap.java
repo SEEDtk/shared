@@ -21,7 +21,7 @@ class TestPatternMap {
     Integer[] TEST_OBJECTS = new Integer[] { 1,       2,            3,        4 };
 
     @Test
-    void test() {
+    void testPatternMap() {
         PatternMap<Integer> testMap = new PatternMap<Integer>();
         assertThat("Map not initialized empty.", testMap.isEmpty());
         assertThat(testMap.size(), equalTo(0));

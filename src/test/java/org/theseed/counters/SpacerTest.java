@@ -26,7 +26,7 @@ class SpacerTest {
 
 
     @Test
-    void test() {
+    void testSpacer() {
         // We create lists of different sizes and use different counts.
         for (int size = 10; size < 100; size += 3) {
             List<String> testList = IntStream.range(0, size).mapToObj(i -> String.format("I%d", i)).collect(Collectors.toList());
