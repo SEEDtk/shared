@@ -35,10 +35,10 @@ public class GenomeDirectory implements Iterable<Genome> {
     /** list of the genome IDs */
     private TreeSet<String> genomeIDs;
 
-    /** last file name read */
+    /** last file name read (not thread-safe) */
     private File gtoFile;
 
-    /** Filter for GTO files */
+    /** filter for GTO files */
     private class GtoFilter implements FilenameFilter {
 
         @Override
@@ -174,12 +174,13 @@ public class GenomeDirectory implements Iterable<Genome> {
      */
     public Genome getGenome(String genomeId) {
         // Build the genome file name.
-        this.gtoFile = new File(dirName, genomeId + ".gto");
+        File gFile = new File(dirName, genomeId + ".gto");
         // Read the genome.  Note we have to percolate some checked exceptions.
         Genome retVal;
         try {
-            log.debug("Reading genome from {}.", this.gtoFile);
-            retVal = new Genome(this.gtoFile);
+            log.debug("Reading genome from {}.", gFile);
+            retVal = new Genome(gFile);
+            this.gtoFile = gFile;
         } catch (NumberFormatException | IOException e) {
             throw new RuntimeException("Error processing genomes.", e);
         }
