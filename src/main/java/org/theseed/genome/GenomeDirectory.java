@@ -161,7 +161,10 @@ public class GenomeDirectory implements Iterable<Genome> {
     }
 
     /**
-     * @return the name of the last file read using an iterator
+     * This recalls the name of the last genome read, but it is useless in a multi-threaded environment.
+     * We keep it for some older commands that do single-threaded iteration.
+     *
+     * @return the name of the last file read
      */
     public File currFile() {
         return this.gtoFile;
