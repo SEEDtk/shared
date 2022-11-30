@@ -28,9 +28,9 @@ public class Parms {
 
     // FIELDS
     /** map of parameters to values */
-    private SortedMap<String, String> binary;
+    protected SortedMap<String, String> binary;
     /** set of options */
-    private SortedSet<String> unary;
+    protected SortedSet<String> unary;
 
     /**
      * This is a special comparator that sorts single-hyphen parameters in front of double-hyphen ones.
