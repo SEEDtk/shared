@@ -1,5 +1,7 @@
 package org.theseed.genome;
 
+import java.io.UnsupportedEncodingException;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -20,6 +22,7 @@ import org.theseed.locations.Region;
 import org.theseed.proteins.Function;
 import org.theseed.proteins.Role;
 import org.theseed.proteins.RoleMap;
+import org.theseed.sequence.MD5Hex;
 
 import com.github.cliftonlabs.json_simple.JsonArray;
 import com.github.cliftonlabs.json_simple.JsonKey;
@@ -985,6 +988,23 @@ public class Feature implements Comparable<Feature> {
      */
     public String getFigfam() {
         return this.figfam;
+    }
+
+    /**
+     * @return the protein MD5
+     */
+    public String getMD5() {
+        String retVal = null;
+        String prot = this.protein_translation;
+        if (! StringUtils.isBlank(prot)) try {
+            MD5Hex computer = new MD5Hex();
+            retVal = computer.checksum(this.protein_translation);
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException("Missing MD5 algorithm. " + e.getMessage());
+        } catch (UnsupportedEncodingException e) {
+            throw new RuntimeException("Error in MD5 computation. " + e.getMessage());
+        }
+        return retVal;
     }
 
     /**
