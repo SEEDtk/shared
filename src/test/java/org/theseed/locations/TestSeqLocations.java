@@ -1,15 +1,13 @@
 /**
  *
  */
-package org.theseed.shared;
+package org.theseed.locations;
 
 import java.io.File;
 import java.io.IOException;
 
 import org.theseed.genome.Feature;
 import org.theseed.genome.Genome;
-import org.theseed.locations.Location;
-import org.theseed.locations.SequenceLocation;
 import org.theseed.proteins.CodonSet;
 
 import org.junit.jupiter.api.Test;

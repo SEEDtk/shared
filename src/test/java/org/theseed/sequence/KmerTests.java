@@ -103,6 +103,18 @@ public class KmerTests {
         assertThat(k2.distance(k1), equalTo(d));
     }
 
+    /**
+     * test clean check
+     */
+    @Test
+    public void testCleanCheck() {
+        String clean = "acgtacgtacgtacgttgcau";
+        String[] dirty = new String[] { "acgxttttuuuccccgggaaac", "n", "acgacgacgacgttttttyaaa" };
+        assertThat(DnaKmers.isClean(clean), equalTo(true));
+        for (var kmer : dirty)
+            assertThat(kmer, ! DnaKmers.isClean(kmer));
+    }
+
 
     /**
      * test genome kmers
@@ -187,5 +199,10 @@ public class KmerTests {
         }
         assertThat(ups > 0 && downs > 0, equalTo(true));
     }
+
+    /**
+     * Test isClean check.
+     */
+
 
 }

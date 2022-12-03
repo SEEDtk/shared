@@ -232,7 +232,7 @@ public class Contig implements Comparable<Contig> {
                 rev = 'a';
                 break;
             default :
-                rev = 'x';
+                rev = 'n';
             }
             retVal.append(rev);
         }

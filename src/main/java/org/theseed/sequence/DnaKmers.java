@@ -5,6 +5,7 @@ package org.theseed.sequence;
 
 import java.util.HashSet;
 
+import org.apache.commons.lang3.StringUtils;
 import org.theseed.genome.Contig;
 
 /**
@@ -102,6 +103,15 @@ public class DnaKmers extends SequenceKmers {
     @Override
     public int getK() {
         return this.K;
+    }
+
+    /**
+     * @return TRUE if the specified kmer has no ambiguity characters, else FALSE
+     *
+     * @param kmer	kmer to check
+     */
+    public static boolean isClean(String kmer) {
+        return StringUtils.indexOfAnyBut(kmer, "acgtu") < 0;
     }
 
 

@@ -1,7 +1,7 @@
 /**
  *
  */
-package org.theseed.shared;
+package org.theseed.locations;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
@@ -17,11 +17,6 @@ import java.util.Map;
 
 import org.theseed.genome.Feature;
 import org.theseed.genome.Genome;
-import org.theseed.locations.DiscreteLocationList;
-import org.theseed.locations.Frame;
-import org.theseed.locations.Location;
-import org.theseed.locations.Region;
-import org.theseed.locations.SortedLocationList;
 import org.theseed.locations.DiscreteLocationList.Edge;
 import org.junit.jupiter.api.Test;
 
