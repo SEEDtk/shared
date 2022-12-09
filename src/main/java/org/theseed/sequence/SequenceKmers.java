@@ -82,7 +82,7 @@ public abstract class SequenceKmers implements Iterable<String> {
         return this.kmerSet.size();
     }
 
-    /** Only the sequence sequence matters to this object. */
+    /** Only the sequence matters to this object. */
     @Override
     public int hashCode() {
         final int prime = 31;

@@ -96,6 +96,9 @@ public class CounterTest  {
         assertThat("Wrong count for thing 4.", thingCounter.getCount(t4), equalTo(4));
         assertThat("Wrong count for thing 5.", thingCounter.getCount(t5), equalTo(0));
         assertThat(thingCounter.getTotal(), equalTo(10));
+        var best = thingCounter.getBestEntry();
+        assertThat(best.getCount(), equalTo(4));
+        assertThat(best.getKey(), equalTo(t4));
         Collection<Thing> keysFound = thingCounter.keys();
         assertThat("Wrong keys returned.", keysFound, contains(t1, t4, t2, t3));
         assertThat("Too many keys returned.", keysFound.size(), equalTo(4));

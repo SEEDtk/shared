@@ -5,6 +5,7 @@ package org.theseed.counters;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -24,7 +25,7 @@ import java.util.TreeSet;
 public class CountMap<K> {
 
     /** underlying hash map */
-    HashMap<K, Count> map;
+    private HashMap<K, Count> map;
 
     /**
      * Utility class to encapsulate the count.
@@ -303,6 +304,16 @@ public class CountMap<K> {
      */
     public void remove(K key) {
         this.map.remove(key);
+    }
+
+    /**
+     * @return the counter entry with the highest count, or NULL if there are no counts
+]	 */
+    public Count getBestEntry() {
+        Count retVal = null;
+        if (this.map.size() > 0)
+            retVal = Collections.min(this.map.values());
+        return retVal;
     }
 
 }
