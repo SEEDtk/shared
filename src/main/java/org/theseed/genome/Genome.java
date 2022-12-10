@@ -34,6 +34,7 @@ import org.theseed.counters.Shuffler;
 import org.theseed.locations.Location;
 import org.theseed.locations.Region;
 import org.theseed.proteins.Function;
+import org.theseed.proteins.RoleMap;
 import org.theseed.reports.LinkObject;
 import org.theseed.sequence.FastaOutputStream;
 import org.theseed.sequence.Sequence;
@@ -153,6 +154,104 @@ public class Genome  {
         @Override
         public Object getValue() {
             return this.m_value;
+        }
+
+    }
+
+    /**
+     * This class is an iterator for pegs only.
+     */
+    public class Pegs implements Iterator<Feature> {
+
+        /** iterator through the genome features */
+        private Iterator<Feature> iter;
+        /** next feature to return */
+        private Feature nextFeature;
+
+        /**
+         * Construct a peg iterator for this genome.
+         */
+        public Pegs() {
+            this.iter = Genome.this.features.values().iterator();
+            this.nextFeature = this.findNext();
+        }
+
+        /**
+         * @return the next peg in the genome, or NULL if there are none
+         */
+        private Feature findNext() {
+            Feature retVal = null;
+            while (retVal == null && this.iter.hasNext()) {
+                Feature curr = this.iter.next();
+                if (curr.getType().contentEquals("CDS"))
+                    retVal = curr;
+            }
+            return retVal;
+        }
+
+        @Override
+        public boolean hasNext() {
+            return this.nextFeature != null;
+        }
+
+        @Override
+        public Feature next() {
+            Feature retVal = this.nextFeature;
+            this.nextFeature = this.findNext();
+            return retVal;
+        }
+
+    }
+
+    /**
+     * This class is an iterator for pegs with interesting roles.
+     */
+    public class InterestingPegs implements Iterator<Feature> {
+
+        /** map of interesting roles */
+        private RoleMap roleMap;
+        /** next feature to return */
+        private Feature nextFeature;
+        /** iterator through the features */
+        private Iterator<Feature> featIter;
+
+        /**
+         * Create an iterator through the genome based on the specified role map.
+         *
+         * @param roles		definition map for interesting roles
+         */
+        public InterestingPegs(RoleMap roles) {
+            this.roleMap = roles;
+            // Set up the iterator through the genome features.
+            this.featIter = Genome.this.new Pegs();
+            // Find the first interesting feature.
+            this.nextFeature = this.findNext();
+        }
+
+        /**
+         * @return the next interesting peg, or NULL if there are none
+         */
+        private Feature findNext() {
+            Feature retVal = null;
+            while (retVal == null && this.featIter.hasNext()) {
+                // We stop when we find a feature that is a peg and has an interesting role.
+                Feature curr = this.featIter.next();
+                if (curr.isInteresting(this.roleMap))
+                    retVal = curr;
+            }
+            return retVal;
+        }
+
+        @Override
+        public boolean hasNext() {
+            return this.nextFeature != null;
+        }
+
+        @Override
+        public Feature next() {
+            Feature retVal = this.nextFeature;
+            this.nextFeature = this.findNext();
+            return retVal;
         }
 
     }

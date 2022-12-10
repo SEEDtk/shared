@@ -254,5 +254,20 @@ public class FLocation extends Location {
         return this.getBegin() <= CONTIG_EDGE;
     }
 
+    @Override
+    public String toSproutString() {
+        return String.format("%s_%d+%d", this.getContigId(), this.getBegin(), this.getLength());
+    }
+
+    @Override
+    public int getDownstreamGap(Location other) {
+        return (this.isSameStrand(other) ? other.getBegin() - this.getEnd() - 1 : Integer.MAX_VALUE);
+    }
+
+    @Override
+    public int getDownstreamShift(Location other) {
+        return other.getBegin() - this.getBegin();
+    }
+
 
 }

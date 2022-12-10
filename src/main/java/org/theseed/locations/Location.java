@@ -999,6 +999,11 @@ public abstract class Location implements Comparable<Location>, Cloneable {
     public abstract String toSeedString();
 
     /**
+     * @return a SPROUT-style location string for this location
+     */
+    public abstract String toSproutString();
+
+    /**
      * @return TRUE if this location starts near the edge of a contig
      */
     public abstract boolean isEdgeStart(Contig contig);
@@ -1007,5 +1012,27 @@ public abstract class Location implements Comparable<Location>, Cloneable {
      * @return TRUE if this location ends near the edge of a contig
      */
     public abstract boolean isEdgeEnd(Contig contig);
+
+    /**
+     * This returns the downstream gap between two locations.  The downstream gap is the distance between
+     * the end of this location and the beginning of the other location.  Both locations must be on the
+     * same strand (that is, same contig ID and direction).  If not, the result will be MAX_VALUE.  If the
+     * locations overlap, the result will be negative.
+     *
+     * @return the distance in the strand direction between the end of this location and the beginning of the other
+     */
+    public abstract int getDownstreamGap(Location other);
+
+    /**
+     * This returns the downstream shift distance between two locations.  Like the downstream gap, the shift
+     * distance is dependent on the strand, but it is a distance between start positions.  A downstream shift of
+     * 10 means this location starts 10 positions after the other one in the strand direction.The downstream gap is the distance between
+     * the end of this location and the beginning of the other location.  Both locations must be on the
+     * same strand (that is, same contig ID and direction), or the result will be meaningless.  This function
+     * is used for sorting, so it is presumed the user sorts by strand first.
+     *
+     * @return the distance in the strand direction between the beginning of this location and the beginning of the other
+     */
+    public abstract int getDownstreamShift(Location other);
 
 }

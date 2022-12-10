@@ -707,4 +707,27 @@ public class TestLocations {
         assertThat(floc2, equalTo(floc));
     }
 
+    @Test
+    public void testDownstream() {
+        Location floc1 = Location.create("contig1", 1000, 2000);
+        Location floc2 = Location.create("contig1", 1050, 2050);
+        Location floc3 = Location.create("contig1", 2020, 3020);
+        Location floc4 = Location.create("contig2", 4000, 5000);
+        Location bloc1 = Location.create("contig1", 5000, 4000);
+        Location bloc2 = Location.create("contig1", 4900, 3900);
+        Location bloc3 = Location.create("contig1", 3899, 2899);
+        assertThat(floc1.getDownstreamGap(floc2), equalTo(-951));
+        assertThat(floc1.getDownstreamShift(floc2), equalTo(50));
+        assertThat(floc1.getDownstreamGap(floc3), equalTo(19));
+        assertThat(floc1.getDownstreamShift(floc3), equalTo(1020));
+        assertThat(floc3.getDownstreamShift(floc1), equalTo(-1020));
+        assertThat(floc1.getDownstreamGap(floc4), equalTo(Integer.MAX_VALUE));
+        assertThat(floc1.getDownstreamGap(bloc1), equalTo(Integer.MAX_VALUE));
+        assertThat(bloc1.getDownstreamGap(bloc2), equalTo(-901));
+        assertThat(bloc1.getDownstreamShift(bloc2), equalTo(100));
+        assertThat(bloc1.getDownstreamGap(bloc3), equalTo(100));
+        assertThat(bloc2.getDownstreamGap(bloc3), equalTo(0));
+        assertThat(bloc2.getDownstreamShift(bloc1), equalTo(-100));
+    }
+
 }

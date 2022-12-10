@@ -263,5 +263,20 @@ public class BLocation extends Location {
         return this.getEnd() <= CONTIG_EDGE;
     }
 
+    @Override
+    public String toSproutString() {
+        return String.format("%s_%d-%d", this.getContigId(), this.getBegin(), this.getLength());
+    }
+
+    @Override
+    public int getDownstreamGap(Location other) {
+        return (this.isSameStrand(other) ? this.getEnd() - other.getBegin() - 1 : Integer.MAX_VALUE);
+    }
+
+    @Override
+    public int getDownstreamShift(Location other) {
+        return this.getBegin() - other.getBegin();
+    }
+
 
 }
