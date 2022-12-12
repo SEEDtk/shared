@@ -66,7 +66,7 @@ public class Region implements Comparable<Region> {
      */
     @Override
     public String toString() {
-        String retVal = "[" + this.left + ", " + this.right + "]";
+        String retVal = "[" + this.left + "," + this.right + "]";
         return retVal;
     }
 

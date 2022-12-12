@@ -304,7 +304,7 @@ public abstract class Location implements Comparable<Location>, Cloneable {
             retVal = Location.create(contigId, dir);
             // Loop through the regions, adding them.
             for (String region : regions) {
-                String[] edges = StringUtils.splitByWholeSeparator(region, ", ");
+                String[] edges = StringUtils.split(region, ',');
                 retVal.putRegion(Integer.valueOf(edges[0]), Integer.valueOf(edges[1]));
             }
         }

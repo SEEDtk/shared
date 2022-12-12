@@ -15,6 +15,7 @@ import java.util.stream.Collectors;
 import org.junit.jupiter.api.Test;
 import org.theseed.genome.Contig;
 import org.theseed.genome.Genome;
+import org.theseed.locations.Location;
 
 /**
  * @author Bruce Parrello
@@ -48,6 +49,17 @@ class SequenceTests {
                 assertThat(message, seq.getComment(), equalTo(contig.getDescription()));
                 assertThat(message, seq.getSequence(), equalTo(Contig.reverse(contig.getSequence())));
             }
+        }
+    }
+
+    @Test
+    void testLocations() throws IOException {
+        try (FastaInputStream inStream = new FastaInputStream(new File("data", "single.fa"))) {
+            Sequence seq = inStream.next();
+            Location loc1 = Location.create("contig1", "+", 11, 15, 41, 44);
+            Location loc2 = Location.create("contig1", "-", 11, 15, 41, 44);
+            assertThat(seq.getDna(loc1), equalTo("cccccacgt"));
+            assertThat(seq.getDna(loc2), equalTo("acgtggggg"));
         }
     }
 

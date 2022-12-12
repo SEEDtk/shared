@@ -3,7 +3,10 @@
  */
 package org.theseed.sequence;
 
+import org.apache.commons.lang3.StringUtils;
 import org.theseed.genome.Contig;
+import org.theseed.locations.Location;
+import org.theseed.locations.Region;
 
 /**
  * This class represents a record from a FASTA file.  It contains a sequence,
@@ -89,6 +92,25 @@ public class Sequence {
      */
     public void setSequence(String sequence) {
         this.sequence = sequence;
+    }
+
+    /**
+     * @return the DNA at a given location in this sequence
+     *
+     * @param loc	location whose DNA is desired
+     */
+    public String getDna(Location loc) {
+        StringBuilder buffer = new StringBuilder(loc.getRegionLength());
+        // Note that it is presumed we have the correct contig ID.  Get the DNA.  Note we have to convert from
+        // 1-based positions to 0-based positions, and we switch everything to lower-case, as per our DNA
+        // conventions.
+        for (Region region : loc.getRegions())
+            buffer.append(StringUtils.substring(this.sequence, region.getLeft() - 1, region.getRight()));
+        String retVal = buffer.toString().toLowerCase();
+        if (loc.getDir() == '-') {
+            retVal = Contig.reverse(retVal);
+        }
+        return retVal;
     }
 
     /**
