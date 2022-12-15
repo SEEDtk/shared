@@ -21,11 +21,7 @@ public class DnaDiscriminatingKmerDb extends DiscriminatingKmerDb {
         super(kmerSize);
     }
 
-    /**
-     * Add a genome to the discriminating-kmer database.  Both strands of each contig will be added.
-     *
-     * @param genome	genome to process
-     */
+    @Override
     public void addGenome(Genome genome) {
         String genomeId = genome.getId();
         for (Contig contig : genome.getContigs()) {
@@ -35,18 +31,12 @@ public class DnaDiscriminatingKmerDb extends DiscriminatingKmerDb {
         }
     }
 
-    /**
-     * Count the hits in a DNA sequence.
-     *
-     * @param contigSequence	DNA sequence whose hits are to be counted
-     *
-     * @return a map of group IDs to hit counts
-     */
+    @Override
     public CountMap<String> countHits(String contigSequence) {
         var sequences = new ArrayList<String>(2);
         sequences.add(contigSequence);
         sequences.add(Contig.reverse(contigSequence));
-        return super.countHits(sequences);
+        return super.countSeqHits(sequences);
     }
 
 }

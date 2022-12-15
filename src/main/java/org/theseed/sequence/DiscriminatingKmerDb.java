@@ -12,6 +12,7 @@ import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.theseed.counters.CountMap;
+import org.theseed.genome.Genome;
 
 /**
  * This object builds a database of discriminating kmers.  The client passes in sequences that belong to groups.
@@ -95,7 +96,7 @@ public abstract class DiscriminatingKmerDb {
      *
      * @return a count map from each group ID to the number of hits found
      */
-    protected CountMap<String> countHits(Collection<String> sequences) {
+    protected CountMap<String> countSeqHits(Collection<String> sequences) {
         var retVal = new CountMap<String>();
         KmerSeries kmers = new KmerSeries(sequences, this.kSize);
         for (String kmer : kmers) {
@@ -105,5 +106,21 @@ public abstract class DiscriminatingKmerDb {
         }
         return retVal;
     }
+
+    /**
+     * Add a genome to the discriminating-kmer database.
+     *
+     * @param genome	genome to process
+     */
+    public abstract void addGenome(Genome genome);
+
+    /**
+     * Count the hits in a DNA sequence.
+     *
+     * @param contigSequence	a DNA sequence whose kmer hits are to be counted
+     *
+     * @return a count map of group IDs to hit counts
+     */
+    public abstract CountMap<String> countHits(String contigSequence);
 
 }

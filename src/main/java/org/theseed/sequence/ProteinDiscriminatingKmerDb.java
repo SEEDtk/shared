@@ -20,15 +20,19 @@ import org.theseed.proteins.DnaTranslator;
  */
 public class ProteinDiscriminatingKmerDb extends DiscriminatingKmerDb {
 
+    // FIELDS
+    /** genetic code to use */
+    private int geneticCode;
+    /** DNA translator for that code */
+    private DnaTranslator xlate;
+
+
     public ProteinDiscriminatingKmerDb(int kmerSize) {
         super(kmerSize);
+        this.setGeneticCode(11);
     }
 
-    /**
-     * Add a genome to a protein discriminating kmer database.  All of the pegs will be processed as protein sequences.
-     *
-     * @param genome	genome to add
-     */
+    @Override
     public void addGenome(Genome genome) {
         String genomeId = genome.getId();
         for (Feature feat : genome.getPegs()) {
@@ -37,17 +41,8 @@ public class ProteinDiscriminatingKmerDb extends DiscriminatingKmerDb {
         }
     }
 
-    /**
-     * Count the protein hits in a DNA sequence.
-     *
-     * @param contigSequence	a DNA sequence whose kmer hits are to be counted
-     * @param gc				genetic code for protein translation
-     *
-     * @return a count map of group IDs to hit counts
-     */
-    public CountMap<String> countHits(String contigSequence, int gc) {
-        // Create a translator for this genetic code.
-        DnaTranslator xlate = new DnaTranslator(gc);
+    @Override
+    public CountMap<String> countHits(String contigSequence) {
         // Get the reverse compliment.
         String revSeq = Contig.reverse(contigSequence);
         // Get the sequence length.  The translator simply ignores fragments at the end.
@@ -55,11 +50,28 @@ public class ProteinDiscriminatingKmerDb extends DiscriminatingKmerDb {
         // Translate the three frames.
         Collection<String> seqs = new ArrayList<String>(6);
         for (int i = 1; i <= 3; i++) {
-            seqs.add(xlate.translate(contigSequence, i, seqLen));
-            seqs.add(xlate.translate(revSeq, i, seqLen));
+            seqs.add(this.xlate.translate(contigSequence, i, seqLen));
+            seqs.add(this.xlate.translate(revSeq, i, seqLen));
         }
         // Return the counts.
-        return super.countHits(seqs);
+        return super.countSeqHits(seqs);
+    }
+
+    /**
+     * @return the genetic code for protein translation
+     */
+    public int getGeneticCode() {
+        return this.geneticCode;
+    }
+
+    /**
+     * Specify a new genetic code for protein translation.
+     *
+     * @param gc 	the geneticCode to set
+     */
+    public void setGeneticCode(int gc) {
+        this.geneticCode = gc;
+        this.xlate = new DnaTranslator(gc);
     }
 
 }
