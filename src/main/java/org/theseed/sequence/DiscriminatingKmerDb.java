@@ -75,7 +75,7 @@ public abstract class DiscriminatingKmerDb {
      * Delete the common-kmer set to save memory.
      */
     public void finalize() {
-        this.commonSet = null;
+        this.commonSet.clear();
     }
 
     /**
@@ -122,5 +122,13 @@ public abstract class DiscriminatingKmerDb {
      * @return a count map of group IDs to hit counts
      */
     public abstract CountMap<String> countHits(String contigSequence);
+
+    /**
+     * Erase ALL the kmers to save memory.  After this the database can be reused.
+     */
+    public void clear() {
+        this.kmerMap.clear();
+        this.commonSet.clear();
+    }
 
 }

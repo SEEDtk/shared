@@ -26,9 +26,19 @@ public class DnaDiscriminatingKmerDb extends DiscriminatingKmerDb {
         String genomeId = genome.getId();
         for (Contig contig : genome.getContigs()) {
             String seq = contig.getSequence();
-            this.addSequence(seq, genomeId);
-            this.addSequence(Contig.reverse(seq), genomeId);
+            this.addContig(genomeId, seq);
         }
+    }
+
+    /**
+     * Add a contig to the kmer database.  Only the forward strand will be processed.
+     * When we count hits, we check the incoming sequence in both directions.
+     *
+     * @param groupId	ID of the group to which the contig belongs
+     * @param seq		DNA sequence of the contig
+     */
+    public void addContig(String groupId, String seq) {
+        this.addSequence(seq, groupId);
     }
 
     @Override

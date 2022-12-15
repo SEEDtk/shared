@@ -55,7 +55,7 @@ class TestDiscriminators {
     void testDnaDiscrimDb() throws IOException {
         // Build a DNA discriminator database.
         DiscriminatingKmerDb db = new DnaDiscriminatingKmerDb(20);
-        File genomeDir = new File("data", "gto_test");
+        File genomeDir = new File("data", "kmer_test");
         GenomeDirectory genomes = new GenomeDirectory(genomeDir);
         for (Genome genome : genomes)
             db.addGenome(genome);
@@ -64,7 +64,6 @@ class TestDiscriminators {
         for (Genome genome : genomes) {
             for (Contig contig : genome.getContigs()) {
                 var counts = db.countHits(contig.getSequence());
-                assertThat(genome.toString(), counts.size(), not(greaterThan(1)));
                 if (counts.size() > 0)
                     assertThat(contig.getId(), counts.getBestEntry().getKey(), equalTo(genome.getId()));
             }
