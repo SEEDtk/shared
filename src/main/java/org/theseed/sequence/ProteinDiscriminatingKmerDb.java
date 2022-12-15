@@ -33,11 +33,10 @@ public class ProteinDiscriminatingKmerDb extends DiscriminatingKmerDb {
     }
 
     @Override
-    public void addGenome(Genome genome) {
-        String genomeId = genome.getId();
+    public void addGenome(Genome genome, String groupId) {
         for (Feature feat : genome.getPegs()) {
             String prot = feat.getProteinTranslation();
-            this.addSequence(prot, genomeId);
+            this.addSequence(prot, groupId);
         }
     }
 

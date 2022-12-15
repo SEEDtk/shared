@@ -20,14 +20,13 @@ public class FeatureDiscriminatingKmerDb extends DnaDiscriminatingKmerDb {
     }
 
     @Override
-    public void addGenome(Genome genome) {
-        String genomeId = genome.getId();
+    public void addGenome(Genome genome, String groupId) {
         for (Feature feat : genome.getFeatures()) {
             switch (feat.getType()) {
             case "rna" :
             case "CDS" :
                 String dna = feat.getDna().toLowerCase();
-                this.addSequence(dna, genomeId);
+                this.addSequence(dna, groupId);
             }
         }
     }

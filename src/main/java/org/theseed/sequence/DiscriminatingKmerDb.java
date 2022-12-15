@@ -112,7 +112,7 @@ public abstract class DiscriminatingKmerDb {
      *
      * @param genome	genome to process
      */
-    public abstract void addGenome(Genome genome);
+    public abstract void addGenome(Genome genome, String groupId);
 
     /**
      * Count the hits in a DNA sequence.

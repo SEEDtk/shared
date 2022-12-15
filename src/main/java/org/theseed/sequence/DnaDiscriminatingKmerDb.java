@@ -22,11 +22,10 @@ public class DnaDiscriminatingKmerDb extends DiscriminatingKmerDb {
     }
 
     @Override
-    public void addGenome(Genome genome) {
-        String genomeId = genome.getId();
+    public void addGenome(Genome genome, String groupId) {
         for (Contig contig : genome.getContigs()) {
             String seq = contig.getSequence().toLowerCase();
-            this.addContig(genomeId, seq);
+            this.addContig(groupId, seq);
         }
     }
 

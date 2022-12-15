@@ -32,7 +32,7 @@ class TestDiscriminators {
         File genomeDir = new File("data", "kmer_test");
         GenomeDirectory genomes = new GenomeDirectory(genomeDir);
         for (Genome genome : genomes) {
-            db.addGenome(genome);
+            db.addGenome(genome, genome.getId());
             var counts = db.getGroupCounts();
             log.info("{} groups in database.", counts.size());
         }
@@ -58,7 +58,7 @@ class TestDiscriminators {
         File genomeDir = new File("data", "kmer_test");
         GenomeDirectory genomes = new GenomeDirectory(genomeDir);
         for (Genome genome : genomes)
-            db.addGenome(genome);
+            db.addGenome(genome, genome.getId());
         db.finalize();
         // Now loop back through the genomes getting the counts.
         for (Genome genome : genomes) {
@@ -77,7 +77,7 @@ class TestDiscriminators {
         File genomeDir = new File("data", "kmer_test");
         GenomeDirectory genomes = new GenomeDirectory(genomeDir);
         for (Genome genome : genomes) {
-            db.addGenome(genome);
+            db.addGenome(genome, genome.getId());
             var counts = db.getGroupCounts();
             log.info("{} groups in database.", counts.size());
         }
