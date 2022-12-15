@@ -25,7 +25,7 @@ public class DnaDiscriminatingKmerDb extends DiscriminatingKmerDb {
     public void addGenome(Genome genome) {
         String genomeId = genome.getId();
         for (Contig contig : genome.getContigs()) {
-            String seq = contig.getSequence();
+            String seq = contig.getSequence().toLowerCase();
             this.addContig(genomeId, seq);
         }
     }
@@ -44,8 +44,9 @@ public class DnaDiscriminatingKmerDb extends DiscriminatingKmerDb {
     @Override
     public CountMap<String> countHits(String contigSequence) {
         var sequences = new ArrayList<String>(2);
-        sequences.add(contigSequence);
-        sequences.add(Contig.reverse(contigSequence));
+        String normalized = contigSequence.toLowerCase();
+        sequences.add(normalized);
+        sequences.add(Contig.reverse(normalized));
         return super.countSeqHits(sequences);
     }
 

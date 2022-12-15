@@ -26,7 +26,7 @@ public class FeatureDiscriminatingKmerDb extends DnaDiscriminatingKmerDb {
             switch (feat.getType()) {
             case "rna" :
             case "CDS" :
-                String dna = feat.getDna();
+                String dna = feat.getDna().toLowerCase();
                 this.addSequence(dna, genomeId);
             }
         }

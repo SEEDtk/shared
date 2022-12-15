@@ -44,13 +44,14 @@ public class ProteinDiscriminatingKmerDb extends DiscriminatingKmerDb {
     @Override
     public CountMap<String> countHits(String contigSequence) {
         // Get the reverse compliment.
-        String revSeq = Contig.reverse(contigSequence);
+        String normalized = contigSequence.toLowerCase();
+        String revSeq = Contig.reverse(normalized);
         // Get the sequence length.  The translator simply ignores fragments at the end.
         final int seqLen = contigSequence.length();
         // Translate the three frames.
         Collection<String> seqs = new ArrayList<String>(6);
         for (int i = 1; i <= 3; i++) {
-            seqs.add(this.xlate.translate(contigSequence, i, seqLen));
+            seqs.add(this.xlate.translate(normalized, i, seqLen));
             seqs.add(this.xlate.translate(revSeq, i, seqLen));
         }
         // Return the counts.
