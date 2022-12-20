@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.TreeSet;
+import org.apache.commons.io.FileUtils;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -177,7 +178,7 @@ public class GenomeDirectory implements Iterable<Genome> {
      */
     public Genome getGenome(String genomeId) {
         // Build the genome file name.
-        File gFile = new File(dirName, genomeId + ".gto");
+        File gFile = this.getGenomeFile(genomeId);
         // Read the genome.  Note we have to percolate some checked exceptions.
         Genome retVal;
         try {
@@ -188,6 +189,15 @@ public class GenomeDirectory implements Iterable<Genome> {
             throw new RuntimeException("Error processing genomes.", e);
         }
         return retVal;
+    }
+
+    /**
+     * @return the file name of a genome
+     *
+     * @param genomeId	ID of the target genome
+     */
+    private File getGenomeFile(String genomeId) {
+        return new File(dirName, genomeId + ".gto");
     }
 
     /**
@@ -208,7 +218,7 @@ public class GenomeDirectory implements Iterable<Genome> {
      * @param genome	genome to store
      */
     public void store(Genome genome) throws IOException {
-        File gFile = new File(this.dirName, genome.getId() + ".gto");
+        File gFile = this.getGenomeFile(genome.getId());
         genome.save(gFile);
         this.genomeIDs.add(genome.getId());
     }
@@ -218,6 +228,23 @@ public class GenomeDirectory implements Iterable<Genome> {
      */
     public String getName() {
         return this.dirName.toString();
+    }
+
+    /**
+     * Delete a genome from this directory.
+     *
+     * @param genomeId	ID of the genome to delete
+     *
+     * @throws IOException
+     */
+    public void remove(String genomeId) throws IOException {
+        // Compute the genome file name.
+        File gFile = this.getGenomeFile(genomeId);
+        if (gFile.exists()) {
+            // Here the genome exists in this directory.  Delete it and update the ID set.
+            FileUtils.forceDelete(gFile);
+            this.genomeIDs.remove(genomeId);
+        }
     }
 
 }
