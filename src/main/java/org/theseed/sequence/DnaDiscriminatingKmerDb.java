@@ -49,4 +49,9 @@ public class DnaDiscriminatingKmerDb extends DiscriminatingKmerDb {
         return super.countSeqHits(sequences);
     }
 
+    @Override
+    protected boolean isClean(String kmer) {
+        return DnaKmers.isClean(kmer);
+    }
+
 }

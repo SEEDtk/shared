@@ -111,7 +111,7 @@ public class DnaKmers extends SequenceKmers {
      * @param kmer	kmer to check
      */
     public static boolean isClean(String kmer) {
-        return StringUtils.indexOfAnyBut(kmer, "acgtu") < 0;
+        return StringUtils.containsOnly(kmer, "acgtu");
     }
 
 

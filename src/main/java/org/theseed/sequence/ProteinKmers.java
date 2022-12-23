@@ -5,6 +5,8 @@ package org.theseed.sequence;
 
 import java.util.HashSet;
 
+import org.apache.commons.lang3.StringUtils;
+
 /**
  * This package manages the set of sequence kmers in a protein string.
  *
@@ -81,6 +83,14 @@ public class ProteinKmers extends SequenceKmers {
         return this.K;
     }
 
+    /**
+     * @return TRUE if the specified kmer has no ambiguity characters, else FALSE
+     *
+     * @param kmer	kmer to check
+     */
+    public static boolean isClean(String kmer) {
+        return StringUtils.containsOnly(kmer, "ARNDCQEGHILKMFPSTWYVUO");
+    }
 
 
 }

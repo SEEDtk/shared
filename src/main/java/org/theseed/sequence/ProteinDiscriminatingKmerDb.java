@@ -5,6 +5,7 @@ package org.theseed.sequence;
 
 import java.util.ArrayList;
 import java.util.Collection;
+
 import org.theseed.counters.CountMap;
 import org.theseed.genome.Contig;
 import org.theseed.genome.Feature;
@@ -35,7 +36,7 @@ public class ProteinDiscriminatingKmerDb extends DiscriminatingKmerDb {
     @Override
     public void addGenome(Genome genome, String groupId) {
         for (Feature feat : genome.getPegs()) {
-            String prot = feat.getProteinTranslation();
+            String prot = feat.getProteinTranslation().toUpperCase();
             this.addSequence(prot, groupId);
         }
     }
@@ -72,6 +73,11 @@ public class ProteinDiscriminatingKmerDb extends DiscriminatingKmerDb {
     public void setGeneticCode(int gc) {
         this.geneticCode = gc;
         this.xlate = new DnaTranslator(gc);
+    }
+
+    @Override
+    protected boolean isClean(String kmer) {
+        return ProteinKmers.isClean(kmer);
     }
 
 }

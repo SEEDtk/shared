@@ -56,7 +56,7 @@ public abstract class DiscriminatingKmerDb {
         int n = sequence.length() - this.kSize;
         for (int i = 0; i <= n; i++) {
             String kmer = sequence.substring(i, i + this.kSize);
-            if (! this.commonSet.contains(kmer)) {
+            if (this.isClean(kmer) && ! this.commonSet.contains(kmer)) {
                 // Here the kmer is not already known to be common.
                 String kGroup = this.kmerMap.get(kmer);
                 if (kGroup == null) {
@@ -70,6 +70,13 @@ public abstract class DiscriminatingKmerDb {
             }
         }
     }
+
+    /**
+     * @return TRUE if the specified sequence has ambiguity characters, else FALSE
+     *
+     * @param kmer		sequence to check
+     */
+    protected abstract boolean isClean(String kmer);
 
     /**
      * Delete the common-kmer set to save memory.
