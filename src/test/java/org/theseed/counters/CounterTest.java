@@ -504,6 +504,63 @@ public class CounterTest  {
         assertThat(map2.sum(), equalTo(80));
     }
 
+    @Test
+    public void testWeightMap() {
+        WeightMap map1 = new WeightMap(3);
+        map1.count("AAA", 1.0);
+        map1.count("AAA", 0.2);
+        map1.count("AAA", 1.5);
+        assertThat(map1.getCount("AAA"), closeTo(2.7, 0.05));
+        map1.count("BBB", 1.3);
+        map1.count("CCC", 3.5);
+        assertThat(map1.size(), equalTo(3));
+        assertThat(map1.getCount("BBB"), closeTo(1.3, 0.05));
+        assertThat(map1.getCount("CCC"), closeTo(3.5, 0.05));
+        assertThat(map1.getCount("AAA"), closeTo(2.7, 0.05));
+        WeightMap map2 = new WeightMap();
+        map2.count("BBB", 0.7);
+        map2.count("CCC", 0.2);
+        map2.count("DDD", 0.6);
+        map1.accumulate(map2);
+        assertThat(map1.size(), equalTo(4));
+        assertThat(map1.getCount("AAA"), closeTo(2.7, 0.05));
+        assertThat(map1.getCount("BBB"), closeTo(2.0, 0.05));
+        assertThat(map1.getCount("CCC"), closeTo(3.7, 0.05));
+        assertThat(map1.getCount("DDD"), closeTo(0.6, 0.05));
+        var counts = map1.counts();
+        assertThat(counts.size(), equalTo(4));
+        for (var count : counts) {
+            switch (count.getKey()) {
+            case "AAA" :
+                assertThat("AAA", count.getCount(), closeTo(2.7, 0.05));
+                break;
+            case "BBB" :
+                assertThat("BBB", count.getCount(), closeTo(2.0, 0.05));
+                break;
+            case "CCC" :
+                assertThat("CCC", count.getCount(), closeTo(3.7, 0.05));
+                break;
+            case "DDD" :
+                assertThat("DDD", count.getCount(), closeTo(0.6, 0.05));
+                break;
+            default :
+                assertThat("Invalid count key \"" + count.getKey() + "\".", false);
+            }
+        }
+        assertThat(map1.sum(), closeTo(9.0, 0.05));
+        var best = map1.getBestEntry();
+        assertThat(best.getKey(), equalTo("CCC"));
+        assertThat(map1.getCount("DDD"), closeTo(0.6, 0.05));
+        var keys = map1.keys();
+        assertThat(keys, contains("AAA", "BBB", "CCC", "DDD"));
+        map2.remove("DDD");
+        assertThat(map2.size(), equalTo(2));
+        assertThat(map2.getCount("DDD"), equalTo(0.0));
+        assertThat(map2.findCounter("DDD"), nullValue());
+
+    }
+
+
     public static class Thing extends MagicObject implements Comparable<Thing> {
 
         /**
