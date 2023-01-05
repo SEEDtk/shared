@@ -2,9 +2,12 @@ package org.theseed.genome;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.StringUtils;
 import org.theseed.locations.Region;
+import org.theseed.sequence.Sequence;
 
 import com.github.cliftonlabs.json_simple.JsonKey;
 import com.github.cliftonlabs.json_simple.JsonObject;
@@ -35,6 +38,12 @@ public class Contig implements Comparable<Contig> {
     private String rSequence;
     /** string containing nucleic acids */
     private static final String NUCLEOTIDES = "acgtu";
+    /** pattern for coverage keywords in the comment */
+    private static final Pattern COMMENT_COVG_PATTERN = Pattern.compile("\\b(?:covg|cov|multi|coverage)[= ](\\d+(?:\\.\\d+)?)\\b");
+    /** pattern for coverage keywords in the contig ID */
+    private static final Pattern LABEL_COVG_PATTERN = Pattern.compile("_(?:coverage|covg|cov)_(\\d+(?:\\.\\d+)?)(?:_|\\b)");
+    /** default coverage to use if none can be computed */
+    private static final double DEFAULT_COVERAGE = 50.0;
 
 
     /** This enum defines the keys used and their default values.
@@ -355,6 +364,28 @@ public class Contig implements Comparable<Contig> {
             }
         }
         return retVal;
+    }
+
+    /**
+     * Compute coverage for an assembled contig.  We look in the label and then the comment.  If nothing works,
+     * we use a default.
+     *
+     * @param	sequence representing the assembled contig
+     *
+     * @return the estimated coverage
+     */
+    public static double computeCoverage(Sequence contig) {
+        double coverage = DEFAULT_COVERAGE;
+        final String contigId = contig.getLabel();
+        Matcher m = LABEL_COVG_PATTERN.matcher(contigId);
+        if (m.find())
+            coverage = Double.valueOf(m.group(1));
+        else {
+            m = COMMENT_COVG_PATTERN.matcher(contig.getComment());
+            if (m.find())
+                coverage = Double.valueOf(m.group(1));
+        }
+        return coverage;
     }
 
 }
