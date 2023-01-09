@@ -6,6 +6,7 @@ package org.theseed.counters;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.SortedSet;
@@ -24,6 +25,8 @@ public class WeightMap {
 
     /** underlying hash map */
     private HashMap<String, Count> map;
+    /** sorter for key-sorting */
+    private static final Comparator<Count> KEY_SORTER = new KeySorter();
 
     /**
      * Utility class to encapsulate the count.
@@ -117,6 +120,18 @@ public class WeightMap {
 
     }
 
+    /**
+     * This is a comparator that sorts the counts by key.
+     */
+    public static class KeySorter implements Comparator<Count> {
+
+        @Override
+        public int compare(Count o1, Count o2) {
+            return o1.key.compareTo(o2.key);
+        }
+
+    }
+
 
     /**
      * Create a blank weighted-counting map.
@@ -206,11 +221,20 @@ public class WeightMap {
     }
 
     /**
-     * @return a collection of all the counts in this object, sorted from highest to lowest
+     * @return a list of all the counts in this object, sorted from highest to lowest
      */
     public List<Count> sortedCounts() {
         ArrayList<Count> retVal = new ArrayList<Count>(this.map.values());
         retVal.sort(null);
+        return retVal;
+    }
+
+    /**
+     * @return a list of all the counts in the object, sorted by key
+     */
+    public List<Count> keyedCounts() {
+        ArrayList<Count> retVal = new ArrayList<Count>(this.map.values());
+        retVal.sort(KEY_SORTER);
         return retVal;
     }
 
@@ -244,8 +268,18 @@ public class WeightMap {
      *
      * @param otherMap		other map whose counts are to be added
      */
-    public void accumulate(WeightMap projCounts) {
-        projCounts.map.values().stream().forEach(x -> this.count(x.getKey(), x.getCount()));
+    public void accumulate(WeightMap otherMap) {
+        otherMap.map.values().stream().forEach(x -> this.count(x.getKey(), x.getCount()));
+    }
+
+    /**
+     * Accumulate all the weighted counts from a small map into this map with a scale factor.
+     *
+     * @param otherMap		other map whose counts are to be added
+     * @param scale			scale factor by which to multiply the incoming counts
+     */
+    public void accumulate(WeightMap otherMap, double scale) {
+        otherMap.map.values().stream().forEach(x -> this.count(x.getKey(), scale * x.getCount()));
     }
 
     /**

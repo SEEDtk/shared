@@ -557,7 +557,31 @@ public class CounterTest  {
         assertThat(map2.size(), equalTo(2));
         assertThat(map2.getCount("DDD"), equalTo(0.0));
         assertThat(map2.findCounter("DDD"), nullValue());
+    }
 
+    @Test
+    public void testWeightAccum() {
+        WeightMap map1 = new WeightMap(3);
+        map1.count("AAA", 1.0);
+        map1.count("AAA", 0.2);
+        map1.count("AAA", 1.5);
+        assertThat(map1.getCount("AAA"), closeTo(2.7, 0.05));
+        map1.count("BBB", 1.3);
+        map1.count("CCC", 3.5);
+        assertThat(map1.size(), equalTo(3));
+        assertThat(map1.getCount("BBB"), closeTo(1.3, 0.05));
+        assertThat(map1.getCount("CCC"), closeTo(3.5, 0.05));
+        assertThat(map1.getCount("AAA"), closeTo(2.7, 0.05));
+        WeightMap map2 = new WeightMap();
+        map2.count("BBB", 0.7);
+        map2.count("CCC", 0.2);
+        map2.count("DDD", 0.6);
+        map1.accumulate(map2, 2.0);
+        assertThat(map1.size(), equalTo(4));
+        assertThat(map1.getCount("AAA"), closeTo(2.7, 0.05));
+        assertThat(map1.getCount("BBB"), closeTo(2.7, 0.05));
+        assertThat(map1.getCount("CCC"), closeTo(3.9, 0.05));
+        assertThat(map1.getCount("DDD"), closeTo(1.2, 0.05));
     }
 
 
