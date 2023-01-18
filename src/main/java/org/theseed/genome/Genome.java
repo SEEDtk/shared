@@ -1421,4 +1421,19 @@ public class Genome  {
         this.events.add(event);
     }
 
+    /**
+     * Delete all features, subsystems, and contigs from this genome.  This resets the
+     * genome to a blank state, but keeps the principal metadata intact.  We do this
+     * the slow way, by deleting the contigs individually.
+     */
+    public void clear() {
+        Collection<Contig> contigList = new ArrayList<Contig>(this.contigs.values());
+        for (var contig : contigList)
+            this.deleteContig(contig);
+        // Clear the SSU rRNA cache.
+        this.ssuRna = null;
+        // Finally, erase the quality data.
+        this.quality = new JsonObject();
+    }
+
 }
