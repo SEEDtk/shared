@@ -3,7 +3,9 @@
  */
 package org.theseed.utils;
 
+import java.io.File;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.net.URL;
 
 import org.kohsuke.args4j.CmdLineException;
@@ -147,6 +149,22 @@ public abstract class BaseProcessor implements ICommand {
      */
     public void setCommandString(String commandString) {
         this.commandString = commandString;
+    }
+
+    /**
+     * Open a print writer for a given output file.  If NULL is passed, the standard output will be used.
+     *
+     * @param outFile	output file name, or NULL to use the standard output
+     *
+     * @throws IOException
+     */
+    public PrintWriter openWriter(File outFile) throws IOException {
+        PrintWriter retVal;
+        if (outFile == null)
+            retVal = new PrintWriter(System.out);
+        else
+            retVal = new PrintWriter(outFile);
+        return retVal;
     }
 
 }
