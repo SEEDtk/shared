@@ -7,6 +7,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.URL;
+import java.util.stream.Stream;
 
 import org.kohsuke.args4j.CmdLineException;
 import org.kohsuke.args4j.CmdLineParser;
@@ -164,6 +165,24 @@ public abstract class BaseProcessor implements ICommand {
             retVal = new PrintWriter(System.out);
         else
             retVal = new PrintWriter(outFile);
+        return retVal;
+    }
+
+    /**
+     * Make a stream parallel if a flag is set.
+     *
+     * @param stream	incoming stream
+     * @param paraFlag	TRUE if the stream should be made parallel
+     *
+     * @return the incoming stream in either normal or parallel mode
+     */
+    protected <T> Stream<T> makePara(Stream<T> stream, boolean paraFlag) {
+        Stream<T> retVal;
+        if (paraFlag) {
+            retVal = stream.parallel();
+            log.info("Parallel processing is being used.");
+        } else
+            retVal = stream;
         return retVal;
     }
 
