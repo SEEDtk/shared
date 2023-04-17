@@ -34,7 +34,7 @@ import org.theseed.reports.NaturalSort;
 ;
 
 /**
- * This object contains the data for all the samples processed during an FPKM summary.  For each named job, it contains the
+ * This object contains the data for all the samples processed during an TPM summary.  For each named job, it contains the
  * threonine production data.  For each feature, it contains all the weights.
  *
  * @author Bruce Parrello
@@ -717,8 +717,8 @@ public class RnaData implements Iterable<RnaData.Row>, Serializable {
     }
 
     /**
-     * Normalize this RNA data.  This includes deleting all RNA features and scaling the FPKM
-     * numbers to TPM values. (TPM = FPKM * 10^6 / SUM(all FPKMs for sample))
+     * Normalize this RNA data.  This includes deleting all RNA features and scaling the TPM
+     * numbers to TPM values. (TPM = TPM * 10^6 / SUM(all TPMs for sample))
      */
     public void normalize() {
         // Each row contains an array of weights.  This array keeps the totals.
