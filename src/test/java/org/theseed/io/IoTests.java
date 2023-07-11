@@ -383,11 +383,34 @@ public class IoTests {
     public void testTabbedFile() throws IOException {
         File inFile = new File("data", "tabbed.txt");
         TabbedLineReader tabReader = new TabbedLineReader(inFile);
-        applyTabReaderTests(tabReader);
+        assertThat("Header line wrong.", tabReader.header(), equalTo("genome_id\tgenome.genome_name\tcounter.0\tfraction\tflag"));
+        applyTabReaderTests(tabReader, "100.99\tname of 100.99\t10\t0.8");
         // Reopen to test iteration.
         tabReader = new TabbedLineReader(inFile);
         String[] testLabels = new String[] { "100.99", "200.20", "1000.6", "4" };
         int i = 0;
+        for (TabbedLineReader.Line l : tabReader) {
+            assertThat("Wrong record at index " + i, l.get(0), equalTo(testLabels[i]));
+            i++;
+        }
+        assertThat("Wrong number of records", i, equalTo(4));
+        tabReader.close();
+        // Try with a string list.
+        LineReader reader = new LineReader(inFile);
+        Shuffler<String> tabStrings = new Shuffler<String>(100);
+        tabStrings.addSequence(reader);
+        reader.close();
+        tabReader = new TabbedLineReader(tabStrings);
+        applyTabReaderTests(tabReader, "100.99\tname of 100.99\t10\t0.8");
+        // Try with comma delimiters.
+        inFile = new File("data", "comma.txt");
+        tabReader = new TabbedLineReader(inFile, ',');
+        assertThat("Header line wrong.", tabReader.header(), equalTo("genome_id,genome.genome_name,counter.0,fraction,flag"));
+        applyTabReaderTests(tabReader, "100.99,name of 100.99,10,0.8");
+        // Reopen to test iteration.
+        tabReader = new TabbedLineReader(inFile, ',');
+        testLabels = new String[] { "100.99", "200.20", "1000.6", "4" };
+        i = 0;
         for (TabbedLineReader.Line l : tabReader) {
             assertThat("Wrong record at index " + i, l.get(0), equalTo(testLabels[i]));
             i++;
@@ -412,13 +435,6 @@ public class IoTests {
         assertThat("End of file not detected", tabReader.hasNext(), equalTo(false));
         assertThat("Error reading past end-of-file", tabReader.next(), nullValue());
         tabReader.close();
-        // Try with a string list.
-        LineReader reader = new LineReader(inFile);
-        Shuffler<String> tabStrings = new Shuffler<String>(100);
-        tabStrings.addSequence(reader);
-        reader.close();
-        tabReader = new TabbedLineReader(tabStrings);
-        applyTabReaderTests(tabReader);
     }
 
     @Test
@@ -439,9 +455,8 @@ public class IoTests {
      * @param tabReader
      * @throws IOException
      */
-    private void applyTabReaderTests(TabbedLineReader tabReader) throws IOException {
+    private void applyTabReaderTests(TabbedLineReader tabReader, String testLine) throws IOException {
         assertThat("Wrong number of columns.", tabReader.size(), equalTo(5));
-        assertThat("Header line wrong.", tabReader.header(), equalTo("genome_id\tgenome.genome_name\tcounter.0\tfraction\tflag"));
         // Test the column finder.
         assertThat("Did not find genome name.", tabReader.findField("genome_name"), equalTo(1));
         assertThat("Did not find fraction.", tabReader.findField("fraction"), equalTo(3));
@@ -471,7 +486,7 @@ public class IoTests {
         assertThat("Wrong value in column 2 of line 1", line.getInt(2), equalTo(10));
         assertThat("Wrong value in column 3 of line 1", line.getDouble(3), closeTo(0.8, 0.0001));
         assertThat("Boolean adjustment fail in line 1", line.getFlag(4), equalTo(false));
-        assertThat("Line input not working", line.getAll(), equalTo("100.99\tname of 100.99\t10\t0.8"));
+        assertThat("Line input not working", line.getAll(), equalTo(testLine));
         line = tabReader.next();
         assertThat("Wrong value in column 2 of line 2", line.getInt(2), equalTo(-4));
         assertThat("Wrong value in column 3 of line 2", line.getDouble(3), equalTo(12.0));

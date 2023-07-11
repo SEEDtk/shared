@@ -61,7 +61,7 @@ public class TabbedLineReader implements Closeable, AutoCloseable, Iterable<Tabb
             // Get the number of fields in the line.
             int nFields = labels.length;
             // Normally, this will work.
-            this.fields = StringUtils.splitPreserveAllTokens(inLine, '\t');
+            this.fields = StringUtils.splitPreserveAllTokens(inLine, TabbedLineReader.this.delim);
             // If the number of fields is wrong, we have to adjust.
             if (this.fields.length != nFields) {
                 // Copy the old array and create a new one of the proper length.
@@ -217,6 +217,8 @@ public class TabbedLineReader implements Closeable, AutoCloseable, Iterable<Tabb
     private String headerLine;
     /** number of data lines read */
     private int lineCount;
+    /** delimiter to use (usually tab) */
+    private char delim;
     /** list of fancy TRUE values */
     private static final Set<String> TRUE_VALUES = Stream.of("1", "true", "yes", "y", "t").collect(Collectors.toSet());
 
@@ -228,7 +230,20 @@ public class TabbedLineReader implements Closeable, AutoCloseable, Iterable<Tabb
      * @throws IOException
      */
     public TabbedLineReader(File inFile) throws IOException {
-        this.openFile(inFile);
+        this.openFile(inFile, '\t');
+        this.readHeader();
+    }
+
+    /**
+     * Open a tabbed-line reader for a file with a nonstandard delimiter.
+     *
+     * @param inFile	input file to open
+     * @param delimiter	delimiter to use
+     *
+     * @throws IOException
+     */
+    public TabbedLineReader(File inFile, char delimiter) throws IOException {
+        this.openFile(inFile, delimiter);
         this.readHeader();
     }
 
@@ -236,10 +251,12 @@ public class TabbedLineReader implements Closeable, AutoCloseable, Iterable<Tabb
      * Open a file for tabbed line reading.
      *
      * @param inFile	input file to open
+     * @param delimiter	delimiter to use
      *
      * @throws IOException
      */
-    private void openFile(File inFile) throws IOException {
+    private void openFile(File inFile, char delimiter) throws IOException {
+        this.delim = delimiter;
         this.stream = new FileInputStream(inFile);
         this.reader = new LineReader(this.stream);
     }
@@ -253,7 +270,7 @@ public class TabbedLineReader implements Closeable, AutoCloseable, Iterable<Tabb
      * @throws IOException
      */
     public TabbedLineReader(File inFile, int fields) throws IOException {
-        this.openFile(inFile);
+        this.openFile(inFile, '\t');
         this.clearLabels(fields);
         this.readAhead();
     }
@@ -267,7 +284,7 @@ public class TabbedLineReader implements Closeable, AutoCloseable, Iterable<Tabb
      * @throws IOException
      */
     public TabbedLineReader(InputStream inStream, int fields) throws IOException {
-        this.openFile(inStream);
+        this.openFile(inStream, '\t');
         this.clearLabels(fields);
         this.readAhead();
     }
@@ -278,27 +295,35 @@ public class TabbedLineReader implements Closeable, AutoCloseable, Iterable<Tabb
      *
      * @throws IOException
      */
-    private void openFile(InputStream inStream) throws IOException {
+    private void openFile(InputStream inStream, char delimiter) throws IOException {
+        this.delim = delimiter;
         this.stream = inStream;
         this.reader = new LineReader(inStream);
     }
 
     /**
-     * Open a tabbed-line reader for an input stream.
+     * Open a tabbed-line reader for an input stream with a non-standard delimiter.
+     *
+     * @param inStream	input stream to open
+     * @param delimiter	delimiter to use
+     *
+     * @throws IOException
+     */
+    public TabbedLineReader(InputStream inStream, char delimiter) throws IOException {
+        this.openFile(inStream, delimiter);
+        this.readHeader();
+    }
+
+    /**
+     * Open a tabbed-line reader for an input stream with a specified delimiter.
      *
      * @param inStream	input stream to open
      *
      * @throws IOException
      */
     public TabbedLineReader(InputStream inStream) throws IOException {
-        this.openFile(inStream);
+        this.openFile(inStream, '\t');
         this.readHeader();
-    }
-
-    /**
-     * Construct a blank, empty tabbed-file reader.
-     */
-    protected TabbedLineReader() {
     }
 
     /**
@@ -333,6 +358,7 @@ public class TabbedLineReader implements Closeable, AutoCloseable, Iterable<Tabb
     public TabbedLineReader(List<String> strings) {
         this.stream = null;
         this.reader = strings.iterator();
+        this.delim = '\t';
         this.readHeader();
     }
 
@@ -351,7 +377,7 @@ public class TabbedLineReader implements Closeable, AutoCloseable, Iterable<Tabb
         } else {
             this.headerLine = this.reader.next();
             // Parse the header line into labels and normalize them to lower case.
-            this.labels = StringUtils.split(headerLine, '\t');
+            this.labels = StringUtils.split(headerLine, this.delim);
             // Set up to return the first data line.
             this.readAhead();
         }
