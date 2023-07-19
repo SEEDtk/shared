@@ -760,4 +760,31 @@ public class IoTests {
         testStream.close();
     }
 
+    @Test
+    public void testCsvReader() throws IOException {
+        File csvFile = new File("data", "quotes.csv");
+        try (CsvLineReader reader = new CsvLineReader(csvFile)) {
+            assertThat(reader.size(), equalTo(4));
+            assertThat(reader.getLabels(), arrayContaining("a", "b", "c", "d"));
+            assertThat(reader.hasNext(), equalTo(true));
+            var line = reader.next();
+            assertThat(line.get(0), equalTo("1 2,3"));
+            assertThat(line.getInt(1), equalTo(4));
+            assertThat(line.get(2), equalTo("5\"6\"7"));
+            assertThat(line.getInt(3), equalTo(888));
+            assertThat(reader.hasNext(), equalTo(true));
+            line = reader.next();
+            assertThat(line.get(0), equalTo(""));
+            assertThat(line.get(1), equalTo("b2"));
+            assertThat(line.get(2), equalTo(""));
+            assertThat(line.get(3), equalTo("d2"));
+            assertThat(reader.hasNext(), equalTo(true));
+            line = reader.next();
+            assertThat(line.get(0), equalTo("123"));
+            assertThat(line.get(1), equalTo("45\",6"));
+            assertThat(line.get(2), equalTo("7"));
+            assertThat(line.get(3), equalTo(""));
+            assertThat(reader.hasNext(), equalTo(false));
+        }
+    }
 }

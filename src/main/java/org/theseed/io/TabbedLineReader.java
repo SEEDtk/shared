@@ -61,7 +61,7 @@ public class TabbedLineReader implements Closeable, AutoCloseable, Iterable<Tabb
             // Get the number of fields in the line.
             int nFields = labels.length;
             // Normally, this will work.
-            this.fields = StringUtils.splitPreserveAllTokens(inLine, TabbedLineReader.this.delim);
+            this.fields = TabbedLineReader.this.splitLine(inLine);
             // If the number of fields is wrong, we have to adjust.
             if (this.fields.length != nFields) {
                 // Copy the old array and create a new one of the proper length.
@@ -288,6 +288,21 @@ public class TabbedLineReader implements Closeable, AutoCloseable, Iterable<Tabb
         this.clearLabels(fields);
         this.readAhead();
     }
+
+    /**
+     * Open a tabbed-line reader for a headerless stream with a non-standard delimiter
+     *
+     * @param inStream	input stream to open
+     * @param fields	number of fields in each record
+     * @param delimiter	delimiter to use
+     *
+     * @throws IOException
+     */
+    public TabbedLineReader(InputStream inStream, int fields, char delimiter) throws IOException {
+        this.openFile(inStream, delimiter);
+        this.clearLabels(fields);
+        this.readAhead();
+    }
     /**
      * Open an input stream for tabbed line reading.
      *
@@ -315,7 +330,7 @@ public class TabbedLineReader implements Closeable, AutoCloseable, Iterable<Tabb
     }
 
     /**
-     * Open a tabbed-line reader for an input stream with a specified delimiter.
+     * Open a tabbed-line reader for an input stream.
      *
      * @param inStream	input stream to open
      *
@@ -363,6 +378,21 @@ public class TabbedLineReader implements Closeable, AutoCloseable, Iterable<Tabb
     }
 
     /**
+     * Open a tabbed-line reader for a headerless file with an alternate delimiter
+     *
+     * @param inFile	input file to open
+     * @param fields	number of fields in each record
+     * @param delimiter	delimiter to use
+     *
+     * @throws IOException
+     */
+    public TabbedLineReader(File inFile, int fields, char delimiter) throws IOException {
+        this.openFile(inFile, delimiter);
+        this.clearLabels(fields);
+        this.readAhead();
+    }
+
+    /**
      * Read in the header record and create the array of field labels.
      *
      * @throws IOException
@@ -377,7 +407,7 @@ public class TabbedLineReader implements Closeable, AutoCloseable, Iterable<Tabb
         } else {
             this.headerLine = this.reader.next();
             // Parse the header line into labels and normalize them to lower case.
-            this.labels = StringUtils.split(headerLine, this.delim);
+            this.labels = this.splitLine(headerLine);
             // Set up to return the first data line.
             this.readAhead();
         }
@@ -642,6 +672,17 @@ public class TabbedLineReader implements Closeable, AutoCloseable, Iterable<Tabb
     public Stream<Line> stream() {
         Stream<Line> retVal = StreamSupport.stream(this.spliterator(), false);
         return retVal;
+    }
+
+    /**
+     * Split a line into fields.
+     *
+     * @param line	line to split
+     *
+     * @return an array of the field strings
+     */
+    protected String[] splitLine(String line) {
+        return StringUtils.splitPreserveAllTokens(line, TabbedLineReader.this.delim);
     }
 
 }

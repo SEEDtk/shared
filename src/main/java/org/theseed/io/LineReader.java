@@ -41,13 +41,19 @@ public class LineReader implements Iterable<String>, Iterator<String>, Closeable
     /**
      * Create a line reader for the specified input file.
      *
-     * @param inputFile		input file to read
+     * @param inputFile		input file to read, or NULL to read the standard input
      *
      * @throws IOException
      */
     public LineReader(File inputFile) throws IOException {
-        this.fileName = inputFile.toString();
-        Reader streamReader = new FileReader(inputFile);
+        Reader streamReader;
+        if (inputFile != null) {
+            streamReader = new FileReader(inputFile);
+            this.fileName = inputFile.toString();
+        } else {
+            streamReader = new InputStreamReader(System.in);
+            this.fileName = "standard input";
+        }
         setup(streamReader);
     }
 
@@ -102,7 +108,8 @@ public class LineReader implements Iterable<String>, Iterator<String>, Closeable
 
     /**
      * Initialize this file for reading.
-     * @param streamReader
+     *
+     * @param streamReader	reader for the input stream
      *
      * @throws IOException
      */
@@ -115,6 +122,13 @@ public class LineReader implements Iterable<String>, Iterator<String>, Closeable
     @Override
     public Iterator<String> iterator() {
         return this;
+    }
+
+    /**
+     * @return the name of this file
+     */
+    public String getName() {
+        return this.fileName;
     }
 
     /**
