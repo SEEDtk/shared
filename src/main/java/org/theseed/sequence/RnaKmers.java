@@ -29,7 +29,7 @@ public class RnaKmers extends SequenceKmers {
     public RnaKmers(int kSize) {
         this.sequence = "";
         this.kmerSet = new HashSet<String>();
-        this.K = defaultK;
+        this.K = kSize;
     }
 
     /**
