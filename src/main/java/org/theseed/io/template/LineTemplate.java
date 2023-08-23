@@ -26,9 +26,13 @@ import org.theseed.utils.ParseFailureException;
  * output if the column is nonblank.  "else" produces output if the column was blank, and "fi" terminates
  * the conditional.  Besides conditionals, we have the following special commands
  *
- * 	list	takes as input a conjunction, a column name, a colon, and a separator string.  The column is split on
- * 			the separator string, and then formed into a comma-separated list using the conjunction
- *  0		produces no output
+ * 	list		takes as input a conjunction, a column name, a colon, and a separator string.  The column is
+ * 				split on the separator string, and then formed into a comma-separated list using the conjunction
+ *  0			produces no output
+ *  product		takes as input two column names separated by a colon.  The first column is presumed to be a gene
+ *  			product, and is parsed into multiple English sentences accordingly.  THe second column should
+ *  			contain the code for the feature type, which is included in the description and affects the
+ *  			text.
  *
  * The template string is parsed into a list of commands, the most common commands being either a literal string
  * or a column index.  This command list can then be processed rapidly to form the result string.
@@ -118,6 +122,9 @@ public class LineTemplate {
                         break;
                     case "list" :
                         varCommand = new ListCommand(m2.group(2), inStream);
+                        break;
+                    case "product" :
+                        varCommand = new GeneProductCommand(m2.group(2), inStream);
                         break;
                     case "0" :
                         varCommand = new NullCommand();

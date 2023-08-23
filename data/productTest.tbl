@@ -1,0 +1,21 @@
+rep_id	feature.patric_id	feature.feature_type	feature.product
+511145.12	fig|511145.12.peg.2214	CDS	D-lactate dehydrogenase (EC 1.1.1.28)
+511145.12	fig|511145.12.rna.37	tRNA	tRNA-Asn-GTT
+511145.12	fig|511145.12.peg.2837	CDS	hypothetical protein
+511145.12	fig|511145.12.peg.3576	CDS	Nickel ABC transporter, permease protein NikB (TC 3.A.1.5.3)
+511145.12	fig|511145.12.rna.90	misc_RNA	
+511145.12	fig|511145.12.peg.3830	CDS	tRNA-5-carboxymethylaminomethyl-2-thiouridine(34) synthesis protein MnmE
+511145.12	fig|511145.12.peg.858	CDS	Oligopeptide transport permease protein OppB-like @ Glutathione ABC transporter, permease protein GsiC
+511145.12	fig|511145.12.peg.2884	CDS	Inactive (p)ppGpp 3'-pyrophosphohydrolase domain / GTP pyrophosphokinase (EC 2.7.6.5), (p)ppGpp synthetase I
+511145.12	fig|511145.12.rna.99	rRNA	Small Subunit Ribosomal RNA; ssuRNA; SSU rRNA
+511145.12	fig|511145.12.peg.2927	CDS	FIG001592: Phosphocarrier protein kinase/phosphorylase, nitrogen regulation associated
+511145.12	fig|511145.12.peg.1132	CDS	LSU ribosomal protein L32p @ LSU ribosomal protein L32p, zinc-independent
+511145.12	fig|511145.12.peg.4203	CDS	Formate dehydrogenase H (EC 1.2.1.2) @ selenocysteine-containing
+511145.12	fig|511145.12.peg.1245	CDS	Phosphoenolpyruvate-dihydroxyacetone phosphotransferase (EC 2.7.1.121), subunit DhaM; DHA-specific IIA component / DHA-specific phosphocarrier protein HPr / DHA-specific EI component
+1736483.3	fig|1736483.3.assembly_gap.2	assembly_gap	undefind assembly_gap
+441771.6	fig|441771.6.rna.84	rRNA	Large Subunit Ribosomal RNA; lsuRNA; LSU rRNA
+1736483.3	fig|1736483.3.rna.12	rRNA	5S rRNA ## 5S ribosomal RNA
+1736483.3	fig|1736483.3.repeat.12	repeat_region	repeat region
+568707.3	fig|568707.3.pg.42	pseudogene	
+511145.12	fig|511145.12.rna.102	misc_RNA	
+1736483.3	fig|1736483.3.rna.21	misc_RNA	bacterial RNase P

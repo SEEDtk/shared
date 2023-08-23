@@ -102,6 +102,8 @@ public class Genome  {
     private JsonObject quality;
     /** match pattern for SSU rRNA */
     public static final Pattern SSU_R_RNA = Pattern.compile("SSU\\s+rRNA|Small\\s+Subunit\\s+(?:Ribosomal\\s+r)?RNA|ssuRNA|16S\\s+(?:r(?:ibosomal\\s+)?)?RNA", Pattern.CASE_INSENSITIVE);
+    /** match pattern for LSU rRNA */
+    public static final Pattern LSU_R_RNA = Pattern.compile("LSU\\s+rRNA|Large\\s+Subunit\\s+(?:Ribosomal\\s+r)?RNA|lsuRNA|23S\\s+(?:r(?:ibosomal\\s+)?)?RNA", Pattern.CASE_INSENSITIVE);
     /** refseq location format */
     private static final Pattern ACCESSION_LOCATION = Pattern.compile("(\\w+):(\\d+)-(\\d+)");
     /** empty list used as a default intermediate value for cases where the contigs or features are missing */
