@@ -13,7 +13,7 @@ import java.util.regex.Matcher;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.theseed.io.TabbedLineReader;
+import org.theseed.io.FieldInputStream;
 import org.theseed.utils.ParseFailureException;
 
 /**
@@ -60,7 +60,7 @@ class TestLineTemplate {
                 "It belongs to the domain {{superkingdom}}{{$if:species}}, the species {{species}}{{$fi}}{{$if:genus}}, the genus {{genus}}{{$fi}}{{$if:family}}, the family {{family}}{{$fi}}, and its NCBI taxonomic identifier is {{taxon_id}}. " +
                 "It is believed to be of {{genome_quality}} quality. ";
         File inFile = new File("data", "genomes10.tbl");
-        try (TabbedLineReader inStream = new TabbedLineReader(inFile)) {
+        try (FieldInputStream inStream = FieldInputStream.create(inFile)) {
             LineTemplate xlate = new LineTemplate(inStream, TEMPLATE);
             for (var line : inStream) {
                 String output = xlate.apply(line);

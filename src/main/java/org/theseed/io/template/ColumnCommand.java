@@ -6,7 +6,7 @@ package org.theseed.io.template;
 import java.io.IOException;
 
 import org.apache.commons.lang3.StringUtils;
-import org.theseed.io.TabbedLineReader;
+import org.theseed.io.FieldInputStream;
 
 /**
  * This template command outputs the content of the named column in the current input line.
@@ -28,12 +28,12 @@ public class ColumnCommand implements ITemplateCommand {
      *
      * @throws IOException
      */
-    public ColumnCommand(String columnName, TabbedLineReader inStream) throws IOException {
+    public ColumnCommand(String columnName, FieldInputStream inStream) throws IOException {
         this.colIdx = inStream.findField(columnName);
     }
 
     @Override
-    public String translate(LineTemplate template, TabbedLineReader.Line line) {
+    public String translate(LineTemplate template, FieldInputStream.Record line) {
         String retVal;
         if (template.peek())
             retVal = StringUtils.strip(line.get(this.colIdx));

@@ -3,7 +3,7 @@
  */
 package org.theseed.io.template;
 
-import org.theseed.io.TabbedLineReader;
+import org.theseed.io.FieldInputStream;
 
 /**
  * This template command inserts a literal string into the output.
@@ -27,7 +27,7 @@ public class LiteralCommand implements ITemplateCommand {
     }
 
     @Override
-    public String translate(LineTemplate template, TabbedLineReader.Line line) {
+    public String translate(LineTemplate template, FieldInputStream.Record line) {
         String retVal;
         if (template.peek())
             retVal = this.value;

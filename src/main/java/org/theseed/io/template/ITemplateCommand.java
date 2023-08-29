@@ -3,7 +3,7 @@
  */
 package org.theseed.io.template;
 
-import org.theseed.io.TabbedLineReader;
+import org.theseed.io.FieldInputStream;
 
 /**
  * This interface describes a template command.  Any object that wishes to serve as a command
@@ -30,5 +30,5 @@ public interface ITemplateCommand {
      * @param template	source template structure
      * @param line		input line to use as the source
      */
-    public String translate(LineTemplate template, TabbedLineReader.Line line);
+    public String translate(LineTemplate template, FieldInputStream.Record line);
 }

@@ -3,7 +3,7 @@
  */
 package org.theseed.io.template;
 
-import org.theseed.io.TabbedLineReader.Line;
+import org.theseed.io.FieldInputStream;
 
 /**
  * This command produces no output, and is used to suppress extra spaces in multi-line templates.
@@ -25,7 +25,7 @@ public class NullCommand implements ITemplateCommand {
     }
 
     @Override
-    public String translate(LineTemplate template, Line line) {
+    public String translate(LineTemplate template, FieldInputStream.Record line) {
         return "";
     }
 

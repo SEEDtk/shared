@@ -6,8 +6,7 @@ package org.theseed.io.template;
 import java.io.IOException;
 
 import org.apache.commons.lang3.StringUtils;
-import org.theseed.io.TabbedLineReader;
-import org.theseed.io.TabbedLineReader.Line;
+import org.theseed.io.FieldInputStream;
 
 /**
  * This processes an if-command.  Currently, the if-command pushes a context of TRUE if the
@@ -29,7 +28,7 @@ public class IfCommand implements ITemplateCommand {
      *
      * @throws IOException
      */
-    public IfCommand(String columnName, TabbedLineReader inStream) throws IOException {
+    public IfCommand(String columnName, FieldInputStream inStream) throws IOException {
         // Compute the column index for the target column.
         this.colIdx = inStream.findField(columnName);
     }
@@ -45,7 +44,7 @@ public class IfCommand implements ITemplateCommand {
     }
 
     @Override
-    public String translate(LineTemplate template, Line line) {
+    public String translate(LineTemplate template, FieldInputStream.Record line) {
         // Get the value of the conditional column.
         String colValue = line.get(this.colIdx);
         // Push TRUE if it is nonblank, else FALSE.

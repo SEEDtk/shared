@@ -3,7 +3,7 @@
  */
 package org.theseed.io.template;
 
-import org.theseed.io.TabbedLineReader.Line;
+import org.theseed.io.FieldInputStream;
 
 /**
  * THis command processes ELSE.  The ELSE command flips the if-context if the underlying if-context is TRUE.
@@ -26,7 +26,7 @@ public class ElseCommand implements ITemplateCommand {
     }
 
     @Override
-    public String translate(LineTemplate template, Line line) {
+    public String translate(LineTemplate template, FieldInputStream.Record line) {
         template.elseFlip();
         return "";
     }

@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.theseed.io.TabbedLineReader;
+import org.theseed.io.FieldInputStream;
 import org.theseed.utils.ParseFailureException;
 
 
@@ -66,7 +66,7 @@ public class LineTemplate {
      * @throws IOException
      * @throws ParseFailureException
      */
-    public LineTemplate(TabbedLineReader inStream, String template) throws IOException, ParseFailureException {
+    public LineTemplate(FieldInputStream inStream, String template) throws IOException, ParseFailureException {
         // Estimate the buffer size.
         this.bufferSize = template.length();
         // Initialize the if-stack.  It starts with an always-on bit at the bottom.
@@ -155,7 +155,7 @@ public class LineTemplate {
      *
      * @return the result of applying the template to the input line
      */
-    public String apply(TabbedLineReader.Line line) {
+    public String apply(FieldInputStream.Record line) {
         // Create the string builder.
         StringBuffer retVal = new StringBuffer(this.bufferSize);
         // Apply each command to the input line.

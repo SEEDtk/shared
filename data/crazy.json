@@ -1,0 +1,14 @@
+[
+      {
+        "accession":"NC_000962", 		"annotation":"This is \b a stress test for \\ escaped \"strings\": \u03B2",
+        "end":1612620,         "public":true,         "segments":["1612600..1612620", 12345],
+        "sequence_id":"NC_000962",
+        "start":1612600,
+        "strand":"-",
+        "taxon_id":83332 ,
+        "_version_":1695269065998729220},
+      {
+        "aa_length":517,
+        "aa_sequence_md5":"1858022ce0f5fe4f935caa2878162e43",
+        "accession":"NC_000962",
+        "alt_locus_tag":"Rv3696c"}]

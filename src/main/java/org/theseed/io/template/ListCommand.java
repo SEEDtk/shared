@@ -6,8 +6,7 @@ package org.theseed.io.template;
 import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.StringUtils;
-import org.theseed.io.TabbedLineReader;
-import org.theseed.io.TabbedLineReader.Line;
+import org.theseed.io.FieldInputStream;
 import org.theseed.utils.ParseFailureException;
 
 import java.io.IOException;
@@ -42,7 +41,7 @@ public class ListCommand implements ITemplateCommand {
      * @throws ParseFailureException
      * @throws IOException
      */
-    public ListCommand(String columnSpec, TabbedLineReader inStream) throws ParseFailureException, IOException {
+    public ListCommand(String columnSpec, FieldInputStream inStream) throws ParseFailureException, IOException {
         Matcher m = LIST_SPEC.matcher(columnSpec);
         if (! m.matches())
             throw new ParseFailureException("Invalid list specification \"" + columnSpec + "\".");
@@ -62,7 +61,7 @@ public class ListCommand implements ITemplateCommand {
     }
 
     @Override
-    public String translate(LineTemplate template, Line line) {
+    public String translate(LineTemplate template, FieldInputStream.Record line) {
         String retVal;
         // Only proceed if we have an active context.
         if (! template.peek())
