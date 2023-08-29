@@ -24,7 +24,17 @@ import org.theseed.utils.ParseFailureException;
  * expression, that follows the command with a colon separator.  Conditionals are handled by the special
  * commands "if", "else", and "fi".  "if" takes a column name as its argument, and the body is only
  * output if the column is nonblank.  "else" produces output if the column was blank, and "fi" terminates
- * the conditional.  Besides conditionals, we have the following special commands
+ * the conditional.
+ *
+ * There is a second kind of conditional called the group.  The group starts with the "group" command and
+ * end with an "end" command.  It takes as input a conjunction, usually "and" or "or".  Each clause in the
+ * group is associated with a column name.  The group is only generated if at least one column is nonblank (so
+ * the group is treated as a conditional at runtime).
+ * Inside the group, the "clause" command generates text if the specified column is nonblank.  (The column
+ * name should be specified as a parameter.)  The specification of the column name At the
+ * end, the clauses are assembled and put into a long sentence with commas and an and-separator if necessary.
+ *
+ * Besides conditionals, we have the following special commands
  *
  * 	list		takes as input a conjunction, a column name, a colon, and a separator string.  The column is
  * 				split on the separator string, and then formed into a comma-separated list using the conjunction
@@ -51,6 +61,9 @@ public class LineTemplate {
     private BitSet ifStack;
     /** index of top position in the stack */
     private int stackSize;
+    /** currently-active group command */
+    private GroupCommand activeGroup;
+
     /** search pattern for variables */
     protected static final Pattern VARIABLE = Pattern.compile("(.*?)\\{\\{(.+?)\\}\\}(.*)");
     /** search pattern for special commands */
@@ -77,6 +90,8 @@ public class LineTemplate {
         this.commands = new ArrayList<ITemplateCommand>();
         // This will track how many unclosed IF commands we have found.
         int ifLevel = 0;
+        // This will track the IF-stack size at the start of a group.
+        int groupIfLevel = 0;
         // Denote we are parsing the whole template.
         String residual = template;
         while (! residual.isEmpty()) {
@@ -128,6 +143,29 @@ public class LineTemplate {
                         break;
                     case "0" :
                         varCommand = new NullCommand();
+                        break;
+                    case "group" :
+                        var newGroup = new GroupCommand(m2.group(2), inStream);
+                        // Insure we are not getting too fancy.
+                        if (this.activeGroup != null)
+                            throw new ParseFailureException("Cannot nest group commands.");
+                        // Denote we're in a group.
+                        groupIfLevel = ifLevel;
+                        this.activeGroup = newGroup;
+                        varCommand = newGroup;
+                        break;
+                    case "clause" :
+                        varCommand = new ClauseCommand(this.activeGroup, m.group(2));
+                        break;
+                    case "end" :
+                        varCommand = new EndGroupCommand(this.activeGroup);
+                        // Verify we don't have an out-of-control IF.
+                        if (ifLevel > groupIfLevel)
+                            throw new ParseFailureException("Group command contains an unclosed IF.");
+                        else if (ifLevel < groupIfLevel)
+                            throw new ParseFailureException("External IF was closed inside group.");
+                        // Denote there is no active group.
+                        this.activeGroup = null;
                         break;
                     default :
                         throw new ParseFailureException("Unknown special command \"" + columnName + "\".");
