@@ -5,13 +5,12 @@ package org.theseed.io.template;
 
 import java.io.IOException;
 import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.BitSet;
 import java.util.Deque;
-import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.theseed.io.FieldInputStream;
 import org.theseed.utils.ParseFailureException;
 
@@ -56,11 +55,12 @@ import org.theseed.utils.ParseFailureException;
 public class LineTemplate {
 
     // FIELDS
+    /** logging facility */
+    protected static Logger log = LoggerFactory.getLogger(LineTemplate.class);
     /** compiled template */
     private TemplateCommand compiledTemplate;
     /** compile stack */
     private Deque<TemplateCommand> compileStack;
-
     /** search pattern for variables */
     protected static final Pattern VARIABLE = Pattern.compile("(.*?)\\{\\{(.+?)\\}\\}(.*)");
     /** search pattern for special commands */
@@ -80,6 +80,74 @@ public class LineTemplate {
         // Initialize the compile stack.
         this.compileStack = new ArrayDeque<TemplateCommand>();
         this.compileStack.push(new BlockCommand(this));
+        final int len = template.length();
+        log.info("Compiling {}-character template string.", len);
+        // We parse the template into tokens.  There are literals, variables, and commands.  The unparsed section
+        // of the string is stored as the residual.  We set up a try-block so we can output the neighborhood of the
+        // error.
+        String residual = template;
+        try {
+            while(! residual.isEmpty()) {
+                // Look for the next variable or command.
+                Matcher m = VARIABLE.matcher(residual);
+                if (! m.matches()) {
+                    // Here the entire remainder of the template is a literal.
+                    TemplateCommand residualCommand = new LiteralCommand(this, residual);
+                    this.addToTop(residualCommand);
+                } else {
+                    // Here group 1 is the initial literal, group 2 is a variable or command, and group 3
+                    // is the new residual.
+                    String prefix = m.group(1);
+                    String construct = m.group(2);
+                    if (! prefix.isEmpty()) {
+                        TemplateCommand prefixCommand = new LiteralCommand(this, prefix);
+                        this.addToTop(prefixCommand);
+                    }
+                    // Is this a command or a variable reference?
+                    if (construct.charAt(0) != '$') {
+                        // Here we have a variable reference.
+                        TemplateCommand varCommand = new ColumnCommand(this, construct, inStream);
+                        this.addToTop(varCommand);
+                    } else {
+                        // Here we have a special command and we need to decode it.
+                        Matcher m2 = COMMAND.matcher(construct);
+                        if (! m2.matches())
+                            throw new ParseFailureException("Invalid special command \"" + construct + "\".");
+                        switch (m2.group(1)) {
+                        // TODO special commands
+                        default :
+                            throw new ParseFailureException("Unknown special command \"" + m2.group(1) + "\".");
+                        }
+                    }
+                    // Update the residual.
+                    residual = m.group(3);
+                }
+            }
+            // TODO validate the stack
+        } catch (ParseFailureException e) {
+            int pos = len - residual.length();
+            int start = pos - 20;
+            if (start < 0) start = 0;
+            int end = pos + 20;
+            if (end > len) end = len;
+            log.error("Parsing error encountered near \"{}\".", template.substring(start, end));
+            log.error("Parser message: {}", e.getMessage());
+            throw new ParseFailureException(e);
+        }
+    }
+
+    /**
+     * Add a new subcommand to the top command on the compile stack.
+     *
+     * @param subCommand	subcommand to add
+     *
+     * @throws ParseFailureException
+     */
+    protected void addToTop(TemplateCommand subCommand) throws ParseFailureException {
+        TemplateCommand top = this.compileStack.peek();
+        if (top == null)
+            throw new ParseFailureException("Mismatched block construct.");
+        top.addCommand(subCommand);
     }
 
     /**
@@ -99,7 +167,7 @@ public class LineTemplate {
      *
      * @param command	command to push
      */
-    public void push(TemplateCommand command) {
+    protected void push(TemplateCommand command) {
         this.compileStack.push(command);
 
     }
@@ -109,8 +177,35 @@ public class LineTemplate {
      *
      * @return the command on top of the stack.
      */
-    public TemplateCommand pop() {
+    protected TemplateCommand pop() {
         return this.compileStack.pop();
+    }
+
+    /**
+     * @return the top command on the stack without popping it
+     */
+    protected TemplateCommand peek() {
+        return this.compileStack.peek();
+    }
+
+    /**
+     * @return the index for the specified column
+     *
+     * @param colName	name of the column desired
+     * @param inStream	source input stream
+     *
+     * @throws ParseFailureException
+     *
+     */
+    protected int findField(String colName, FieldInputStream inStream) throws ParseFailureException {
+        int retVal;
+        try {
+            retVal = inStream.findField(colName);
+        } catch (IOException e) {
+            // Convert a field-not-found to a parsing exception.
+            throw new ParseFailureException("Could not find field \"" + colName + "\" in source input stream.");
+        }
+        return retVal;
     }
 
 }

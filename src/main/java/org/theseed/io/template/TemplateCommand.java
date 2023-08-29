@@ -3,7 +3,7 @@
  */
 package org.theseed.io.template;
 
-import org.theseed.io.FieldInputStream.Record;
+import org.theseed.io.FieldInputStream;
 import org.theseed.utils.ParseFailureException;
 
 /**
@@ -72,15 +72,19 @@ public abstract class TemplateCommand {
      * Add a new sub-command.
      *
      * @param command	sub-command to add
+     *
+     * @throws ParseFailureException
      */
-    protected abstract void addCommand(TemplateCommand command);
+    protected abstract void addCommand(TemplateCommand command) throws ParseFailureException;
 
     /**
-     * @param template
-     * @param line
-     * @return
+     * Translate this command to output text.
+     *
+     * @param line	current input line
+     *
+     * @return the translated text of the command
      */
-    protected abstract String translate(Record line);
+    protected abstract String translate(FieldInputStream.Record line);
 
     /**
      * Push a new command onto the master template's compile stack.
