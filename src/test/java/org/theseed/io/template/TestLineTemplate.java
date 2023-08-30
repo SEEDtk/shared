@@ -88,7 +88,7 @@ class TestLineTemplate {
             for (var line : inStream) {
                 String output = xlate.apply(line);
                 String test = testIter.next();
-                assertThat(String.format("Line %d",  i), output, equalTo(test));
+                assertThat(String.format("Line %d", i), output, equalTo(test));
                 i++;
             }
         }
