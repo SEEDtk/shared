@@ -88,19 +88,24 @@ public class LineTemplate {
         // of the string is stored as the residual.  We set up a try-block so we can output the neighborhood of the
         // error.
         String residual = template;
+        int currentPos = 0;
         try {
             while(! residual.isEmpty()) {
                 // Look for the next variable or command.
                 Matcher m = VARIABLE.matcher(residual);
                 if (! m.matches()) {
                     // Here the entire remainder of the template is a literal.
+                    currentPos = template.length() - residual.length();
                     TemplateCommand residualCommand = new LiteralCommand(this, residual);
                     this.addToTop(residualCommand);
+                    residual = "";
                 } else {
                     // Here group 1 is the initial literal, group 2 is a variable or command, and group 3
                     // is the new residual.
                     String prefix = m.group(1);
                     String construct = m.group(2);
+                    currentPos = template.length() - residual.length() + prefix.length();
+                    // Process the prefix.
                     if (! prefix.isEmpty()) {
                         TemplateCommand prefixCommand = new LiteralCommand(this, prefix);
                         this.addToTop(prefixCommand);
@@ -192,11 +197,12 @@ public class LineTemplate {
             }
             if (this.compileStack.size() > 1)
                 throw new ParseFailureException("Unclosed " + this.peek().getName() + " command in template.");
+            // Save the compiled template.
+            this.compiledTemplate = this.pop();
         } catch (ParseFailureException e) {
-            int pos = len - residual.length();
-            int start = pos - 20;
+            int start = currentPos - 20;
             if (start < 0) start = 0;
-            int end = pos + 20;
+            int end = currentPos + 20;
             if (end > len) end = len;
             log.error("Parsing error encountered near \"{}\".", template.substring(start, end));
             log.error("Parser message: {}", e.getMessage());
@@ -320,7 +326,7 @@ public class LineTemplate {
             int len = 10 + phrases.size() * 2 + phrases.stream().mapToInt(x -> x.length()).sum();
             StringBuilder buffer = new StringBuilder(len);
             IntStream.range(0, n).forEach(i -> buffer.append(phrases.get(i)).append(", "));
-            buffer.append(" ").append(conjunction).append(" ").append(phrases.get(n));
+            buffer.append(conjunction).append(" ").append(phrases.get(n));
             retVal = buffer.toString();
         }
         return retVal;

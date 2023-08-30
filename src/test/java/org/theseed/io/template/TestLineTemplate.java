@@ -8,12 +8,15 @@ import static org.hamcrest.Matchers.*;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Iterator;
 import java.util.regex.Matcher;
 
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.theseed.genome.Genome;
 import org.theseed.io.FieldInputStream;
+import org.theseed.io.LineReader;
 import org.theseed.utils.ParseFailureException;
 
 /**
@@ -56,17 +59,46 @@ class TestLineTemplate {
     void testTemplates() throws IOException, ParseFailureException {
         final String TEMPLATE = "The genome with identifier {{genome_id}} is called {{genome_name}} and has {{genome_length}} base pairs. " +
                 "Its NCBI accession number is {{assembly_accession}} and it has {{contigs}} contigs with {{patric_cds}} known protein-coding regions. " +
-                "{{$if:host_name}}Its organism is found in the species {{$list:and:host_name:, }}. {{$fi}}{{$if:disease}}The organism is known to cause {{$list:and:disease:::}}. {{$fi}}" +
-                "It belongs to the domain {{superkingdom}}{{$if:species}}, the species {{species}}{{$fi}}{{$if:genus}}, the genus {{genus}}{{$fi}}{{$if:family}}, the family {{family}}{{$fi}}, and its NCBI taxonomic identifier is {{taxon_id}}. " +
-                "It is believed to be of {{genome_quality}} quality. ";
-        File inFile = new File("data", "genomes10.tbl");
-        try (FieldInputStream inStream = FieldInputStream.create(inFile)) {
+                "{{$if:host_name}}Its organism is found in the species {{$list:host_name:and:, }}. {{$fi}}{{$if:disease}}The organism is known to cause {{$list:disease}}. {{$fi}}" +
+                "{{$group:and}}It belongs to" +
+                    "{{$clause:superkingdom}}the domain {{superkingdom}}" +
+                    "{{$clause:species}}the species {{species}}" +
+                    "{{$clause:genus}}the genus {{genus}}{{$end}}";
+        try (var inStream = FieldInputStream.create(new File("data", "genomes10.tbl"));
+                var testStream = new LineReader(new File("data", "genomes10.txt"))) {
             LineTemplate xlate = new LineTemplate(inStream, TEMPLATE);
+            Iterator<String> testIter = testStream.iterator();
+            int i = 1;
             for (var line : inStream) {
                 String output = xlate.apply(line);
-                log.info(output);
+                assertThat(String.format("Line %d",  i), output, equalTo(testIter.next()));
+                i++;
             }
         }
     }
+
+    @Test
+    void testProducts() throws IOException, ParseFailureException {
+        final String TEMPLATE = "{{$product:product:type}}";
+        try (var inStream = FieldInputStream.create(new File("data", "products.tbl"));
+                var testStream = new LineReader(new File("data", "products.txt"))) {
+            LineTemplate xlate = new LineTemplate(inStream, TEMPLATE);
+            Iterator<String> testIter = testStream.iterator();
+            int i = 1;
+            for (var line : inStream) {
+                String output = xlate.apply(line);
+                String test = testIter.next();
+                assertThat(String.format("Line %d",  i), output, equalTo(test));
+                i++;
+            }
+        }
+    }
+
+    @Test
+    void testRnaPattern() {
+        var m = Genome.SSU_R_RNA.matcher("small subunit ribosomal RNA # sp16SG");
+        assertThat(m.find(), equalTo(true));
+    }
+
 
 }
