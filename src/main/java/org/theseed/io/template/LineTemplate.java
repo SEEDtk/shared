@@ -26,8 +26,8 @@ import org.theseed.utils.ParseFailureException;
  *
  * Special commands are handled by a dollar sign and a command name.  If the command requires a variable or
  * expression, that follows the command with a colon separator.  Conditionals are handled by the special
- * commands "if", "else", and "fi".  "if" takes a column name as its argument, and the body is only
- * output if the column is nonblank.  "else" produces output if the column was blank, and "fi" terminates
+ * commands "if", "else", and "fi".  "if" takes one or more column names as its argument, and the body is only
+ * output if all the columns evaluate to TRUE.  "else" produces output if the IF failed, and "fi" terminates
  * the conditional.
  *
  * There is a second kind of conditional called the group.  The group starts with the "group" command and

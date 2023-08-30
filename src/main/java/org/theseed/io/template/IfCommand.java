@@ -3,6 +3,9 @@
  */
 package org.theseed.io.template;
 
+import java.util.Arrays;
+
+import org.apache.commons.lang3.StringUtils;
 import org.theseed.io.FieldInputStream;
 import org.theseed.io.FieldInputStream.Record;
 import org.theseed.utils.ParseFailureException;
@@ -16,7 +19,7 @@ public class IfCommand extends TemplateCommand {
 
     // FIELDS
     /** index of the condition column */
-    private int colIdx;
+    private int[] colIdx;
     /** then-clause */
     private TemplateCommand thenClause;
     /** else-clause */
@@ -33,8 +36,12 @@ public class IfCommand extends TemplateCommand {
      */
     public IfCommand(LineTemplate template, FieldInputStream inStream, String parms) throws ParseFailureException {
         super(template);
-        this.colIdx = template.findField(parms, inStream);
-        // Both clauses are null.  The first subcommand is THEN, the second is ELSE, and
+        // Get the indices of all the condition columns.
+        String[] cols = StringUtils.split(parms, ':');
+        this.colIdx = new int[cols.length];
+        for (int i = 0; i < this.colIdx.length; i++)
+            this.colIdx[i] = template.findField(cols[i], inStream);
+        // Both clauses are initialized to null.  The first subcommand is THEN, the second is ELSE, and
         // any others are an error.
         this.thenClause = null;
         this.elseClause = null;
@@ -56,8 +63,8 @@ public class IfCommand extends TemplateCommand {
     @Override
     protected String translate(Record line) {
         String retVal = "";
-        // Get the condition column.
-        boolean flag = line.getFlag(this.colIdx);
+        // Evaluate the condition.
+        boolean flag = Arrays.stream(this.colIdx).allMatch(x -> line.getFlag(x));
         // Execute the appropriate clause if it exists.
         if (flag && this.thenClause != null)
             retVal = this.thenClause.translate(line);

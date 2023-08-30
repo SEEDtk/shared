@@ -79,7 +79,7 @@ class TestLineTemplate {
 
     @Test
     void testProducts() throws IOException, ParseFailureException {
-        final String TEMPLATE = "{{$product:product:type}}";
+        final String TEMPLATE = "{{$if:type:fid}}{{$product:product:type}}{{$fi}}";
         try (var inStream = FieldInputStream.create(new File("data", "products.tbl"));
                 var testStream = new LineReader(new File("data", "products.txt"))) {
             LineTemplate xlate = new LineTemplate(inStream, TEMPLATE);
