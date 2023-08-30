@@ -19,6 +19,8 @@ public class ColumnCommand extends PrimitiveTemplateCommand {
     // FIELDS
     /** index of column to output */
     private int colIdx;
+    /** name of column to output */
+    private String name;
     /** default expected output size */
     private static int DEFAULT_COLUMN_SIZE = 20;
 
@@ -35,12 +37,19 @@ public class ColumnCommand extends PrimitiveTemplateCommand {
         super(template);
         this.setEstimatedLength(DEFAULT_COLUMN_SIZE);
         // Find the column index for the input stream.
-           this.colIdx = template.findField(colName, inStream);
+        this.colIdx = template.findField(colName, inStream);
+        // Save the column name.
+        this.name = colName;
     }
 
     @Override
     protected String translate(Record line) {
         return line.get(this.colIdx);
+    }
+
+    @Override
+    protected String getName() {
+        return this.name;
     }
 
 }

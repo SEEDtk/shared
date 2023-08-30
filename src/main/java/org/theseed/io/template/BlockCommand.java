@@ -20,11 +20,21 @@ public class BlockCommand extends TemplateCommand {
     // FIELDS
     /** list of sub-commands */
     private List<TemplateCommand> subCommands;
+    /** name of command that created the block */
+    private String name;
 
-    public BlockCommand(LineTemplate template) {
+    /**
+     * Construct a new block command.
+     *
+     * @param template	controlling master template
+     * @param name		name of command that created the block
+     */
+    public BlockCommand(LineTemplate template, String name) {
         super(template);
         // Prepare for the sub-commands.
         this.subCommands = new ArrayList<TemplateCommand>();
+        // Save the name to use for the block's commnd.
+        this.name = name;
     }
 
     @Override
@@ -42,6 +52,11 @@ public class BlockCommand extends TemplateCommand {
             retVal.append(subString);
         }
         return retVal.toString();
+    }
+
+    @Override
+    protected String getName() {
+        return this.name;
     }
 
 }

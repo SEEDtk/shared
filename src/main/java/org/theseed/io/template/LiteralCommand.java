@@ -34,4 +34,9 @@ public class LiteralCommand extends PrimitiveTemplateCommand {
         return this.text;
     }
 
+    @Override
+    protected String getName() {
+        return "literal";
+    }
+
 }

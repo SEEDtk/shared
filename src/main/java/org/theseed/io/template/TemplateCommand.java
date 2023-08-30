@@ -87,23 +87,14 @@ public abstract class TemplateCommand {
     protected abstract String translate(FieldInputStream.Record line);
 
     /**
-     * Push a new command onto the master template's compile stack.
-     *
-     *  @param command	command to push
+     * @return the name of this command
      */
-    public void push(TemplateCommand command) {
-        var template = this.masterTemplate;
-        template.push(command);
-    }
+    protected abstract String getName();
 
     /**
-     * Close a command block.
-     *
-     * @throws ParseFailureException
+     * @return the master controlling template
      */
-    public TemplateCommand pop() throws ParseFailureException {
-        var template = this.masterTemplate;
-        TemplateCommand retVal = template.pop();
-        return retVal;
+    protected LineTemplate getMasterTemplate() {
+        return this.masterTemplate;
     }
 }
