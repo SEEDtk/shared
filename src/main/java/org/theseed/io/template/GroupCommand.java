@@ -26,6 +26,8 @@ public class GroupCommand extends TemplateCommand {
     private TemplateCommand prefix;
     /** clause blocks */
     private List<ClauseCommand> clauses;
+    /** suffix */
+    private String suffix;
 
     /**
      * Construct a group command.
@@ -35,10 +37,16 @@ public class GroupCommand extends TemplateCommand {
      */
     public GroupCommand(LineTemplate template, String parms) {
         super(template);
-        if (StringUtils.isBlank(parms))
+        String[] pieces = StringUtils.split(parms, ':');
+        if (pieces.length < 1)
             this.conjunction = "and";
-        else
-            this.conjunction = parms;
+        else {
+            this.conjunction = pieces[0];
+            if (pieces.length < 2)
+                this.suffix = "";
+            else
+                this.suffix = pieces[1];
+        }
         // Denote we have no prefix and no clauses.
         this.prefix = null;
         this.clauses = new ArrayList<ClauseCommand>();
@@ -64,7 +72,7 @@ public class GroupCommand extends TemplateCommand {
         }
         String retVal;
         if (phrases.size() == 0)
-            retVal = "";
+            retVal = this.suffix;
         else
             retVal = prefix.translate(line) + " " + LineTemplate.conjunct(this.conjunction, phrases)
                     + ".";

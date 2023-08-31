@@ -36,7 +36,9 @@ import org.theseed.utils.ParseFailureException;
  * the group is treated as a conditional at runtime). Inside the group, the "clause" command generates text
  * if the specified column is nonblank.  (The column name should be specified as a parameter.) At the
  * end, the clauses are assembled and put into a long sentence with commas and the conjunction if necessary,
- * with a final period.
+ * with a final period.  Sometimes the group will start in the middle of a sentence instead of being a sentence
+ * unto itself.  If this happens, you can add a period as an additional parameter (colon-separated) to the
+ * conjunctiion.
  *
  * Besides conditionals, we have the following special commands
  *

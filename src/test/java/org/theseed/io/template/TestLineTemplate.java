@@ -14,7 +14,6 @@ import java.util.regex.Matcher;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.theseed.genome.Genome;
 import org.theseed.io.FieldInputStream;
 import org.theseed.io.LineReader;
 import org.theseed.utils.ParseFailureException;
@@ -95,9 +94,20 @@ class TestLineTemplate {
     }
 
     @Test
-    void testRnaPattern() {
-        var m = Genome.SSU_R_RNA.matcher("small subunit ribosomal RNA # sp16SG");
-        assertThat(m.find(), equalTo(true));
+    void testGroup() throws IOException, ParseFailureException {
+        final String TEMPLATE = "Hello, we have a group{{$group:and:.}} with{{$clause:f1}}one {{f1}}"
+                + "{{$clause:f2}}two {{f2}}{{$clause:f3}}three {{f3}}{{$end}}";
+        try (var inStream = FieldInputStream.create(new File("data", "groups.tbl"))) {
+            int i = 1;
+            int testIdx = inStream.findField("expected");
+            LineTemplate xlate = new LineTemplate(inStream, TEMPLATE);
+            for (var line : inStream) {
+                String output = xlate.apply(line);
+                String test = line.get(testIdx);
+                assertThat(String.format("Line %d", i), output, equalTo(test));
+                i++;
+            }
+        }
     }
 
 
