@@ -38,9 +38,10 @@ public class GroupCommand extends TemplateCommand {
     public GroupCommand(LineTemplate template, String parms) {
         super(template);
         String[] pieces = StringUtils.split(parms, ':');
-        if (pieces.length < 1)
+        if (pieces == null || pieces.length < 1) {
             this.conjunction = "and";
-        else {
+            this.suffix = "";
+        } else {
             this.conjunction = pieces[0];
             if (pieces.length < 2)
                 this.suffix = "";
