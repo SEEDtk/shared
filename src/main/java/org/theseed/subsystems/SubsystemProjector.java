@@ -6,11 +6,14 @@ package org.theseed.subsystems;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.SortedSet;
+import java.util.TreeMap;
 import java.util.TreeSet;
 
 import org.apache.commons.lang3.StringUtils;
@@ -42,16 +45,20 @@ public class SubsystemProjector {
     // FIELDS
     /** logging facility */
     protected static Logger log = LoggerFactory.getLogger(SubsystemProjector.class);
-    /** marker line for end of a group */
-    public static final String END_MARKER = "//";
-    /** marker line for start of variant section */
-    private static final String VARIANT_SECTION_MARKER = "**";
     /** subsystem specifications */
     private Map<String, SubsystemSpec> subsystems;
     /** variant specifications */
     private SortedSet<VariantSpec> variants;
     /** useful role map */
     private RoleMap roleMap;
+    /** marker line for end of a group */
+    public static final String END_MARKER = "//";
+    /** marker line for start of variant section */
+    private static final String VARIANT_SECTION_MARKER = "**";
+    /** spacer for rule report indenting */
+    private static final String SPACER = "    ";
+    /** double spacer for rule report indenting */
+    private static final String SPACER2 = SPACER + SPACER;
 
     /**
      * Create a new, blank subsystem projector.
@@ -305,6 +312,50 @@ public class SubsystemProjector {
      */
     public RoleMap usefulRoles() {
         return this.roleMap;
+    }
+
+    /**
+     * This method writes a summary of the variant rules for each subsystem.  For each subsystem, there is
+     * a header line with the subsystem name, then for each variant within the subsystem there is a header
+     * line for the variant followed by detail lines listing role requirements.  The variant is present if
+     * at least one of the role sets is satisfied.
+     *
+     * @param ruleFile	output file for the report
+     *
+     * @throws IOException
+     */
+    public void ruleReport(File ruleFile) throws IOException {
+        Map<String, List<String>> ruleMap = new TreeMap<String, List<String>>();
+        try (PrintWriter writer = new PrintWriter(ruleFile)) {
+            for (SubsystemSpec subsystem : this.subsystems.values()) {
+                final String subName = subsystem.getName();
+                writer.println(subName);
+                // Loop through the variants, extracting the ones for this subsystem into
+                // the rule map.
+                ruleMap.clear();
+                for (VariantSpec variant : this.variants) {
+                    if (variant.getName().contentEquals(subName)) {
+                        List<String> rules = ruleMap.computeIfAbsent(variant.getCode(), x -> new ArrayList<String>());
+                        rules.add(variant.getRuleString());
+                    }
+                }
+                // Now we print the rule map.
+                int vCount = 0;
+                int rCount = 0;
+                for (var variantEntry : ruleMap.entrySet()) {
+                    String variantCode = variantEntry.getKey();
+                    vCount++;
+                    List<String> rules = variantEntry.getValue();
+                    writer.println(SPACER + "Variant " + variantCode);
+                    for (String rule : rules) {
+                        writer.println(SPACER2 + rule);
+                        rCount++;
+                    }
+                }
+                log.info("{} variants and {} rules found for {}.", vCount, rCount, subName);
+            }
+        }
+
     }
 
 }

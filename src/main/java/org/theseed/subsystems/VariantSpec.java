@@ -6,6 +6,7 @@ package org.theseed.subsystems;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.theseed.genome.Genome;
 import org.theseed.genome.SubsystemRow;
@@ -152,6 +153,14 @@ public class VariantSpec implements Comparable<VariantSpec> {
      */
     public RoleSet[] getCells() {
         return this.cells;
+    }
+
+    /**
+     * @return the rule string for this variant spec
+     */
+    public String getRuleString() {
+        String retVal = Arrays.stream(this.getCells()).map(x -> x.toString()).filter(x -> ! x.isBlank()).collect(Collectors.joining(" + "));
+        return retVal;
     }
 
     @Override
