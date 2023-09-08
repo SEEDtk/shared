@@ -129,6 +129,7 @@ class TestFieldStream {
             int featureTypeIdx = inStream.findField("feature_type");
             int taxonIdx = inStream.findField("taxon_id");
             int naLengthIdx = inStream.findField("na_length");
+            int segmentIdx = inStream.findField("segments");
             Iterator<FieldInputStream.Record> iter = inStream.iterator();
             assertThat(iter.hasNext(), equalTo(true));
             var record = iter.next();
@@ -137,6 +138,7 @@ class TestFieldStream {
             assertThat(record.get(featureTypeIdx), equalTo("repeat_region"));
             assertThat(record.getInt(taxonIdx), equalTo(83332));
             assertThat(record.getInt(naLengthIdx), equalTo(21));
+            assertThat(record.getList(segmentIdx), contains("1612600..1612620", "300..400"));
             assertThat(iter.hasNext(), equalTo(true));
             record = iter.next();
             assertThat(record.get(accessionIdx), equalTo("NC_000963"));
@@ -144,6 +146,7 @@ class TestFieldStream {
             assertThat(record.get(featureTypeIdx), equalTo("CDS"));
             assertThat(record.getInt(taxonIdx), equalTo(0));
             assertThat(record.getInt(naLengthIdx), equalTo(1554));
+            assertThat(record.getList(segmentIdx), contains("4138202..4139755"));
             assertThat(iter.hasNext(), equalTo(true));
             record = iter.next();
             assertThat(record.get(accessionIdx), equalTo("NC_000962"));
@@ -151,6 +154,7 @@ class TestFieldStream {
             assertThat(record.get(featureTypeIdx), equalTo("misc_feature"));
             assertThat(record.getInt(taxonIdx), equalTo(83332));
             assertThat(record.getInt(naLengthIdx), equalTo(24));
+            assertThat(record.getList(segmentIdx).isEmpty(), equalTo(true));
             assertThat(iter.hasNext(), equalTo(false));
         }
     }
