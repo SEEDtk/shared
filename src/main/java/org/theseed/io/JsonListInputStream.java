@@ -144,6 +144,7 @@ public class JsonListInputStream extends FieldInputStream {
                         throw new IOException("Unsupported use of map value for key \"" + key + "\" in line " + this.getLineNumber() + ".");
                     else if (INVALID_KEYS.contains(value))
                         throw new IOException("Unexpected token \"" + value + "\" found parsing value of \"" + key + "\" in line " + this.getLineNumber() + ".");
+                    else
                         retVal.addField(key, value);
                     // The next token should be a comma or end-of-record.
                     delim = this.getNextToken();
