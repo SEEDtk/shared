@@ -58,6 +58,20 @@ public class MarkerFile {
     }
 
     /**
+     * @return the string value from a marker file, or an empty string if the file does not exist
+     *
+     * @param name		name of the file
+     */
+    public static String readSafe(File name) {
+        String retVal;
+        if (name.canRead())
+            retVal = read(name);
+        else
+            retVal = "";
+        return retVal;
+    }
+
+    /**
      * @return an integer value from a marker file.
      *
      * @param name		name of the file
