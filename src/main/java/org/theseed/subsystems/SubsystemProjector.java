@@ -64,9 +64,31 @@ public class SubsystemProjector {
      * Create a new, blank subsystem projector.
      */
     public SubsystemProjector() {
+        this.setup();
+        this.roleMap = new RoleMap();
+    }
+
+    /**
+     * Create a new, blank subsystem projector with preloaded role definitions.
+     *
+     * @param roleFile	role file to use (or NULL if none)
+     */
+    public SubsystemProjector(File roleFile) {
+        this.setup();
+        if (roleFile == null)
+            this.roleMap = new RoleMap();
+        else {
+            this.roleMap = RoleMap.load(roleFile);
+            log.info("{} role definitions pre-loaded from {}.", this.roleMap.size(), roleFile);
+        }
+    }
+
+    /**
+     * Initialize this subsystem projector.
+     */
+    private void setup() {
         this.subsystems = new HashMap<String, SubsystemSpec>(1000);
         this.variants = new TreeSet<VariantSpec>();
-        this.roleMap = new RoleMap();
     }
 
     /**
