@@ -42,14 +42,15 @@ import org.theseed.utils.ParseFailureException;
  *
  * Besides conditionals, we have the following special commands
  *
+ *  0			produces no output
  * 	list		takes as input a conjunction, a column name, a colon, and a separator string.  The column is
  * 				split on the separator string, and then formed into a comma-separated list using the conjunction.
  * 				If the separator string is omitted, the column is retrieved as a list.
- *  0			produces no output
  *  product		takes as input two column names separated by a colon.  The first column is presumed to be a gene
  *  			product, and is parsed into multiple English sentences accordingly.  THe second column should
  *  			contain the code for the feature type, which is included in the description and affects the
  *  			text.
+ *  strand		takes as input a strand code and outputs a text translation
  *
  * The template string is parsed into a list of commands.  This command list can then be processed rapidly
  * to form the result string.
@@ -125,13 +126,18 @@ public class LineTemplate {
                         // Set up some local variables for use below.
                         TemplateCommand newCommand = null;
                         switch (m2.group(1)) {
+                        case "0" :
+                            // The null command does nothing, so it has no effect.
+                            break;
+                        case "strand" :
+                            // This command translates a strand code (+ or -).
+                            newCommand = new StrandCommand(this, inStream, m2.group(2));
+                            this.addToTop(newCommand);
+                            break;
                         case "product" :
                             // This command translates a gene product.
                             newCommand = new GeneProductCommand(this, inStream, m2.group(2));
                             this.addToTop(newCommand);
-                            break;
-                        case "0" :
-                            // The null command does nothing, so it has no effect.
                             break;
                         case "list" :
                             // This command turns a field containing a list into a comma-separated

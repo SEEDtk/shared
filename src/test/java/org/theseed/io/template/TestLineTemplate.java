@@ -94,6 +94,22 @@ class TestLineTemplate {
     }
 
     @Test
+    void testLocations() throws IOException, ParseFailureException {
+        final String TEMPLATE = "Feature {{patric_id}} is on {{$strand:strand}} at location {{start}} to {{end}}.";
+        try (var inStream = FieldInputStream.create(new File("data", "locs.txt"))) {
+            int fidIdx = inStream.findField("patric_id");
+            int valIdx = inStream.findField("value");
+            LineTemplate xlate = new LineTemplate(inStream, TEMPLATE);
+            for (var record : inStream) {
+                String output = xlate.apply(record);
+                String fid = record.get(fidIdx);
+                String expected = record.get(valIdx);
+                assertThat(fid, output, equalTo(expected));
+            }
+        }
+    }
+
+    @Test
     void testGroup() throws IOException, ParseFailureException {
         final String TEMPLATE = "Hello, we have a group{{$group:and:.}} with{{$clause:f1}}one {{f1}}"
                 + "{{$clause:f2}}two {{f2}}{{$clause:f3}}three {{f3}}{{$end}}";
