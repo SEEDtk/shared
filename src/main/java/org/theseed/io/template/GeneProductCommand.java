@@ -269,7 +269,7 @@ public class GeneProductCommand extends PrimitiveTemplateCommand {
     private String processProtein(String product) {
         StringBuffer retVal = new StringBuffer(product.length() * 2);
         // Check for the null case.
-        if (StringUtils.isBlank(product))
+        if (StringUtils.isBlank(product) || StringUtils.equalsIgnoreCase(product, "hypothetical protein"))
             retVal.append("This feature is a hypothetical protein.");
         else {
             // Strip off the comment.
