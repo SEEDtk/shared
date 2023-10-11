@@ -12,9 +12,11 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.IntStream;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.theseed.io.FieldInputStream;
+import org.theseed.text.output.TemplateHashWriter;
 import org.theseed.utils.ParseFailureException;
 
 
@@ -51,6 +53,9 @@ import org.theseed.utils.ParseFailureException;
  *  			contain the code for the feature type, which is included in the description and affects the
  *  			text.
  *  strand		takes as input a strand code and outputs a text translation
+ *  include		takes as input a file name, a comma, and a key field name; it is replaced by the appropriate
+ *  			expanded template string from the global-data cache
+ *  nl			emits a line break
  *
  * The template string is parsed into a list of commands.  This command list can then be processed rapidly
  * to form the result string.
@@ -67,6 +72,8 @@ public class LineTemplate {
     private TemplateCommand compiledTemplate;
     /** compile stack */
     private Deque<TemplateCommand> compileStack;
+    /** global-data cache */
+    private TemplateHashWriter globals;
     /** search pattern for variables */
     protected static final Pattern VARIABLE = Pattern.compile("(.*?)\\{\\{(.+?)\\}\\}(.*)");
     /** search pattern for special commands */
@@ -77,11 +84,15 @@ public class LineTemplate {
      *
      * @param inStream	tab-delimited file stream
      * @param template	template string
+     * @param globals 	global-data structure
      *
      * @throws IOException
      * @throws ParseFailureException
      */
-    public LineTemplate(FieldInputStream inStream, String template) throws IOException, ParseFailureException {
+    public LineTemplate(FieldInputStream inStream, String template, TemplateHashWriter globals)
+            throws IOException, ParseFailureException {
+        // Save the global-data cache.
+        this.globals = globals;
         // Initialize the compile stack.
         this.compileStack = new ArrayDeque<TemplateCommand>();
         this.compileStack.push(new BlockCommand(this,"block"));
@@ -151,6 +162,20 @@ public class LineTemplate {
                             this.addAndPush(newCommand);
                             // Start a block to cover the THEN clause.
                             this.addAndPush(new BlockCommand(this, "if"));
+                            break;
+                        case "include" :
+                            // This command includes a data string from the global-data cache.
+                            // The parameter is file name, comma, link-field name.
+                            String[] pieces = StringUtils.split(m.group(2), ",");
+                            if (pieces.length != 2)
+                                throw new ParseFailureException("Malformed include:  need file name, comma, and link-field name.");
+                            newCommand = new IncludeCommand(this, inStream, pieces[0], pieces[1]);
+                            this.addToTop(newCommand);
+                            break;
+                        case "nl" :
+                            // This command emits a new-line.
+                            newCommand = new LiteralCommand(this, "\n");
+                            this.addToTop(newCommand);
                             break;
                         case "else" :
                             // This command starts a block that executes when the IF is false.
@@ -338,6 +363,18 @@ public class LineTemplate {
             retVal = buffer.toString();
         }
         return retVal;
+    }
+
+    /**
+     * Extract a global data item.
+     *
+     * @param fileName	name of the input file
+     * @param keyValue	key value for the item
+     *
+     * @return the item value, or an empty string if it was not found
+     */
+    public String getGlobal(String fileName, String keyValue) {
+        return this.globals.getString(fileName, keyValue);
     }
 
 }

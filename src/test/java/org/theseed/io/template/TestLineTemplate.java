@@ -16,6 +16,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.theseed.io.FieldInputStream;
 import org.theseed.io.LineReader;
+import org.theseed.text.output.TemplateHashWriter;
 import org.theseed.utils.ParseFailureException;
 
 /**
@@ -56,6 +57,7 @@ class TestLineTemplate {
 
     @Test
     void testTemplates() throws IOException, ParseFailureException {
+        TemplateHashWriter globals = new TemplateHashWriter();
         final String TEMPLATE = "The genome with identifier {{genome_id}} is called {{genome_name}} and has {{genome_length}} base pairs. " +
                 "Its NCBI accession number is {{assembly_accession}} and it has {{contigs}} contigs with {{patric_cds}} known protein-coding regions. " +
                 "{{$if:host_name}}Its organism is found in the species {{$list:host_name:and:, }}. {{$fi}}{{$if:disease}}The organism is known to cause {{$list:disease}}. {{$fi}}" +
@@ -65,7 +67,7 @@ class TestLineTemplate {
                     "{{$clause:genus}}the genus {{genus}}{{$end}}";
         try (var inStream = FieldInputStream.create(new File("data", "genomes10.tbl"));
                 var testStream = new LineReader(new File("data", "genomes10.txt"))) {
-            LineTemplate xlate = new LineTemplate(inStream, TEMPLATE);
+            LineTemplate xlate = new LineTemplate(inStream, TEMPLATE, globals);
             Iterator<String> testIter = testStream.iterator();
             int i = 1;
             for (var line : inStream) {
@@ -78,10 +80,11 @@ class TestLineTemplate {
 
     @Test
     void testProducts() throws IOException, ParseFailureException {
+        TemplateHashWriter globals = new TemplateHashWriter();
         final String TEMPLATE = "{{$if:type:fid}}{{$product:product:type}}{{$fi}}";
         try (var inStream = FieldInputStream.create(new File("data", "products.tbl"));
                 var testStream = new LineReader(new File("data", "products.txt"))) {
-            LineTemplate xlate = new LineTemplate(inStream, TEMPLATE);
+            LineTemplate xlate = new LineTemplate(inStream, TEMPLATE, globals);
             Iterator<String> testIter = testStream.iterator();
             int i = 1;
             for (var line : inStream) {
@@ -95,11 +98,12 @@ class TestLineTemplate {
 
     @Test
     void testLocations() throws IOException, ParseFailureException {
+        TemplateHashWriter globals = new TemplateHashWriter();
         final String TEMPLATE = "Feature {{patric_id}} is on {{$strand:strand}} at location {{start}} to {{end}}.";
         try (var inStream = FieldInputStream.create(new File("data", "locs.txt"))) {
             int fidIdx = inStream.findField("patric_id");
             int valIdx = inStream.findField("value");
-            LineTemplate xlate = new LineTemplate(inStream, TEMPLATE);
+            LineTemplate xlate = new LineTemplate(inStream, TEMPLATE, globals);
             for (var record : inStream) {
                 String output = xlate.apply(record);
                 String fid = record.get(fidIdx);
@@ -111,12 +115,13 @@ class TestLineTemplate {
 
     @Test
     void testGroup() throws IOException, ParseFailureException {
+        TemplateHashWriter globals = new TemplateHashWriter();
         final String TEMPLATE = "Hello, we have a group{{$group:and:.}} with{{$clause:f1}}one {{f1}}"
                 + "{{$clause:f2}}two {{f2}}{{$clause:f3}}three {{f3}}{{$end}}";
         try (var inStream = FieldInputStream.create(new File("data", "groups.tbl"))) {
             int i = 1;
             int testIdx = inStream.findField("expected");
-            LineTemplate xlate = new LineTemplate(inStream, TEMPLATE);
+            LineTemplate xlate = new LineTemplate(inStream, TEMPLATE, globals);
             for (var line : inStream) {
                 String output = xlate.apply(line);
                 String test = line.get(testIdx);
