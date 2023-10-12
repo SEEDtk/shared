@@ -12,7 +12,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.IntStream;
 
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.theseed.io.FieldInputStream;
@@ -53,8 +52,9 @@ import org.theseed.utils.ParseFailureException;
  *  			contain the code for the feature type, which is included in the description and affects the
  *  			text.
  *  strand		takes as input a strand code and outputs a text translation
- *  include		takes as input a file name, a comma, and a key field name; it is replaced by the appropriate
- *  			expanded template string from the global-data cache
+ *  include		takes as input a file name, a key field name, and a conjunction.  The file name and key field
+ *  			name are used to locate a list of expanded template strings from the global cache.  These
+ *  			are strung together by the conjunction just as in the list command.
  *  nl			emits a line break
  *
  * The template string is parsed into a list of commands.  This command list can then be processed rapidly
@@ -166,10 +166,7 @@ public class LineTemplate {
                         case "include" :
                             // This command includes a data string from the global-data cache.
                             // The parameter is file name, comma, link-field name.
-                            String[] pieces = StringUtils.split(m.group(2), ",");
-                            if (pieces.length != 2)
-                                throw new ParseFailureException("Malformed include:  need file name, comma, and link-field name.");
-                            newCommand = new IncludeCommand(this, inStream, pieces[0], pieces[1]);
+                            newCommand = new IncludeCommand(this, inStream, m2.group(2));
                             this.addToTop(newCommand);
                             break;
                         case "nl" :
@@ -373,8 +370,8 @@ public class LineTemplate {
      *
      * @return the item value, or an empty string if it was not found
      */
-    public String getGlobal(String fileName, String keyValue) {
-        return this.globals.getString(fileName, keyValue);
+    public List<String> getGlobal(String fileName, String keyValue) {
+        return this.globals.getStrings(fileName, keyValue);
     }
 
 }

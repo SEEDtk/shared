@@ -11,8 +11,8 @@ import org.theseed.io.FieldInputStream.Record;
 import org.theseed.utils.ParseFailureException;
 
 /**
- * This is the basic IF command.  The command has as its sole parameter a column name.
- * It executes its THEN-block when the column evaluates to TRUE and executes the ELSE
+ * This is the basic IF command.  The command has as its sole parameter a field expression.
+ * It executes its THEN-block when the expression evaluates to TRUE and executes the ELSE
  * block when the column evaluates to FALSE.
  */
 public class IfCommand extends TemplateCommand {
