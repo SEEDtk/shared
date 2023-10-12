@@ -1,7 +1,7 @@
 /**
  *
  */
-package org.theseed.text.output;
+package org.theseed.io.template.output;
 
 import java.io.IOException;
 

@@ -16,7 +16,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.theseed.io.FieldInputStream;
 import org.theseed.io.LineReader;
-import org.theseed.text.output.TemplateHashWriter;
+import org.theseed.io.template.output.TemplateHashWriter;
 import org.theseed.utils.ParseFailureException;
 
 /**
