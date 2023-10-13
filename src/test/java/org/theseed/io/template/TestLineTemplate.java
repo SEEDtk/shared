@@ -141,6 +141,7 @@ class TestLineTemplate {
         globals.write("dlits.txt", "key2", "more key2 dlit text");
         globals.write("dlits.txt", "key1", "key1 dlit text");
         globals.write("ilits.txt", "key1", "key1 ilit text");
+        // TODO test field expressions with include
     }
 
 

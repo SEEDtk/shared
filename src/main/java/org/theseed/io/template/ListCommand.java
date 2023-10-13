@@ -9,6 +9,7 @@ import java.util.List;
 import org.apache.commons.lang3.StringUtils;
 import org.theseed.io.FieldInputStream;
 import org.theseed.io.FieldInputStream.Record;
+import org.theseed.io.template.cols.FieldExpression;
 import org.theseed.utils.ParseFailureException;
 
 /**
@@ -20,7 +21,7 @@ public class ListCommand extends PrimitiveTemplateCommand {
 
     // FIELDS
     /** index of the column containing the list */
-    private int colIdx;
+    private FieldExpression listExpression;
     /** conjunction to use at end of list */
     private String conjunction;
     /** separator string, or NULL if the field is a list */
@@ -45,8 +46,8 @@ public class ListCommand extends PrimitiveTemplateCommand {
         if (pieces.length <= 0)
             throw new ParseFailureException("List command requires parameters.");
         else {
-            // Get the input field index.
-            this.colIdx = template.findField(pieces[0], inStream);
+            // Compile the input expression.
+            this.listExpression = FieldExpression.compile(template, inStream, pieces[0]);
             if (pieces.length < 2) {
                 // The conjunction defaults to "and".
                 this.conjunction = "and";
@@ -70,9 +71,11 @@ public class ListCommand extends PrimitiveTemplateCommand {
         // Get the column data.
         List<String> pieces;
         if (this.separator == null)
-            pieces = line.getList(this.colIdx);
-        else
-            pieces = Arrays.asList(StringUtils.splitByWholeSeparator(line.get(this.colIdx), this.separator));
+            pieces = this.listExpression.getList(line);
+        else {
+            String value = this.listExpression.get(line);
+            pieces = Arrays.asList(StringUtils.splitByWholeSeparator(value, this.separator));
+        }
         return LineTemplate.conjunct(this.conjunction, pieces);
     }
 

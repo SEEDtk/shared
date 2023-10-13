@@ -27,7 +27,7 @@ import org.theseed.utils.ParseFailureException;
  *
  * Special commands are handled by a dollar sign and a command name.  If the command requires a variable or
  * expression, that follows the command with a colon separator.  Conditionals are handled by the special
- * commands "if", "else", and "fi".  "if" takes one or more column names as its argument, and the body is only
+ * commands "if", "else", and "fi".  "if" takes one or more field expressions as its argument, and the body is only
  * output if all the columns evaluate to TRUE.  "else" produces output if the IF failed, and "fi" terminates
  * the conditional.
  *
@@ -44,17 +44,14 @@ import org.theseed.utils.ParseFailureException;
  * Besides conditionals, we have the following special commands
  *
  *  0			produces no output
- * 	list		takes as input a conjunction, a column name, a colon, and a separator string.  The column is
+ * 	list		takes as input a conjunction, a field expression, a colon, and a separator string.  The column is
  * 				split on the separator string, and then formed into a comma-separated list using the conjunction.
  * 				If the separator string is omitted, the column is retrieved as a list.
  *  product		takes as input two column names separated by a colon.  The first column is presumed to be a gene
  *  			product, and is parsed into multiple English sentences accordingly.  THe second column should
  *  			contain the code for the feature type, which is included in the description and affects the
  *  			text.
- *  strand		takes as input a strand code and outputs a text translation
- *  include		takes as input a file name, a key field name, and a conjunction.  The file name and key field
- *  			name are used to locate a list of expanded template strings from the global cache.  These
- *  			are strung together by the conjunction just as in the list command.
+ *  strand		takes as input a column name containing a strand code and outputs a text translation
  *  nl			emits a line break
  *
  * The template string is parsed into a list of commands.  This command list can then be processed rapidly
@@ -162,12 +159,6 @@ public class LineTemplate {
                             this.addAndPush(newCommand);
                             // Start a block to cover the THEN clause.
                             this.addAndPush(new BlockCommand(this, "if"));
-                            break;
-                        case "include" :
-                            // This command includes a data string from the global-data cache.
-                            // The parameter is file name, comma, link-field name.
-                            newCommand = new IncludeCommand(this, inStream, m2.group(2));
-                            this.addToTop(newCommand);
                             break;
                         case "nl" :
                             // This command emits a new-line.
@@ -319,7 +310,7 @@ public class LineTemplate {
      * @throws ParseFailureException
      *
      */
-    protected int findField(String colName, FieldInputStream inStream) throws ParseFailureException {
+    public int findField(String colName, FieldInputStream inStream) throws ParseFailureException {
         int retVal;
         try {
             retVal = inStream.findField(colName);
