@@ -167,7 +167,7 @@ public class LineTemplate {
                             break;
                         case "else" :
                             // This command starts a block that executes when the IF is false.
-                            // We first need to pop off a then-block.  The next method fails if
+                            // We first need to pop off a then-block.  This next method fails if
                             // the context is not IF.
                             this.popInContext("else", "if");
                             // Now create the ELSE and connect it to the IF.

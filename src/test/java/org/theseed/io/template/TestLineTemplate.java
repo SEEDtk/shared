@@ -141,7 +141,23 @@ class TestLineTemplate {
         globals.write("dlits.txt", "key2", "more key2 dlit text");
         globals.write("dlits.txt", "key1", "key1 dlit text");
         globals.write("ilits.txt", "key1", "key1 ilit text");
-        // TODO test field expressions with include
+        final String TEMPLATE = "This is an important test.  We need to know if {{datum}} works. " +
+                "Also, we are testing include. {{$if:include(dlits.txt, key)}}" +
+                "We have {{$list:include(dlits.txt, key):and}}" +
+                "{{$else}}{{$if:list}}We do not have key, but we have {{$list:list}}" +
+                "{{$fi}}{{$fi}}.";
+        try (var inStream = FieldInputStream.create(new File("data", "includes.tbl"))) {
+            LineTemplate xlate = new LineTemplate(inStream, TEMPLATE, globals);
+            int i = 1;
+            int testIdx = inStream.findField("expected");
+            for (var line : inStream) {
+                String output = xlate.apply(line);
+                String test = line.get(testIdx);
+                log.info(output);
+                assertThat(String.format("Line %d", i), output, equalTo(test));
+                i++;
+            }
+        }
     }
 
 

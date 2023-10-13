@@ -32,7 +32,7 @@ public class TemplateHashWriter implements ITemplateWriter {
     @Override
     public void write(String fileName, String key, String outString) throws IOException {
         // Get the sub-hash for this file.
-        Map<String, List<String>> subHash = this.masterHash.computeIfAbsent(key, x -> new HashMap<String, List<String>>());
+        Map<String, List<String>> subHash = this.masterHash.computeIfAbsent(fileName, x -> new HashMap<String, List<String>>());
         // Get the string list for this key.
         List<String> valueList = subHash.computeIfAbsent(key, x -> new ArrayList<String>(2));
         // Store the template string, using the provided key.
