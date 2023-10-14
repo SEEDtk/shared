@@ -13,7 +13,7 @@ import org.theseed.io.template.cols.FieldExpression;
 import org.theseed.utils.ParseFailureException;
 
 /**
- * This command handles a field containing a list.  The list can bean actual list
+ * This command handles a field containing a list.  The list can be an actual list
  * or a delimited list.  The list itself is output as a comma-separated phrase with
  * a conjunction ("and" or "or").
  */
