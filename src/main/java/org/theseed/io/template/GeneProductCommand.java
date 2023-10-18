@@ -126,7 +126,7 @@ public class GeneProductCommand extends PrimitiveTemplateCommand {
         // Convert underscores to spaces.
         String typeDesc = StringUtils.replaceChars(type, '_', ' ');
         // Return the description.
-        return "This feature is " + prefixArticle(typeDesc) + ".";
+        return prefixArticle(typeDesc);
     }
 
     /**
@@ -162,11 +162,11 @@ public class GeneProductCommand extends PrimitiveTemplateCommand {
         String retVal;
         if (StringUtils.isBlank(product)) {
             // Here we have no product string.
-            retVal = "This feature's product is a miscellaneous RNA.";
+            retVal = "a miscellaneous RNA";
         } else {
             // Here we have a product string to use.
             String productString = Function.commentFree(product);
-            retVal = "This feature's product is a miscellaneous RNA believed to be " + productString + ".";
+            retVal = "a miscellaneous RNA believed to be " + productString;
         }
         return retVal;
     }
@@ -182,13 +182,13 @@ public class GeneProductCommand extends PrimitiveTemplateCommand {
         // Use the product to determine the type of ribosomal RNA.
         String retVal;
         if (StringUtils.isBlank(product)) {
-            retVal = "This feature's product is an unknown ribosomal RNA.";
+            retVal = "an unknown ribosomal RNA";
         } else if (Genome.LSU_R_RNA.matcher(product).find()) {
             // Here we have an LSU.
-            retVal = "This feature's product is a large subunit ribosomal RNA.";
+            retVal = "a large subunit ribosomal RNA";
         } else if (Genome.SSU_R_RNA.matcher(product).find()) {
             // Here we have the venerable SSU.
-            retVal = "This feature's product is a 16S small subunit ribosomal RNA.";
+            retVal = "a 16S small subunit ribosomal RNA";
         } else {
             // Break up the product and return the longest portion.
             String[] pieces = RNA_SPLITTER.split(product);
@@ -201,13 +201,12 @@ public class GeneProductCommand extends PrimitiveTemplateCommand {
             var m = RNA_NAMER.matcher(longestPiece);
             if (! m.find()) {
                 // Here there is no such substring.
-                retVal = "This feature's product is a ribosomal RNA of type " + longestPiece + ".";
+                retVal = "a ribosomal RNA of type " + longestPiece;
             } else {
                 // Here we must replace the substring with the full version of the name.
                 String tail = (m.end() + 1 < longestPiece.length() ?
                         longestPiece.substring(m.end() + 1) : "");
-                retVal = "This feature's product is " +
-                        prefixArticle(longestPiece.substring(0, m.start()) + "ribosomal RNA" + tail);
+                retVal = prefixArticle(longestPiece.substring(0, m.start()) + "ribosomal RNA" + tail);
             }
         }
         return retVal;
@@ -223,7 +222,7 @@ public class GeneProductCommand extends PrimitiveTemplateCommand {
     private String processTRna(String product) {
         String retVal;
         if (StringUtils.isBlank(product)) {
-            retVal = "This feature's product is an unknown type of transfer RNA.";
+            retVal = "an unknown type of transfer RNA.";
         } else {
             // Parse the product.  If we have a match, group 1 is the amino acid abbreviation, and if group 2 exists, it
             // is the codon.
@@ -236,7 +235,7 @@ public class GeneProductCommand extends PrimitiveTemplateCommand {
                 String codon = "";
                 if (m.group(2) != null)
                     codon = " from codon " + m.group(2);
-                retVal = "This feature's product is a transfer RNA for " + aa + codon + ".";
+                retVal = "a transfer RNA for " + aa + codon;
             } else {
                 m = T_RNA_PARSER2.matcher(product);
                 if (m.matches()) {
@@ -244,14 +243,14 @@ public class GeneProductCommand extends PrimitiveTemplateCommand {
                     String aa = AMINO_ACIDS.get(m.group(1));
                     if (aa == null)
                         aa = "an unknown amino acid " + m.group(1);
-                    retVal = "This feature's product is a transfer RNA for " + aa + ".";
+                    retVal = "a transfer RNA for " + aa;
                 } else {
                     m = T_RNA_PSEUDO.matcher(product);
                     if (m.matches()) {
                         // Here we have a pseudo-transfer RNA.
-                        retVal = "This feature's product is a pseudo-transfer RNA for codon " + m.group(1) + ".";
+                        retVal = "a pseudo-transfer RNA for codon " + m.group(1);
                     } else
-                        retVal = "This feature's product is a transfer RNA of unknown type.";
+                        retVal = "a transfer RNA of unknown type";
                 }
             }
         }
@@ -270,7 +269,7 @@ public class GeneProductCommand extends PrimitiveTemplateCommand {
         StringBuffer retVal = new StringBuffer(product.length() * 2);
         // Check for the null case.
         if (StringUtils.isBlank(product) || StringUtils.equalsIgnoreCase(product, "hypothetical protein"))
-            retVal.append("This feature is a hypothetical protein.");
+            retVal.append("a hypothetical protein.");
         else {
             // Strip off the comment.
             String productBody = Function.commentFree(product);
@@ -279,15 +278,15 @@ public class GeneProductCommand extends PrimitiveTemplateCommand {
             if (pieces.length > 1) {
                 // This gets complicated.  We present the alternatives as a numbered list.  Note that the first
                 // function is preceded by a colon, and the remaining ones separated by semi-colons.
-                retVal.append("This feature is a protein with ").append(pieces.length).append(" domains, whose products are: (1) ")
+                retVal.append("a protein with ").append(pieces.length).append(" domains, whose products are: (1) ")
                         .append(this.interpretDomain(pieces[0]));
                 final int n = pieces.length - 1;
                 for (int i = 1; i < n; i++)
                     retVal.append("; (").append(i+1).append(") ").append(this.interpretDomain(pieces[i]));
-                retVal.append("; and (").append(pieces.length).append(") ").append(this.interpretDomain(pieces[n])).append(".");
+                retVal.append("; and (").append(pieces.length).append(") ").append(this.interpretDomain(pieces[n]));
             } else {
                 // Here we have a much simpler case:  an umambiguous product.
-                retVal.append("This feature is a protein whose product is ").append(this.interpretDomain(productBody)).append(".");
+                retVal.append("a protein whose product is ").append(this.interpretDomain(productBody));
             }
         }
         return retVal.toString();
