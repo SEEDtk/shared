@@ -51,6 +51,7 @@ import org.theseed.utils.ParseFailureException;
  *  			product, and is parsed into multiple English sentences accordingly.  THe second column should
  *  			contain the code for the feature type, which is included in the description and affects the
  *  			text.
+ *  tab			emits a horizontal tab character
  *  strand		takes as input a column name containing a strand code and outputs a text translation
  *  nl			emits a line break
  *
@@ -207,6 +208,11 @@ public class LineTemplate {
                             this.popInContext("end", "group", "clause");
                             // Pop off the GROUP itself.
                             this.pop();
+                            break;
+                        case "tab" :
+                            // This command emits a tab.
+                            newCommand = new LiteralCommand(this, "\t");
+                            this.addToTop(newCommand);
                             break;
                         default :
                             throw new ParseFailureException("Unknown special command \"" + m2.group(1) + "\".");

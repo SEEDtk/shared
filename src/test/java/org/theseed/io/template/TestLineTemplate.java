@@ -160,5 +160,16 @@ class TestLineTemplate {
         }
     }
 
+    @Test
+    void testLiterals() throws IOException, ParseFailureException {
+        TemplateHashWriter globals = new TemplateHashWriter();
+        final String TEMPLATE = "This tests the {{fld1}} null ({{$0}}), tab ({{$tab}}), and new-line {{$nl}} commands.";
+        try (var inStream = FieldInputStream.create(new File("data", "single.tbl"))) {
+            LineTemplate xlate = new LineTemplate(inStream, TEMPLATE, globals);
+            var line = inStream.next();
+            String output = xlate.apply(line);
+            assertThat(output, equalTo("This tests the a null (), tab (\t), and new-line \n commands."));
+        }
+    }
 
 }
