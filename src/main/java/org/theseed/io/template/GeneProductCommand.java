@@ -222,7 +222,7 @@ public class GeneProductCommand extends PrimitiveTemplateCommand {
     private String processTRna(String product) {
         String retVal;
         if (StringUtils.isBlank(product)) {
-            retVal = "an unknown type of transfer RNA.";
+            retVal = "an unknown type of transfer RNA";
         } else {
             // Parse the product.  If we have a match, group 1 is the amino acid abbreviation, and if group 2 exists, it
             // is the codon.
@@ -269,7 +269,7 @@ public class GeneProductCommand extends PrimitiveTemplateCommand {
         StringBuffer retVal = new StringBuffer(product.length() * 2);
         // Check for the null case.
         if (StringUtils.isBlank(product) || StringUtils.equalsIgnoreCase(product, "hypothetical protein"))
-            retVal.append("a hypothetical protein.");
+            retVal.append("a hypothetical protein");
         else {
             // Strip off the comment.
             String productBody = Function.commentFree(product);
