@@ -125,4 +125,15 @@ public abstract class BaseMultiReportProcessor extends BaseProcessor {
         return retVal;
     }
 
+    /**
+     * Create the name of a file in the output directory.
+     *
+     * @param name	base name of proposed output file or directory
+     *
+     * @return a usable name of the proposed output file or directory
+     */
+    protected File getOutFile(String name) {
+        return new File(this.outDir, name);
+    }
+
 }
