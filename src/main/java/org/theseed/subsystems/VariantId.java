@@ -48,9 +48,13 @@ public class VariantId implements Comparable<VariantId> {
         boolean retVal;
         if (code.startsWith("*"))
             code = code.substring(1);
-        if (code.contentEquals("active"))
+        if (code.startsWith("active"))
             retVal = true;
-        else if (code.contentEquals("inactive"))
+        else if (code.startsWith("inactive"))
+            retVal = false;
+        else if (code.startsWith("likely"))
+            retVal = false;
+        else if (code.startsWith("lookat"))
             retVal = false;
         else if (code.contentEquals("missing"))
             retVal = false;
@@ -63,6 +67,33 @@ public class VariantId implements Comparable<VariantId> {
         return retVal;
     }
 
+    /**
+     * @return TRUE if the variant code indicates a likely variant, else FALSE
+     *
+     * @param code	variant code of interest
+     */
+    public static boolean isLikely(String code) {
+        boolean retVal;
+        if (code.startsWith("*"))
+            code = code.substring(1);
+        if (code.startsWith("active"))
+            retVal = false;
+        else if (code.startsWith("inactive"))
+            retVal = false;
+        else if (code.startsWith("likely"))
+            retVal = true;
+        else if (code.startsWith("lookat"))
+            retVal = false;
+        else if (code.contentEquals("missing"))
+            retVal = false;
+        else if (code.startsWith("-"))
+            retVal = false;
+        else if (code.contentEquals("0"))
+            retVal = false;
+        else
+            retVal = false;
+        return retVal;
+    }
     /**
      * @return TRUE if this is an active variant, else FALSE
      */
