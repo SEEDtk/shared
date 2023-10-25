@@ -5,9 +5,12 @@ package org.theseed.io.template;
 
 import java.io.IOException;
 import java.util.ArrayDeque;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Deque;
 import java.util.List;
+import java.util.Random;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.IntStream;
@@ -39,7 +42,10 @@ import org.theseed.utils.ParseFailureException;
  * end, the clauses are assembled and put into a long sentence with commas and the conjunction if necessary,
  * with a final period.  Sometimes the group will start in the middle of a sentence instead of being a sentence
  * unto itself.  If this happens, you can add a period as an additional parameter (colon-separated) to the
- * conjunctiion.
+ * conjunction.
+ *
+ * Occasionally, you will want to use the group to output the clauses as individual lines.  If this is the
+ * case, use "nl" as the conjunction.
  *
  * Besides conditionals, we have the following special commands
  *
@@ -54,6 +60,8 @@ import org.theseed.utils.ParseFailureException;
  *  tab			emits a horizontal tab character
  *  strand		takes as input a column name containing a strand code and outputs a text translation
  *  nl			emits a line break
+ *  choices		outputs randomly-selected answers to a multiple-choice question.  Takes as input a choice-set
+ *  			name, the correct answer (as a column name or as a literal in quotes), and the number of answers desired.
  *
  * The template string is parsed into a list of commands.  This command list can then be processed rapidly
  * to form the result string.
@@ -72,6 +80,8 @@ public class LineTemplate {
     private Deque<TemplateCommand> compileStack;
     /** global-data cache */
     private TemplateHashWriter globals;
+    /** randomizer */
+    private Random rand;
     /** search pattern for variables */
     protected static final Pattern VARIABLE = Pattern.compile("(.*?)\\{\\{(.+?)\\}\\}(.*)");
     /** search pattern for special commands */
@@ -89,6 +99,8 @@ public class LineTemplate {
      */
     public LineTemplate(FieldInputStream inStream, String template, TemplateHashWriter globals)
             throws IOException, ParseFailureException {
+        // Set up the randomizer.
+        this.rand = new Random();
         // Save the global-data cache.
         this.globals = globals;
         // Initialize the compile stack.
@@ -214,6 +226,11 @@ public class LineTemplate {
                             newCommand = new LiteralCommand(this, "\t");
                             this.addToTop(newCommand);
                             break;
+                        case "choices" :
+                            // This command [resents multiple answer choices.
+                            newCommand = new ChoiceCommand(this, inStream, m2.group(2));
+                            this.addToTop(newCommand);
+                            break;
                         default :
                             throw new ParseFailureException("Unknown special command \"" + m2.group(1) + "\".");
                         }
@@ -242,6 +259,15 @@ public class LineTemplate {
         final String name = top.getName();
         if (! Arrays.stream(context).anyMatch(x -> x.contentEquals(name)))
             throw new ParseFailureException("\"" + newName + "\" command found outside of proper context.");
+    }
+
+    /**
+     * Set the random seed to allow repeatable testing.
+     *
+     * @param newSeed	new random see
+     */
+    protected void setSeed(long newSeed) {
+        this.rand = new Random(newSeed);
     }
 
     /**
@@ -371,4 +397,69 @@ public class LineTemplate {
         return this.globals.getStrings(fileName, keyValue);
     }
 
+    /**
+     * @return a list of choices from the specified choice list
+     *
+     * @param name		name of the choice list
+     * @param answer	correct choice
+     * @param num		number of choices to use
+     *
+     * @throws ParseFailureException
+     */
+    public List<String> getChoices(String name, String answer, int num) throws ParseFailureException {
+        List<String> retVal;
+        Set<String> choices = this.globals.getChoices(name);
+        if (choices == null)
+            throw new ParseFailureException("No choice list named \"" + name + "\" is available.");
+        final int n = choices.size();
+        ArrayList<String> choiceList = new ArrayList<String>(n);
+        if (num >= n) {
+            choiceList.addAll(choices);
+            this.shuffle(choiceList, n);
+            retVal = choiceList;
+        } else {
+            choices.stream().filter(x -> ! x.equals(answer)).forEach(x -> choiceList.add(x));
+            this.shuffle(choiceList, num);
+            // Now we have "num" random entries at the beginning.  Figure out where to add the
+            // real answer.
+            int idx = this.rand.nextInt(num);
+            choiceList.set(idx, answer);
+            retVal = choiceList.subList(0, num);
+        }
+        return retVal;
+    }
+
+    /**
+     * Shuffle random entries into the first N positions of a list.
+     *
+     * @param choiceList	list to shuffle
+     * @param n				number of entries to choose
+     */
+    private void shuffle(ArrayList<String> choiceList, int n) {
+        // Now we need to shuffle the list.  We do this internally so we can set the seed for
+        // testing.
+        int i = 0;
+        // Loop until there is no more shuffling to do.
+        while (i < n) {
+            // Determine how much space is available to pick from.
+            int remaining = choiceList.size() - i;
+            // Compute the place to pick from.
+            int j = this.rand.nextInt(remaining) + i;
+            if (j != i) {
+                String buffer = choiceList.get(j);
+                choiceList.set(j, choiceList.get(i));
+                choiceList.set(i, buffer);
+            }
+            i++;
+        }
+    }
+
+    /**
+     * @return TRUE if the named choice list is present, else FALSE
+     *
+     * @param name	name of the choice list
+     */
+    public boolean hasChoiceList(String name) {
+        return this.globals.getChoices(name) != null;
+    }
 }

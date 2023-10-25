@@ -1,0 +1,21 @@
+What is the genus of 123?	A) g5, B) g3, C) g4, or D) g1
+Is the species of 123 s1?	A) Yes or B) No
+What is the species of 123?	A) s1, B) s2, or C) s3
+What is the genus of 456?	A) g5, B) g4, C) g7, or D) g2
+Is the species of 456 s1?	A) No or B) Yes
+What is the species of 456?	A) s1, B) s2, or C) s3
+What is the genus of 789?	A) g5, B) g1, C) g3, or D) g6
+Is the species of 789 s1?	A) Yes or B) No
+What is the species of 789?	A) s3, B) s1, or C) s2
+What is the genus of 223?	A) g5, B) g7, C) g4, or D) g2
+Is the species of 223 s1?	A) No or B) Yes
+What is the species of 223?	A) s1, B) s2, or C) s3
+What is the genus of 224?	A) g1, B) g3, C) g5, or D) g6
+Is the species of 224 s1?	A) Yes or B) No
+What is the species of 224?	A) s3, B) s2, or C) s1
+What is the genus of 225?	A) g5, B) g3, C) g6, or D) g1
+Is the species of 225 s1?	A) Yes or B) No
+What is the species of 225?	A) s1, B) s2, or C) s3
+What is the genus of 227?	A) g5, B) g2, C) g4, or D) g7
+Is the species of 227 s1?	A) No or B) Yes
+What is the species of 227?	A) s3, B) s1, or C) s2

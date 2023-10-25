@@ -116,9 +116,10 @@ class TestLineTemplate {
     @Test
     void testGroup() throws IOException, ParseFailureException {
         TemplateHashWriter globals = new TemplateHashWriter();
-        final String TEMPLATE = "Hello, we have a group{{$group:and:.}} with{{$clause:f1}}one {{f1}}"
+        String TEMPLATE = "Hello, we have a group{{$group:and:.}} with{{$clause:f1}}one {{f1}}"
                 + "{{$clause:f2}}two {{f2}}{{$clause:f3}}three {{f3}}{{$end}}";
-        try (var inStream = FieldInputStream.create(new File("data", "groups.tbl"))) {
+        final File groupFile = new File("data", "groups.tbl");
+        try (var inStream = FieldInputStream.create(groupFile)) {
             int i = 1;
             int testIdx = inStream.findField("expected");
             LineTemplate xlate = new LineTemplate(inStream, TEMPLATE, globals);
@@ -128,6 +129,25 @@ class TestLineTemplate {
                 assertThat(String.format("Line %d", i), output, equalTo(test));
                 i++;
             }
+        }
+        // Here we do the special NL-style group.
+        TEMPLATE = "{{$group:nl}}{{$clause:f1}}This is the {{f1}} question."
+                + "{{$clause:f2}}This is the {{f2}} question."
+                + "{{$clause:f3}}This is the {{f3}} question.{{$end}}";
+        try (var inStream = FieldInputStream.create(groupFile)) {
+            LineTemplate xlate = new LineTemplate(inStream, TEMPLATE, globals);
+            var line = inStream.next();
+            String output = xlate.apply(line);
+            assertThat(output, equalTo(""));
+            line = inStream.next();
+            output = xlate.apply(line);
+            assertThat(output, equalTo("This is the B question."));
+            line = inStream.next();
+            output = xlate.apply(line);
+            assertThat(output, equalTo("This is the A question.\nThis is the C question."));
+            line = inStream.next();
+            output = xlate.apply(line);
+            assertThat(output, equalTo("This is the A question.\nThis is the B question.\nThis is the C question."));
         }
     }
 
@@ -169,6 +189,29 @@ class TestLineTemplate {
             var line = inStream.next();
             String output = xlate.apply(line);
             assertThat(output, equalTo("This tests the a null (), tab (\t), and new-line \n commands."));
+        }
+    }
+
+    @Test
+    void testRandom() throws IOException, ParseFailureException {
+        TemplateHashWriter globals = new TemplateHashWriter();
+        File simpleFile = new File("data", "simple.tbl");
+        globals.readChoiceLists(simpleFile, "genus", "species");
+        final String TEMPLATE = "What is the genus of {{genome}}?{{$tab}}{{$choices:genus:genus:4}}{{$nl}}" +
+                    "Is the species of {{genome}} s1?{{$tab}}{{$choices:YesNo:\"Yes\":3}}{{$nl}}" +
+                    "What is the species of {{genome}}?{{$tab}}{{$choices:species:species:3}}";
+        try (LineReader testStream = new LineReader(new File("data", "simple.txt"));
+                var inStream = FieldInputStream.create(simpleFile)) {
+            LineTemplate xlate = new LineTemplate(inStream, TEMPLATE, globals);
+            xlate.setSeed(12345679L);
+            int i = 1;
+            for (var line : inStream) {
+                String output = xlate.apply(line);
+                String l1 = testStream.next();
+                String l2 = testStream.next();
+                String l3 = testStream.next();
+                assertThat(Integer.toString(i), output, equalTo(l1 + "\n" + l2 + "\n" + l3));
+            }
         }
     }
 

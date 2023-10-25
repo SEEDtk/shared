@@ -15,7 +15,11 @@ import org.theseed.utils.ParseFailureException;
  * of which may not materialize.  The phrases are comma-spliced together with a conjunction
  * at the end (standard phrase-conjuncting).  We only generate the prefix, the phrases
  * which correspond to fields that evaluate TRUE, and a period at the end.  If none of
- * the fields are TRUE, we don't generate anything at all.
+ * the fields are TRUE, we generate a specified null clause.
+ *
+ * The parameters are the conjunction (default "and") and the null clause (default empty string).
+ * If the conjunction is specified as "nl", then a different approach will be used and the
+ * clauses will be output as separate lines.
  */
 public class GroupCommand extends TemplateCommand {
 
@@ -27,7 +31,7 @@ public class GroupCommand extends TemplateCommand {
     /** clause blocks */
     private List<ClauseCommand> clauses;
     /** suffix */
-    private String suffix;
+    private String nullClause;
 
     /**
      * Construct a group command.
@@ -40,13 +44,16 @@ public class GroupCommand extends TemplateCommand {
         String[] pieces = StringUtils.split(parms, ':');
         if (pieces == null || pieces.length < 1) {
             this.conjunction = "and";
-            this.suffix = "";
+            this.nullClause = "";
         } else {
-            this.conjunction = pieces[0];
-            if (pieces.length < 2)
-                this.suffix = "";
+            if (pieces[0].contentEquals("nl"))
+                this.conjunction = null;
             else
-                this.suffix = pieces[1];
+                this.conjunction = pieces[0];
+            if (pieces.length < 2)
+                this.nullClause = "";
+            else
+                this.nullClause = pieces[1];
         }
         // Denote we have no prefix and no clauses.
         this.prefix = null;
@@ -73,10 +80,20 @@ public class GroupCommand extends TemplateCommand {
         }
         String retVal;
         if (phrases.size() == 0)
-            retVal = this.suffix;
-        else
-            retVal = prefix.translate(line) + " " + LineTemplate.conjunct(this.conjunction, phrases)
+            retVal = this.nullClause;
+        else {
+            String startup = prefix.translate(line);
+            if (this.conjunction == null) {
+                // Here we have new-line mode.
+                if (! StringUtils.isBlank(startup))
+                    retVal = startup + "\n";
+                else
+                    retVal = "";
+                retVal += StringUtils.join(phrases, "\n");
+            } else
+                retVal = startup + " " + LineTemplate.conjunct(this.conjunction, phrases)
                     + ".";
+        }
         return retVal;
     }
 
