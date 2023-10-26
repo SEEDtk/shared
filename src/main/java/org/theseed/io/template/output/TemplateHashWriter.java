@@ -100,7 +100,7 @@ public class TemplateHashWriter implements ITemplateWriter {
             // With all the choice sets created, we add the sets.
             for (int i = 0; i < fields.length; i++) {
                 Set<String> set = sets.get(i);
-                log.info("{} items added to choice list for {}.", sets.size(), fields[i]);
+                log.info("{} items added to choice list for {}.", set.size(), fields[i]);
                 this.choiceLists.put(fields[i], set);
             }
         }
