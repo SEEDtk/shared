@@ -5,7 +5,6 @@ package org.theseed.io.template.cols;
 
 import java.util.List;
 
-import org.apache.commons.lang3.StringUtils;
 import org.theseed.io.FieldInputStream;
 import org.theseed.io.FieldInputStream.Record;
 import org.theseed.io.template.LineTemplate;
@@ -41,8 +40,7 @@ public class ReferenceFieldExpression extends FieldExpression {
 
     @Override
     public boolean eval(Record line) {
-        String value = line.get(this.colIdx);
-        return ! StringUtils.isBlank(value);
+        return line.getFlag(this.colIdx);
     }
 
     @Override
