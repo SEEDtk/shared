@@ -68,6 +68,26 @@ public class VariantId implements Comparable<VariantId> {
     }
 
     /**
+     * @return TRUE if the variant code indicates a dirty variant, else FALSE
+     *
+     * @param code	variant code of interest
+     */
+    public static boolean isDirty(String code) {
+        boolean retVal;
+        if (code.startsWith("*"))
+            code = code.substring(1);
+        if (code.startsWith("dirty"))
+            retVal = true;
+        else if (code.startsWith("lookat"))
+            retVal = true;
+        else if (code.contentEquals("0"))
+            retVal = true;
+        else
+            retVal = false;
+        return retVal;
+    }
+
+    /**
      * @return TRUE if the variant code indicates a likely variant, else FALSE
      *
      * @param code	variant code of interest

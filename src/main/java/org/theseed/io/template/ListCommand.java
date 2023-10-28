@@ -34,7 +34,7 @@ public class ListCommand extends PrimitiveTemplateCommand {
      *
      * @param template	controlling master template
      * @param inStream	source input stream
-     * @param parms		parameters (colon-separated): field name, conjunction, optional separator string
+     * @param parms		parameters (colon-separated): field name, conjunction, optional delimiter string
      *
      * @throws ParseFailureException
      */
@@ -76,7 +76,19 @@ public class ListCommand extends PrimitiveTemplateCommand {
             String value = this.listExpression.get(line);
             pieces = Arrays.asList(StringUtils.splitByWholeSeparator(value, this.separator));
         }
-        return LineTemplate.conjunct(this.conjunction, pieces);
+        return this.assemble(this.conjunction, pieces);
+    }
+
+    /**
+     * Assemble the list.  This method can be overridden by the various list subclasses.
+     *
+     * @param conjunct	conjunction to use
+     * @param pieces	elements of the list
+     *
+     * @return the desired output string
+     */
+    protected String assemble(String conjunct, List<String> pieces) {
+        return LineTemplate.conjunct(conjunct, pieces);
     }
 
     @Override

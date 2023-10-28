@@ -50,13 +50,17 @@ import org.theseed.utils.ParseFailureException;
  * Besides conditionals, we have the following special commands
  *
  *  0			produces no output
- * 	list		takes as input a conjunction, a field expression, a colon, and a separator string.  The column is
+ * 	list		takes as input a conjunction, a field expression, and a separator string.  The column is
  * 				split on the separator string, and then formed into a comma-separated list using the conjunction.
  * 				If the separator string is omitted, the column is retrieved as a list.
+ *  numword		takes as input a field expression, a singular word, a plural word, and an optional separator
+ *  			string.  The field expression is interpreted as a list.  If there is one item in the list, the
+ *  			singular word is emitted; otherwise, the plural word is emitted.
  *  product		takes as input two column names separated by a colon.  The first column is presumed to be a gene
  *  			product, and is parsed into multiple English sentences accordingly.  THe second column should
  *  			contain the code for the feature type, which is included in the description and affects the
  *  			text.
+ *  qlist		identical to the list command, except the list elements are quoted
  *  tab			emits a horizontal tab character
  *  strand		takes as input a column name containing a strand code and outputs a text translation
  *  nl			emits a line break
@@ -160,10 +164,22 @@ public class LineTemplate {
                             newCommand = new GeneProductCommand(this, inStream, m2.group(2));
                             this.addToTop(newCommand);
                             break;
+                        case "numword" :
+                            // This command uses a field containing a list to decide between a singular word
+                            // and a plural word.
+                            newCommand = new NumWordCommand(this, inStream, m2.group(2));
+                            this.addToTop(newCommand);
+                            break;
                         case "list" :
                             // This command turns a field containing a list into a comma-separated
                             // phrase.
                             newCommand = new ListCommand(this, inStream, m2.group(2));
+                            this.addToTop(newCommand);
+                            break;
+                        case "qlist" :
+                            // This command turns a field containing a list into a comma-separated
+                            // phrase with quoted elements.
+                            newCommand = new QuotedListCommand(this, inStream, m2.group(2));
                             this.addToTop(newCommand);
                             break;
                         case "if" :
