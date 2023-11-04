@@ -66,6 +66,7 @@ import org.theseed.utils.ParseFailureException;
  *  nl			emits a line break
  *  choices		outputs randomly-selected answers to a multiple-choice question.  Takes as input a choice-set
  *  			name, the correct answer (as a column name or as a literal in quotes), and the number of answers desired.
+ *  json		takes as input a type name, a tag name, and a field expression.  It outputs a JSON string.
  *
  * The template string is parsed into a list of commands.  This command list can then be processed rapidly
  * to form the result string.
@@ -243,8 +244,13 @@ public class LineTemplate {
                             this.addToTop(newCommand);
                             break;
                         case "choices" :
-                            // This command [resents multiple answer choices.
+                            // This command presents multiple answer choices.
                             newCommand = new ChoiceCommand(this, inStream, m2.group(2));
+                            this.addToTop(newCommand);
+                            break;
+                        case "json" :
+                            // This command presents a JSON string.
+                            newCommand = new JsonCommand(this, inStream, m2.group(2));
                             this.addToTop(newCommand);
                             break;
                         default :
@@ -451,7 +457,7 @@ public class LineTemplate {
      * @param choiceList	list to shuffle
      * @param n				number of entries to choose
      */
-    private void shuffle(ArrayList<String> choiceList, int n) {
+    public void shuffle(ArrayList<String> choiceList, int n) {
         // Now we need to shuffle the list.  We do this internally so we can set the seed for
         // testing.
         int i = 0;
@@ -477,5 +483,14 @@ public class LineTemplate {
      */
     public boolean hasChoiceList(String name) {
         return this.globals.getChoices(name) != null;
+    }
+
+    /**
+     * @return the choice list with the given name, or NULL if there is none
+     *
+     * @param name	name of the choice list
+     */
+    public Set<String> getChoices(String name) {
+        return this.globals.getChoices(name);
     }
 }

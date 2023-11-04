@@ -61,6 +61,9 @@ public abstract class FieldExpression {
             case "include" :
                 retVal = new IncludeFieldExpression(template, inStream, parms);
                 break;
+            case "sample" :
+                retVal = new SampleFieldExpression(template, parms);
+                break;
             default :
                 throw new ParseFailureException("Invalid field-expression function \"" + m.group(1) + "\".");
             }

@@ -215,4 +215,38 @@ class TestLineTemplate {
         }
     }
 
+    @Test
+    void testSamples() throws IOException, ParseFailureException {
+        TemplateHashWriter globals = new TemplateHashWriter();
+        File simpleFile = new File("data", "simple.tbl");
+        globals.readChoiceLists(simpleFile, "genus", "species");
+        final String TEMPLATE = "The random genera for {{genome}} are {{$list:sample(genus,4)}}. The random species are {{$list:sample(species,4)}}.";
+        try (LineReader testStream = new LineReader(new File("data", "sample.txt"));
+                var inStream = FieldInputStream.create(simpleFile)) {
+            LineTemplate xlate = new LineTemplate(inStream, TEMPLATE, globals);
+            xlate.setSeed(12345679L);
+            for (var line : inStream) {
+                String output = xlate.apply(line);
+                String l1 = testStream.next();
+                assertThat(output, equalTo(l1));
+            }
+        }
+    }
+
+    @Test
+    void testJson() throws IOException, ParseFailureException {
+        TemplateHashWriter globals = new TemplateHashWriter();
+        try (var inStream = FieldInputStream.create(new File("data", "genome_feature.json"));
+                var testStream = new LineReader(new File("data", "features3.txt"))) {
+            final String TEMPLATE = "Json strings for {{p2_feature_id}} include {{$json:list:loc:segments}} and {{$json:string:acc:accession}}.";
+            LineTemplate xlate = new LineTemplate(inStream, TEMPLATE, globals);
+            Iterator<String> testIter = testStream.iterator();
+            for (var line : inStream) {
+                String output = xlate.apply(line);
+                assertThat(output, equalTo(testIter.next()));
+            }
+        }
+
+    }
+
 }
