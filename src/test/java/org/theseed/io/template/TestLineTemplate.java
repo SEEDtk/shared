@@ -238,7 +238,7 @@ class TestLineTemplate {
         TemplateHashWriter globals = new TemplateHashWriter();
         try (var inStream = FieldInputStream.create(new File("data", "genome_feature.json"));
                 var testStream = new LineReader(new File("data", "features3.txt"))) {
-            final String TEMPLATE = "Json strings for {{p2_feature_id}} include {{$json:list:loc:segments}} and {{$json:string:acc:accession}}.";
+            final String TEMPLATE = "Json strings for {{p2_feature_id}} include {{$json:list:segments}} and {{$json:string:acc:accession}}.";
             LineTemplate xlate = new LineTemplate(inStream, TEMPLATE, globals);
             Iterator<String> testIter = testStream.iterator();
             for (var line : inStream) {

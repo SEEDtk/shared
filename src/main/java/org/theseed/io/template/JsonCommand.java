@@ -97,16 +97,22 @@ public class JsonCommand extends PrimitiveTemplateCommand {
         super(lineTemplate);
         // Split up the parameters.
         String[] pieces = StringUtils.split(parms, ':');
-        if (pieces.length != 3)
-            throw new ParseFailureException("\"$json\" command must have three parameters.");
+        if (pieces.length < 2 || pieces.length > 3)
+            throw new ParseFailureException("\"$json\" command must have two or three parameters.");
         // Save the type.
         this.vType = TYPE_MAP.get(pieces[0]);
         if (this.vType == null)
             throw new ParseFailureException("Invalid $json type code \"" + pieces[0] + "\".");
         // Quote and save the tag.
         this.tag = ValueType.quote(pieces[1]);
+        // The default for the third parameter is the second.
+        String fieldName;
+        if (pieces.length == 2)
+            fieldName = pieces[1];
+        else
+            fieldName = pieces[2];
         // Compile the value expression.
-        this.valueExpr = FieldExpression.compile(lineTemplate, inStream, pieces[2]);
+        this.valueExpr = FieldExpression.compile(lineTemplate, inStream, fieldName);
     }
 
     @Override
