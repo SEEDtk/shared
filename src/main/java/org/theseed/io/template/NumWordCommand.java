@@ -79,11 +79,7 @@ public class NumWordCommand extends PrimitiveTemplateCommand {
 
     @Override
     protected String getName() {
-        // TODO code for getName
-        return null;
+        return "numword";
     }
-    // FIELDS
-    // TODO data members for NumWordCommand
 
-    // TODO constructors and methods for NumWordCommand
 }
