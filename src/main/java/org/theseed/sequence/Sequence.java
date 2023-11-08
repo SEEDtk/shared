@@ -15,7 +15,7 @@ import org.theseed.locations.Region;
  * @author Bruce Parrello
  *
  */
-public class Sequence {
+public class Sequence implements ISequence {
 
     // FIELDS
     String label;
