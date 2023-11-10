@@ -7,7 +7,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
-import org.theseed.utils.ParseFailureException;
+import org.theseed.basic.ParseFailureException;
 
 /**
  * This reporter generates a DL4J Xmatrix directory for a regression model.  In this case, the labels file contains

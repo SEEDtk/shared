@@ -6,7 +6,7 @@ package org.theseed.rna;
 import java.io.File;
 import java.io.FileNotFoundException;
 
-import org.theseed.utils.ParseFailureException;
+import org.theseed.basic.ParseFailureException;
 
 /**
  * This is the base class for an object that computes the baseline expression value for a feature in an RNA

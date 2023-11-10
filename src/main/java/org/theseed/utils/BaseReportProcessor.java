@@ -12,6 +12,8 @@ import java.io.PrintWriter;
 import org.kohsuke.args4j.Option;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.theseed.basic.BaseProcessor;
+import org.theseed.basic.ParseFailureException;
 
 /**
  * This is a variant of the basic command processor that writes a report.  It handles opening, closing

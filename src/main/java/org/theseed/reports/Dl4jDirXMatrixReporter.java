@@ -8,7 +8,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
 
-import org.theseed.utils.ParseFailureException;
+import org.theseed.basic.ParseFailureException;
 
 /**
  * This is an intermediate class for all of the XMatrix reports that produce DL4J directories.  Each such directory

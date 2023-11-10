@@ -9,6 +9,7 @@ import java.util.regex.Pattern;
 import org.apache.commons.lang3.RegExUtils;
 import org.theseed.magic.MagicObject;
 import org.theseed.reports.NaturalSort;
+import org.theseed.roles.RoleUtilities;
 
 /**
  * This class represents a full functional assignment, and is used when we want to classify proteins by function instead
@@ -22,8 +23,6 @@ public class Function extends MagicObject {
     // FIELDS
     /** serialization ID */
     private static final long serialVersionUID = -454453869754978161L;
-    /** parsing pattern for removing function comments */
-    private static final Pattern COMMENT_PATTERN = Pattern.compile("\\s*[#!].+");
     /** parsing pattern for removing EC numbers */
     private static final Pattern EC_PATTERN = Pattern.compile(Role.EC_REGEX);
     /** parsing pattern for removing TC numbers */
@@ -67,7 +66,7 @@ public class Function extends MagicObject {
      * @param funDesc	function description to normalize
      */
     protected String normalize(String funDesc) {
-        String retVal = commentFree(funDesc);
+        String retVal = RoleUtilities.commentFree(funDesc);
         // Remove all the EC and TC numbers.
         retVal = RegExUtils.replaceAll(retVal, EC_PATTERN, " ");
         retVal = RegExUtils.replaceAll(retVal, TC_PATTERN, " ");
@@ -90,13 +89,13 @@ public class Function extends MagicObject {
     }
 
     /**
-     * @return a function with the comment removed
-     *
-     * @param function	function to check for comments
-     */
-    public static String commentFree(String function) {
-        return RegExUtils.removeFirst(function, COMMENT_PATTERN);
-    }
+	 * @return a function with the comment removed
+	 *
+	 * @param function	function to check for comments
+	 */
+	public static String commentFree(String function) {
+		return RoleUtilities.commentFree(function);
+	}
 
     /**
      * This is a comparator for sorting functions by name.

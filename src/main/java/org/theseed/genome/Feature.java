@@ -19,9 +19,9 @@ import java.util.regex.Pattern;
 import org.apache.commons.lang3.StringUtils;
 import org.theseed.locations.Location;
 import org.theseed.locations.Region;
-import org.theseed.proteins.Function;
 import org.theseed.proteins.Role;
 import org.theseed.proteins.RoleMap;
+import org.theseed.roles.RoleUtilities;
 import org.theseed.sequence.MD5Hex;
 
 import com.github.cliftonlabs.json_simple.JsonArray;
@@ -497,7 +497,7 @@ public class Feature implements Comparable<Feature> {
             retVal = new String[0];
         } else {
             // Remove any comments.
-            String commentFree = Function.commentFree(function);
+            String commentFree = RoleUtilities.commentFree(function);
             // Split the function into roles.
             retVal = Arrays.stream(SEP_PATTERN.split(commentFree)).
                     filter(value -> value.length() > 0).toArray(String[]::new);

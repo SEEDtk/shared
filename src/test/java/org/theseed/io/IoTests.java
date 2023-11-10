@@ -8,9 +8,7 @@ import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -500,37 +498,6 @@ public class IoTests {
         tabReader.close();
     }
 
-    /**
-     * test the line reader
-     *
-     * @throws IOException
-     */
-    @Test
-    public void testLineReader() throws IOException {
-        // Start with an empty file.
-        File emptyFile = new File("data", "empty.fa");
-        try (LineReader reader = new LineReader(emptyFile)) {
-            assertThat(reader.hasNext(), equalTo(false));
-        }
-        // Try a regular file as a stream.
-        InputStream inStream = new FileInputStream(new File("data", "lines.txt"));
-        try (LineReader reader = new LineReader(inStream)) {
-            assertThat(reader.hasNext(), equalTo(true));
-            List<String> lines = new ArrayList<String>(5);
-            for (String line : reader)
-                lines.add(line);
-            assertThat(lines.size(), equalTo(3));
-            assertThat(lines.get(0), equalTo("line 1"));
-            assertThat(lines.get(1), equalTo("line 2"));
-            assertThat(lines.get(2), equalTo("line 3"));
-        }
-        File badFile = new File("data", "nosuchfile.bad");
-        try (LineReader reader = new LineReader(badFile)) {
-            assertThat("Opened an invalid file.", false, equalTo(true));
-        } catch (IOException e) {
-            assertThat(true, equalTo(true));
-        }
-    }
 
     /**
      * test marker files

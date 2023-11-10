@@ -36,6 +36,7 @@ import org.theseed.locations.Region;
 import org.theseed.proteins.Function;
 import org.theseed.proteins.RoleMap;
 import org.theseed.reports.LinkObject;
+import org.theseed.roles.RoleUtilities;
 import org.theseed.sequence.FastaOutputStream;
 import org.theseed.sequence.Sequence;
 
@@ -101,9 +102,9 @@ public class Genome  {
     /** quality descriptor */
     private JsonObject quality;
     /** match pattern for SSU rRNA */
-    public static final Pattern SSU_R_RNA = Pattern.compile("SSU\\s+rRNA|Small\\s+Subunit\\s+(?:Ribosomal\\s+)?r?RNA|ssuRNA|16S\\s+(?:r(?:ibosomal\\s+)?)?RNA", Pattern.CASE_INSENSITIVE);
+	public static final Pattern SSU_R_RNA = RoleUtilities.SSU_R_RNA;
     /** match pattern for LSU rRNA */
-    public static final Pattern LSU_R_RNA = Pattern.compile("LSU\\s+rRNA|Large\\s+Subunit\\s+(?:Ribosomal\\s+)?r?RNA|lsuRNA|23S\\s+(?:r(?:ibosomal\\s+)?)?RNA", Pattern.CASE_INSENSITIVE);
+	public static final Pattern LSU_R_RNA = RoleUtilities.LSU_R_RNA;
     /** refseq location format */
     private static final Pattern ACCESSION_LOCATION = Pattern.compile("(\\w+):(\\d+)-(\\d+)");
     /** empty list used as a default intermediate value for cases where the contigs or features are missing */
@@ -1387,7 +1388,7 @@ public class Genome  {
      * @param feat		feature in question
      */
     public static boolean isSSURole(Feature feat) {
-        return SSU_R_RNA.matcher(feat.getPegFunction()).find();
+        return RoleUtilities.SSU_R_RNA.matcher(feat.getPegFunction()).find();
     }
 
     /**

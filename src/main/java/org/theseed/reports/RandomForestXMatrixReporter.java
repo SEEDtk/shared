@@ -6,8 +6,8 @@ package org.theseed.reports;
 import java.io.File;
 import java.io.IOException;
 
+import org.theseed.basic.ParseFailureException;
 import org.theseed.io.MarkerFile;
-import org.theseed.utils.ParseFailureException;
 
 /**
  * This reporter produces a DL4J XMatrix directory.  This differs from the standard classifier in that there

@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 
 import org.kohsuke.args4j.Option;
+import org.theseed.basic.ParseFailureException;
 import org.theseed.io.TabbedLineReader;
 
 /**

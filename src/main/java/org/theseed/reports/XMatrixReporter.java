@@ -13,7 +13,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.theseed.utils.ParseFailureException;
+import org.theseed.basic.ParseFailureException;
 
 /**
  * This object produces input data for a machine learning program.  It supports DL4J classifier, DL4J random

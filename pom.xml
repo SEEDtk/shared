@@ -11,7 +11,7 @@
     <logback.version>1.2.10</logback.version>
     <slf4jVersion>1.7.21</slf4jVersion>
   </properties>
-  <description>Library of low-level shared SEED classes.</description>
+  <description>Library of mid-level shared SEED classes.</description>
   <dependencies>
     <dependency>
       <groupId>org.apache.commons</groupId>
@@ -74,6 +74,11 @@
         <artifactId>hamcrest</artifactId>
         <version>2.2</version>
         <scope>test</scope>
+    </dependency>
+    <dependency>
+        <groupId>org.theseed</groupId>
+        <artifactId>basic</artifactId>
+        <version>1.0.0</version>
     </dependency>
   </dependencies>
 </project>

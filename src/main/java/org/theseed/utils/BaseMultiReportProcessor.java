@@ -12,6 +12,8 @@ import org.apache.commons.io.FileUtils;
 import org.kohsuke.args4j.Option;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.theseed.basic.BaseProcessor;
+import org.theseed.basic.ParseFailureException;
 
 /**
  * This is a sub-command base class that writes multiple output files to a directory.  Support
