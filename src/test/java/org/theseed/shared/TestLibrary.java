@@ -1306,7 +1306,7 @@ public class TestLibrary {
         assertThat(subsystem.getGenome(), equalTo(testGto));
         assertThat(testGto.getSubsystem("Funny subsystem"), equalTo(subsystem));
         assertThat(subsystem.getVariantCode(), equalTo("likely"));
-        assertThat(subsystem.isActive(), equalTo(true));
+        assertThat(subsystem.isActive(), equalTo(false));
         subsystem.setClassifications("big stuff", "middle stuff", "");
         assertThat(subsystem.getClassifications(), contains("big stuff", "middle stuff", ""));
         Shuffler<String> newClasses = new Shuffler<String>(3).add1("super-class").add1("class").add1("sub-class");
