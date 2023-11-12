@@ -129,6 +129,13 @@ public class CountMap<K> {
             return CountMap.this;
         }
 
+        /**
+         * Increment the counter value.
+         */
+        public void increment() {
+            this.num++;
+        }
+
     }
 
 
