@@ -404,6 +404,7 @@ public class TabbedLineReader implements Closeable, AutoCloseable, Iterable<Tabb
         if (! this.reader.hasNext()) {
             // Here the entire file is empty.  Insure we get EOF on the first read.
             this.nextLine = null;
+            this.labels = new String[0];
         } else {
             this.headerLine = this.reader.next();
             // Parse the header line into labels and normalize them to lower case.
