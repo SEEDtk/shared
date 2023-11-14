@@ -36,7 +36,7 @@ public class MD5Hex {
      *
      * @throws UnsupportedEncodingException
      */
-    public String checksum(String input) throws UnsupportedEncodingException {
+    public synchronized String checksum(String input) throws UnsupportedEncodingException {
         byte[] bytes = md.digest(input.getBytes("UTF-8"));
         return hexOf(bytes);
     }
