@@ -102,9 +102,9 @@ public class Genome  {
     /** quality descriptor */
     private JsonObject quality;
     /** match pattern for SSU rRNA */
-	public static final Pattern SSU_R_RNA = RoleUtilities.SSU_R_RNA;
+    public static final Pattern SSU_R_RNA = RoleUtilities.SSU_R_RNA;
     /** match pattern for LSU rRNA */
-	public static final Pattern LSU_R_RNA = RoleUtilities.LSU_R_RNA;
+    public static final Pattern LSU_R_RNA = RoleUtilities.LSU_R_RNA;
     /** refseq location format */
     private static final Pattern ACCESSION_LOCATION = Pattern.compile("(\\w+):(\\d+)-(\\d+)");
     /** empty list used as a default intermediate value for cases where the contigs or features are missing */
@@ -1437,6 +1437,16 @@ public class Genome  {
         this.ssuRna = null;
         // Finally, erase the quality data.
         this.quality = new JsonObject();
+    }
+
+    /**
+     * This method indicates if the genome is more or less complete.  Currently,
+     * we do not have a way to do this for general GTOs.
+     *
+     * @return TRUE if this is believed to be a complete genome, else FALSE
+     */
+    public boolean isComplete() {
+        return false;
     }
 
 }
