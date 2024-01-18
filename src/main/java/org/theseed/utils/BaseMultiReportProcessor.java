@@ -138,4 +138,11 @@ public abstract class BaseMultiReportProcessor extends BaseProcessor {
         return new File(this.outDir, name);
     }
 
+    /**
+     * @return the output directory
+     */
+    public File getOutDir() {
+        return this.outDir;
+    }
+
 }
