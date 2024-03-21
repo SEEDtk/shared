@@ -179,4 +179,29 @@ public class VariantId implements Comparable<VariantId> {
         this.code = code;
     }
 
+    public static String computeActiveLevel(String code) {
+        String retVal;
+        if (code.startsWith("*"))
+            code = code.substring(1);
+        if (code.startsWith("active"))
+            retVal = "active";
+        else if (code.startsWith("inactive"))
+            retVal = "inactive";
+        else if (code.startsWith("likely"))
+            retVal = "likely";
+        else if (code.startsWith("lookat"))
+            retVal = "dirty";
+        else if (code.startsWith("dirty"))
+            retVal = "dirty";
+        else if (code.contentEquals("missing"))
+            retVal = "dirty";
+        else if (code.startsWith("-"))
+            retVal = "inactive";
+        else if (code.contentEquals("0"))
+            retVal = "dirty";
+        else
+            retVal = "active";
+        return retVal;
+    }
+
 }
