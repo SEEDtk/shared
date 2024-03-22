@@ -30,7 +30,6 @@ import java.util.regex.Pattern;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.theseed.counters.Shuffler;
 import org.theseed.locations.Location;
 import org.theseed.locations.Region;
 import org.theseed.proteins.Function;
@@ -39,6 +38,7 @@ import org.theseed.reports.LinkObject;
 import org.theseed.roles.RoleUtilities;
 import org.theseed.sequence.FastaOutputStream;
 import org.theseed.sequence.Sequence;
+import org.theseed.stats.Shuffler;
 
 import com.github.cliftonlabs.json_simple.JsonArray;
 import com.github.cliftonlabs.json_simple.JsonException;

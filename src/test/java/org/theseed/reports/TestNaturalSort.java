@@ -9,7 +9,7 @@ import static org.hamcrest.Matchers.*;
 import java.util.Arrays;
 
 import org.junit.jupiter.api.Test;
-import org.theseed.counters.Shuffler;
+import org.theseed.stats.Shuffler;
 
 /**
  * @author Bruce Parrello

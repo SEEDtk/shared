@@ -1,11 +1,11 @@
 package org.theseed.shared;
 
-import org.theseed.counters.Shuffler;
 import org.theseed.genome.Feature;
 import org.theseed.genome.Genome;
 import org.theseed.genome.SubsystemRow;
 import org.theseed.proteins.Role;
 import org.theseed.proteins.RoleMap;
+import org.theseed.stats.Shuffler;
 import org.theseed.subsystems.SubsystemProjector;
 import org.theseed.subsystems.SubsystemSpec;
 import org.theseed.subsystems.VariantId;

@@ -21,8 +21,6 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.theseed.counters.KeyPair;
-import org.theseed.counters.Shuffler;
 import org.theseed.genome.Annotation;
 import org.theseed.genome.CloseGenome;
 import org.theseed.genome.Contig;
@@ -49,6 +47,9 @@ import org.theseed.sequence.FastaOutputStream;
 import org.theseed.sequence.MD5Hex;
 import org.theseed.sequence.ProteinKmers;
 import org.theseed.sequence.Sequence;
+import org.theseed.stats.KeyPair;
+import org.theseed.stats.Shuffler;
+
 import com.github.cliftonlabs.json_simple.JsonObject;
 
 import org.junit.jupiter.api.Test;

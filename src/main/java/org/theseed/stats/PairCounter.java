@@ -1,11 +1,13 @@
 /**
  *
  */
-package org.theseed.counters;
+package org.theseed.stats;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+
+import org.theseed.counters.CountMap;
 
 /**
  * This class counts pairs and occurrences of objects.  The main method records the existence of an

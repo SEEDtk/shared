@@ -1,7 +1,7 @@
 /**
  *
  */
-package org.theseed.counters;
+package org.theseed.stats;
 
 import java.io.File;
 import java.io.IOException;
@@ -13,6 +13,7 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.theseed.counters.CountMap;
 import org.theseed.io.TabbedLineReader;
 
 /**

@@ -1,7 +1,7 @@
 /**
  *
  */
-package org.theseed.counters;
+package org.theseed.stats;
 
 import java.util.ArrayList;
 import java.util.Collections;

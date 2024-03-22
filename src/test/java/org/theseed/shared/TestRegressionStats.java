@@ -7,7 +7,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 
 import org.junit.jupiter.api.Test;
-import org.theseed.counters.RegressionStatistics;
+import org.theseed.stats.RegressionStatistics;
 
 /**
  * @author Bruce Parrello

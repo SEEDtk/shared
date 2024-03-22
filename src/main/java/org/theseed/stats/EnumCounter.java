@@ -1,7 +1,7 @@
 /**
  *
  */
-package org.theseed.counters;
+package org.theseed.stats;
 
 /**
  * This is a simple counter class where the key is an enum.

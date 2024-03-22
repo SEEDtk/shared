@@ -1,7 +1,7 @@
 /**
  *
  */
-package org.theseed.counters;
+package org.theseed.stats;
 
 /**
  * This class represents an unordered pair of elements of the same type. The equals and hashcode

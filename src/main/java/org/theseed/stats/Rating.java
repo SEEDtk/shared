@@ -1,7 +1,7 @@
 /**
  *
  */
-package org.theseed.counters;
+package org.theseed.stats;
 
 /**
  * This class represents rated objects.  It is sorted by highest rating followed by the objects themselves.

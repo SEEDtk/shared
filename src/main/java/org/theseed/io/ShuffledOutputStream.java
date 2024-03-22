@@ -10,7 +10,7 @@ import java.io.PrintStream;
 import java.io.UncheckedIOException;
 import java.util.Iterator;
 
-import org.theseed.counters.Shuffler;
+import org.theseed.stats.Shuffler;
 
 /**
  * This is a variation of BalancedOutputStream for the case where there are two classes.  In this case,

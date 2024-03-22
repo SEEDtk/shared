@@ -10,6 +10,8 @@ import java.io.IOException;
 import java.util.Iterator;
 
 import org.junit.jupiter.api.Test;
+import org.theseed.stats.Rating;
+import org.theseed.stats.RatingList;
 
 /**
  * @author Bruce Parrello

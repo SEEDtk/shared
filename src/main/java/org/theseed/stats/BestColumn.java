@@ -1,7 +1,7 @@
 /**
  *
  */
-package org.theseed.counters;
+package org.theseed.stats;
 
 /**
  * This is a utility class that tracks the maximum value from a numbered sequence.  It reports back

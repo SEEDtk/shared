@@ -11,10 +11,10 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
-import org.theseed.counters.Shuffler;
 import org.theseed.sequence.CharCounter;
 import org.theseed.sequence.FastaInputStream;
 import org.theseed.sequence.Sequence;
+import org.theseed.stats.Shuffler;
 
 /**
  * @author Bruce Parrello
