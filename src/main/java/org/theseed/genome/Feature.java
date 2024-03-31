@@ -582,7 +582,7 @@ public class Feature implements Comparable<Feature> {
     }
 
     /**
-     * This a version of "getUsefulROles" for just deciding if a feature is interesting based
+     * This a version of "getUsefulRoles" for just deciding if a feature is interesting based
      * on its roles.  It is slightly faster than the other method, and more convenient.
      *
      * @param map		role map containing all useful roles
