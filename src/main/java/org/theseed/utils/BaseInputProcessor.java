@@ -24,7 +24,7 @@ public abstract class BaseInputProcessor extends BaseProcessor {
 
     // FIELDS
     /** logging facility */
-    protected static Logger log = LoggerFactory.getLogger(BaseReportProcessor.class);
+    protected static Logger log = LoggerFactory.getLogger(BaseInputProcessor.class);
     /** input stream */
     private TabbedLineReader inStream;
 
