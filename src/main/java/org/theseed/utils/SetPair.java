@@ -42,8 +42,4 @@ public class SetPair<V> {
         return this.set2;
     }
 
-
-     // TODO data members for SetPair
-
-    // TODO constructors and methods for SetPair
 }
