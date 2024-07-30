@@ -88,8 +88,7 @@ public class WeightMap {
         public int hashCode() {
             final int prime = 31;
             int result = 1;
-            result = prime * result + getEnclosingInstance().hashCode();
-            result = prime * result + ((key == null) ? 0 : key.hashCode());
+            result = (prime * result + ((key == null) ? 0 : key.hashCode())) * result + Double.hashCode(num);
             return result;
         }
 
@@ -308,5 +307,7 @@ public class WeightMap {
             retVal = Collections.min(this.map.values());
         return retVal;
     }
+
+
 
 }
