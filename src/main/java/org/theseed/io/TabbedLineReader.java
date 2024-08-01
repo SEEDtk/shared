@@ -350,7 +350,7 @@ public class TabbedLineReader implements Closeable, AutoCloseable, Iterable<Tabb
      *
      * @throws IOException
      */
-    public TabbedLineReader openInput(File inFile) throws IOException {
+    public static TabbedLineReader openInput(File inFile) throws IOException {
         TabbedLineReader retVal;
         if (inFile == null) {
             log.info("Input will be taken from the standard input.");
