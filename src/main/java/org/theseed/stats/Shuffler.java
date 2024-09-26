@@ -4,6 +4,7 @@
 package org.theseed.stats;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.Random;
 
@@ -179,6 +180,43 @@ public class Shuffler<T> extends ArrayList<T> {
             return (remaining >= 0 ? iter.next() : null);
         }
 
+    }
+
+    /**
+     * This is a static utility method for randomly selecting a small portion of a big
+     * collection.
+     *
+     * @param collection	collection from which to select the results
+     * @param limit			maximum number of results to select
+     *
+     * @return a random subset of the proper size taken from the original collection
+     */
+    public static <X> Collection<X> selectPart(Collection<X> collection, int limit) {
+        Collection<X> retVal = collection;
+        if (retVal.size() > limit) {
+            Random randStream = new Random();
+            // Here we have to select a random subset of the instances to return. We do not have
+            // efficient random access to the instance list, so we run through them in order,
+            // using a probability function to select based on the number of instances we still
+            // need over the number of instances left. If this becomes greater than 1, we pick
+            // everything remaining.
+            double remaining = retVal.size();
+            Iterator<X> iter = retVal.iterator();
+            // We'll put the instances we keep in here. Note that we don't need the old value of
+            // "retVal" since we only access it via the iterator.
+            retVal = new ArrayList<X>(limit);
+            while (retVal.size() < limit && iter.hasNext()) {
+                // Get the current instance.
+                X curr = iter.next();
+                // Determine how much we want to keep it.
+                double desire = (limit - retVal.size()) / remaining;
+                remaining -= 1.0;
+                // Roll a die to see if we keep it.
+                if (randStream.nextDouble() < desire)
+                    retVal.add(curr);
+            }
+        }
+        return retVal;
     }
 
 }
