@@ -13,6 +13,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 
 import java.util.Collection;
+import java.util.TreeSet;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -50,6 +51,17 @@ class TestShuffler {
         // Now show the counts.
         for (var count : counters.sortedCounts())
             log.info("Count for \"{}\" is {}.", count.getKey(), count.getCount());
+    }
+
+    @Test
+    void testSelectOne() {
+        // Build an alphabet set.
+        Collection<String> alphaSet = new TreeSet<String>();
+        IntStream.range(0, ALPHABET.length()).mapToObj(i -> ALPHABET.substring(i, i+1)).forEach(x -> alphaSet.add(x));
+        for (int i = 0; i < ALPHABET.length(); i++) {
+            String letter = Shuffler.selectItem(alphaSet, i);
+            assertThat(letter, equalTo(ALPHABET.substring(i, i+1)));
+        }
     }
 
 }

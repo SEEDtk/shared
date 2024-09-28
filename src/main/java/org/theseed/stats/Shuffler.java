@@ -219,4 +219,25 @@ public class Shuffler<T> extends ArrayList<T> {
         return retVal;
     }
 
+    /**
+     * Extract the entry at the desired position of a random-access collection.
+     *
+     * @param collection	collection
+     * @param idx			position (0-based) of the desired entry
+     *
+     * @return the desired entry in the specified collection, or NULL if there is none
+     */
+    public static <X> X selectItem(Collection<X> collection, int desired) {
+        X retVal;
+        if (desired < 0 && desired >= collection.size())
+            retVal = null;
+        else {
+            Iterator<X> iter = collection.iterator();
+            retVal = iter.next();
+            for (int i = 0; i < desired; i++)
+                retVal = iter.next();
+        }
+        return retVal;
+    }
+
 }
