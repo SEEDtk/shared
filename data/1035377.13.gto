@@ -1,0 +1,553 @@
+{
+    "genetic_code":11,
+    "close_genomes":[
+        
+    ],
+    "scientific_name":"Yersinia pestis A1122",
+    "subsystems":[
+        
+    ],
+    "home":"PATRIC",
+    "quality":{
+        
+    },
+    "features":[
+        {
+            "couplings":[
+                
+            ],
+            "aliases":[
+                "A1122_21767"
+            ],
+            "family_assignments":[
+                [
+                    "PLFAM",
+                    "PLF_629_00003984"
+                ],
+                [
+                    "PGFAM",
+                    "PGF_04060585"
+                ],
+                [
+                    "FIGFAM",
+                    "FIG01390174"
+                ]
+            ],
+            "function":"hypothetical protein",
+            "protein_translation":"MSDTMVVNGSGGVPAFLFSGSTLSSYRPNFEANSITIALPHYVDLPGRSNFKLMYIMGFPIDTEMEKDSEYSNKIRQESKISKTEGTVSYEQKITVETGQEKDGVKVYRVMVLEGTIAESIEHLDKKENEDILNNNRNRIVLADNTVINFDNISQLKEFLRRSVNIVDHDIFSSNGFEGFNPTSHFPSNPSSDYFNSTGVTFGSGVDLGQRSKQDLLNDGVPQYIADRLDGYYMLRGKEAYDKVRTAPLTLSDNEAHLLSNIYIDKFSHKIEGLFNDANIGLRFSDLPLRTRTALVSIGYQKGFKLSRTAPTVWNKVIAKDWNGLVNAFNNIVDGMSDRRKREGALVQKDIDSGLLK",
+            "annotations":[
+                
+            ],
+            "location":[
+                [
+                    "1035377.13.con.0001",
+                    1756,
+                    "-",
+                    1074
+                ]
+            ],
+            "id":"fig|1035377.13.peg.3",
+            "type":"CDS"
+        },
+        {
+            "couplings":[
+                
+            ],
+            "aliases":[
+                "A1122_21762"
+            ],
+            "family_assignments":[
+                
+                [
+                    "PLFAM",
+                    "FIG01429041"
+                ]
+            ],
+            "function":"hypothetical protein",
+            "protein_translation":"MSHGIYGKQTTFKQTEFTNIKSNTKKHIALINKDNSWMISLKILGIKRDEYTVCFEDFSLIRPPTYVAIHPLLIKKVKSGNFIVVKEIKKSIPGCTVYYH",
+            "annotations":[
+                
+            ],
+            "location":[
+                [
+                    "1035377.13.con.0001",
+                    346,
+                    "+",
+                    303
+                ]
+            ],
+            "id":"fig|1035377.13.peg.2",
+            "type":"CDS"
+        },
+        {
+            "couplings":[
+                
+            ],
+            "aliases":[
+                "A1122_21797"
+            ],
+            "family_assignments":[
+                [
+                    "PLFAM",
+                    "PLF_629_00040989"
+                ],
+                [
+                    "PGFAM",
+                    "PGF_06582775"
+                ]
+            ],
+            "function":"hypothetical protein",
+            "protein_translation":"MWITIAPFVTQGSGYAFPHASILSGIAMSHFYFLVLHAVKQGFIFGDAKVRTRHINHRFSPYHTPSQNTSCEGLFYVVAKKKPLCLKEGLYVSKKIPGVIHLRKFQTNHKMEHRQCPEVKECSD",
+            "annotations":[
+                
+            ],
+            "location":[
+                [
+                    "1035377.13.con.0001",
+                    5510,
+                    "-",
+                    375
+                ]
+            ],
+            "id":"fig|1035377.13.peg.10",
+            "type":"CDS"
+        },
+        {
+            "couplings":[
+                
+            ],
+            "aliases":[
+                
+            ],
+            "family_assignments":[
+                [
+                    "PLFAM",
+                    "PLF_629_00004357"
+                ],
+                [
+                    "PGFAM",
+                    "PGF_03932232"
+                ],
+                [
+                    "FIGFAM",
+                    "FIG00638284"
+                ]
+            ],
+            "function":"hypothetical protein",
+            "protein_translation":"MSFAVYVFFSARPLDDKNMRAKQNNFEIIPPPILFLHK",
+            "annotations":[
+                
+            ],
+            "location":[
+                [
+                    "1035377.13.con.0001",
+                    308,
+                    "-",
+                    117
+                ]
+            ],
+            "id":"fig|1035377.13.peg.1",
+            "type":"CDS"
+        },
+        {
+            "couplings":[
+                
+            ],
+            "aliases":[
+                
+            ],
+            "family_assignments":[
+                [
+                    "PLFAM",
+                    "PLF_629_00033637"
+                ],
+                [
+                    "PGFAM",
+                    "PGF_06113005"
+                ]
+            ],
+            "function":"hypothetical protein",
+            "protein_translation":"MSSVQESLYNDYSISGFFMWRLLQAGYSKAKKSPGTGGTRTGGERIAK",
+            "annotations":[
+                
+            ],
+            "location":[
+                [
+                    "1035377.13.con.0001",
+                    8137,
+                    "+",
+                    147
+                ]
+            ],
+            "id":"fig|1035377.13.peg.13",
+            "type":"CDS"
+        },
+        {
+            "couplings":[
+                
+            ],
+            "aliases":[
+                "A1122_21802"
+            ],
+            "family_assignments":[
+                [
+                    "PLFAM",
+                    "PLF_629_00000003"
+                ],
+                [
+                    "PGFAM",
+                    "PGF_01000105"
+                ],
+                [
+                    "FIGFAM",
+                    "FIG01306568"
+                ]
+            ],
+            "function":"Mobile element protein",
+            "protein_translation":"MVTFETVMEIKILHKQGMSSRAIARELGISRNTVKRYLQAKSEPPKYTPRPAVASLLDEYRDYIRQRIADAHPYKIPATVIAREIRDQGYRGGMTILRAFIRSLSVPQEQEPAVRFETEPGRQMQVDWGTMRNGRSPLHVFVAVLGYSRMLYIEFTDNMRYDTLETCHRNAFRFFGGVPREVLYDNMKTVVLQRDAYQTGQHRFHPSLWQFGKEMGFSPRLCRPFRAQTKGKVERMVQYTRNSFYIPLMTRLRPMGITVDVETANRHGLRWLHDVANQRKHETIQARPCDRWLEEQQSMLALPPEKKEYDVHLDENLVNFDKHPLHHPLSIYDSFCRGVA",
+            "annotations":[
+                
+            ],
+            "location":[
+                [
+                    "1035377.13.con.0001",
+                    5567,
+                    "+",
+                    1023
+                ]
+            ],
+            "id":"fig|1035377.13.peg.11",
+            "type":"CDS"
+        },
+        {
+            "couplings":[
+                
+            ],
+            "aliases":[
+                "A1122_21807"
+            ],
+            "family_assignments":[
+                [
+                    "PLFAM",
+                    "PLF_629_00000004"
+                ],
+                [
+                    "PGFAM",
+                    "PGF_01000105"
+                ],
+                [
+                    "FIGFAM",
+                    "FIG01306568"
+                ]
+            ],
+            "function":"Mobile element protein",
+            "protein_translation":"MMELQHQRLMALAGQLQLESLISAAPALSQQAVDQEWSYMDFLEHLLHEEKLARHQRKQAMYTRMAAFPAVKTFEEYDFTFATGAPQKQLQSLRSLSFIERNENIVLLGPSGVGKTHLAIAMGYEAVRAGIKVRFTTAADLLLQLSTAQRQGRYKTTLQRGVMAPRLLIIDEIGYLPFSQEEAKLFFQVIAKRYEKSAMILTSNLPFGQWDQTFAGDAALTSAMLDRILHHSHVVQIKGESYRLRQKRKAGVIAEANPE",
+            "annotations":[
+                
+            ],
+            "location":[
+                [
+                    "1035377.13.con.0001",
+                    6589,
+                    "+",
+                    780
+                ]
+            ],
+            "id":"fig|1035377.13.peg.12",
+            "type":"CDS"
+        },
+        {
+            "couplings":[
+                
+            ],
+            "aliases":[
+                
+            ],
+            "family_assignments":[
+                [
+                    "PLFAM",
+                    "PLF_629_00004193"
+                ],
+                [
+                    "PGFAM",
+                    "PGF_10627796"
+                ],
+                [
+                    "FIGFAM",
+                    "FIG01328611"
+                ]
+            ],
+            "function":"hypothetical protein",
+            "protein_translation":"MSTFLALPQLCLLAAFACPETCLKRSRKASEPESNKTQAIK",
+            "annotations":[
+                
+            ],
+            "location":[
+                [
+                    "1035377.13.con.0001",
+                    4790,
+                    "+",
+                    126
+                ]
+            ],
+            "id":"fig|1035377.13.peg.9",
+            "type":"CDS"
+        },
+        {
+            "couplings":[
+                
+            ],
+            "aliases":[
+                "A1122_21792"
+            ],
+            "family_assignments":[
+                [
+                    "PLFAM",
+                    "PLF_629_00026463"
+                ],
+                [
+                    "PGFAM",
+                    "PGF_05076737"
+                ],
+                [
+                    "FIGFAM",
+                    "FIG00638284"
+                ]
+            ],
+            "function":"hypothetical protein",
+            "protein_translation":"MNGKTEFMPDERDLAIKAKHSNKDTPESRPDMF",
+            "annotations":[
+                
+            ],
+            "location":[
+                [
+                    "1035377.13.con.0001",
+                    4609,
+                    "+",
+                    102
+                ]
+            ],
+            "id":"fig|1035377.13.peg.8",
+            "type":"CDS"
+        },
+        {
+            "couplings":[
+                
+            ],
+            "aliases":[
+                "A1122_21787"
+            ],
+            "family_assignments":[
+                [
+                    "PLFAM",
+                    "PLF_629_00004073"
+                ],
+                [
+                    "PGFAM",
+                    "PGF_06213680"
+                ],
+                [
+                    "FIGFAM",
+                    "FIG01462501"
+                ]
+            ],
+            "function":"Toxin HigB",
+            "protein_translation":"MVLFSQRFDDWLNEQEDALQEKVLADLKKLQVYGPELPRPYADTVKGSRYKNMKELRVQFSGRPIRAFYAFDPIRRAIVLCAGDKSNDKRFYEKLVRIAEDEFTAHLNTLESK",
+            "annotations":[
+                
+            ],
+            "location":[
+                [
+                    "1035377.13.con.0001",
+                    4298,
+                    "-",
+                    342
+                ]
+            ],
+            "id":"fig|1035377.13.peg.7",
+            "type":"CDS"
+        },
+        {
+            "couplings":[
+                
+            ],
+            "aliases":[
+                "A1122_21782"
+            ],
+            "family_assignments":[
+                [
+                    "PLFAM",
+                    "PLF_629_00004056"
+                ],
+                [
+                    "PGFAM",
+                    "PGF_09104784"
+                ],
+                [
+                    "FIGFAM",
+                    "FIG00003845"
+                ]
+            ],
+            "function":"Antitoxin HigA",
+            "protein_translation":"MRTLDEVIASRSPESQTRIKEMADEMILEVGLQMMREELQLSQKQVAEAMGISQPAVTKLEQRGNDLKLATLKRYVEAMGGKLSLDVELPTGRRVAFHV",
+            "annotations":[
+                
+            ],
+            "location":[
+                [
+                    "1035377.13.con.0001",
+                    3957,
+                    "-",
+                    300
+                ]
+            ],
+            "id":"fig|1035377.13.peg.6",
+            "type":"CDS"
+        },
+        {
+            "couplings":[
+                
+            ],
+            "aliases":[
+                "A1122_21777"
+            ],
+            "family_assignments":[
+                [
+                    "PLFAM",
+                    "PLF_629_00004057"
+                ],
+                [
+                    "PGFAM",
+                    "PGF_10629346"
+                ],
+                [
+                    "FIGFAM",
+                    "FIG01334654"
+                ]
+            ],
+            "function":"Protease VII (Omptin) precursor (EC 3.4.23.49) @ Outer membrane protease Pla",
+            "protein_translation":"MKKSSIVATIITILSGSANAASSQLIPNISPDSFTVAASTGMLSGKSHEMLYDAETGRKISQLDWKIKNVAILKGDISWDPYSFLTLNARGWTSLASGSGNMDDYDWMNENQSEWTDHSSHPATNVNHANEYDLNVKGWLLQDENYKAGITAGYQETRFSWTATGGSYSYNNGAYTGNFPKGVRVIGYNQRFSMPYIGLAGQYRINDFELNALFKFSDWVRAHDNDEHYMRDLTFREKTSGSRYYGTVINAGYYVTPNAKVFAEFTYSKYDEGKGGTQTIDKNSGDSVSIGGDAAGISNKNYTVTAGLQYRF",
+            "annotations":[
+                
+            ],
+            "location":[
+                [
+                    "1035377.13.con.0001",
+                    2533,
+                    "+",
+                    939
+                ]
+            ],
+            "id":"fig|1035377.13.peg.5",
+            "type":"CDS"
+        },
+        {
+            "couplings":[
+                
+            ],
+            "aliases":[
+                "A1122_21772"
+            ],
+            "family_assignments":[
+                [
+                    "PLFAM",
+                    "PLF_629_00004079"
+                ],
+                [
+                    "PGFAM",
+                    "PGF_10354179"
+                ],
+                [
+                    "FIGFAM",
+                    "FIG01222245"
+                ]
+            ],
+            "function":"hypothetical protein",
+            "protein_translation":"MKFHFCDLNHSYKNQEGKIRSRKTAPGNIRKKQKGDNVSKTKSGRHRLSKTDKRLLAALVVAGYEERTARDLIQKHVYTLTQADLRHLVSEISNGVGQSQAYDAIYQARRIRLARKYLSGKKPEGVEPREGQEREDLP",
+            "annotations":[
+                
+            ],
+            "location":[
+                [
+                    "1035377.13.con.0001",
+                    1874,
+                    "+",
+                    417
+                ]
+            ],
+            "id":"fig|1035377.13.peg.4",
+            "type":"CDS"
+        }
+    ],
+    "analysis_events":[
+        
+    ],
+    "contigs":[
+        {
+            "genetic_code":11,
+            "dna":"tgaattgcgctcccgatcagttcagcagaagattatgatggggttctatgggtattgctgcggtaacacccatgttacttgaggttgtatgtagtctgtgtagaattatacacataaggcttaaactgctcttttttttcaatatgcaattggaagttcattgactacataaatagattattccaaataatttatttatgtaagaacaggatgggagggggaatgatctcaaagttattttgcttggctctcatatttttatcatcaagtggccttgcagaaaaaaacacatatacagcaaaagacatcttgcaaaacctagaattaaatacctttggcaattcattgtctcatggcatctatgggaaacagacaaccttcaagcaaaccgagtttacaaatattaaaagcaacaccaaaaaacacattgcacttatcaataaagacaactcatggatgatatcattaaaaatactaggaattaagagagatgagtatactgtctgttttgaagatttctctctaataagaccgccaacatatgtagccatacatcctctacttataaaaaaagtaaaatctggaaactttatagtagtgaaagaaataaagaaatctatccctggttgcactgtatattatcattaatagcaagcccctcattattatgaggggctcatggttattttaacaatccactatcgatatctttttgcaccagagcgccctctcgtttacgtctgtcagacattccatcaacaatattattaaaagcatttacaaggccattccagtcttttgcgataactttattccatactgtgggagcagttctggataacttaaaccctttttgatatccaatagacaccagtgctgtacgggttctcaacggtaaatcgctgaaccgaagaccgatattagcgtcattgaaaagaccttcaatcttatgtgagaatttatcaatataaatattagataagagatgagcttcattatcagaaagcgtcagaggtgctgttctcactttatcataagcctccttccctcgaagcatataatacccatcaagtctatctgcaatatactgagggacaccgtcattcaataaatcctgtttgcttcgctgaccaaggtcaaccccggaaccgaatgtaacaccggtactgttaaaataatcgctactaggattagacggaaaatgacttgtcggattaaacccttcaaaaccattactggagaaaatatcgtggtcaacaatatttaccgaacgacgtaaaaattccttcagttgactaatattgtcaaagttaatgacagtgttgtccgctaggacgatgcgatttcggttattattcagaatgtcttcgttctctttcttatcgagatgttcaatagattcggcaatcgttccctcaagaaccatgacacggtagactttcacaccgtctttttcctgacctgtttcaacagttattttctgttcgtaagacacggtcccttcagtttttgaaattttactttcctggcggatcttatttgaatattcactgtctttctccatctccgtatcaatcggaaaccccataatgtacatcagtttaaaattactccggccaggcagatccacataatgtggtaatgcaattgtaatcgaattagcttcaaaatttggtctgtaactgcttaatgtacttccggaaaagagaaaagccggaacaccacctgaaccattcactaccattgtatctgacataaaaattcctctttaacacataaaaaaaacaataagttaaaaaaaatactgtacataaaaccactgtttttatgtacagtaataaaattacgccgctttattttctctgtcaataatatgaaatttcatttttgtgatctgaatcactcttataaaaatcaggaagggaagattcgcagcagaaaaacagcaccgggtaacatcagaaaaaaacagaaaggagataacgtgagcaaaacaaaatctggtcgccaccgactgagcaaaacagacaaacgcctgctggctgcacttgtcgttgccggatacgaagaacggacagcccgtgacctcatccagaaacacgtttacacactgacacaggccgacctgcgccatctggtcagtgaaatcagtaacggtgtgggacagtcacaggcctacgatgcgatttaccaggcgagacgcattcgtctcgcccgtaaatacctgagcggaaaaaaaccggaaggggtggaaccccgggaagggcaggaacgggaagatttaccataactcccgttatcagtaccatcggctcaacgctcgttgtcggatctgaaaaattcgctcaaaagatcatatttccctggatattttccaccgtttcttatgtgagcaaagtcacataattctgtcagacgacgagaaaacggatatcgattattgtttaatatttttacattattaaaaatgaaattagataatcagatacaaataatatgttttcgttcatgcagagagattaagggtgtctaatgaagaaaagttctattgtggcaaccattataactattctgtccgggagtgctaatgcagcatcatctcagttaataccaaatatatcccctgacagctttacagttgcagcctccaccgggatgctgagtggaaagtctcatgaaatgctttatgacgcagaaacaggaagaaagatcagccagttagactggaagatcaaaaatgtcgctatcctgaaaggtgatatatcctgggatccatactcatttctgaccctgaatgccagggggtggacgtctctggcttccgggtcaggtaatatggatgactacgactggatgaatgaaaatcaatctgagtggacagatcactcatctcatcctgctacaaatgttaatcatgccaatgaatatgacctcaatgtgaaaggctggttactccaggatgagaattataaagcaggtataacagcaggatatcaggaaacacgtttcagttggacagctacaggtggttcatatagttataataatggagcttataccggaaacttcccgaaaggagtgcgggtaataggttataaccagcgcttttctatgccatatattggacttgcaggccagtatcgcattaatgattttgagttaaatgcattatttaaattcagcgactgggttcgggcacatgataatgatgagcactatatgagagatcttactttccgtgagaagacatccggctcacgttattatggtaccgtaattaacgctggatattatgtcacacctaatgccaaagtctttgcggaatttacatacagtaaatatgatgagggcaaaggaggtactcagaccattgataagaatagtggagattctgtctctattggcggagatgctgccggtatttccaataaaaattatactgtgacggcgggtctgcaatatcgcttctgaaaaatacagatcatatctctcttttcatcctcccctagcggggaggatgtctgtggaaaggaggttggtgtttgaccaaccttcagatgtgtgaaaaatcacctttttcaccataatgacggggcgctcattctgttgttttgccttgacattctccacgtctttcagggcatggagaaggtcaaattagacatggaacgctactctccttcctgtaggaagctcaacatccaagcttaatttgcctcccattgcttcaacgtaacgctttaacgtcgccagctttaaatcatttccgcgctgctccagctttgttactgctggctggcttatacccatcgcctcagcaacttgtttttgtgataactggagttcttcacgcatcatctgcaagccgacctcaagaatcatctcatctgccatttctttaattcgtgtctggctttcaggtgaacgactggcaatcacctcatctaatgttctcattacttgctctccagtgtgttcagatgtgctgtaaattcatcctcagctatacgcaccagtttttcataaaaccgcttatcattacttttatctcctgcacaaagaacgatagcccgacgaatcggatcgaacgcataaaaggctcttatcggacggccagaaaactgaacgcgaagctctttcatatttttgtaccgagaacctttcacggtatcggcatatggcctgggtaactcaggtccgtaaacctgtagctttttcaaatcagccaaaaccttttcctgaagagcgtcttcttgctcatttagccagtcgtcaaatcgctggctaaaaagtaccatccacatgctcaaccctataacctgtagcttaccccactaacaatataacctacgagttatattttcaagaaaagctggctatttaacataacggcaatttttgtacgcaccactgaaatgcgttcagcgcgatcacggcaacagacaggcaaaaatagcaacaaacctcccgaaaaaccgccgcgatcgcgcctgataaattttaaccttatgcatatctatgcagccaggcgaatcacgaacgaattgcctgcctgatgtaactgaaacgggtgttttttcctgatttggtgggcgtggaagacggaacatgaacgggaaaacagaattcatgccagatgagcgcgatctggcaattaaggcaaaacacagcaacaaagacacgccagaatcgcgcccggatatgttttaacgcgattttcagactcagacaaattcagcagaatgctactccattcaccgggctgatggtgaatacatgcgtatccaggatgagtacatttctggctctgccacagctctgtctgttggcagctttcgcctgtccggaaacctgcttaaaacgctcccgaaaggcctctgaaccagaaagcaacaaaacacaggccattaagtaaatcgcgttaaaacacgtctgatggattgctgcaaaaaaaagtccctaatggagcagggactgttaaacccagtgaatagcgtctaaattaaagtaagaatacgaccaggtactcttcagaaaagagattaatccaccgcacagaataatcaacagtaaaaacaaacaaccctgattttttatttttctttttttcgataaaaacaaaattaaagaaataattaatcagaacattccttaacttcagggcattgcctgtgttccattttgtgattagtctgaaacttccgaaggtggataacacccggtatttttttgctcacataaagcccctccttcaggcagaggggctttttctttgccaccacataaaaaaggccctcacaggaggtgttctgtgagggcgtatgataaggactgaatcgatggttaatatgtctagtcctgacttttgcatctccgaatataaaaccctgtttaacggcatgcaaaaccaaaaaataaaaatgtgacatcgcaatgccagataatattgacgcatgagggaatgcgtaccccgacccctgtgtaacgaacggtgcaatagtgatccacacccaacgcctgaaatcagatccagggggtaatctgctctcctgattcaggagagtttatggtcacttttgagacagttatggaaattaaaatcctgcacaagcagggaatgagtagccgggcgattgccagagaactggggatctcccgcaataccgttaaacgttatttgcaggcaaaatctgagccgccaaaatatacgccgcgacctgctgttgcttcactcctggatgaataccgggattatattcgtcaacgcatcgccgatgctcatccttacaaaatcccggcaacggtaatcgctcgcgagatcagagaccagggatatcgtggcggaatgaccattctcagggcattcattcgttctctctcggttcctcaggagcaggagcctgccgttcggttcgaaactgaacccggacgacagatgcaggttgactggggcactatgcgtaatggtcgctcaccgcttcacgtgttcgttgctgttctcggatacagccgaatgctgtacatcgaattcactgacaatatgcgttatgacacgctggagacctgccatcgtaatgcgttccgcttctttggtggtgtgccgcgcgaagtgttgtatgacaatatgaaaactgtggttctgcaacgtgacgcatatcagaccggtcagcaccggttccatccttcgctgtggcagttcggcaaggagatgggcttctctccccgactgtgtcgccccttcagggcacagactaaaggtaaggtggaacggatggtgcagtacacccgtaacagtttttacatcccactaatgactcgcctgcgcccgatggggatcactgtcgatgttgaaacagccaaccgccacggtctgcgctggctgcacgatgtcgctaaccaacgaaagcatgaaacaatccaggcccgtccctgcgatcgctggctcgaagagcagcagtccatgctggcactgcctccggagaaaaaagagtatgacgtgcatcttgatgaaaatctggtgaacttcgacaaacaccccctgcatcatccactctccatctacgactcattctgcagaggagtggcgtgatgatggaactgcaacatcaacgactgatggcgctcgccgggcagttgcaactggaaagccttataagcgcagcgcctgcgctgtcacaacaggcagtagaccaggaatggagttatatggacttcctggagcatctgcttcatgaagaaaaactggcacgtcatcaacgtaaacaggcgatgtatacccgaatggcagccttcccggcggtgaaaacgttcgaagagtatgacttcacattcgccaccggagcaccgcagaagcaactccagtcgttacgctcactcagcttcatagaacgtaatgaaaatatcgtattactggggccatcaggtgtggggaaaacccatctggcaatagcgatgggctatgaagcagtccgtgcaggtatcaaagttcgcttcacaacagcagcagatctgttacttcagttatctacggcacaacgtcagggccgttataaaacgacgcttcagcgtggagtaatggccccccgcctgctcatcattgatgaaataggctatctgccgttcagtcaggaagaagcaaagctgttcttccaggtcatcgctaaacgttacgaaaagagcgcaatgatcctgacatccaatctgccgttcgggcagtgggatcaaacgttcgccggtgatgcagcactgacctcagcgatgctggaccgtatcttacaccactcacatgtcgttcaaatcaaaggagaaagctatcgactcagacagaaacgaaaggccggggttatagcagaagctaatcctgagtaaaacggtggatcaatattgggccgttggtggagatataagtggatcacttttcatccgtcgttgacaccctgatgaattcacgtgttcacgcctgaataacaagaatgccggagatacgcagtcatattttttacacaattctctaatcccgacaaggtcgtaggtcgttataggaaaattcttagcaccattccggaacaatcagaacagcaggccatgaacgactgacaacattacgaatataaaaaacgcacccgggccagacattccccctactgattaaaccagccggacttgtccacggaacggtctttttaaaccgacacacagtctgagtacagatacatgtcacgatgatgcaggattagcggaagagtgtgagcacgtttccgggaactgtggtgaaccatagctcaatattcgagtgagggcataccggaaacgcgctcagattcgttgtaacgcgattttccgtaccgggcaattttttcagttgttttttcgtttcatgtcgtcagaaacgttctgagcgcgtttccggcatctgatgctacgcaaaccatccccatggtcagttgacagccggaaacacgcgggtgtcgttttagcgtatcgacgggacggcgtcgagaagcacaaaaaacagatgttgtactcagtcagttgttttacagacagcactgcggcagattgaaaaagtaccgtactttcaggaatgtccagaaaccatgtgtcagacttcgttctcccccttccgggtgaatttttttgtcatccgttcaggaatctctttataacgattactccatttcaggattttttatgtggcgtttactacaggcaggatattcaaaggcaaaaaaatcccccggaacaggcggaacccggacagggggagaacgaatcgctaaataattttcgtagttgtatttcccatcgttgctactgcaacgggatgaatttgccgcagtttatcctgtaaaacaatcctgatttactcacactccacatatcactgacggagcacaacggaatagtgaacaaacaacaacaaactgcgctg",
+            "genbank_locus":{
+                "comment":"CP002958.1",
+                "accession":"CP002958"
+            },
+            "length":8431,
+            "id":"1035377.13.con.0001"
+        }
+    ],
+    "ncbi_taxonomy_id":1035377,
+    "ssu_rrna":"",
+    "domain":"Bacteria",
+    "ncbi_lineage":[
+        [
+            "cellular organisms",
+            131567,
+            "no rank"
+        ],
+        [
+            "Bacteria",
+            2,
+            "superkingdom"
+        ],
+        [
+            "Pseudomonadota",
+            1224,
+            "phylum"
+        ],
+        [
+            "Gammaproteobacteria",
+            1236,
+            "class"
+        ],
+        [
+            "Enterobacterales",
+            91347,
+            "order"
+        ],
+        [
+            "Yersiniaceae",
+            1903411,
+            "family"
+        ],
+        [
+            "Yersinia",
+            629,
+            "genus"
+        ],
+        [
+            "Yersinia pseudotuberculosis complex",
+            1649845,
+            "species group"
+        ],
+        [
+            "Yersinia pestis",
+            632,
+            "species"
+        ],
+        [
+            "Yersinia pestis A1122",
+            1035377,
+            "strain"
+        ]
+    ],
+    "id":"1035377.13"
+}
