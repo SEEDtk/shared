@@ -991,7 +991,7 @@ public class Feature implements Comparable<Feature> {
     }
 
     /**
-     * @return the protein MD5
+     * @return the protein MD5, or NULL if there is no protein
      */
     public String getMD5() {
         String retVal = null;
