@@ -118,6 +118,20 @@ public class TestLibrary {
         assertThat(ret.getGroup(), equalTo("ToxiHigb"));
     }
 
+    /**
+     * Test deparenthesization.
+     */
+    @Test
+    public void testParens() {
+        String test1 = "(abc(def)ghi(j(kl)m)nop)";
+        assertThat(MagicMap.deparenthesize(test1), equalTo("abc(def)ghi(j(kl)m)nop"));
+        test1 = "abc(def)ghi";
+        assertThat(MagicMap.deparenthesize(test1), equalTo("abc(def)ghi"));
+        test1 = "(abc)def(ghi)";
+        assertThat(MagicMap.deparenthesize(test1), equalTo("(abc)def(ghi)"));
+        test1 = "(simple)";
+        assertThat(MagicMap.deparenthesize(test1), equalTo("simple"));
+    }
 
     /**
      * Test magic IDs.

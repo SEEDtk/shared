@@ -69,11 +69,11 @@ public class Feature implements Comparable<Feature> {
     /** subsystem membership data */
     private Set<SubsystemRow.Role> subsystemRoles;
     /** parsing pattern for feature type */
-    private static final Pattern TYPE_PATTERN = Pattern.compile("fig\\|\\d+\\.\\d+\\.(\\w+)\\.\\d+");
+    private static final Pattern TYPE_PATTERN = Pattern.compile("fig\\|\\d+\\.\\d+\\.([^.]+)\\.\\d+");
     /** parsing pattern for function-to-roles */
     private static final Pattern SEP_PATTERN = Pattern.compile("\\s+[\\/@]\\s+|\\s*;\\s+");
     /** pattern for extracting genome ID from feature ID */
-    public static final Pattern FID_PARSER = Pattern.compile("fig\\|(\\d+\\.\\d+)\\.\\w+\\.\\d+");
+    public static final Pattern FID_PARSER = Pattern.compile("fig\\|(\\d+\\.\\d+)\\.[^.]+\\.\\d+");
     /** gene name match pattern */
     private static final Pattern GENE_NAME = Pattern.compile("[a-z]{3}(?:[A-Z])?");
 
