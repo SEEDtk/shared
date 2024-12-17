@@ -14,6 +14,7 @@ import java.util.Set;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.theseed.io.TabbedLineReader;
 
 /**
  * @author Bruce Parrello
@@ -43,6 +44,17 @@ class TestAliasMap {
             }
         }
         log.info("{} aliases had multiple features.", dupCount);
+    }
+
+    @Test
+    void testGeneNames() throws IOException {
+        try (TabbedLineReader inStream = new TabbedLineReader(new File("data", "gene.names"), 2)) {
+            for (var line : inStream) {
+                String fid = line.get(0);
+                String name = line.get(1);
+                assertThat(fid + "=" + name, Feature.GENE_NAME.matcher(name).matches(), equalTo(true));
+            }
+        }
     }
 
 }

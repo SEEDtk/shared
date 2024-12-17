@@ -75,7 +75,7 @@ public class Feature implements Comparable<Feature> {
     /** pattern for extracting genome ID from feature ID */
     public static final Pattern FID_PARSER = Pattern.compile("fig\\|(\\d+\\.\\d+)\\.[^.]+\\.\\d+");
     /** gene name match pattern */
-    private static final Pattern GENE_NAME = Pattern.compile("[a-z]{3}(?:[A-Z])?");
+    protected static final Pattern GENE_NAME = Pattern.compile("(?:[a-z]{3,4}(?:[A-Z]+[0-9]?||[0-9][a-z]?||[A-Z][0-9]*(?:_[0-9])?||[a-z][0-9]+||[a-z]+)?)||[a-z]{2}[0-9]+||[A-Z][0-9]+");
 
     /**
      * @return the feature type of a feature ID.
@@ -1060,6 +1060,21 @@ public class Feature implements Comparable<Feature> {
             }
         }
         return retVal.toString();
+    }
+
+    /**
+     * Specify a new gene name. The gene name is in the list of aliases, and it is distinguished
+     * only by its appearance, which matches a specific pattern.
+     *
+     * @param name		proposed new gene name, or an empty string for none
+     */
+    public void setGeneName(String name) {
+        // The gene
+        String oldName = this.getGeneName();
+        if (! oldName.isEmpty())
+            this.aliases.remove(oldName);
+        if (! name.isEmpty())
+            this.aliases.add(name);
     }
 
 }
