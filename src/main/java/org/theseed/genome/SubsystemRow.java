@@ -8,6 +8,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.theseed.subsystems.VariantId;
 
@@ -391,6 +392,22 @@ public class SubsystemRow implements Comparable<SubsystemRow> {
     public void setClassifications(List<String> classList) {
         this.classifications.clear();
         this.classifications.addAll(classList);
+    }
+
+    /**
+     * @return the number of active roles in this subsystem row
+     */
+    public int getRoleCount() {
+        int retVal = (int) this.roles.stream().filter(x -> ! x.fids.isEmpty()).count();
+        return retVal;
+    }
+
+    /**
+     * @return the set of active roles in this subsystem row
+     */
+    public Set<Role> getActiveRoles() {
+        Set<Role> retVal = this.roles.stream().filter(x -> ! x.fids.isEmpty()).collect(Collectors.toSet());
+        return retVal;
     }
 
 }

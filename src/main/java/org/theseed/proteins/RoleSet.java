@@ -11,6 +11,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Stream;
 
 import org.apache.commons.lang3.StringUtils;
 import org.theseed.genome.Feature;
@@ -176,6 +177,13 @@ public class RoleSet implements Iterable<String>, Comparable<RoleSet> {
             }
         }
         return retVal;
+    }
+
+    /**
+     * @return a stream of the roles in this set
+     */
+    public Stream<String> stream() {
+        return Arrays.stream(this.roles);
     }
 
     /**

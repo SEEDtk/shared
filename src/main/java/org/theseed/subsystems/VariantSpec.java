@@ -156,6 +156,14 @@ public class VariantSpec implements Comparable<VariantSpec> {
     }
 
     /**
+     * @return the set of roles for this specification
+     */
+    public Set<String> getRoles() {
+        Set<String> retVal = Arrays.stream(this.getCells()).flatMap(x -> x.stream()).filter(x -> ! x.isBlank()).collect(Collectors.toSet());
+        return retVal;
+    }
+
+    /**
      * @return the rule string for this variant spec
      */
     public String getRuleString() {

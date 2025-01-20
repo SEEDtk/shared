@@ -7,6 +7,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -232,6 +233,13 @@ public class SubsystemProjector {
      */
     public SortedSet<VariantSpec> getVariants() {
         return this.variants;
+    }
+
+    /**
+     * @return the set of subsystems in this projector
+     */
+    public Collection<SubsystemSpec> getSubsystems() {
+        return this.subsystems.values();
     }
 
     /**
