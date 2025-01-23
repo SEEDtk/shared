@@ -34,10 +34,12 @@ class TestRuleProjector {
         vCode = desc.projectActive(gto, roleSet, roleMap);
         assertThat(vCode, nullValue());
         gto = new Genome(new File("data/ss_test/Gtos", "1045004.4.gto"));
+        roleSet = roleMap.getRolePresenceMap(gto);
         gto.clearSubsystems();
         vCode = desc.project(gto, roleSet, roleMap);
         assertThat(vCode, equalTo("active.1.1"));
         gto = new Genome(new File("data/ss_test/Gtos", "483218.5.gto"));
+        roleSet = roleMap.getRolePresenceMap(gto);
         gto.clearSubsystems();
         vCode = desc.project(gto, roleSet, roleMap);
         assertThat(vCode, equalTo("dirty"));

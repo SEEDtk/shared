@@ -18,6 +18,7 @@ import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.Test;
 import org.theseed.basic.ParseFailureException;
+import org.theseed.genome.Feature;
 import org.theseed.genome.Genome;
 import org.theseed.subsystems.StrictRoleMap;
 
@@ -196,6 +197,33 @@ class TestCoreSubsystem {
             objStream.close();
         }
         assertThat(desc2, equalTo(desc));
+    }
+
+    @Test
+    void testStrictRoleMap() throws IOException, ParseFailureException, ClassNotFoundException {
+        StrictRoleMap roleMap = StrictRoleMap.load(new File("data/ss_test/Subsystems", "core.roles.in.subsystems"));
+        Genome gto = new Genome(new File("data/ss_test/Gtos", "319225.3.gto"));
+        var roleSet = roleMap.getRolePresenceMap(gto);
+        // Insure every role in the set is in the genome.
+        for (var roleSetEntry : roleSet.entrySet()) {
+            String roleKey = roleSetEntry.getKey();
+            Set<String> fids = roleSetEntry.getValue();
+            for (String fid : fids) {
+                String function = gto.getFeature(fid).getFunction();
+                Set<String> roles = roleMap.usefulRoles(function).stream().map(x -> x.getId()).collect(Collectors.toSet());
+                assertThat(roleKey + " " + fid, roles, hasItem(roleKey));
+            }
+        }
+        // Insure every useful role in the genome is in the set.
+        Set<String> roleSetKeys = roleSet.keySet();
+        for (Feature feat : gto.getFeatures()) {
+            String function = feat.getFunction();
+            Set<String> roles = roleMap.usefulRoles(function).stream().map(x -> x.getId()).collect(Collectors.toSet());
+            for (String role : roles)
+                assertThat(feat.toString(), role, in(roleSetKeys));
+        }
+
+
     }
 
 }

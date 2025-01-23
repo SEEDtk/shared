@@ -86,16 +86,16 @@ public class SubsystemDescriptor implements Serializable {
         while (iter.hasNext() && retVal == null) {
             var ruleEntry = iter.next();
             String vCode = ruleEntry.getKey();
-            // Make sure this is a worthwhile variant.
-            if (! activeFlag || VariantId.isActive(vCode)) {
-                // Check the rule to see if the variant is present.
-                if (ruleEntry.getValue().check(roleSet.keySet())) {
-                    // Yes it is. Denote we found a variant.
-                    retVal = vCode;
-                }
+            // Check the rule to see if the variant is present.
+            if (ruleEntry.getValue().check(roleSet.keySet())) {
+                // Yes it is. Denote we found a variant.
+                retVal = vCode;
             }
         }
-        if (retVal != null) {
+        // Make sure this is a worthwhile variant.
+        if (retVal != null && activeFlag && ! VariantId.isActive(retVal))
+            retVal = null;
+        else if (retVal != null) {
             // We want to project this subsystem onto the genome. We build a subsystem row using the name,
             // classes, and variant code and connect it to the genome.
             SubsystemRow row;

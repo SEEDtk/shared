@@ -54,6 +54,8 @@ public class VariantId implements Comparable<VariantId> {
             retVal = false;
         else if (code.startsWith("likely"))
             retVal = false;
+        else if (code.startsWith("dirty"))
+            retVal = false;
         else if (code.startsWith("lookat"))
             retVal = false;
         else if (code.contentEquals("missing"))

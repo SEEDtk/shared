@@ -1,0 +1,4 @@
+1 means group0 and ((Rv3779 and AftA and AftC and EmbA and EmbB and Emb) or (AftA and AftC and EmbC and EmbA and EmbB and Rv3807c) or (Emb and Rv3807c))
+9 means (Rv3806c and Rv3807c) or Rv3809c
+0 means (DprE1 and Rv3806c and Rv3807c and GlfT2 and Rv3809c) or (DprE1 and DprE2 and Rv3806c) or Flipase
+-1 means any
