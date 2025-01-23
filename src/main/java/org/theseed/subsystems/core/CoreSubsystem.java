@@ -1186,4 +1186,19 @@ public class CoreSubsystem {
     public Row getRowOf(String genomeId) {
         return this.spreadsheet.get(genomeId);
     }
+
+    /**
+     * @return the number of group names for the rules
+     */
+    public int getRuleNameCount() {
+        return this.ruleMap.size();
+    }
+
+    /**
+     * @return the number of variant rules
+     */
+    public int getVariantRuleCount() {
+        return this.variantRules.size();
+    }
+
 }
