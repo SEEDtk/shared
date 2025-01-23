@@ -25,7 +25,7 @@ import org.theseed.subsystems.VariantId;
  * @author Bruce Parrello
  *
  */
-public class SubsystemDescriptor implements Serializable {
+public class SubsystemDescriptor implements Serializable, Comparable<SubsystemDescriptor> {
 
     // FIELDS
     /** subsystem name */
@@ -216,6 +216,11 @@ public class SubsystemDescriptor implements Serializable {
      */
     public String getRole(int idx) {
         return this.roleNames.get(idx);
+    }
+
+    @Override
+    public int compareTo(SubsystemDescriptor o) {
+        return this.name.compareTo(o.name);
     }
 
 }
