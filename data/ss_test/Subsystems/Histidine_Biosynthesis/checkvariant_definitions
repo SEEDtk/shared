@@ -1,0 +1,8 @@
+reg means HisAb(HisZ) or HisAb2
+HisA means HisAs(HisGs) or HisAl(HisGl)
+HisHx means HisH(HisK) or HisH2
+HisE means HisEa(HisF) and HisEb(HisH)
+all means 8 of {HisA, 8, HisC(HisI), HisD(HisA), HisE, HisF(HisB), HisG(HisC), HisI(HisD)}
+most means 4 of {HisA, HisB(HisE), HisC(HisI), HisD(HisA), HisE, HisF(HisB), HisG(HisC), HisI(HisD)}
+any means 1 of {HisB(HisE), HisC(HisI), HisD(HisA), HisE, HisF(HisB), HisG(HisC), HisI(HisD), reg, HisHx}
+

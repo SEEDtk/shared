@@ -1,0 +1,4 @@
+any means 1 of { citD, citX, citC, citE, citF, citG, OAD, citI, citB, citA, cimH, citM, citT, citS }
+all means 6 of { citD, citX, citC, citE, citF, citG, OAD }
+many means 3 of { citD, citX, citC, citE, citF, citG, OAD }
+

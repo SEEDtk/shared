@@ -1,0 +1,39 @@
+#################################
+DESCRIPTION
+ Ubiquinone (Coenzyme Q) functions in the respiratory electron transport chain and serves as a lipophilic antioxidant. Ubiquinone is an acceptor of electrons from many cellular dehydrogenases involved in the oxidative metabolism of dihydroorotate, choline, fatty acyl-CoA, glycerolphosphate, sarcosine, and dimethylglycine .
+ The UQ biosynthetic enzymes may constitute a complex that is tightly bound to the membrane.
+   In the biosythetic pathway the nucleus is derived from the shikimate pathway via chorismate in bacteria or tyrosin in higher eukaryotes. The prenyl side chain is derived from prenyl diphosphate (prenyl PPi) and the methyl groups are derived from S-adenosylmethionine.
+
+#################################
+NOTES
+ Thiamin monophosphate is formed by coupling of two independently synthesized moieties.
+
+#36	THI10: Thiamin transporter in yeast. PMID: 19348578
+
+References
+
+1.	Begley TP, Downs DM, Ealick SE, McLafferty FW, Van Loon AP, Taylor S, Campobasso N, Chiu HJ, Kinsland C, Reddick JJ, Xi J. Thiamin biosynthesis in prokaryotes. Arch Microbiol. 1999 Apr;171(5):293-300. Review. PMID: 10382260
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#################################
+VARIANTS
+-1	organism incapable of de novo biosynthesis of tetrapyrroles
+1.AhbABCD	de novo bios of 5-ALA and siroheme asserted. HEME bios from sirocheme via AhbABCD path
+5	de novo bios of 5-ALA can be asserted. NO siroheme, NO heme (other tetrapyrroles are likely synthesized in this organism)
+9	only Ferrochelatase is present � uptake of exogenous heme/protoporphyrin IX is a potential source of heme - see SSs: "Heme, hemin uptake and utilization systems in GramPositives" and "Hemin transport system"
+

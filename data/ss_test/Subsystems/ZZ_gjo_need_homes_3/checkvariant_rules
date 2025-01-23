@@ -1,0 +1,3 @@
+active means 2 of { 1.5.1.1.a, 1.5.1.1.b, 1.5.1.21.a, 1.5.1.49 } or PpnN
+dirty means not PpnN and not 1.5.1.1.a and not 1.5.1.1.b
+likely means not PpnN

@@ -8,9 +8,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import org.theseed.genome.Genome;
-import org.theseed.genome.SubsystemRow;
 import org.theseed.proteins.RoleSet;
+import org.theseed.subsystems.core.SubsystemRuleProjector;
 
 /**
  * A variant specification is an ordered list of protein families and/or role IDs that form a possible subsystem implementation.
@@ -69,7 +68,7 @@ public class VariantSpec implements Comparable<VariantSpec> {
      * @param i				index of the cell
      * @param projector		target subsystem projector
      */
-    public void setCell(int i, SubsystemProjector projector) {
+    public void setCell(int i, SubsystemRuleProjector projector) {
         boolean oldEmpty = this.cells[i].isEmpty();
         String roleDesc = this.subsystem.getRole(i);
         this.cells[i] = projector.getRoleIds(roleDesc);
@@ -108,34 +107,6 @@ public class VariantSpec implements Comparable<VariantSpec> {
             // We fail (return FALSE) iff the cell has roles, and there is no feature
             // containing all the roles
             retVal = (this.cells[i].isEmpty() || this.cells[i].featureSet(roleMap) != null);
-        }
-        return retVal;
-    }
-
-    /**
-     * Install a subsystem row for this variant in the specified genome.
-     *
-     * @param genome		genome to contain the subsystem row
-     * @param roleMap		hash of role IDs to feature sets
-     *
-     * @return the subsystem row
-     */
-    public SubsystemRow instantiate(Genome genome, Map<String, Set<String>> roleMap) {
-        SubsystemRow retVal = new SubsystemRow(genome, this.getName());
-        retVal.setVariantCode(this.variantCode);
-        retVal.setClassifications(this.subsystem.getClassifications());
-        // For each cell in the subsystem, we add the role.
-        for (int i = 0; i < this.cells.length; i++) {
-            String role = this.subsystem.getRole(i);
-            retVal.addRole(role);
-            // Now add any features in this cell.  They will be the ones with the specified role.
-            if (! this.cells[i].isEmpty()) {
-                Set<String> fids = this.cells[i].featureSet(roleMap);
-                if (fids != null) {
-                    for (String fid : fids)
-                        retVal.addFeature(role, fid);
-                }
-            }
         }
         return retVal;
     }

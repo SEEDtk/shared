@@ -1,0 +1,36 @@
+###############################
+DESCRIPTION
+The mycobacterial cell wall, including the essential, covalently linked complex of peptidoglycan, heteropolymeric arabinogalactan, and highly hydrophobic mycolic acids, is responsible for many of the pathophysiological features of members of the Mycobacterium genus (Belanova et al., 2008)
+The initiation point for arabinogalactan biogenesis is the mycobacterial version of the bacterial carrier lipid, bactoprenol, identified as decaprenyl phosphate (C50-P), and the sequential addition of GlcNAc-P, rhamnose (Rha), and single galactofuranose units, donated by the appropriate nucleotide sugars. At some stage, the arabinofuranose units are added, donated not by a nucleotide sugar but a lipid carrier, C50-P-Ara.  
+Two galactosyl transferases can apparently account for the full biosynthesis of the cell wall galactan of mycobacteria:  galactofuranosyl transferase GlfT1 is involved in the initial steps of galactan formation and is responsible for attaching the first and, perhaps, the second Galf unit to the C50-P-P-GlcNAc-Rha acceptor.  Another galactosyl transferase, GlfT2 (bifunctional) is responsible for the formation of the bulk of the galactan, containing alternating 5- and 6-linked beta-Galf units (Belanova et al., 2008)
+
+DprE1 and DprE2 are involved in the biosynthesis of D-arabinose and, in particular, they are essential to perform the transformation of decaprenylphosphoryl-D-ribose to decaprenylphosphoryl-D-arabinose, which is a substrate for arabinosyltransferases in the synthesis of the cell-envelope arabinogalactan and liporabinomannan polysaccharides of mycobacteria (Belanova et al., 2008)
+
+###############################
+NOTES
+References
+
+Manina G1, Pasca MR, Buroni S, De Rossi E, Riccardi G. 2010. Decaprenylphosphoryl-&#946;-D-ribose 2'-epimerase from Mycobacterium tuberculosis is a magic drug target. Curr Med Chem. 17(27):3099-108.  PMID:20629622
+
+Huang H1, Scherman MS, D'Haeze W, Vereecke D, Holsters M, Crick DC, McNeil MR. 2005. Identification and active expression of the Mycobacterium tuberculosis gene encoding 5-phospho-{alpha}-d-ribose-1-diphosphate: decaprenyl-phosphate 5-phosphoribosyltransferase, the first enzyme committed to decaprenylphosphoryl-d-arabinose synthesis.  J Biol Chem, 280(26):24539-43. PMID:15878857
+
+Larrouy-Maumus G1, Škovierová H, Dhouib R, Angala SK, Zuberogoitia S, Pham H, Villela AD, Mikušová K, Noguera A, Gilleron M, Valentínová L, Korduláková J, Brennan PJ, Puzo G, Nigou J, Jackson M. 2012. A small multidrug resistance-like transporter involved in the arabinosylation of arabinogalactan and lipoarabinomannan in mycobacteria.  J Biol Chem. Nov, 287(47):39933-41. PMID:23038254
+
+Telenti A1, Philipp WJ, Sreevatsan S, Bernasconi C, Stockbauer KE, Wieles B, Musser JM, Jacobs WR Jr.  1997.  The emb operon, a gene cluster of Mycobacterium tuberculosis involved in resistance to ethambutol. Nat Med, 3(5):567-70. PMID:9142129
+
+Belanova M1, Dianisková P, Brennan PJ, Completo GC, Rose NL, Lowary TL, Mikusová K. 2008.  Galactosyl transferases in mycobacterial cell wall synthesis.  J Bacteriol, 190(3):1141-5. PMID:18055597
+
+Mikusová K1, Belánová M, Korduláková J, Honda K, McNeil MR, Mahapatra S, Crick DC, Brennan PJ. 2006.  Identification of a novel galactosyl transferase involved in biosynthesis of the mycobacterial cell wall.  J Bacteriol, 188(18):6592-8.  PMID:16952951
+
+
+
+
+
+###############################
+LITERATURE
+
+###############################
+VARIANTS
+
+
+

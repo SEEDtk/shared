@@ -15,6 +15,8 @@ import java.util.stream.Stream;
 
 import org.apache.commons.lang3.StringUtils;
 import org.theseed.genome.Feature;
+import org.theseed.subsystems.StrictRole;
+import org.theseed.subsystems.StrictRoleMap;
 
 /**
  * This is a simple object that represents a short array of role IDs, generally computed from a
@@ -88,11 +90,11 @@ public class RoleSet implements Iterable<String>, Comparable<RoleSet> {
      *
      * @return the role set representing this function
      */
-    public static RoleSet create(String function, RoleMap roleMap) {
+    public static RoleSet create(String function, StrictRoleMap roleMap) {
         String[] roleDescs = Feature.rolesOfFunction(function);
         List<String> buffer = new ArrayList<String>(roleDescs.length);
         for (String roleDesc : roleDescs) {
-            Role found = roleMap.getByName(roleDesc);
+            StrictRole found = roleMap.getByName(roleDesc);
             if (found != null)
                 buffer.add(found.getId());
         }
