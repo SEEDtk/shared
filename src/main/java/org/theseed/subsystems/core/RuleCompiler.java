@@ -157,9 +157,9 @@ public class RuleCompiler {
         while (! this.tokens.isEmpty()) {
             String token = this.tokens.remove(0);
             if (StringUtils.isNumeric(token)) {
-                // This is a number.  If we are inside a numeric list rule and the next token is
-                // not "of", it is a role index. Otherwise, it is the start of a list rule.
-                if (! this.listContext() || ! this.tokens.isEmpty() && this.tokens.get(0).contentEquals("of"))
+                // This is a number. If the next token is "of", it is the start of a list rule. Otherwise,
+                // it is an identifier (which could be a role abbreviation or index).
+                if (! this.tokens.isEmpty() && this.tokens.get(0).contentEquals("of"))
                     this.startListRule(token);
                 else
                     this.processIdentifier(token);

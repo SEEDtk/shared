@@ -30,16 +30,16 @@ class TestCoreSubsystem {
 
     protected static final String[] SUB_NAMES = new String[] { "Citrate_Metabolism", "Cluster_with_dapF",
             "Histidine_Biosynthesis", "ZZ_gjo_need_homes_3", "2-oxoisovalerate_to_2-isopropyl-3-oxosuccinate_module",
-            "Biosynthesis_of_Arabinogalactan_in_Mycobacteria"};
+            "Biosynthesis_of_Arabinogalactan_in_Mycobacteria", "Oxygen-dependent_NiFe_hydrogenase"};
     protected static final String[] REAL_NAMES = new String[] { "Citrate Metabolism", "Cluster with dapF",
             "Histidine Biosynthesis", "ZZ gjo need homes 3", "2-oxoisovalerate to 2-isopropyl-3-oxosuccinate module",
-            "Biosynthesis of Arabinogalactan in Mycobacteria"};
+            "Biosynthesis of Arabinogalactan in Mycobacteria", "Oxygen-dependent NiFe hydrogenase"};
 
     @Test
     void testCoreSubsystemLoad() throws IOException, ParseFailureException {
         StrictRoleMap roleMap = StrictRoleMap.load(new File("data/ss_test/Subsystems", "core.roles.in.subsystems"));
-        CoreSubsystem[] subs = new CoreSubsystem[6];
-        for (int subIdx = 0; subIdx < 6; subIdx++) {
+        CoreSubsystem[] subs = new CoreSubsystem[7];
+        for (int subIdx = 0; subIdx < 7; subIdx++) {
             File inDir = new File("data/ss_test/Subsystems", SUB_NAMES[subIdx]);
             subs[subIdx] = new CoreSubsystem(inDir, roleMap);
             assertThat(subs[subIdx].getName(), equalTo(REAL_NAMES[subIdx]));
@@ -167,7 +167,7 @@ class TestCoreSubsystem {
     void testSubsystemList() throws IOException {
         // Verify that we find four subsystems directories.
         List<File> subs = CoreSubsystem.getSubsystemDirectories(new File("data", "ss_test"));
-        assertThat(subs.size(), equalTo(6));
+        assertThat(subs.size(), equalTo(7));
         List<String> subNames = subs.stream().map(x -> x.getName()).collect(Collectors.toList());
         assertThat(subNames, containsInAnyOrder(SUB_NAMES));
         // Verify that all found directories have spreadsheets.
@@ -197,6 +197,14 @@ class TestCoreSubsystem {
             objStream.close();
         }
         assertThat(desc2, equalTo(desc));
+    }
+
+    @Test
+    void testSubsystemCompiler() throws IOException, ParseFailureException, ClassNotFoundException {
+        StrictRoleMap roleMap = StrictRoleMap.load(new File("data/ss_test/Subsystems", "core.roles.in.subsystems"));
+        File inDir = new File("data/ss_test/Subsystems", "Oxygen-dependent_NiFe_hydrogenase");
+        CoreSubsystem sub = new CoreSubsystem(inDir, roleMap);
+        assertThat(sub.getVariantRuleCount(), equalTo(2));
     }
 
     @Test

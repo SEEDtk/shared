@@ -1,0 +1,2 @@
+active means group0 and ((2718 and hypC and hypD and hypE and hypF and ppi1 and ppi2) or (hypB and hypC and hypD and hypE and hypF and ppi1 and ppi2) or (2718 and hypB))
+-1 means any
