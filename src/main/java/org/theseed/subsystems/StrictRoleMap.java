@@ -8,7 +8,6 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.PrintWriter;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -16,6 +15,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.theseed.genome.Feature;
 import org.theseed.genome.Genome;
 import org.theseed.io.TabbedLineReader;
@@ -31,11 +32,12 @@ import org.theseed.magic.MagicMap;
  * @author Bruce Parrello
  *
  */
-public class StrictRoleMap extends MagicMap<StrictRole> implements Serializable {
+public class StrictRoleMap extends MagicMap<StrictRole> {
 
+    // FIELDS
+    /** logging facility */
+    protected static Logger log = LoggerFactory.getLogger(StrictRoleMap.class);
 
-    /** version ID for serialization */
-    private static final long serialVersionUID = 3129471296994139956L;
 
     /**
      * Construct a blank, empty subsystem role map.
@@ -112,7 +114,7 @@ public class StrictRoleMap extends MagicMap<StrictRole> implements Serializable 
      */
     public void writeObject(ObjectOutputStream out) throws IOException {
         // Write the number of roles in this map.
-        out.write(this.size());
+        out.writeInt(this.size());
         // Run through the roles in sequence and write them.
         for (StrictRole role : this) {
             out.writeUTF(role.getId());

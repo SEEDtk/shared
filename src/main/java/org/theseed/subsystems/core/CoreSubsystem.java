@@ -8,6 +8,7 @@ import java.io.FileFilter;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.BitSet;
@@ -758,6 +759,9 @@ public class CoreSubsystem {
             for (String rule : variantRules)
                 ruleStream.println(rule);
         }
+        // Write out a generated-rules marker.
+        final File markFile = new File(this.subDir, "GENERATED_RULES");
+        MarkerFile.write(markFile, LocalDate.now().toString());
         log.info("Compiling rules.");
         this.readRules(this.subDir, "checkvariant_definitions", this.ruleMap);
         this.readRules(this.subDir, "checkvariant_rules", this.variantRules);

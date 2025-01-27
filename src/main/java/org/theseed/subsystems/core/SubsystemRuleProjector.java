@@ -95,6 +95,46 @@ public class SubsystemRuleProjector implements Serializable {
     }
 
     /**
+     * Read this subsystem role projector from an object stream.
+     *
+     * @param in	input object stream
+     *
+     * @throws IOException
+     * @throws ClassNotFoundException
+     */
+    private void readObject(ObjectInputStream in) throws ClassNotFoundException, IOException {
+        log.info("Reading subsystem role map.");
+        this.roleMap = new StrictRoleMap();
+        this.roleMap.readObject(in);
+        int subCount = in.readInt();
+        this.subsystems = new HashMap<String, SubsystemDescriptor>(subCount * 5 / 3 + 1);
+        log.info("Reading {} subsystem descriptors.", subCount);
+        for (int i = 0; i < subCount; i++) {
+            SubsystemDescriptor desc = (SubsystemDescriptor) in.readObject();
+            String subName = desc.getName();
+            this.subsystems.put(subName, desc);
+        }
+    }
+
+    /**
+     * Write this subsystem role projector to an object stream
+     *
+     * @param out	output object stream
+     *
+     * @throws IOException
+     */
+    private void writeObject(ObjectOutputStream out) throws IOException {
+        log.info("Writing subsystem role map.");
+        this.roleMap.writeObject(out);
+        int subCount = this.subsystems.size();
+        log.info("Writing {} subsystem descriptors.", subCount);
+        out.writeInt(subCount);
+        for (SubsystemDescriptor desc : this.subsystems.values())
+            out.writeObject(desc);
+    }
+
+
+    /**
      * Compute the role IDs for a function.
      *
      * @param function	functional assignment
