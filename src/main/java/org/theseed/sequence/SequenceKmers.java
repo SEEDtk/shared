@@ -34,7 +34,7 @@ public abstract class SequenceKmers implements Iterable<String> {
             // equal to themselves.
             retVal = INFINITY;
         } else {
-            long count = this.kmerSet.parallelStream().filter(x -> other.contains(x)).count();
+            long count = this.kmerSet.stream().filter(x -> other.contains(x)).count();
             retVal = (int) count;
         }
         return retVal;
