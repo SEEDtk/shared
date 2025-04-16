@@ -62,6 +62,8 @@ public class VariantId implements Comparable<VariantId> {
             retVal = false;
         else if (code.startsWith("-"))
             retVal = false;
+        else if (code.startsWith("dead"))
+            retVal = false;
         else if (code.contentEquals("0"))
             retVal = false;
         else
@@ -109,6 +111,8 @@ public class VariantId implements Comparable<VariantId> {
         else if (code.contentEquals("missing"))
             retVal = false;
         else if (code.startsWith("-"))
+            retVal = false;
+        else if (code.startsWith("dead"))
             retVal = false;
         else if (code.contentEquals("0"))
             retVal = false;
@@ -198,6 +202,8 @@ public class VariantId implements Comparable<VariantId> {
         else if (code.contentEquals("missing"))
             retVal = "dirty";
         else if (code.startsWith("-"))
+            retVal = "inactive";
+        else if (code.startsWith("dead"))
             retVal = "inactive";
         else if (code.contentEquals("0"))
             retVal = "dirty";

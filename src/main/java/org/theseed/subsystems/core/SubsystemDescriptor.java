@@ -104,6 +104,7 @@ public class SubsystemDescriptor implements Serializable, Comparable<SubsystemDe
             }
             row.setClassifications(this.classes[0], this.classes[1], this.classes[2]);
             row.setVariantCode(retVal);
+            row.setRoles(this.roleNames);
             // Next we fill in each role. Loop through the roles in this subsystem.
             for (String roleName : this.roleNames) {
                 // Check for features performing this role.

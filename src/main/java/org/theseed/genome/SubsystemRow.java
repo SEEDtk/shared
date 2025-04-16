@@ -410,4 +410,13 @@ public class SubsystemRow implements Comparable<SubsystemRow> {
         return retVal;
     }
 
+    /**
+     * Store the list of roles for this subsystem.
+     *
+     * @param roleNames		list of subsystem roles
+     */
+    public void setRoles(List<String> roleNames) {
+        roleNames.stream().forEach(x -> this.addRole(x));
+    }
+
 }
