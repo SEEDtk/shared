@@ -388,4 +388,12 @@ public class Contig implements Comparable<Contig> {
         return coverage;
     }
 
+    /**
+     * Delete the sequence from the contig to save memory.
+     */
+    public void clearSequence() {
+        this.sequence = "";
+        this.rSequence = "";
+    }
+
 }

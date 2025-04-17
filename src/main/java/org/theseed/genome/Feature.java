@@ -9,14 +9,18 @@ import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Optional;
+import java.util.Map;
+import java.util.NavigableSet;
 import java.util.Set;
 import java.util.SortedSet;
+import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.theseed.locations.Location;
 import org.theseed.locations.Region;
 import org.theseed.proteins.Role;
@@ -37,7 +41,8 @@ import com.github.cliftonlabs.json_simple.JsonObject;
 public class Feature implements Comparable<Feature> {
 
     // FIELDS
-
+    /** logging facility */
+    protected static Logger log = LoggerFactory.getLogger(Feature.class);
     /** ID of this feature */
     private String id;
     /** type of feature (CDS, rna, crispr...) */
@@ -60,8 +65,8 @@ public class Feature implements Comparable<Feature> {
     private JsonObject original;
     /** gene ontology ID numbers */
     private Collection<GoTerm> goTerms;
-    /** alternate names */
-    private Collection<String> aliases;
+    /** alternate names (map of type -> aliases */
+    private Map<String, NavigableSet<String>> aliases;
     /** genome containing this feature */
     private Genome parent;
     /** list of functionally-coupled features */
@@ -141,7 +146,7 @@ public class Feature implements Comparable<Feature> {
         FAMILY_ASSIGNMENTS(null),
         LOCATION(null),
         GO_TERMS(null),
-        ALIASES(null),
+        ALIAS_PAIRS(null),
         COUPLINGS(null),
         ANNOTATIONS(null);
 
@@ -245,12 +250,22 @@ public class Feature implements Comparable<Feature> {
                 this.goTerms.add(goTerm);
             }
         }
-        // Get the aliases.
-        JsonArray aliasList = feat.getCollectionOrDefault(FeatureKeys.ALIASES);
-        this.aliases = new ArrayList<String>();
+        // Get the aliases. This is presented as a list of lists. Each sub-list is of
+        // the form [type,alias]. Note that we use trees because we have few alias types
+        // and fewer aliases per type.
+        JsonArray aliasList = feat.getCollectionOrDefault(FeatureKeys.ALIAS_PAIRS);
+        this.aliases = new TreeMap<String, NavigableSet<String>>();
         if (aliasList != null) {
-            for (int i = 0; i < aliasList.size(); i++)
-                this.aliases.add(aliasList.getString(i));
+            for (int i = 0; i < aliasList.size(); i++) {
+                JsonArray aliasPair = aliasList.getCollection(i);
+                if (aliasPair.size() != 2)
+                    log.error("Invalid alias pair at position {} for feature {}.", i, this.id);
+                else {
+                    String aliasType = aliasPair.getString(0);
+                    String alias = aliasPair.getString(1);
+                    this.addAlias(aliasType, alias);
+                }
+            }
         }
         // Get the couplings.
         JsonArray couplingsList = feat.getCollectionOrDefault(FeatureKeys.COUPLINGS);
@@ -300,13 +315,13 @@ public class Feature implements Comparable<Feature> {
      * @return the gene name for this feature
      */
     public String getGeneName() {
-        Optional<String> name = this.aliases.stream()
-                .filter(x -> GENE_NAME.matcher(x).matches()).findAny();
         String retVal;
-        if (name.isPresent())
-            retVal = name.get();
-        else
+        // Note we expect only one gene name.
+        NavigableSet<String> names = this.aliases.get("gene_name");
+        if (names == null || names.isEmpty())
             retVal = "";
+        else
+            retVal = names.first();
         return retVal;
     }
 
@@ -363,7 +378,7 @@ public class Feature implements Comparable<Feature> {
         this.subsystemRoles = new HashSet<SubsystemRow.Role>();
         this.annotations = new ArrayList<Annotation>(3);
         this.goTerms = new ArrayList<GoTerm>(2);
-        this.aliases = new ArrayList<String>(4);
+        this.aliases = new TreeMap<String, NavigableSet<String>>();
         this.couplings = new TreeSet<Coupling>();
         // Save a blank JSON object as the original.
         this.original = new JsonObject();
@@ -682,9 +697,16 @@ public class Feature implements Comparable<Feature> {
         retVal.put(FeatureKeys.COUPLINGS.getKey(), couplingList);
         // Next, aliases.
         JsonArray aliasList = new JsonArray();
-        for (String alias : this.aliases)
-            aliasList.add(alias);
-        retVal.put(FeatureKeys.ALIASES.getKey(), aliasList);
+        for (var aliasEntry : this.aliases.entrySet()) {
+            String aliasType = aliasEntry.getKey();
+            for (String alias : aliasEntry.getValue()) {
+                JsonArray aliasPair = new JsonArray();
+                aliasPair.add(aliasType);
+                aliasPair.add(alias);
+                aliasList.add(aliasPair);
+            }
+        }
+        retVal.put(FeatureKeys.ALIAS_PAIRS.getKey(), aliasList);
         // Finally, store the protein families.
         JsonArray famList = new JsonArray();
         if (this.plfam != null) {
@@ -787,30 +809,28 @@ public class Feature implements Comparable<Feature> {
     }
 
     /**
-     * If the specified alias string is nonempty, add it as an alias with the specified prefix.
+     * Add a new alias ID for this feature. If a blank alias is added, all aliases of that type
+     * are deleted.
      *
-     * @param prefix	prefix to identifiy the alias type
-     * @param alias		possible alias ID for this feature
+     * @param aliasType	alias type
+     * @param aliasId	alias
      */
-    public void formAlias(String prefix, String alias) {
-        if (alias != null && alias.length() > 0)
-            this.addAlias(prefix + alias);
+    public void addAlias(String aliasType, String aliasId) {
+        if (StringUtils.isBlank(aliasId))
+            this.aliases.remove(aliasType);
+        else {
+            Set<String> aliasSet = this.aliases.computeIfAbsent(aliasType, x -> new TreeSet<String>());
+            aliasSet.add(aliasId);
         }
-
-    /**
-     * Add a new alias ID for this feature.
-     *
-     * @param aliasId	alias (with prefix)
-     */
-    public void addAlias(String aliasId) {
-        this.aliases.add(aliasId);
     }
 
     /**
      * @return this feature's list of aliases.
      */
     public Collection<String> getAliases() {
-        return this.aliases;
+        List<String> retVal = new ArrayList<String>(this.aliases.size());
+        this.aliases.values().stream().forEach(x -> retVal.addAll(x));
+        return retVal;
     }
 
     @Override
@@ -886,6 +906,13 @@ public class Feature implements Comparable<Feature> {
      */
     protected void connectSubsystem(SubsystemRow.Role role) {
         this.subsystemRoles.add(role);
+    }
+
+    /**
+     * @return the alias map
+     */
+    public Map<String, NavigableSet<String>> getAliasMap() {
+        return this.aliases;
     }
 
 
@@ -1063,18 +1090,19 @@ public class Feature implements Comparable<Feature> {
     }
 
     /**
-     * Specify a new gene name. The gene name is in the list of aliases, and it is distinguished
-     * only by its appearance, which matches a specific pattern.
+     * Specify a new gene name. The gene name is in the list of aliases and it has type
+     * "gene_name".
      *
      * @param name		proposed new gene name, or an empty string for none
      */
     public void setGeneName(String name) {
-        // The gene
-        String oldName = this.getGeneName();
-        if (! oldName.isEmpty())
-            this.aliases.remove(oldName);
-        if (! name.isEmpty())
-            this.aliases.add(name);
+        if (StringUtils.isBlank(name))
+            this.aliases.remove("gene_name");
+        else {
+            var nameSet = new TreeSet<String>();
+            nameSet.add(name);
+            this.aliases.put("gene_name", nameSet);
+        }
     }
 
 }
