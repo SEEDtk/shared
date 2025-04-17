@@ -2,6 +2,7 @@ package org.theseed.genome;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -394,6 +395,25 @@ public class Contig implements Comparable<Contig> {
     public void clearSequence() {
         this.sequence = "";
         this.rSequence = "";
+    }
+
+    @Override
+    public int hashCode() {
+        return id.hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        Contig other = (Contig) obj;
+        return Objects.equals(this.accession, other.accession) && Objects.equals(this.description, other.description)
+                && this.geneticCode == other.geneticCode && Objects.equals(this.id, other.id)
+                && this.length == other.length && Objects.equals(this.sequence, other.sequence);
     }
 
 }

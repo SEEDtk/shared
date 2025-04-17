@@ -588,6 +588,37 @@ public class Feature implements Comparable<Feature> {
     }
 
     /**
+     * @return TRUE if this feature has the same data as another feature
+     *
+     * @param other		other feature to check
+     */
+    public boolean same(Feature other) {
+        boolean retVal = this.id.equals(other.id);
+        if (retVal) {
+            retVal = this.function.equals(other.function);
+            if (retVal && ! StringUtils.isBlank(this.protein_translation)) {
+                retVal = this.protein_translation.equals(other.protein_translation);
+            }
+        }
+        if (retVal) {
+            retVal = this.aliases.equals(other.aliases);
+            if (retVal) {
+                retVal = (StringUtils.equals(this.pgfam, other.pgfam) && StringUtils.equals(this.plfam, other.plfam)
+                        && this.location.equals(other.location) && this.type.equals(other.type));
+                if (retVal) {
+                    retVal = this.annotations.equals(other.annotations);
+                    if (retVal) {
+                        Set<GoTerm> goTerms = new HashSet<GoTerm>(this.goTerms);
+                        Set<GoTerm> otherTerms = new HashSet<GoTerm>(other.goTerms);
+                        retVal = goTerms.equals(otherTerms);
+                    }
+                }
+            }
+        }
+        return retVal;
+    }
+
+    /**
      * @return the roles in this feature that are also found in the specified role map.
      *
      * @param map	map containing the roles considered useful
