@@ -2,6 +2,7 @@ package org.theseed.genome;
 
 import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
+import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -81,6 +82,16 @@ public class Feature implements Comparable<Feature> {
     public static final Pattern FID_PARSER = Pattern.compile("fig\\|(\\d+\\.\\d+)\\.[^.]+\\.\\d+");
     /** gene name match pattern */
     protected static final Pattern GENE_NAME = Pattern.compile("(?:[a-z]{3,4}(?:[A-Z]+[0-9]?||[0-9][a-z]?||[A-Z][0-9]*(?:_[0-9])?||[a-z][0-9]+||[a-z]+)?)||[a-z]{2}[0-9]+||[A-Z][0-9]+");
+    /** GI match pattern */
+    protected static final Pattern GENERAL_ALIAS = Pattern.compile("([^:|]+)(?::|\\|)(.+)");
+    /** alias mappings */
+    protected static final Map<Pattern, String> ALIAS_TYPE_MAP =
+    		Map.of( Pattern.compile("Uniprot\\w*", Pattern.CASE_INSENSITIVE), "UniProt",
+    				Pattern.compile("uni", Pattern.CASE_INSENSITIVE), "UniProt",
+    				Pattern.compile("Swiss-?prot", Pattern.CASE_INSENSITIVE), "SwissProt",
+    				Pattern.compile("gene_?id", Pattern.CASE_INSENSITIVE), "GeneID",
+    				Pattern.compile("locus", Pattern.CASE_INSENSITIVE), "LocusTag",
+    				Pattern.compile("gene", Pattern.CASE_INSENSITIVE), "gene_name");
 
     /**
      * @return the feature type of a feature ID.
@@ -147,6 +158,7 @@ public class Feature implements Comparable<Feature> {
         LOCATION(null),
         GO_TERMS(null),
         ALIAS_PAIRS(null),
+        ALIASES(null),
         COUPLINGS(null),
         ANNOTATIONS(null);
 
@@ -267,6 +279,16 @@ public class Feature implements Comparable<Feature> {
                 }
             }
         }
+        // Now we need to untangle old-format aliases.
+        aliasList = feat.getCollectionOrDefault(FeatureKeys.ALIASES);
+        if (aliasList != null) {
+        	for (Object aliasO : aliasList) {
+        		String aliasPair = (String) aliasO;
+        		var splitAliases = analyzeAlias(aliasPair);
+        		for (var splitAlias : splitAliases)
+        			this.addAlias(splitAlias.getKey(), splitAlias.getValue());
+        	}
+        }
         // Get the couplings.
         JsonArray couplingsList = feat.getCollectionOrDefault(FeatureKeys.COUPLINGS);
         this.couplings = new TreeSet<Coupling>();
@@ -298,6 +320,62 @@ public class Feature implements Comparable<Feature> {
     }
 
     /**
+     * Compute the type and name of a single-string alias. Most aliases are encoded with the
+     * type name, a separator (: or |), and the name. The gene name is recognized by its
+     * structure. Everything else is treated as a locus tag.
+     *
+	 * @param aliasPair		alias in single-string format
+	 *
+	 * @return a list of entries, containing alias types and names, respectively
+	 */
+	public static List<Map.Entry<String, String>> analyzeAlias(String aliasPair) {
+		var retVal = new ArrayList<Map.Entry<String, String>>(1);
+		Matcher m = GENERAL_ALIAS.matcher(aliasPair);
+		if (m.matches()) {
+			// We have several complications here. An ID that is used for two types is
+			// represented by the type names separated with a slash. Also, there are a
+			// lot of type synonyms. First, we split up the types.
+			String[] aTypes = StringUtils.split(m.group(1), "/");
+			for (String aType : aTypes) {
+				// Find a match for one of the type patterns.
+				aType = fixAliasType(aType);
+				retVal.add(new AbstractMap.SimpleEntry<String, String>(aType, m.group(2)));
+			}
+		} else {
+			m = GENE_NAME.matcher(aliasPair);
+			if (m.matches())
+				retVal.add(new AbstractMap.SimpleEntry<String, String>("gene_name", aliasPair));
+			else
+				retVal.add(new AbstractMap.SimpleEntry<String, String>("LocusTag", aliasPair));
+		}
+		return retVal;
+	}
+
+	/**
+	 * This method normalizes an alias type. We use the alias type map to find out if
+	 * there is a preferred synonym for a type string.
+	 *
+	 * @param aType		alias type to check
+	 *
+	 * @return the preferred alias type
+	 */
+	private static String fixAliasType(String aType) {
+		var iter = ALIAS_TYPE_MAP.entrySet().iterator();
+		String retVal = null;
+		// Loop until we find a match or we run out of patterns.
+		while (retVal == null && iter.hasNext()) {
+			var aliasEntry = iter.next();
+			Pattern aliasPattern = aliasEntry.getKey();
+			if (aliasPattern.matcher(aType).matches())
+				retVal = aliasEntry.getValue();
+		}
+		// If no match, return the input.
+		if (retVal == null)
+			retVal = aType;
+		return retVal;
+	}
+
+	/**
      * Add a new coupling specification for this feature.  If a coupling already exists for the same
      * target, it is overwritten.
      *
@@ -738,6 +816,8 @@ public class Feature implements Comparable<Feature> {
             }
         }
         retVal.put(FeatureKeys.ALIAS_PAIRS.getKey(), aliasList);
+        // Insure the old aliases aren't hanging around.
+        retVal.remove("aliases");
         // Finally, store the protein families.
         JsonArray famList = new JsonArray();
         if (this.plfam != null) {
