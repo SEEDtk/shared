@@ -3,7 +3,6 @@
  */
 package org.theseed.sequence;
 
-import java.io.Closeable;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.FileNotFoundException;
@@ -22,7 +21,7 @@ import org.apache.commons.lang3.StringUtils;
  * This is an input stream for FASTA files.  It uses an underlying scanner to
  * read the file.
  */
-public class FastaInputStream implements Iterable<Sequence>, Closeable, AutoCloseable,
+public class FastaInputStream implements Iterable<Sequence>, AutoCloseable,
         Iterator<Sequence> {
 
     private static final Pattern DELIMITER = Pattern.compile("\\r?\\n>");

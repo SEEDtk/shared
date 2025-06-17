@@ -3,7 +3,6 @@
  */
 package org.theseed.io;
 
-import java.io.Closeable;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -34,7 +33,7 @@ import org.slf4j.LoggerFactory;
  * @author Bruce Parrello
  *
  */
-public class TabbedLineReader implements Closeable, AutoCloseable, Iterable<TabbedLineReader.Line>,
+public class TabbedLineReader implements AutoCloseable, Iterable<TabbedLineReader.Line>,
     Iterator<TabbedLineReader.Line> {
 
     /**

@@ -1,6 +1,5 @@
 package org.theseed.reports;
 
-import java.io.Closeable;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintWriter;
@@ -13,7 +12,7 @@ import java.io.UncheckedIOException;
  * @author Bruce Parrello
  *
  */
-public class BaseReporter implements Closeable, AutoCloseable {
+public class BaseReporter implements AutoCloseable {
 
     /** saved output stream */
     private OutputStream outStream;

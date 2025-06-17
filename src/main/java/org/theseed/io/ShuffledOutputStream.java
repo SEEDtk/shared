@@ -3,7 +3,6 @@
  */
 package org.theseed.io;
 
-import java.io.Closeable;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintStream;
@@ -20,7 +19,7 @@ import org.theseed.stats.Shuffler;
  * @author Bruce Parrello
  *
  */
-public class ShuffledOutputStream implements Closeable, AutoCloseable, ILabeledOutputStream {
+public class ShuffledOutputStream implements AutoCloseable, ILabeledOutputStream {
 
     // FIELDS
     /** label for the small class */

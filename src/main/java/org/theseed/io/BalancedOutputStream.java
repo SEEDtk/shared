@@ -3,7 +3,6 @@
  */
 package org.theseed.io;
 
-import java.io.Closeable;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
@@ -29,7 +28,7 @@ import org.theseed.stats.Shuffler;
  * @author Bruce Parrello
  *
  */
-public class BalancedOutputStream implements Closeable, AutoCloseable, ILabeledOutputStream {
+public class BalancedOutputStream implements AutoCloseable, ILabeledOutputStream {
 
     // FIELDS
     /** proportion of the smallest class's size to be allowed for output */

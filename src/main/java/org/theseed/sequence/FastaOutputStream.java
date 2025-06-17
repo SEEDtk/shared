@@ -3,7 +3,6 @@
  */
 package org.theseed.sequence;
 
-import java.io.Closeable;
 import java.io.Flushable;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -18,7 +17,7 @@ import java.io.FileNotFoundException;
  *
  * @author Bruce Parrello
  */
-public class FastaOutputStream implements Closeable, AutoCloseable, Flushable {
+public class FastaOutputStream implements AutoCloseable, Flushable {
 
     // FIELDS
     PrintWriter writer = null;

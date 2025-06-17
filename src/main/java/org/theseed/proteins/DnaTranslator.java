@@ -21,7 +21,6 @@ import org.theseed.sequence.Sequence;
 public class DnaTranslator {
 
     /** genetic code 11 translation table */
-    @SuppressWarnings("serial")
     private static final HashMap<String, String> GENETIC_CODE_11 = new HashMap<String, String>() {{
         put("aaa","K"); put("aac","N"); put("aag","K"); put("aat","N"); put("aca","T");
         put("acc","T"); put("acg","T"); put("act","T"); put("aga","R"); put("agc","S");
