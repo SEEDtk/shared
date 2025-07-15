@@ -46,7 +46,7 @@ public abstract class BaseInputProcessor extends BaseProcessor {
     protected abstract void setReaderDefaults();
 
     @Override
-    protected final boolean validateParms() throws IOException, ParseFailureException {
+    protected final void validateParms() throws IOException, ParseFailureException {
         this.validateReaderParms();
         if (this.inFile == null) {
             log.info("Input will be read from the standard input.");
@@ -63,7 +63,6 @@ public abstract class BaseInputProcessor extends BaseProcessor {
             this.inStream.close();
             throw new IOException(e);
         }
-        return true;
     }
 
     /**

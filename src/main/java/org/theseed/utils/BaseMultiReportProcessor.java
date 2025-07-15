@@ -73,7 +73,7 @@ public abstract class BaseMultiReportProcessor extends BaseProcessor {
 
 
     @Override
-    protected boolean validateParms() throws IOException, ParseFailureException {
+    protected void validateParms() throws IOException, ParseFailureException {
         // Let the client validate the parameters.
         this.validateMultiReportParms();
         // Set up the output directory.
@@ -89,7 +89,6 @@ public abstract class BaseMultiReportProcessor extends BaseProcessor {
             FileUtils.cleanDirectory(this.outDir);
         } else
             log.info("Output files will be created in directory {}.", this.outDir);
-        return true;
     }
 
     /**

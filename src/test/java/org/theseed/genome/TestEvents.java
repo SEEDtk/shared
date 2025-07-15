@@ -82,8 +82,7 @@ class TestEvents {
         }
 
         @Override
-        protected boolean validateParms() throws IOException, ParseFailureException {
-            return true;
+        protected void validateParms() throws IOException, ParseFailureException {
         }
 
         @Override
