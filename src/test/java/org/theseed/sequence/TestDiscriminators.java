@@ -36,7 +36,7 @@ class TestDiscriminators {
             var counts = db.getGroupCounts();
             log.info("{} groups in database.", counts.size());
         }
-        db.finalize();
+        db.finish();
         var counts = db.getGroupCounts();
         log.info("{} groups in final database with {} total kmers.", counts.size(), counts.getTotal());
         // Now loop back through the genomes getting the counts.
@@ -59,7 +59,7 @@ class TestDiscriminators {
         GenomeDirectory genomes = new GenomeDirectory(genomeDir);
         for (Genome genome : genomes)
             db.addGenome(genome, genome.getId());
-        db.finalize();
+        db.finish();
         // Now loop back through the genomes getting the counts.
         for (Genome genome : genomes) {
             for (Contig contig : genome.getContigs()) {
@@ -81,7 +81,7 @@ class TestDiscriminators {
             var counts = db.getGroupCounts();
             log.info("{} groups in database.", counts.size());
         }
-        db.finalize();
+        db.finish();
         var counts = db.getGroupCounts();
         log.info("{} groups in final database with {} total kmers.", counts.size(), counts.getTotal());
         // Now loop back through the genomes getting the counts.

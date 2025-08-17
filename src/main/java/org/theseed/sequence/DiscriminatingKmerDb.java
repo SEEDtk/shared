@@ -18,12 +18,12 @@ import org.theseed.genome.Genome;
  * This object builds a database of discriminating kmers.  The client passes in sequences that belong to groups.
  * If a kmer belongs to more than one group, it is put in the common set.  Otherwise, it is mapped to its group.
  *
- * To save memory, use the "finalize" method to delete the common set after the database is built.
+ * To save memory, use the "finish" method to delete the common set after the database is built.
  *
  * @author Bruce Parrello
  *
  */
-public abstract class DiscriminatingKmerDb {
+public abstract class DiscriminatingKmerDb  {
 
     // FIELDS
     /** logging facility */
@@ -81,7 +81,7 @@ public abstract class DiscriminatingKmerDb {
     /**
      * Delete the common-kmer set to save memory.
      */
-    public void finalize() {
+    public void finish() {
         this.commonSet.clear();
     }
 
