@@ -7,8 +7,6 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 
 import org.junit.jupiter.api.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.theseed.stats.CorrelationVariance;
 
 /**
@@ -16,9 +14,6 @@ import org.theseed.stats.CorrelationVariance;
  *
  */
 class TestVariance {
-
-    /** logging facility */
-    protected static Logger log = LoggerFactory.getLogger(TestVariance.class);
 
 
     @Test

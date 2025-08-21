@@ -12,8 +12,6 @@ import java.io.IOException;
 import org.junit.jupiter.api.Test;
 import org.kohsuke.args4j.Argument;
 import org.kohsuke.args4j.Option;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.theseed.basic.BaseProcessor;
 import org.theseed.basic.ParseFailureException;
 
@@ -22,9 +20,6 @@ import org.theseed.basic.ParseFailureException;
  *
  */
 class TestEvents {
-
-    /** logging facility */
-    protected static Logger log = LoggerFactory.getLogger(TestEvents.class);
 
     @Test
     void testGenomeEvents() throws IOException {
@@ -87,6 +82,14 @@ class TestEvents {
 
         @Override
         protected void runCommand() throws Exception {
+        }
+
+        public String getKeyString() {
+            return keyString;
+        }
+
+        public File getInDir() {
+            return inDir;
         }
 
     }

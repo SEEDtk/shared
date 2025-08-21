@@ -23,7 +23,7 @@ import org.theseed.stats.Spacer;
 class SpacerTest {
 
     /** logging facility */
-    protected static Logger log = LoggerFactory.getLogger(SpacerTest.class);
+    private static final Logger log = LoggerFactory.getLogger(SpacerTest.class);
 
 
     @Test

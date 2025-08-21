@@ -9,8 +9,6 @@ import static org.hamcrest.Matchers.*;
 import java.io.File;
 import java.io.IOException;
 import org.junit.jupiter.api.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.theseed.locations.Location;
 
 /**
@@ -19,8 +17,6 @@ import org.theseed.locations.Location;
  */
 class TestDeletes {
 
-    /** logging facility */
-    protected static Logger log = LoggerFactory.getLogger(TestDeletes.class);
 
 
     @Test

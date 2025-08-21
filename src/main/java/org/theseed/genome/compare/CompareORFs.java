@@ -12,6 +12,8 @@ import java.util.Map;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.theseed.genome.Contig;
 import org.theseed.genome.Feature;
 import org.theseed.genome.Genome;
@@ -25,10 +27,13 @@ import org.theseed.locations.Location;
  */
 public abstract class CompareORFs extends MatchGenomes {
 
+    // FIELDS
+    /** logging facility */
+    private static final Logger log = LoggerFactory.getLogger(CompareORFs.class);
     /** comparator for sorting */
     protected Comparator<Feature> orfSorter;
     /** contig ID map from old-genome contig IDs to new-genome contig IDs */
-    private Map<String, String> contigIdMap;
+    private final Map<String, String> contigIdMap;
     /**
      * Comparator for sorting Features by contig, end point, strand.
      */
@@ -56,7 +61,7 @@ public abstract class CompareORFs extends MatchGenomes {
     public CompareORFs() throws NoSuchAlgorithmException {
         super();
         this.orfSorter = new OrfSorter();
-        this.contigIdMap = new HashMap<String, String>();
+        this.contigIdMap = new HashMap<>();
     }
 
     /**
@@ -93,7 +98,7 @@ public abstract class CompareORFs extends MatchGenomes {
         boolean retVal = (newGenome.getContigCount() == oldGenome.getContigCount());
         if (retVal) {
             // Here it is likely we can pull it off. Get a map from MD5s to new-genome contig IDs.
-            Map<String, String> md5Map = new HashMap<String, String>(newGenome.getContigCount());
+            Map<String, String> md5Map = new HashMap<>(newGenome.getContigCount());
             for (Contig contig : newGenome.getContigs())
                 md5Map.put(this.getMd5Computer().sequenceMD5(contig.getSequence()), contig.getId());
             // Loop through the old-genome contigs.
@@ -135,7 +140,7 @@ public abstract class CompareORFs extends MatchGenomes {
      * @return a sorted set of all the pegs in the genome
      */
     public SortedSet<Feature> sortFeatures(Genome genome) {
-        SortedSet<Feature> retVal = new TreeSet<Feature>(this.orfSorter);
+        SortedSet<Feature> retVal = new TreeSet<>(this.orfSorter);
         retVal.addAll(genome.getPegs());
         return retVal;
     }

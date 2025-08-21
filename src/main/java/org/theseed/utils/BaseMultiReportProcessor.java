@@ -36,7 +36,7 @@ public abstract class BaseMultiReportProcessor extends BaseProcessor {
 
     // FIELDS
     /** logging facility */
-    protected static Logger log = LoggerFactory.getLogger(BaseMultiReportProcessor.class);
+    private static final Logger log = LoggerFactory.getLogger(BaseMultiReportProcessor.class);
 
     /** output directory name */
     @Option(name = "--outDir", aliases = { "-D" }, metaVar = "outDir", usage = "output directory name")

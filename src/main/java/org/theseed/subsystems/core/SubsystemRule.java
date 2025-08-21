@@ -6,8 +6,6 @@ package org.theseed.subsystems.core;
 import java.io.Serializable;
 import java.util.Set;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.theseed.basic.ParseFailureException;
 
 /**
@@ -28,8 +26,6 @@ import org.theseed.basic.ParseFailureException;
 public abstract class SubsystemRule implements Serializable {
 
     // FIELDS
-    /** logging facility */
-    protected static Logger log = LoggerFactory.getLogger(SubsystemRule.class);
     /** serialization object ID */
     private static final long serialVersionUID = -1773990479324882478L;
 
@@ -82,11 +78,12 @@ public abstract class SubsystemRule implements Serializable {
      * @return a non-basic subsystem rule, or NULL if the operand is invalid
      */
     public SubsystemRule normalize(Object operand) {
-        SubsystemRule retVal = null;
-        if (operand instanceof SubsystemBasicRule)
-            retVal = ((SubsystemBasicRule) operand).unspool();
-        else if (operand instanceof SubsystemRule)
-            retVal = (SubsystemRule) operand;
+        SubsystemRule retVal;
+        switch (operand) {
+            case SubsystemBasicRule subsystemBasicRule -> retVal = subsystemBasicRule.unspool();
+            case SubsystemRule subsystemRule -> retVal = subsystemRule;
+            default -> retVal = null;
+        }
         return retVal;
     }
 

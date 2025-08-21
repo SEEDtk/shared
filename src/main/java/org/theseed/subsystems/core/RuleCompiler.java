@@ -12,8 +12,6 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.theseed.basic.ParseFailureException;
 import org.theseed.subsystems.core.SubsystemListRule.Mode;
 
@@ -40,16 +38,14 @@ import org.theseed.subsystems.core.SubsystemListRule.Mode;
 public class RuleCompiler {
 
     // FIELDS
-    /** logging facility */
-    protected static Logger log = LoggerFactory.getLogger(RuleCompiler.class);
     /** compiler stack */
-    private Deque<SubsystemRule> stack;
+    private final Deque<SubsystemRule> stack;
     /** list of unprocessed tokens */
-    private List<String> tokens;
+    private final List<String> tokens;
     /** map of identifiers to rules */
-    private Map<String, SubsystemRule> nameMap;
+    private final Map<String, SubsystemRule> nameMap;
     /** set of bad rule identifiers found */
-    private Set<String> badIds;
+    private final Set<String> badIds;
 
     /**
      * Tokenize a rule string.
@@ -59,7 +55,7 @@ public class RuleCompiler {
      * @return an ordered list of tokens
      */
     protected static List<String> tokenize(String line) {
-        List<String> retVal = new ArrayList<String>();
+        List<String> retVal = new ArrayList<>();
         // The current token is built in here.
         StringBuilder buffer = new StringBuilder(30);
         // This tracks internal parens in the token.
@@ -70,16 +66,12 @@ public class RuleCompiler {
         while (i < n) {
             char ch = line.charAt(i);
             switch (ch) {
-            case ' ' :
-                endToken(buffer, retVal);
-                break;
-            case '{' :
-            case '}' :
-            case ',' :
+            case ' ' -> endToken(buffer, retVal);
+            case '{', '}', ',' -> {
                 endToken(buffer, retVal);
                 retVal.add(Character.toString(ch));
-                break;
-            case ')' :
+                }
+            case ')' -> {
                 if (pLevel == 0) {
                     endToken(buffer, retVal);
                     retVal.add(")");
@@ -87,16 +79,15 @@ public class RuleCompiler {
                     buffer.append(')');
                     pLevel--;
                 }
-                break;
-            case '(' :
+                }
+            case '(' -> {
                 if (buffer.length() > 0) {
                     buffer.append('(');
                     pLevel++;
                 } else
                     retVal.add("(");
-                break;
-            default :
-                buffer.append(ch);
+                }
+            default -> buffer.append(ch);
             }
             i++;
         }
@@ -140,11 +131,11 @@ public class RuleCompiler {
      * @param nameSpace
      */
     public RuleCompiler(String line, Map<String, SubsystemRule> nameSpace) {
-        this.stack = new ArrayDeque<SubsystemRule>();
+        this.stack = new ArrayDeque<>();
         this.tokens = tokenize(line);
         this.nameMap = nameSpace;
         this.stack.push(new SubsystemBasicRule());
-        this.badIds = new TreeSet<String>();
+        this.badIds = new TreeSet<>();
     }
 
     /**
@@ -219,8 +210,7 @@ public class RuleCompiler {
      */
     private boolean listContext() {
         boolean retVal = false;
-        if (this.stack.peek() instanceof SubsystemListRule) {
-            SubsystemListRule rule = (SubsystemListRule) this.stack.peek();
+        if (this.stack.peek() instanceof SubsystemListRule rule) {
             retVal = (rule.type() == SubsystemListRule.Mode.NUM);
         }
         return retVal;

@@ -203,7 +203,7 @@ public class TabbedLineReader implements AutoCloseable, Iterable<TabbedLineReade
 
     //FIELDS
     /** logging facility */
-    protected static Logger log = LoggerFactory.getLogger(TabbedLineReader.class);
+    private static final Logger log = LoggerFactory.getLogger(TabbedLineReader.class);
     /** array of field names from the header */
     private String[] labels;
     /** underlying stream of lines */

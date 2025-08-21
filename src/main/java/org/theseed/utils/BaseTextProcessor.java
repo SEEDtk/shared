@@ -9,6 +9,8 @@ import java.io.IOException;
 import java.io.PrintWriter;
 
 import org.kohsuke.args4j.Option;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.theseed.basic.BaseReportProcessor;
 import org.theseed.basic.ParseFailureException;
 import org.theseed.io.LineReader;
@@ -24,6 +26,8 @@ import org.theseed.io.LineReader;
 public abstract class BaseTextProcessor extends BaseReportProcessor {
 
     // FIELDS
+    /** logging facility */
+    private static final Logger log = LoggerFactory.getLogger(BaseTextProcessor.class);
     /** input tab-delimited file */
     private LineReader inStream;
 
@@ -60,7 +64,7 @@ public abstract class BaseTextProcessor extends BaseReportProcessor {
                 log.info("Input will be read from {}.", this.inFile);
                 this.inStream = new LineReader(this.inFile);
             }
-        } catch (Exception e) {
+        } catch (IOException e) {
             // An error occurred: close the input stream and continue the exception.
             if (this.inStream != null)
                 this.inStream.close();

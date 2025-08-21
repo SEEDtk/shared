@@ -29,7 +29,7 @@ public class SubsystemRowDescriptor extends MagicObject {
 
     // FIELDS
     /** logging facility */
-    protected static Logger log = LoggerFactory.getLogger(SubsystemRowDescriptor.class);
+    private static final Logger log = LoggerFactory.getLogger(SubsystemRowDescriptor.class);
 
     /** classification list */
     private List<String> classes;

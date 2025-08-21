@@ -25,7 +25,7 @@ import org.theseed.io.TabbedLineReader;
 public class SampleTest {
 
     /** logging facility */
-    protected static Logger log = LoggerFactory.getLogger(SampleTest.class);
+    private static final Logger log = LoggerFactory.getLogger(SampleTest.class);
 
     @Test
     public void testNewSamples() throws IOException {

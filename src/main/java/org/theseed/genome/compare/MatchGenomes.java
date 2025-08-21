@@ -25,7 +25,7 @@ import org.theseed.sequence.MD5Hex;
 public class MatchGenomes {
 
     /** logging facility */
-    protected static Logger log = LoggerFactory.getLogger(CompareORFs.class);
+    private static final Logger log = LoggerFactory.getLogger(CompareORFs.class);
     /** MD5 computer */
     private MD5Hex md5Computer;
 

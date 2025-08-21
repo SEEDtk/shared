@@ -14,9 +14,6 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.theseed.subsystems.VariantId;
 
 /**
@@ -36,18 +33,16 @@ import org.theseed.subsystems.VariantId;
 public class RuleGenerator {
 
     // FIELDS
-    /** logging facility */
-    protected static Logger log = LoggerFactory.getLogger(RuleGenerator.class);
     /** map of variant codes to rulebit lists */
-    private Map<String, Set<RuleBits>> variantMap;
+    private final Map<String, Set<RuleBits>> variantMap;
     /** index for the next group definition */
     private int nextNum;
     /** map of group definitions */
-    private Map<String, RuleBits> groupMap;
+    private final Map<String, RuleBits> groupMap;
     /** original subsystem */
-    private CoreSubsystem parent;
+    private final CoreSubsystem parent;
     /** empty role set for this subsystem */
-    private RuleBits emptySet;
+    private final RuleBits emptySet;
 
     /**
      * Construct a rule generator from an existing core subsystem. We build a map of variant codes
@@ -59,9 +54,9 @@ public class RuleGenerator {
         this.parent = sub;
         this.emptySet = new RuleBits(sub);
         // Initialize the group definitions.
-        this.groupMap = new TreeMap<String, RuleBits>();
+        this.groupMap = new TreeMap<>();
         // Create the variant code map. We use a tree map because we expect it to be small.
-        this.variantMap = new TreeMap<String, Set<RuleBits>>();
+        this.variantMap = new TreeMap<>();
         // Loop through the subsystem rows.
         Iterator<CoreSubsystem.Row> iter = sub.rowIterator();
         while (iter.hasNext()) {
@@ -127,7 +122,7 @@ public class RuleGenerator {
      */
     public List<String> getGroupDefinitions() {
         // This will contain our definition strings.
-        List<String> retVal = new ArrayList<String>(this.groupMap.size() + 1);
+        List<String> retVal = new ArrayList<>(this.groupMap.size() + 1);
         // First we do the "any" definition.
         final int width = this.parent.getRoleCount();
         String anyDef = "any means 1 of {" + IntStream.range(0, width).mapToObj(i -> this.parent.getRoleAbbr(i))
@@ -150,7 +145,7 @@ public class RuleGenerator {
      */
     public List<String> getVariantRules() {
         // We do active variants first, then the others.
-        List<String> retVal = new ArrayList<String>(this.variantMap.size() + 1);
+        List<String> retVal = new ArrayList<>(this.variantMap.size() + 1);
         // The boolean here determines which value of "isActive" should be on the variants output.
         this.processVariantRules(retVal, true);
         this.processVariantRules(retVal, false);
@@ -198,9 +193,9 @@ public class RuleGenerator {
                                 ruleList.stream().map(x -> this.parenthesize(x, common))
                                 .collect(Collectors.joining(" or ")) + ")";
                     }
-                    // Add this rule to the output.
-                    output.add(ruleString);
                 }
+                // Add this rule to the output.
+                output.add(ruleString);
             }
         }
     }

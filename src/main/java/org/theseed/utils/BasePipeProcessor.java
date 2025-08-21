@@ -9,6 +9,8 @@ import java.io.IOException;
 import java.io.PrintWriter;
 
 import org.kohsuke.args4j.Option;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.theseed.basic.BaseReportProcessor;
 import org.theseed.basic.ParseFailureException;
 import org.theseed.io.TabbedLineReader;
@@ -23,6 +25,8 @@ import org.theseed.io.TabbedLineReader;
 public abstract class BasePipeProcessor extends BaseReportProcessor {
 
     // FIELDS
+    /** logging facility */
+    private static final Logger log = LoggerFactory.getLogger(BasePipeProcessor.class);
     /** input tab-delimited file */
     private TabbedLineReader inStream;
 
@@ -61,7 +65,7 @@ public abstract class BasePipeProcessor extends BaseReportProcessor {
             }
             // Here the subclass can query fields and do initial reading.
             this.validatePipeInput(this.inStream);
-        } catch (Exception e) {
+        } catch (IOException e) {
             // An error occurred: close the input stream and continue the exception.
             if (this.inStream != null)
                 this.inStream.close();

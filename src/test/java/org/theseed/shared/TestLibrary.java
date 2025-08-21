@@ -70,7 +70,7 @@ public class TestLibrary {
     private static Genome myGto = null;
 
     /** logging facility */
-    protected static Logger log = LoggerFactory.getLogger(TestLibrary.class);
+    private static final Logger log = LoggerFactory.getLogger(TestLibrary.class);
 
 
     public TestLibrary() throws IOException {

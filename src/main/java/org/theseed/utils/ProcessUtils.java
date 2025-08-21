@@ -24,7 +24,7 @@ public class ProcessUtils {
 
     // FIELDS
     /** logging facility */
-    protected static Logger log = LoggerFactory.getLogger(ProcessUtils.class);
+    private static final Logger log = LoggerFactory.getLogger(ProcessUtils.class);
 
     /**
      * Wait for a process to finish.  If it has a nonzero exit code, log the error output.

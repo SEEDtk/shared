@@ -15,8 +15,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.theseed.genome.Feature;
 import org.theseed.genome.Genome;
 import org.theseed.io.TabbedLineReader;
@@ -33,11 +31,6 @@ import org.theseed.magic.MagicMap;
  *
  */
 public class StrictRoleMap extends MagicMap<StrictRole> {
-
-    // FIELDS
-    /** logging facility */
-    protected static Logger log = LoggerFactory.getLogger(StrictRoleMap.class);
-
 
     /**
      * Construct a blank, empty subsystem role map.
@@ -129,7 +122,7 @@ public class StrictRoleMap extends MagicMap<StrictRole> {
      */
     public List<StrictRole> usefulRoles(String function) {
         String[] roleNames = Feature.rolesOfFunction(function);
-        List<StrictRole> retVal = new ArrayList<StrictRole>(roleNames.length);
+        List<StrictRole> retVal = new ArrayList<>(roleNames.length);
         for (String roleName : roleNames) {
             StrictRole role = this.getByName(roleName);
             if (role != null) {
@@ -167,7 +160,7 @@ public class StrictRoleMap extends MagicMap<StrictRole> {
      * @return a map from role IDs to feature ID sets for all the roles in the genome
      */
     public Map<String, Set<String>> getRolePresenceMap(Genome genome) {
-        Map<String, Set<String>> retVal = new HashMap<String, Set<String>>(genome.getFeatureCount());
+        Map<String, Set<String>> retVal = new HashMap<>(genome.getFeatureCount());
         for (Feature feat : genome.getFeatures()) {
             String function = feat.getFunction();
             // Get all the roles in the function found in our role map.

@@ -27,7 +27,7 @@ public abstract class XMatrixReporter implements AutoCloseable {
 
     // FIELDS
     /** logging facility */
-    protected static Logger log = LoggerFactory.getLogger(XMatrixReporter.class);
+    private static final Logger log = LoggerFactory.getLogger(XMatrixReporter.class);
     /** controlling command processor */
     private IParms command;
     /** output directory or file */

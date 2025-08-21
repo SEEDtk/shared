@@ -14,9 +14,6 @@ import java.util.TreeMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 /**
  * This object manages a parameter file for editing.  Each parameter is keyed by name.  There is a flag to indicate
  * whether or not it is commented out, and fields for the parameter values, the comment, and any comment that
@@ -28,12 +25,10 @@ import org.slf4j.LoggerFactory;
 public class ParmFile implements Iterable<ParmDescriptor> {
 
     // FIELDS
-    /** logging facility */
-    protected static Logger log = LoggerFactory.getLogger(ParmFile.class);
     /** input line pattern */
     public static final Pattern LINE_PATTERN = Pattern.compile("(# )?--(\\S+) *(?:([^\\t]+))?(?:\\s*\\t#\\s+(.+))?");
     /** parameter map */
-    private SortedMap<String, ParmDescriptor> parmMap;
+    private final SortedMap<String, ParmDescriptor> parmMap;
 
     /**
      * Construct this object from a file.
@@ -44,9 +39,9 @@ public class ParmFile implements Iterable<ParmDescriptor> {
      */
     public ParmFile(File inFile) throws IOException {
         // Create the parm map.
-        this.parmMap = new TreeMap<String, ParmDescriptor>();
+        this.parmMap = new TreeMap<>();
         // Allocate a buffer for the line comments.
-        List<String> buffer = new ArrayList<String>(2);
+        List<String> buffer = new ArrayList<>(2);
         // Loop through the file.
         try (LineReader inStream = new LineReader(inFile)) {
             for (String line : inStream) {

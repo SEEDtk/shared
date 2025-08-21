@@ -24,7 +24,7 @@ import java.util.stream.IntStream;
 class TestShuffler {
 
     /** logging facility */
-    protected static Logger log = LoggerFactory.getLogger(TestShuffler.class);
+    private static final Logger log = LoggerFactory.getLogger(TestShuffler.class);
 
     public static final String ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 

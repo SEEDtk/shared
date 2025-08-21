@@ -38,7 +38,7 @@ public class SubsystemRuleProjector implements Serializable {
 
     // FIELDS
     /** logging facility */
-    protected static Logger log = LoggerFactory.getLogger(SubsystemRuleProjector.class);
+    private static final Logger log = LoggerFactory.getLogger(SubsystemRuleProjector.class);
     /** map of subsystem roles */
     private StrictRoleMap roleMap;
     /** list of subsystem descriptors */

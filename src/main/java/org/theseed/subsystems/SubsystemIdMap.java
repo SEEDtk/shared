@@ -24,7 +24,7 @@ public class SubsystemIdMap extends MagicMap<SubsystemName> {
 
     // FIELDS
     /** logging facility */
-    protected static Logger log = LoggerFactory.getLogger(SubsystemIdMap.class);
+    private static final Logger log = LoggerFactory.getLogger(SubsystemIdMap.class);
 
     /**
      * Construct a new, blank subsystem ID map.

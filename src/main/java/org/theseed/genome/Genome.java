@@ -62,7 +62,7 @@ public class Genome  {
 
     // FIELDS
     /** logging facility */
-    protected static Logger log = LoggerFactory.getLogger(Genome.class);
+    private static final Logger log = LoggerFactory.getLogger(Genome.class);
     /** ID of this genome */
     private String id;
     /** scientific name */

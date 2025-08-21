@@ -29,7 +29,7 @@ import org.theseed.subsystems.StrictRoleMap;
 class TestRuleGenerator {
 
     /** logging facility */
-    protected static Logger log = LoggerFactory.getLogger(TestRuleGenerator.class);
+    private static final Logger log = LoggerFactory.getLogger(TestRuleGenerator.class);
 
 
     @Test

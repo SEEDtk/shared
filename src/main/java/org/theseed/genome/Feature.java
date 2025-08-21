@@ -43,7 +43,7 @@ public class Feature implements Comparable<Feature> {
 
     // FIELDS
     /** logging facility */
-    protected static Logger log = LoggerFactory.getLogger(Feature.class);
+    private static final Logger log = LoggerFactory.getLogger(Feature.class);
     /** ID of this feature */
     private String id;
     /** type of feature (CDS, rna, crispr...) */

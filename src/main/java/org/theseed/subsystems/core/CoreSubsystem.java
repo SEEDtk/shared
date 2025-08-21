@@ -54,7 +54,7 @@ public class CoreSubsystem {
 
     // FIELDS
     /** logging facility */
-    protected static Logger log = LoggerFactory.getLogger(CoreSubsystem.class);
+    private static final Logger log = LoggerFactory.getLogger(CoreSubsystem.class);
     /** subsystem name */
     private String name;
     /** rule namespace */

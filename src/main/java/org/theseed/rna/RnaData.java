@@ -44,7 +44,7 @@ public class RnaData implements Iterable<RnaData.Row>, Serializable {
 
     // FIELDS
     /** logging facility */
-    protected static Logger log = LoggerFactory.getLogger(RnaData.class);
+    private static final Logger log = LoggerFactory.getLogger(RnaData.class);
     /** object version ID */
     private static final long serialVersionUID = 3381600661613511530L;
     /** list of sample descriptors */

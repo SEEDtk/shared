@@ -33,7 +33,7 @@ public class GenomeSubsystemTable {
 
     // FIELDS
     /** logging facility */
-    protected static Logger log = LoggerFactory.getLogger(GenomeSubsystemTable.class);
+    private static final Logger log = LoggerFactory.getLogger(GenomeSubsystemTable.class);
     /** map of feature IDs to subsystems */
     private Map<String, Set<SubData>> subMap;
     /** map of subsystem IDs to features IDs */

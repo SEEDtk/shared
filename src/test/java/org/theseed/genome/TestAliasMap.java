@@ -23,7 +23,7 @@ import org.theseed.io.TabbedLineReader;
 class TestAliasMap {
 
     /** logging facility */
-    protected static Logger log = LoggerFactory.getLogger(TestAliasMap.class);
+    private static final Logger log = LoggerFactory.getLogger(TestAliasMap.class);
 
 
     @Test

@@ -38,7 +38,7 @@ public abstract class RestartableBaseProcessor extends BaseProcessor {
 
     // FIELDS
     /** logging facility */
-    protected static Logger log = LoggerFactory.getLogger(RestartableBaseProcessor.class);
+    private static final Logger log = LoggerFactory.getLogger(RestartableBaseProcessor.class);
     /** output stream */
     private PrintStream output;
     /** set of IDs for items already processed */

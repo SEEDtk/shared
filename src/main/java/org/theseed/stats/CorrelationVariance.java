@@ -6,8 +6,6 @@ package org.theseed.stats;
 import java.util.Arrays;
 
 import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * This class contains a method for computing correlation variance between two series.  Each series is scaled
@@ -20,10 +18,8 @@ import org.slf4j.LoggerFactory;
 public class CorrelationVariance {
 
     // FIELDS
-    /** logging facility */
-    protected static Logger log = LoggerFactory.getLogger(CorrelationVariance.class);
     /** statistics object for the last error values passed in */
-    private DescriptiveStatistics stats;
+    private final DescriptiveStatistics stats;
 
     /**
      * This is a utility class that provides scaling information for a series.
@@ -35,7 +31,7 @@ public class CorrelationVariance {
         /** unit value for series (maximum) */
         private double max;
         /** scale factor for series (maximum - minimum) */
-        private double scale;
+        private final double scale;
 
         /**
          * Construct a scaling object for a series.

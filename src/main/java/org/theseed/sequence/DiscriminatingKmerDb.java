@@ -9,8 +9,6 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.theseed.counters.CountMap;
 import org.theseed.genome.Genome;
 
@@ -26,14 +24,12 @@ import org.theseed.genome.Genome;
 public abstract class DiscriminatingKmerDb  {
 
     // FIELDS
-    /** logging facility */
-    protected static Logger log = LoggerFactory.getLogger(DiscriminatingKmerDb.class);
     /** map of discriminating kmers to groups */
-    private Map<String, String> kmerMap;
+    private final Map<String, String> kmerMap;
     /** set of common kmers */
-    private Set<String> commonSet;
+    private final Set<String> commonSet;
     /** kmer size */
-    private int kSize;
+    private final int kSize;
 
     /**
      * Construct a blank, empty discriminating kmer database.
@@ -42,8 +38,8 @@ public abstract class DiscriminatingKmerDb  {
      */
     public DiscriminatingKmerDb(int kmerSize) {
         this.kSize = kmerSize;
-        this.kmerMap = new HashMap<String, String>();
-        this.commonSet = new HashSet<String>();
+        this.kmerMap = new HashMap<>();
+        this.commonSet = new HashSet<>();
     }
 
     /**
@@ -89,7 +85,7 @@ public abstract class DiscriminatingKmerDb  {
      * @return a count map showing the kmers per group
      */
     public CountMap<String> getGroupCounts() {
-        var retVal = new CountMap<String>();
+        CountMap<String> retVal = new CountMap<>();
         for (String group : this.kmerMap.values())
             retVal.count(group);
         return retVal;
@@ -104,7 +100,7 @@ public abstract class DiscriminatingKmerDb  {
      * @return a count map from each group ID to the number of hits found
      */
     protected CountMap<String> countSeqHits(Collection<String> sequences) {
-        var retVal = new CountMap<String>();
+        CountMap<String> retVal = new CountMap<>();
         KmerSeries kmers = new KmerSeries(sequences, this.kSize);
         for (String kmer : kmers) {
             String group = this.kmerMap.get(kmer);

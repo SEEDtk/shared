@@ -5,9 +5,6 @@ package org.theseed.reports;
 
 import java.io.PrintWriter;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 /**
  * This is a base class for reports produced by BaseReportProcessor instances.  It registers the print writer
  * and handles access to it.
@@ -17,8 +14,7 @@ import org.slf4j.LoggerFactory;
  */
 public class BaseWritingReporter {
 
-    /** logging facility */
-    protected static Logger log = LoggerFactory.getLogger(BaseWritingReporter.class);
+    // FIELDS
     /** output writer */
     protected PrintWriter writer;
 

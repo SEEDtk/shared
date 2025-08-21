@@ -23,8 +23,6 @@ import java.util.stream.Stream;
 
 import org.apache.commons.lang3.RegExUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * This class represents a sample ID.  A sample ID consists of 10 to 11 identification fields separated by underscores.
@@ -36,8 +34,6 @@ import org.slf4j.LoggerFactory;
 public class SampleId implements Comparable<SampleId> {
 
     // FIELDS
-    /** logging facility */
-    protected static Logger log = LoggerFactory.getLogger(SampleId.class);
     /** array of segments */
     private String[] fragments;
     /** time point */
@@ -114,7 +110,7 @@ public class SampleId implements Comparable<SampleId> {
             new AbstractMap.SimpleEntry<>("926fb1", StringUtils.split("M_0_TA1_C_asdO", '_'))
             ).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
     /** set of invalid deletion proteins */
-    protected static final Set<String> BAD_DELETES = new TreeSet<String>(Arrays.asList("asd", "thrABC"));
+    protected static final Set<String> BAD_DELETES = new TreeSet<>(Arrays.asList("asd", "thrABC"));
     /** fragment descriptions */
     public static final String[] FRAGMENT_DESCRIPTIONS = new String[] { "host", "original thrABC", "core thr operon",
             "insert method", "asd status", "insertions", "deletions", "IPTG", "time", "medium" };
@@ -176,7 +172,7 @@ public class SampleId implements Comparable<SampleId> {
         if (timeString.contentEquals("ML") || timeString.contentEquals("X"))
             this.timePoint = Double.NaN;
         else
-            this.timePoint = Double.valueOf(timeString);
+            this.timePoint = Double.parseDouble(timeString);
     }
 
     /**
@@ -221,11 +217,11 @@ public class SampleId implements Comparable<SampleId> {
             // Break the strain name into pieces.
             String[] pieces = StringUtils.split(strain);
             // Remove deletes from the host name and add them to the master delete string.
-            StringBuffer deleteString = new StringBuffer(40);
-            String parts[] = StringUtils.split(pieces[0], "dD", 2);
+            StringBuilder deleteString = new StringBuilder(40);
+            String[] parts = StringUtils.split(pieces[0], "dD", 2);
             if (parts.length > 1) {
                 pieces[0] = parts[0];
-                deleteString.append("D" + parts[1]);
+                deleteString.append("D").append(parts[1]);
             }
             retVal.parseHost(pieces[0]);
             // Now we loop through the modifiers.  A modifier can be a plasmid specification, a deletion,
@@ -309,7 +305,7 @@ public class SampleId implements Comparable<SampleId> {
      * @return a corrected deletion specifier
      */
     private static String fixDeletes(String deletions) {
-        List<String> deletes = new ArrayList<String>(11);
+        List<String> deletes = new ArrayList<>(11);
         deletions = deletions.toLowerCase();
         int pos = 1;
         while (pos < deletions.length()) {
@@ -327,7 +323,7 @@ public class SampleId implements Comparable<SampleId> {
             pos = end + 1;
         }
         String retVal = "D000";
-        if (deletes.size() > 0)
+        if (! deletes.isEmpty())
             retVal = "D" + StringUtils.join(deletes, 'D');
         return retVal;
     }
@@ -417,18 +413,12 @@ public class SampleId implements Comparable<SampleId> {
         if (plasmidInfo != null)
             System.arraycopy(plasmidInfo, 0, this.fragments, 1, plasmidInfo.length);
         else switch (modifier) {
-        case "ptacthrABC" :
-        case "ptacthrabc" :
-        case "ptac-thrABC" :
-        case "ptac-thrabc" :
+        case "ptacthrABC", "ptacthrabc", "ptac-thrABC", "ptac-thrabc" -> {
             this.fragments[2] = "TA1";
             this.fragments[3] = "C";
-            break;
-        case "ptacasd" :
-        case "ptac-asd" :
-            this.fragments[4] = "asdT";
-            break;
-        default :
+            }
+        case "ptacasd", "ptac-asd" -> this.fragments[4] = "asdT";
+        default -> {
             // Split out the pieces.  This is brutal parsing since there are no delimiters.
             String[] prots = splitProteins(modifier);
             for (String prot : prots) {
@@ -436,6 +426,7 @@ public class SampleId implements Comparable<SampleId> {
                     insert = prot;
                 else
                     insert = insert + "-" + prot;
+            }
             }
         }
         return insert;
@@ -450,7 +441,7 @@ public class SampleId implements Comparable<SampleId> {
      * @return a list of the protein IDs found
      */
     private static String[] splitProteins(String modifier) {
-        List<String> list = new ArrayList<String>(4);
+        List<String> list = new ArrayList<>(4);
         String lcModifier = modifier.toLowerCase();
         int p = 0;
         while (p < lcModifier.length()) {
@@ -521,7 +512,7 @@ public class SampleId implements Comparable<SampleId> {
             newFragments[REP_COL] = "rep1";
             this.fragments = newFragments;
         } else {
-            int repNum = Integer.valueOf(this.fragments[REP_COL].substring(3));
+            int repNum = Integer.parseInt(this.fragments[REP_COL].substring(3));
             this.fragments[REP_COL] = String.format("rep%d", repNum + 1);
         }
     }
@@ -573,8 +564,7 @@ public class SampleId implements Comparable<SampleId> {
             retVal[1] = timePoint;
             retVal[2] = iptgFlag;
             retVal[3] = sampleNum;
-            for (int i = 1; i < parts.length; i++)
-                retVal[i+3] = parts[i];
+            System.arraycopy(parts, 1, retVal, 4, parts.length - 1);
         }
         return retVal;
     }
@@ -616,8 +606,7 @@ public class SampleId implements Comparable<SampleId> {
         retVal[1] = timePoint;
         retVal[2] = iptgFlag;
         retVal[3] = "XX";
-        for (int i = 1; i < parts.length; i++)
-            retVal[i+3] = parts[i];
+        System.arraycopy(parts, 1, retVal, 4, parts.length - 1);
         return retVal;
     }
 
@@ -660,19 +649,12 @@ public class SampleId implements Comparable<SampleId> {
     public int compareTo(SampleId o) {
         int retVal = 0;
         for (int i = 0; retVal == 0 && i < NORMAL_SIZE; i++) {
-            switch (i) {
-            case TIME_COL:
-                retVal = Double.compare(this.timePoint, o.timePoint);
-                break;
-            case DELETE_COL:
-                retVal = SampleId.setCompare(this.getDeletes(), o.getDeletes());
-                break;
-            case INSERT_COL:
-                retVal = SampleId.setCompare(this.getInserts(), o.getInserts());
-                break;
-            default:
-                retVal = this.fragments[i].compareTo(o.fragments[i]);
-            }
+            retVal = switch (i) {
+                case TIME_COL -> Double.compare(this.timePoint, o.timePoint);
+                case DELETE_COL -> SampleId.setCompare(this.getDeletes(), o.getDeletes());
+                case INSERT_COL -> SampleId.setCompare(this.getInserts(), o.getInserts());
+                default -> this.fragments[i].compareTo(o.fragments[i]);
+            };
         }
         // Handle the optional 11th slot.
         if (retVal == 0) {
@@ -730,6 +712,7 @@ public class SampleId implements Comparable<SampleId> {
     /**
      * @return the string representative of the sample ID
      */
+    @Override
     public String toString() {
         return StringUtils.join(this.fragments, '_');
     }
@@ -756,11 +739,10 @@ public class SampleId implements Comparable<SampleId> {
      * @param deletes	delete string to parse
      */
     public static SortedSet<String> parseDeletes(String deletes) {
-        SortedSet<String> retVal = new TreeSet<String>();
+        SortedSet<String> retVal = new TreeSet<>();
         if (! deletes.contentEquals("D000")) {
             String[] parts = StringUtils.split(deletes, 'D');
-            for (String part : parts)
-                retVal.add(part);
+            retVal.addAll(Arrays.asList(parts));
         }
         return retVal;
     }
@@ -805,11 +787,10 @@ public class SampleId implements Comparable<SampleId> {
      * @param inserts	insert string to parse
      */
     public static Set<String> parseInserts(String inserts) {
-        Set<String> retVal = new TreeSet<String>();
+        Set<String> retVal = new TreeSet<>();
         if (! inserts.contentEquals("000")) {
             String[] parts = StringUtils.split(inserts, '-');
-            for (String part : parts)
-                retVal.add(part);
+            retVal.addAll(Arrays.asList(parts));
         }
         return retVal;
     }
@@ -929,16 +910,11 @@ public class SampleId implements Comparable<SampleId> {
     public int hashCode() {
         int result = 0;
         for (int i = 0; i < this.fragments.length; i++) {
-            switch (i) {
-            case INSERT_COL :
-                result = 31 * result + this.getInserts().hashCode();
-                break;
-            case DELETE_COL :
-                result = 31 * result + this.getDeletes().hashCode();
-                break;
-            default :
-                result = 31 * result + this.getFragment(i).hashCode();
-            }
+            result = switch (i) {
+                case INSERT_COL -> 31 * result + this.getInserts().hashCode();
+                case DELETE_COL -> 31 * result + this.getDeletes().hashCode();
+                default -> 31 * result + this.getFragment(i).hashCode();
+            };
         }
         return result;
     }
@@ -955,20 +931,19 @@ public class SampleId implements Comparable<SampleId> {
         boolean retVal = true;
         for (int i = 0; i < this.fragments.length && retVal; i++) {
             switch (i) {
-            case DELETE_COL :
+            case DELETE_COL -> {
                 // For deletes, the deletion order does not matter, so we have a special compare.
                 Set<String> thisDels = this.getDeletes();
                 Set<String> otherDels = other.getDeletes();
                 retVal = (thisDels.size() == otherDels.size() && thisDels.containsAll(otherDels));
-                break;
-            case INSERT_COL :
+                }
+            case INSERT_COL -> {
                 // Inserts work like deletes.
                 Set<String> thisInserts = this.getInserts();
                 Set<String> otherInserts = other.getInserts();
                 retVal = (thisInserts.size() == otherInserts.size() && thisInserts.containsAll(otherInserts));
-                break;
-            default :
-                // For normal fragments it's just a string compare.
+                }
+            default -> // For normal fragments it's just a string compare.
                 retVal = this.fragments[i].contentEquals(other.fragments[i]);
             }
         }
@@ -989,20 +964,19 @@ public class SampleId implements Comparable<SampleId> {
                     ! this.fragments[i].contentEquals(inSample.fragments[i])) {
                 // Here we have two constants that don't match.  If we are an insert or delete, we do a set-based check.
                 switch (i) {
-                case DELETE_COL :
+                case DELETE_COL -> {
                     // For deletes, the deletion order does not matter, so we have a special compare.
                     Set<String> thisDels = this.getDeletes();
                     Set<String> otherDels = inSample.getDeletes();
                     retVal = (thisDels.size() == otherDels.size() && thisDels.containsAll(otherDels));
-                    break;
-                case INSERT_COL :
+                    }
+                case INSERT_COL -> {
                     // Inserts work like deletes.
                     Set<String> thisInserts = this.getInserts();
                     Set<String> otherInserts = inSample.getInserts();
                     retVal = (thisInserts.size() == otherInserts.size() && thisInserts.containsAll(otherInserts));
-                    break;
-                default:
-                    retVal = false;
+                    }
+                default -> retVal = false;
                 }
             }
         }
@@ -1104,7 +1078,7 @@ public class SampleId implements Comparable<SampleId> {
      * @param consumer	operation to process the component string
      */
     public Collection<String> getComponents() {
-        List<String> retVal = new ArrayList<String>(FRAGMENT_DESCRIPTIONS.length + 20);
+        List<String> retVal = new ArrayList<>(FRAGMENT_DESCRIPTIONS.length + 20);
         // Strain and ASD are simple.
         retVal.add(this.fragments[STRAIN_COL]);
         retVal.add(this.fragments[ASD_COL]);
