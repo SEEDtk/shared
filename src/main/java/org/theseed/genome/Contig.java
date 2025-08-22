@@ -227,23 +227,13 @@ public class Contig implements Comparable<Contig> {
         for (int i = n - 1; i >= 0; i--) {
             char rev;
             char norm = dna.charAt(i);
-            switch (norm) {
-            case 'a' :
-                rev = 't';
-                break;
-            case 'c' :
-                rev = 'g';
-                break;
-            case 'g' :
-                rev = 'c';
-                break;
-            case 't' :
-            case 'u' :
-                rev = 'a';
-                break;
-            default :
-                rev = 'n';
-            }
+            rev = switch (norm) {
+                case 'a' -> 't';
+                case 'c' -> 'g';
+                case 'g' -> 'c';
+                case 't', 'u' -> 'a';
+                default -> 'n';
+            };
             retVal.append(rev);
         }
         return retVal.toString();
@@ -336,7 +326,7 @@ public class Contig implements Comparable<Contig> {
      * @param seq	input DNA sequence
      */
     public static List<String> cleanParts(String seq) {
-        List<String> retVal = new ArrayList<String>(5);
+        List<String> retVal;
         String normalized = seq.toLowerCase();
         int iBreak = StringUtils.indexOfAnyBut(normalized, "acgt");
         // We special-case no ambiguity characters because that is the most common case.
@@ -344,7 +334,7 @@ public class Contig implements Comparable<Contig> {
             retVal = List.of(normalized);
         else {
             // Now we have to break up the sequence.
-            retVal = new ArrayList<String>(5);
+            retVal = new ArrayList<>(5);
             if (iBreak > 0)
                 retVal.add(normalized.substring(0, iBreak));
             final int n = normalized.length();
@@ -380,11 +370,11 @@ public class Contig implements Comparable<Contig> {
         final String contigId = contig.getLabel();
         Matcher m = LABEL_COVG_PATTERN.matcher(contigId);
         if (m.find())
-            coverage = Double.valueOf(m.group(1));
+            coverage = Double.parseDouble(m.group(1));
         else {
             m = COMMENT_COVG_PATTERN.matcher(contig.getComment());
             if (m.find())
-                coverage = Double.valueOf(m.group(1));
+                coverage = Double.parseDouble(m.group(1));
         }
         return coverage;
     }

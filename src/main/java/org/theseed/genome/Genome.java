@@ -385,7 +385,7 @@ public class Genome  {
         this.taxonomyId = Integer.parseInt(StringUtils.substringBefore(genomeId, "."));
         this.domain = domain;
         this.geneticCode = code;
-        setup();
+        this.setup();
     }
 
     /**
@@ -1185,7 +1185,7 @@ public class Genome  {
     /**
      * @param taxonomyId 	taxonomic ID of this genome
      */
-    protected void setTaxonomyId(int taxonomyId) {
+    public void setTaxonomyId(int taxonomyId) {
         this.taxonomyId = taxonomyId;
     }
 

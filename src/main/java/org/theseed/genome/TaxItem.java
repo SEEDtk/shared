@@ -19,11 +19,11 @@ public class TaxItem {
 
     // FIELDS
     /** taxonomic ID */
-    private int id;
+    private final int id;
     /** rank level */
-    private String rank;
+    private final String rank;
     /** taxonomy name */
-    private String name;
+    private final String name;
 
     public static enum TaxItemKeys implements JsonKey {
         TAXON_ID(2),
@@ -58,7 +58,7 @@ public class TaxItem {
     public static class TaxIterator implements Iterator<TaxItem> {
 
         /** lineage from the genome */
-        private TaxItem[] lineage;
+        private final TaxItem[] lineage;
         /** last item returned */
         private int pos;
 

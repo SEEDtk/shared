@@ -93,8 +93,8 @@ public class CompareFeatures extends CompareORFs {
      */
     @Override
     protected void initCompareData() {
-        this.oldOnly = new TreeSet<Feature>();
-        this.newOnly = new TreeSet<Feature>();
+        this.oldOnly = new TreeSet<>();
+        this.newOnly = new TreeSet<>();
         this.identical = 0;
         this.differentFunctions = 0;
         this.longer = 0;

@@ -223,7 +223,7 @@ public class Feature implements Comparable<Feature> {
         // Save the original object.
         this.original = feat;
         // Denote we have no subsystem connections.
-        this.subsystemRoles = new HashSet<SubsystemRow.Role>();
+        this.subsystemRoles = new HashSet<>();
         // Extract the scalar fields.
         this.id = feat.getStringOrDefault(FeatureKeys.ID);
         this.type = fidType(this.id);
@@ -233,7 +233,7 @@ public class Feature implements Comparable<Feature> {
         this.location = null;
         JsonArray regions = feat.getCollectionOrDefault(FeatureKeys.LOCATION);
         // Only proceed if there is at least one region.  The regions are [contigId, begin, strand, length].
-        if (regions != null && regions.size() > 0) {
+        if (regions != null && ! regions.isEmpty()) {
             JsonArray first = (JsonArray) regions.get(0);
             this.location = Location.create((String) first.get(0), (String) first.get(2));
             // Now loop through all the regions, adding them.
@@ -246,7 +246,7 @@ public class Feature implements Comparable<Feature> {
         }
         // Get the annotations.
         JsonArray annotationList = feat.getCollectionOrDefault(FeatureKeys.ANNOTATIONS);
-        this.annotations = new ArrayList<Annotation>();
+        this.annotations = new ArrayList<>();
         if (annotationList != null) {
             for (Object annotationItem : annotationList) {
                 Annotation annotation = new Annotation((JsonArray) annotationItem);
@@ -255,7 +255,7 @@ public class Feature implements Comparable<Feature> {
         }
         // Get the GO terms.
         JsonArray goTermList = feat.getCollectionOrDefault(FeatureKeys.GO_TERMS);
-        this.goTerms = new ArrayList<GoTerm>();
+        this.goTerms = new ArrayList<>();
         if (goTermList != null) {
             for (Object goTermObj : goTermList) {
                 GoTerm goTerm = new GoTerm((JsonArray) goTermObj);
@@ -266,7 +266,7 @@ public class Feature implements Comparable<Feature> {
         // the form [type,alias]. Note that we use trees because we have few alias types
         // and fewer aliases per type.
         JsonArray aliasList = feat.getCollectionOrDefault(FeatureKeys.ALIAS_PAIRS);
-        this.aliases = new TreeMap<String, NavigableSet<String>>();
+        this.aliases = new TreeMap<>();
         if (aliasList != null) {
             for (int i = 0; i < aliasList.size(); i++) {
                 JsonArray aliasPair = aliasList.getCollection(i);
@@ -291,8 +291,8 @@ public class Feature implements Comparable<Feature> {
         }
         // Get the couplings.
         JsonArray couplingsList = feat.getCollectionOrDefault(FeatureKeys.COUPLINGS);
-        this.couplings = new TreeSet<Coupling>();
-        if (couplingsList != null && couplingsList.size() > 0) {
+        this.couplings = new TreeSet<>();
+        if (couplingsList != null && ! couplingsList.isEmpty()) {
             for (Object couplingList : couplingsList) {
                 JsonArray coupling = (JsonArray) couplingList;
                 String target = coupling.getString(0);
@@ -303,17 +303,23 @@ public class Feature implements Comparable<Feature> {
         }
         // Finally, we look for the protein families.
         JsonArray families = feat.getCollectionOrDefault(FeatureKeys.FAMILY_ASSIGNMENTS);
-        if (families != null && families.size() > 0) {
+        if (families != null && ! families.isEmpty()) {
             for (Object family0 : families) {
                 JsonArray family = (JsonArray) family0;
-                String type = family.getString(0);
+                String myType = family.getString(0);
                 String value = family.getString(1);
-                if (type.contentEquals("PGFAM")) {
-                    this.pgfam = value;
-                } else if (type.contentEquals("PLFAM")) {
-                    this.plfam = value;
-                } else if (type.contentEquals("FIGFAM")) {
-                    this.figfam = value;
+                switch (myType) {
+                    case "PGFAM":
+                        this.pgfam = value;
+                        break;
+                    case "PLFAM":
+                        this.plfam = value;
+                        break;
+                    case "FIGFAM":
+                        this.figfam = value;
+                        break;
+                    default:
+                        break;
                 }
             }
         }
@@ -339,14 +345,14 @@ public class Feature implements Comparable<Feature> {
 			for (String aType : aTypes) {
 				// Find a match for one of the type patterns.
 				aType = fixAliasType(aType);
-				retVal.add(new AbstractMap.SimpleEntry<String, String>(aType, m.group(2)));
+				retVal.add(new AbstractMap.SimpleEntry<>(aType, m.group(2)));
 			}
 		} else {
 			m = GENE_NAME.matcher(aliasPair);
 			if (m.matches())
-				retVal.add(new AbstractMap.SimpleEntry<String, String>("gene_name", aliasPair));
+				retVal.add(new AbstractMap.SimpleEntry<>("gene_name", aliasPair));
 			else
-				retVal.add(new AbstractMap.SimpleEntry<String, String>("LocusTag", aliasPair));
+				retVal.add(new AbstractMap.SimpleEntry<>("LocusTag", aliasPair));
 		}
 		return retVal;
 	}
@@ -383,7 +389,7 @@ public class Feature implements Comparable<Feature> {
      * @param size		size of the coupling group
      * @param strength	strength of the coupling
      */
-    public void addCoupling(String target, int size, double strength) {
+    public final void addCoupling(String target, int size, double strength) {
         Coupling coupling = new Coupling(target, size, strength);
         if (this.couplings.contains(coupling)) this.couplings.remove(coupling);
         this.couplings.add(coupling);
@@ -447,17 +453,17 @@ public class Feature implements Comparable<Feature> {
      * @param function	the functional assignment of the feature
      * @param loc		the location of the feature
      */
-    protected void init(String fid, String function, Location loc) {
+    protected final void init(String fid, String function, Location loc) {
         this.id = fid;
         this.type = fidType(fid);
         this.function = function;
         this.location = loc;
         this.protein_translation = "";
-        this.subsystemRoles = new HashSet<SubsystemRow.Role>();
-        this.annotations = new ArrayList<Annotation>(3);
-        this.goTerms = new ArrayList<GoTerm>(2);
-        this.aliases = new TreeMap<String, NavigableSet<String>>();
-        this.couplings = new TreeSet<Coupling>();
+        this.subsystemRoles = new HashSet<>(2);
+        this.annotations = new ArrayList<>(3);
+        this.goTerms = new ArrayList<>(2);
+        this.aliases = new TreeMap<>();
+        this.couplings = new TreeSet<>();
         // Save a blank JSON object as the original.
         this.original = new JsonObject();
     }
@@ -474,6 +480,15 @@ public class Feature implements Comparable<Feature> {
      */
     public String getType() {
         return type;
+    }
+
+    /**
+     * Specify a new feature type.
+     *
+     * @param fType     new feature type
+     */
+    public void setType(String fType) {
+        this.type = fType;
     }
 
     /**
@@ -617,14 +632,15 @@ public class Feature implements Comparable<Feature> {
     }
 
     /**
-     * This class sorts by location, but it is strand-based.  That is, different strands
+     * This class sorts features by location, but it is strand-based.  That is, different strands
      * are treated as different contigs.  If two features have the
      * same location information, it will fall back to the feature ID, to insure no
      * two distinct features compare equal.
      */
     public static class StrandComparator implements Comparator<Feature> {
 
-        private Comparator<Location> comparator;
+        /** strand-basedcomparator for locations */
+        private final Comparator<Location> comparator;
 
         public StrandComparator() {
             this.comparator = new Location.StrandSorter();
@@ -686,9 +702,9 @@ public class Feature implements Comparable<Feature> {
                 if (retVal) {
                     retVal = this.annotations.equals(other.annotations);
                     if (retVal) {
-                        Set<GoTerm> goTerms = new HashSet<GoTerm>(this.goTerms);
-                        Set<GoTerm> otherTerms = new HashSet<GoTerm>(other.goTerms);
-                        retVal = goTerms.equals(otherTerms);
+                        Set<GoTerm> myGoTerms = new HashSet<>(this.goTerms);
+                        Set<GoTerm> otherTerms = new HashSet<>(other.goTerms);
+                        retVal = myGoTerms.equals(otherTerms);
                     }
                 }
             }
@@ -727,7 +743,7 @@ public class Feature implements Comparable<Feature> {
      */
     public static List<Role> usefulRoles(RoleMap map, String function) {
         String[] roleNames = rolesOfFunction(function);
-        List<Role> retVal = new ArrayList<Role>(roleNames.length);
+        List<Role> retVal = new ArrayList<>(roleNames.length);
         for (String roleName : roleNames) {
             Role role = map.getByName(roleName);
             if (role != null) {
@@ -794,7 +810,7 @@ public class Feature implements Comparable<Feature> {
                 goTerm0.addChain(goTerm.getDescription());
             goList.add(goTerm0);
         }
-        if (goList.size() > 0)
+        if (! goList.isEmpty())
             retVal.put(FeatureKeys.GO_TERMS.getKey(), goList);
         // Similarly, couplings.
         JsonArray couplingList = new JsonArray();
@@ -926,7 +942,7 @@ public class Feature implements Comparable<Feature> {
      * @param aliasType	alias type
      * @param aliasId	alias
      */
-    public void addAlias(String aliasType, String aliasId) {
+    public final void addAlias(String aliasType, String aliasId) {
         if (StringUtils.isBlank(aliasId))
             this.aliases.remove(aliasType);
         else {
@@ -939,7 +955,7 @@ public class Feature implements Comparable<Feature> {
      * @return this feature's list of aliases.
      */
     public Collection<String> getAliases() {
-        List<String> retVal = new ArrayList<String>(this.aliases.size());
+        List<String> retVal = new ArrayList<>(this.aliases.size());
         this.aliases.values().stream().forEach(x -> retVal.addAll(x));
         return retVal;
     }
@@ -984,7 +1000,7 @@ public class Feature implements Comparable<Feature> {
      * @return the set of subsystems containing this feature
      */
     public SortedSet<String> getSubsystems() {
-        SortedSet<String> retVal = new TreeSet<String>();
+        SortedSet<String> retVal = new TreeSet<>();
         for (SubsystemRow.Role subRole : this.subsystemRoles) {
             retVal.add(subRole.getSubName());
         }
@@ -995,7 +1011,7 @@ public class Feature implements Comparable<Feature> {
      * @return the set of subsystem rows containing this feature
      */
     public SortedSet<SubsystemRow> getSubsystemRows() {
-        SortedSet<SubsystemRow> retVal = new TreeSet<SubsystemRow>();
+        SortedSet<SubsystemRow> retVal = new TreeSet<>();
         for (SubsystemRow.Role subRole : this.subsystemRoles) {
             retVal.add(subRole.getRow());
         }

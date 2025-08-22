@@ -1242,7 +1242,7 @@ public class TestLibrary {
         gto.purify();
         gto.save(gtoFile);
         Genome diskGenome = new Genome(gtoFile);
-        test(gto, diskGenome, true);
+        verifyGenomes(gto, diskGenome, true);
         Collection<SubsystemRow> subsystems = gto.getSubsystems();
         for (SubsystemRow subsystem : subsystems) {
             SubsystemRow diskSubsystem = diskGenome.getSubsystem(subsystem.getName());
@@ -1440,7 +1440,7 @@ public class TestLibrary {
      * @param gto2	second genome
      * @param full	if TRUE, non-core attributes will be tested
      */
-    public static void test(Genome gto, Genome gto2, boolean full) {
+    public static void verifyGenomes(Genome gto, Genome gto2, boolean full) {
         assertThat(gto2.getId(), equalTo(gto.getId()));
         assertThat(gto2.getName(), equalTo(gto.getName()));
         assertThat(gto2.getDomain(), equalTo(gto.getDomain()));
