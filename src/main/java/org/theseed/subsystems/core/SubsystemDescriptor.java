@@ -29,13 +29,13 @@ public class SubsystemDescriptor implements Serializable, Comparable<SubsystemDe
 
     // FIELDS
     /** subsystem name */
-    private String name;
+    private final String name;
     /** classifications */
-    private String[] classes;
+    private final String[] classes;
     /** array of role names */
-    private List<String> roleNames;
+    private final List<String> roleNames;
     /** variant rules */
-    private LinkedHashMap<String, SubsystemRule> variantRules;
+    private final LinkedHashMap<String, SubsystemRule> variantRules;
     /** serialization object ID */
     private static final long serialVersionUID = 8444755932664902942L;
 
@@ -45,8 +45,8 @@ public class SubsystemDescriptor implements Serializable, Comparable<SubsystemDe
     public SubsystemDescriptor() {
         this.name = "";
         this.classes = new String[] { "", "", "" };
-        this.roleNames = new ArrayList<String>();
-        this.variantRules = new LinkedHashMap<String, SubsystemRule>();
+        this.roleNames = new ArrayList<>();
+        this.variantRules = new LinkedHashMap<>();
     }
 
     /**
@@ -60,7 +60,7 @@ public class SubsystemDescriptor implements Serializable, Comparable<SubsystemDe
         this.classes = new String[] { sub.getSuperClass(), sub.getMiddleClass(), sub.getSubClass() };
         // Get the role names (in order).
         final int roleCount = sub.getRoleCount();
-        this.roleNames = new ArrayList<String>(roleCount);
+        this.roleNames = new ArrayList<>(roleCount);
         for (int i = 0; i < roleCount; i++)
             this.roleNames.add(sub.getRole(i));
         // Store the variant rules.
@@ -101,6 +101,7 @@ public class SubsystemDescriptor implements Serializable, Comparable<SubsystemDe
             SubsystemRow row;
             synchronized (genome) {
                 row = new SubsystemRow(genome, this.name);
+                genome.connectSubsystem(row);
             }
             row.setClassifications(this.classes[0], this.classes[1], this.classes[2]);
             row.setVariantCode(retVal);

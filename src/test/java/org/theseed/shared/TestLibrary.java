@@ -21,6 +21,23 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.arrayContaining;
+import static org.hamcrest.Matchers.closeTo;
+import static org.hamcrest.Matchers.contains;
+import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.greaterThan;
+import static org.hamcrest.Matchers.hasItem;
+import static org.hamcrest.Matchers.hasItems;
+import static org.hamcrest.Matchers.lessThan;
+import static org.hamcrest.Matchers.not;
+import static org.hamcrest.Matchers.nullValue;
+import static org.hamcrest.Matchers.sameInstance;
+import org.junit.jupiter.api.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.theseed.genome.Annotation;
 import org.theseed.genome.CloseGenome;
 import org.theseed.genome.Contig;
@@ -52,13 +69,6 @@ import org.theseed.stats.Shuffler;
 
 import com.github.cliftonlabs.json_simple.JsonObject;
 
-import org.junit.jupiter.api.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.*;
-
 /**
  * @author Bruce Parrello
  *
@@ -88,15 +98,15 @@ public class TestLibrary {
         ProteinKmers.setKmerSize(8);
         KmerCollectionGroup kGroup = new KmerCollectionGroup();
         File inFile = new File("data", "seq_list.fa");
-        FastaInputStream inStream = new FastaInputStream(inFile);
-        for (Sequence inSeq : inStream) {
-            String label = inSeq.getComment();
-            kGroup.addSequence(inSeq, label);
+        try (FastaInputStream inStream = new FastaInputStream(inFile)) {
+            for (Sequence inSeq : inStream) {
+                String label = inSeq.getComment();
+                kGroup.addSequence(inSeq, label);
+            }
+            Collection<String> groups = kGroup.getKeys();
+            assertThat(groups, containsInAnyOrder("AntiHiga", "ToxiHigb"));
+            assertThat(kGroup.size(), equalTo(2));
         }
-        Collection<String> groups = kGroup.getKeys();
-        assertThat(groups, containsInAnyOrder("AntiHiga", "ToxiHigb"));
-        assertThat(kGroup.size(), equalTo(2));
-        inStream.close();
         Sequence testSeq = new Sequence("test1", "", "MILLRRLLGDVLRRQRQRQGRTLREVSSSARVSLGYLSEVERGQKEASSELLSAICDALD" +
                 "VRMSELMREVSDELALAELARSAAATPSETVPAPVRPMLGSVSVTGVPPERVTIKAPAEA" +
                 "VDVVAA");
@@ -137,7 +147,6 @@ public class TestLibrary {
      * Test magic IDs.
      * @throws IOException
      */
-    @SuppressWarnings("unlikely-arg-type")
     @Test
     public void testMagic() throws IOException {
         File inFile = new File("data", "words.txt");
@@ -234,15 +243,12 @@ public class TestLibrary {
 
         // Test map interface
         Map<String, String> thingMap = magicTable;
-        assertThat(thingMap.containsKey(myThing), equalTo(false));
         assertThat(thingMap.containsKey("PhenTrnaSyntAlph"), equalTo(true));
         assertThat(thingMap.containsKey("FrogsAndToads"), equalTo(false));
-        assertThat(thingMap.containsValue(myThing), equalTo(false));
         assertThat(thingMap.containsValue("Unique thing string 12345 with more numbers"), equalTo(true));
         assertThat(thingMap.containsValue("Obviously fake role name"), equalTo(false));
         assertThat(thingMap.get("PhenTrnaSyntAlph"), equalTo("Phenylalanyl-tRNA synthetase alpha chain (EC 6.1.1.20)"));
         assertThat(thingMap.get("FrogsAndToads"), nullValue());
-        assertThat(thingMap.get(myThing), nullValue());
         thingMap.remove("PhenTrnaSyntAlph");
         assertThat(thingMap.containsKey("PhenTrnaSyntAlph"), equalTo(false));
         assertThat(thingMap.remove("FrogsAndToads"), nullValue());
@@ -263,7 +269,7 @@ public class TestLibrary {
         }
         // Test the iterator.
         int count = 0;
-        Set<String> phenSet = new HashSet<String>();
+        Set<String> phenSet = new HashSet<>();
         for (Thing thing : magicTable) {
             count++;
             if (thing.getId().contentEquals("PhenTrnaSyntDoma")) {
@@ -282,9 +288,9 @@ public class TestLibrary {
         }
     }
 
-    private static final String myProtein = "MNERYQCLKTKEYQALLSSKGRQIFAKRKIDMKSVFGQIKVCLGYKRCHLRGKRQVRIDMGFILMANNLLKYNKRKRQN";
-    private static final String myDna1 = "atgaatgaacgttaccagtgtttaaaaactaaagaatatcaggcacttttatcttccaagggtagacaaattttcgctaaacgtaagattgatatgaaatctgtctttgggcagataaaggtttgtttgggttataagagatgtcatctgagaggtaagcgtcaagtgagaattgacatgggattcatactcatggccaacaacctgctgaaatataataagagaaagaggcaaaattaa";
-    private static final String myDna2 = "aaatagatttcaaaatgataaaaacgcatcctatcaggtttgagtgaacttgataggatgcgttttagaatgtcaaaattaattgagtttg";
+    private static final String MY_PROTEIN = "MNERYQCLKTKEYQALLSSKGRQIFAKRKIDMKSVFGQIKVCLGYKRCHLRGKRQVRIDMGFILMANNLLKYNKRKRQN";
+    private static final String MY_DNA1 = "atgaatgaacgttaccagtgtttaaaaactaaagaatatcaggcacttttatcttccaagggtagacaaattttcgctaaacgtaagattgatatgaaatctgtctttgggcagataaaggtttgtttgggttataagagatgtcatctgagaggtaagcgtcaagtgagaattgacatgggattcatactcatggccaacaacctgctgaaatataataagagaaagaggcaaaattaa";
+    private static final String MY_DNA2 = "aaatagatttcaaaatgataaaaacgcatcctatcaggtttgagtgaacttgataggatgcgttttagaatgtcaaaattaattgagtttg";
 
 
     /**
@@ -344,12 +350,12 @@ public class TestLibrary {
         assertThat("Incorrect feature found.", myFeature.getId(), equalTo("fig|1313.7001.peg.758"));
         assertThat("Incorrect function in sample feature.", myFeature.getFunction(), equalTo("Transposase, IS4 family"));
         assertThat(myFeature.getPegFunction(), equalTo("Transposase, IS4 family"));
-        assertThat("Incorrect protein for sample feature.", myFeature.getProteinTranslation(), equalTo(myProtein));
-        assertThat("Incorrect protein for sample feature (seqtype).", Feature.SeqType.PROTEIN.get(myFeature), equalTo(myProtein));
-        assertThat("Incorrect protein length for sample feature.", myFeature.getProteinLength(), equalTo(myProtein.length()));
-        assertThat("Incorrect DNA for sample feature.", myGto.getDna("fig|1313.7001.peg.758"), equalTo(myDna1));
-        assertThat("Incorrect DNA for sample feature.", myFeature.getDna(), equalTo(myDna1));
-        assertThat("Incorrect DNA for sample feature.", Feature.SeqType.DNA.get(myFeature), equalTo(myDna1));
+        assertThat("Incorrect protein for sample feature.", myFeature.getProteinTranslation(), equalTo(MY_PROTEIN));
+        assertThat("Incorrect protein for sample feature (seqtype).", Feature.SeqType.PROTEIN.get(myFeature), equalTo(MY_PROTEIN));
+        assertThat("Incorrect protein length for sample feature.", myFeature.getProteinLength(), equalTo(MY_PROTEIN.length()));
+        assertThat("Incorrect DNA for sample feature.", myGto.getDna("fig|1313.7001.peg.758"), equalTo(MY_DNA1));
+        assertThat("Incorrect DNA for sample feature.", myFeature.getDna(), equalTo(MY_DNA1));
+        assertThat("Incorrect DNA for sample feature.", Feature.SeqType.DNA.get(myFeature), equalTo(MY_DNA1));
         assertThat("Incorrect local family for sample feature.", myFeature.getPlfam(), equalTo("PLF_1301_00010583"));
         assertThat("Incorrect global family for sample feature.", myFeature.getPgfam(), equalTo("PGF_07475842"));
         assertThat("PEG not a CDS", myFeature.isProtein(), equalTo(true));
@@ -365,7 +371,7 @@ public class TestLibrary {
         assertThat("Segmentation flag failure.", myLoc.isSegmented(), equalTo(false));
         // Now we check a segmented location.
         myFeature = myGto.getFeature("fig|1313.7001.repeat_unit.238");
-        assertThat("Incorrect DNA for segmented feature.", myGto.getDna(myFeature.getId()), equalTo(myDna2));
+        assertThat("Incorrect DNA for segmented feature.", myGto.getDna(myFeature.getId()), equalTo(MY_DNA2));
         myLoc = myFeature.getLocation();
         assertThat("Incorrect contig for segmented location.", myLoc.getContigId(), equalTo("1313.7001.con.0018"));
         assertThat("Incorrect left for segmented location.", myLoc.getLeft(), equalTo(11908));
@@ -375,7 +381,7 @@ public class TestLibrary {
         assertThat("Incorrect strand for segmented location.", myLoc.getDir(), equalTo('+'));
         assertThat("Segmentation flag failure.", myLoc.isSegmented(), equalTo(true));
         assertThat("Non-peg typed as CDS", myFeature.isProtein(), equalTo(false));
-        assertThat("Incorrect DNA retrieval by location.", myGto.getDna(myLoc), equalTo(myDna2));
+        assertThat("Incorrect DNA retrieval by location.", myGto.getDna(myLoc), equalTo(MY_DNA2));
         // For fun, we check a feature with GO terms.
         myFeature = myGto.getFeature("fig|1313.7001.peg.975");
         GoTerm[] goTerms = new GoTerm[2];
@@ -538,7 +544,7 @@ public class TestLibrary {
         FeatureList contigFeatures = new FeatureList(gto2, "1313.7001.con.0029");
         Location region = Location.create("1313.7001.con.0029", "+", 160, 6860);
         Collection<Feature> inRegion = contigFeatures.inRegion(160, 6860);
-        ArrayList<String> fids = new ArrayList<String>(inRegion.size());
+        ArrayList<String> fids = new ArrayList<>(inRegion.size());
         for (Feature feat : inRegion) {
             fids.add(feat.getId());
             assertThat("Feature " + feat + " not in region.", region.distance(feat.getLocation()), equalTo(-1));
@@ -582,9 +588,9 @@ public class TestLibrary {
         Thing t1 = new Thing("T1", "first thing");
         Thing t2 = new Thing("T2", "second thing");
         Thing t3 = new Thing("T3", "third thing");
-        KeyPair<Thing> p12 = new KeyPair<Thing>(t1, t2);
-        KeyPair<Thing> p21 = new KeyPair<Thing>(t2, t1);
-        KeyPair<Thing> p13 = new KeyPair<Thing>(t1, t3);
+        KeyPair<Thing> p12 = new KeyPair<>(t1, t2);
+        KeyPair<Thing> p21 = new KeyPair<>(t2, t1);
+        KeyPair<Thing> p13 = new KeyPair<>(t1, t3);
         assertThat("Equality is not commutative.", p21, equalTo(p12));
         assertThat("Hash codes are not commutative.", p21.hashCode(), equalTo(p12.hashCode()));
         assertThat("Different things compare equal.", p13.equals(p12), equalTo(false));
@@ -710,8 +716,9 @@ public class TestLibrary {
                 neighbors.stream().map(Feature::getId).collect(Collectors.toList()),
                 contains("fig|12345.6.peg.10"));
         current = pos.next();
+        assertThat("Wrong feature after peg 9.", current.getId(), equalTo("fig|12345.6.peg.10"));
         neighbors = pos.within(1000);
-        assertThat("Found neighbors for peg10.", neighbors.size(), equalTo(0));
+        assertThat("Found neighbors for peg10.", neighbors.isEmpty(), equalTo(true));
         assertThat("No end-of-list after peg10.", pos.hasNext(), equalTo(false));
     }
 
@@ -884,7 +891,7 @@ public class TestLibrary {
         inStream.close();
         inFasta = new File("data", "test.fa");
         inStream = new FastaInputStream(inFasta);
-        ArrayList<Sequence> testSeqs = new ArrayList<Sequence>(5);
+        ArrayList<Sequence> testSeqs = new ArrayList<>(5);
         for (Sequence input : inStream) {
             testSeqs.add(input);
         }
@@ -917,7 +924,7 @@ public class TestLibrary {
         outStream.close();
         // Read it in and verify.
         inStream = new FastaInputStream(outFasta);
-        ArrayList<Sequence> readSeqs = new ArrayList<Sequence>(5);
+        ArrayList<Sequence> readSeqs = new ArrayList<>(5);
         while (inStream.hasNext()) {
             readSeqs.add(inStream.next());
         }
@@ -1123,8 +1130,6 @@ public class TestLibrary {
         // Test edge before stop on + strand.
         loc = Location.create("c2", "+", 52, 54);
         assertThat(loc.extend(fakeGenome), nullValue());
-        // Test edge before start on + strand.
-        loc = Location.create("c2", "+", 10, 12);
         // Test internal stops.
         loc = Location.create("c3",  "+",  34, 63);
         assertThat(loc.extend(fakeGenome), nullValue());
@@ -1314,6 +1319,7 @@ public class TestLibrary {
         testGto.addFeature(peg2);
         testGto.addFeature(peg3);
         SubsystemRow subsystem = new SubsystemRow(testGto, "Funny subsystem");
+        testGto.connectSubsystem(subsystem);
         subsystem.setVariantCode("likely");
         assertThat(subsystem.getName(), equalTo("Funny subsystem"));
         assertThat(subsystem.getGenome(), equalTo(testGto));
@@ -1420,15 +1426,9 @@ public class TestLibrary {
             String fid = feat.getId();
             int idx = Integer.parseUnsignedInt(StringUtils.substringAfterLast(fid, "."));
             switch (feat.getType()) {
-            case "CDS" :
-                assertThat(fid, idx, lessThan(nextPeg));
-                break;
-            case "rna" :
-                assertThat(fid, idx, lessThan(nextRna));
-                break;
-            case "repeat" :
-                assertThat(fid, idx, lessThan(nextRepeat));
-                break;
+            case "CDS" -> assertThat(fid, idx, lessThan(nextPeg));
+            case "rna" -> assertThat(fid, idx, lessThan(nextRna));
+            case "repeat" -> assertThat(fid, idx, lessThan(nextRepeat));
             }
         }
     }
@@ -1537,12 +1537,10 @@ public class TestLibrary {
         }
 
         public void save(File saveFile) {
-            try {
-                PrintWriter printer = new PrintWriter(saveFile);
+            try (PrintWriter printer = new PrintWriter(saveFile)) {
                 for (Thing thing : this.objectValues()) {
                     printer.format("%s\t%s%n", thing.getId(), thing.getName());
                 }
-                printer.close();
             } catch (IOException e) {
                 throw new RuntimeException("Error saving thing map.", e);
             }
@@ -1550,15 +1548,13 @@ public class TestLibrary {
 
         public static ThingMap load(File loadFile) {
             ThingMap retVal = new ThingMap();
-            try {
-                Scanner reader = new Scanner(loadFile);
+            try (Scanner reader = new Scanner(loadFile)) {
                 while (reader.hasNext()) {
                     String myLine = reader.nextLine();
                     String[] fields = StringUtils.splitByWholeSeparator(myLine, "\t", 2);
                     Thing newThing = new Thing(fields[0], fields[1]);
                     retVal.put(newThing);
                 }
-                reader.close();
             } catch (IOException e) {
                 throw new RuntimeException("Error loading thing map.", e);
             }

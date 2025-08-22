@@ -62,10 +62,10 @@ public class SubsystemRow implements Comparable<SubsystemRow> {
     public class Role {
 
         /** name of this role */
-        private String name;
+        private final String name;
 
         /** set of features bound to this role */
-        private Set<String> fids;
+        private final Set<String> fids;
 
         /**
          * Construct a new role.
@@ -74,7 +74,7 @@ public class SubsystemRow implements Comparable<SubsystemRow> {
          */
         public Role(String name) {
             this.name = name;
-            this.fids = new HashSet<String>(3);
+            this.fids = new HashSet<>(3);
         }
 
         /**
@@ -95,7 +95,7 @@ public class SubsystemRow implements Comparable<SubsystemRow> {
          * @return the set of features attached to this role
          */
         public Set<Feature> getFeatures() {
-            Set<Feature> retVal = new HashSet<Feature>(this.fids.size());
+            Set<Feature> retVal = new HashSet<>(this.fids.size());
             for (String fid : this.fids) {
                 Feature feat = SubsystemRow.this.parent.getFeature(fid);
                 if (feat != null)
@@ -169,13 +169,13 @@ public class SubsystemRow implements Comparable<SubsystemRow> {
     /** empty list  */
     private static final JsonArray noEntries = new JsonArray();
     /** name and variant code for this subsystem */
-    private VariantId variant;
+    private final VariantId variant;
     /** list of roles */
-    private List<Role> roles;
+    private final List<Role> roles;
     /** parent genome */
-    private Genome parent;
+    private final Genome parent;
     /** classifications */
-    private List<String> classifications;
+    private final List<String> classifications;
 
     /**
      * Create a subsystem row descriptor from an incoming JSON object.
@@ -187,17 +187,16 @@ public class SubsystemRow implements Comparable<SubsystemRow> {
         // Get the subsystem metadata.
         this.variant = new VariantId(subsystemObj.getStringOrDefault(SubsystemKeys.NAME),
                 subsystemObj.getStringOrDefault(SubsystemKeys.VARIANT_CODE));
-        this.classifications = new ArrayList<String>(3);
+        this.classifications = new ArrayList<>(3);
         JsonArray classList = subsystemObj.getCollectionOrDefault(SubsystemKeys.CLASSIFICATION);
         for (int i = 0; i < classList.size(); i++)
             this.classifications.add(classList.getString(i));
         // Connect to the parent genome.
         this.parent = genome;
-        genome.connectSubsystem(this);
         // Now we run through the role bindings.  For each one, we insert the role name in
         // the role list, the feature IDs in the role map, and the role descriptors themselves
         // into the subsystem pointers of the features.
-        this.roles = new ArrayList<Role>(20);
+        this.roles = new ArrayList<>(20);
         JsonArray bindings = subsystemObj.getCollectionOrDefault(SubsystemKeys.ROLE_BINDINGS);
         for (Object binding : bindings) {
             JsonObject bindingObj = (JsonObject) binding;
@@ -216,7 +215,7 @@ public class SubsystemRow implements Comparable<SubsystemRow> {
      *
      * @return the role created
      */
-    public Role addRole(String roleName) {
+    public final Role addRole(String roleName) {
         Role retVal = new Role(roleName);
         this.roles.add(retVal);
         return retVal;
@@ -231,9 +230,8 @@ public class SubsystemRow implements Comparable<SubsystemRow> {
     public SubsystemRow(Genome genome, String name) {
         this.variant = new VariantId(name, "active");
         this.parent = genome;
-        this.classifications = new ArrayList<String>(3);
-        this.roles = new ArrayList<Role>();
-        genome.connectSubsystem(this);
+        this.classifications = new ArrayList<>(3);
+        this.roles = new ArrayList<>();
     }
 
     /**
@@ -242,7 +240,7 @@ public class SubsystemRow implements Comparable<SubsystemRow> {
      * @param role		name of role bound to the feature
      * @param fid		ID of the bound feature
      */
-    public void addFeature(String role, String fid) {
+    public final void addFeature(String role, String fid) {
         Feature feat = this.parent.getFeature(fid);
         Optional<Role> thisRole = this.roles.stream().filter(k -> k.name.contentEquals(role)).findFirst();
         if (thisRole.isPresent() && feat != null) {

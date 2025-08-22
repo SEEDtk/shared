@@ -16,6 +16,7 @@ import java.io.Writer;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -27,6 +28,7 @@ import java.util.TreeSet;
 import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -108,7 +110,7 @@ public class Genome  {
     /** refseq location format */
     private static final Pattern ACCESSION_LOCATION = Pattern.compile("(\\w+):(\\d+)-(\\d+)");
     /** empty list used as a default intermediate value for cases where the contigs or features are missing */
-    private static final Collection<JsonObject> noEntries = new ArrayList<JsonObject>();
+    private static final Collection<JsonObject> noEntries = new ArrayList<>();
     /** minimum length of a bad ambiguity run in an SSU */
     private static final String BAD_AMBIGUITY_RUN = "nnnnn";
 
@@ -167,7 +169,7 @@ public class Genome  {
     public class Pegs implements Iterator<Feature> {
 
         /** iterator through the genome features */
-        private Iterator<Feature> iter;
+        private final Iterator<Feature> iter;
         /** next feature to return */
         private Feature nextFeature;
 
@@ -212,11 +214,11 @@ public class Genome  {
     public class InterestingPegs implements Iterator<Feature> {
 
         /** map of interesting roles */
-        private RoleMap roleMap;
+        private final RoleMap roleMap;
         /** next feature to return */
         private Feature nextFeature;
         /** iterator through the features */
-        private Iterator<Feature> featIter;
+        private final Iterator<Feature> featIter;
 
         /**
          * Create an iterator through the genome based on the specified role map.
@@ -331,36 +333,38 @@ public class Genome  {
         Collection<JsonArray> lineageArray = this.gto.getCollectionOrDefault(GenomeKeys.NCBI_LINEAGE);
         this.lineage = lineageArray.stream().map(x -> new TaxItem(x)).toArray(n -> new TaxItem[n]);
         // Pull in the close genomes.
-        this.closeGenomes = new TreeSet<CloseGenome>();
+        this.closeGenomes = new TreeSet<>();
         Collection<JsonObject> closeList = this.gto.getCollectionOrDefault(GenomeKeys.CLOSE_GENOMES);
         for (JsonObject close : closeList)
             this.closeGenomes.add(new CloseGenome(close));
         // Now we need to process the features and contigs.
         Collection<JsonObject> featureList = this.gto.getCollectionOrDefault(GenomeKeys.FEATURES);
-        this.features = new HashMap<String, Feature>();
+        this.features = new HashMap<>();
         for (JsonObject feat : featureList) {
             Feature feature = new Feature(feat);
             this.addFeature(feature);
         }
         Collection<JsonObject> contigList = this.gto.getCollectionOrDefault(GenomeKeys.CONTIGS);
-        this.contigs = new HashMap<String, Contig>();
+        this.contigs = new HashMap<>();
         for (JsonObject contigObj : contigList) {
             Contig contig = new Contig(contigObj);
             this.contigs.put(contig.getId(), contig);
         }
         // We need any analysis events.
-        Collection<JsonObject> events = this.gto.getCollectionOrDefault(GenomeKeys.ANALYSIS_EVENTS);
-        this.events = new ArrayList<AnalysisEvent>();
-        for (JsonObject eventObj : events) {
+        Collection<JsonObject> myEvents = this.gto.getCollectionOrDefault(GenomeKeys.ANALYSIS_EVENTS);
+        this.events = new ArrayList<>();
+        for (JsonObject eventObj : myEvents) {
             AnalysisEvent event = new AnalysisEvent(eventObj);
             this.events.add(event);
         }
         // Finally, the subsystems.
         Collection<JsonObject> subList = this.gto.getCollectionOrDefault(GenomeKeys.SUBSYSTEMS);
-        this.subsystems = new HashMap<String, SubsystemRow>();
+        this.subsystems = new HashMap<>();
         // The subsystem is put into the map by the constructor.
-        for (JsonObject subsystemObj : subList)
-            new SubsystemRow(this, subsystemObj);
+        for (JsonObject subsystemObj : subList) {
+            var row = new SubsystemRow(this, subsystemObj);
+            this.connectSubsystem(row);
+        }
         // Determine the Genome's home database.
         this.setHome(this.gto.getStringOrDefault(GenomeKeys.HOME));
     }
@@ -387,13 +391,13 @@ public class Genome  {
     /**
      * Set up the attached structures.
      */
-    protected void setup() {
+    final protected void setup() {
         // Create empty maps for features, close genomes, subsystems, and contigs.
-        this.features = new HashMap<String, Feature>();
-        this.contigs = new HashMap<String, Contig>();
-        this.closeGenomes = new TreeSet<CloseGenome>();
+        this.features = new HashMap<>();
+        this.contigs = new HashMap<>();
+        this.closeGenomes = new TreeSet<>();
         // Denote the genome has no subvsystems.
-        this.subsystems = new HashMap<String, SubsystemRow>();
+        this.subsystems = new HashMap<>();
         // Create a blank original GTO.
         this.gto = new JsonObject();
         // Create a blank quality object.
@@ -401,7 +405,7 @@ public class Genome  {
         // Create an empty lineage.
         this.lineage = new TaxItem[0];
         // Create an empty event list.
-        this.events = new ArrayList<AnalysisEvent>();
+        this.events = new ArrayList<>();
         // Denote the genome has no home.
         this.setHome("none");
         // Denote no accession map has been built.
@@ -525,7 +529,7 @@ public class Genome  {
      */
     public Shuffler<Feature> getPegs() {
         Collection<Feature> featList = this.getFeatures();
-        Shuffler<Feature> retVal = new Shuffler<Feature>(featList.size());
+        Shuffler<Feature> retVal = new Shuffler<>(featList.size());
         for (Feature feat : featList) {
             if (feat.isProtein()) {
                 retVal.add(feat);
@@ -704,16 +708,16 @@ public class Genome  {
      */
     public void recordEvent(String tool, String... parameters) {
         // Record this as an analysis event.
-        JsonObject gto = this.toJson();
+        JsonObject myGto = this.toJson();
         // Get the events array.
-        JsonArray events = (JsonArray) gto.get("analysis_events");
-        if (events == null) {
-            events = new JsonArray();
-            gto.put("analysis_events", events);
+        JsonArray myEvents = (JsonArray) myGto.get("analysis_events");
+        if (myEvents == null) {
+            myEvents = new JsonArray();
+            myGto.put("analysis_events", myEvents);
         }
         // Build the parameters.
         JsonArray parms = new JsonArray();
-        for (String parm : parameters) parms.add(parm);
+        parms.addAll(Arrays.asList(parameters));
         // Build the event.
         JsonObject thisEvent = new JsonObject().putChain("id", UUID.randomUUID().toString())
                 .putChain("tool_name", tool)
@@ -722,7 +726,7 @@ public class Genome  {
         try {
             thisEvent.put("hostname", InetAddress.getLocalHost().getCanonicalHostName());
         } catch (UnknownHostException e) { }
-        events.add(thisEvent);
+        myEvents.add(thisEvent);
 
     }
     /**
@@ -886,7 +890,7 @@ public class Genome  {
         }
         // The next available index number is one more than the maximum we found.
         // The index number starts after the prefix.
-        int retVal = Integer.valueOf(maxFid.substring(prefix.length())) + 1;
+        int retVal = Integer.parseInt(maxFid.substring(prefix.length())) + 1;
         return retVal;
     }
 
@@ -979,7 +983,7 @@ public class Genome  {
      * @return the desired DNA sequence with the translated portion in upper case
      */
     public String getProteinOrf(String fid) {
-        String retVal = null;
+        String retVal;
         // Get the location of the feature.
         Feature feat = this.getFeature(fid);
         Location protLoc = feat.getLocation();
@@ -1078,7 +1082,7 @@ public class Genome  {
      * @return a list of this genomes contig's in the form of sequences
      */
     public List<Sequence> getSequences() {
-        List<Sequence> retVal = new ArrayList<Sequence>(this.getContigCount());
+        List<Sequence> retVal = new ArrayList<>(this.getContigCount());
         for (Contig contig : this.getContigs()) {
             Sequence seq = new Sequence(contig.getId(), contig.getDescription(), contig.getSequence());
             retVal.add(seq);
@@ -1204,7 +1208,7 @@ public class Genome  {
      *
      * @param subsystemRow	subsystem to connect
      */
-    /* package */ void connectSubsystem(SubsystemRow subsystemRow) {
+    public void connectSubsystem(SubsystemRow subsystemRow) {
         this.subsystems.put(subsystemRow.getName(), subsystemRow);
     }
 
@@ -1253,14 +1257,14 @@ public class Genome  {
      * @return the taxonomy string of this genome.
      */
     public String getTaxString() {
-        List<String> names = new ArrayList<String>(this.lineage.length);
+        List<String> names = new ArrayList<>(this.lineage.length);
         String prev = "cellular organisms";
         // We remove "cellular organisms" at the front, and also skip over blanks and duplicates.
         for (TaxItem item : this.lineage) {
-            String name = item.getName();
-            if (name != null && ! name.isEmpty() && ! name.contentEquals(prev))
-                names.add(name);
-            prev = name;
+            String myName = item.getName();
+            if (myName != null && ! myName.isEmpty() && ! myName.contentEquals(prev))
+                names.add(myName);
+            prev = myName;
         }
         return StringUtils.join(names, "; ");
     }
@@ -1301,8 +1305,8 @@ public class Genome  {
         if (m.matches()) {
             String contigId = this.accessionMap.get(m.group(1));
             if (contigId != null) {
-                int begin = Integer.valueOf(m.group(2));
-                int end = Integer.valueOf(m.group(3));
+                int begin = Integer.parseInt(m.group(2));
+                int end = Integer.parseInt(m.group(3));
                 retVal = Location.create(contigId, begin, end);
             }
         }
@@ -1313,7 +1317,7 @@ public class Genome  {
      * Create a mapping from RefSeq accession IDs to PATRIC contig IDs
      */
     private void buildAccessionMap() {
-        this.accessionMap = new HashMap<String, String>(this.contigs.size());
+        this.accessionMap = new HashMap<>(this.contigs.size());
         // Map each accession number to a contig ID.
         this.contigs.values().stream().filter(x -> StringUtils.isNotEmpty(x.getAccession()))
                 .forEach(x -> this.accessionMap.put(x.getAccession(), x.getId()));
@@ -1430,7 +1434,7 @@ public class Genome  {
      * the slow way, by deleting the contigs individually.
      */
     public void clear() {
-        Collection<Contig> contigList = new ArrayList<Contig>(this.contigs.values());
+        Collection<Contig> contigList = new ArrayList<>(this.contigs.values());
         for (var contig : contigList)
             this.deleteContig(contig);
         // Clear the SSU rRNA cache.
