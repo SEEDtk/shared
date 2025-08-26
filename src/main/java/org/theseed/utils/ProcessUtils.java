@@ -10,7 +10,6 @@ import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
-
 import org.slf4j.LoggerFactory;
 import org.theseed.io.LineReader;
 
@@ -106,7 +105,7 @@ public class ProcessUtils {
         // Start the process.
         Process process = builder.start();
         // Read the process output.
-        List<String> retVal = new ArrayList<String>();
+        List<String> retVal = new ArrayList<>();
         try (LineReader reader = new LineReader(process.getInputStream())) {
             for (String line : reader)
                 retVal.add(line);
