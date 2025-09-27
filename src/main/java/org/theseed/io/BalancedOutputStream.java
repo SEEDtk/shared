@@ -42,7 +42,7 @@ public class BalancedOutputStream implements AutoCloseable, ILabeledOutputStream
     /** random number generator */
     private Random randStream;
     /** TRUE if we opened the stream */
-    private boolean openFlag;
+    private final boolean openFlag;
     /** number of records buffered */
     private int bufferCount;
     /** number of buffered records written */
@@ -85,8 +85,8 @@ public class BalancedOutputStream implements AutoCloseable, ILabeledOutputStream
     private void setup(double fuzz, PrintStream outStream) {
         this.outputStream = outStream;
         this.fuzzFactor = fuzz;
-        this.classLines = new HashMap<String, Shuffler<String>>();
-        this.classCounts = new CountMap<String>();
+        this.classLines = new HashMap<>();
+        this.classCounts = new CountMap<>();
         this.randStream = new Random();
         this.bufferCount = 0;
         this.outputCount = 0;
@@ -98,6 +98,7 @@ public class BalancedOutputStream implements AutoCloseable, ILabeledOutputStream
      * @param label		text for the label column
      * @param text		text for the rest of the line
      */
+    @Override
     public void writeImmediate(String label, String text) {
         this.outputStream.format("%s\t%s%n", label, text);
     }
@@ -108,6 +109,7 @@ public class BalancedOutputStream implements AutoCloseable, ILabeledOutputStream
      * @param label		class label for this line
      * @param line		data for the line
      */
+    @Override
     public void write(String label, String line) {
         if (this.fuzzFactor == 0) {
             writeImmediate(label, line);
@@ -116,7 +118,7 @@ public class BalancedOutputStream implements AutoCloseable, ILabeledOutputStream
             // Insure we have a queue for this class.
             Shuffler<String> queue;
             if (! this.classLines.containsKey(label)) {
-                queue = new Shuffler<String>(20000);
+                queue = new Shuffler<>(20000);
                 this.classLines.put(label, queue);
             } else {
                 queue = this.classLines.get(label);
