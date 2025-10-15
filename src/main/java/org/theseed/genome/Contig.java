@@ -164,6 +164,7 @@ public class Contig implements Comparable<Contig> {
         this.length = len;
         this.accession = "";
         this.description = "";
+        this.sequence = "";
     }
 
     /**
