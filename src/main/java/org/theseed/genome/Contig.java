@@ -96,7 +96,12 @@ public class Contig implements Comparable<Contig> {
      */
     public Contig(JsonObject contigObj) {
         this.id = contigObj.getStringOrDefault(ContigKeys.ID);
-        this.sequence = contigObj.getStringOrDefault(ContigKeys.DNA).toLowerCase();
+        this.sequence = contigObj.getStringOrDefault(ContigKeys.DNA);
+        // Sometimes we get an explicit NULL and we have to convert to an empty string.
+        if (this.sequence != null)
+            this.sequence = this.sequence.toLowerCase();
+        else
+            this.sequence = "";
         this.geneticCode = contigObj.getIntegerOrDefault(ContigKeys.GENETIC_CODE);
         this.length = contigObj.getIntegerOrDefault(ContigKeys.LENGTH);
         if (this.length == 0)
