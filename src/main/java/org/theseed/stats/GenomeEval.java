@@ -28,7 +28,7 @@ public class GenomeEval {
 
     // FIELDS
     /** genome counts */
-    private CountMap<String> statMap;
+    private final CountMap<String> statMap;
     /** list of stat types */
     public static final Set<String> STAT_TYPES = Arrays.asList("HasRNA", "HasPheS", "Clean", "Complete",
             "Consistent", "Understood").stream().collect(Collectors.toSet());
@@ -117,7 +117,7 @@ public class GenomeEval {
      */
     public GenomeEval() {
         // We will count the various genome attributes in here.
-        this.statMap = new CountMap<String>();
+        this.statMap = new CountMap<>();
     }
 
     /**
@@ -126,7 +126,7 @@ public class GenomeEval {
      * @param line	data line to analyze
      */
     public void analyze(TabbedLineReader.Line line) {
-        Set<String> stats = new TreeSet<String>();
+        Set<String> stats = new TreeSet<>();
         if (line.getFancyFlag(GenomeEval.GOOD_COL))
             this.statMap.count("Good");
         else
