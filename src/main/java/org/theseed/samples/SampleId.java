@@ -23,6 +23,7 @@ import java.util.stream.Stream;
 
 import org.apache.commons.lang3.RegExUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 
 /**
  * This class represents a sample ID.  A sample ID consists of 10 to 11 identification fields separated by underscores.
@@ -208,12 +209,12 @@ public class SampleId implements Comparable<SampleId> {
         retVal.fragments = new String[NORMAL_SIZE];
         // Determine the basic strain format.  If it begins with "str ", then it is new-style.  Otherwise,
         // it is old-style.
-        if (StringUtils.startsWith(strain, "str ")) {
-            String[] pieces = StringUtils.split(StringUtils.removeStart(strain, "str "), '_');
+        if (Strings.CS.startsWith(strain, "str ")) {
+            String[] pieces = StringUtils.split(Strings.CS.removeStart(strain, "str "), '_');
             System.arraycopy(pieces, 0, retVal.fragments, 0, pieces.length);
         } else {
             // Erase the leading NRRL (if any).
-            strain = StringUtils.removeStartIgnoreCase(strain, "nrrl ");
+            strain = Strings.CI.removeStart(strain, "nrrl ");
             // Break the strain name into pieces.
             String[] pieces = StringUtils.split(strain);
             // Remove deletes from the host name and add them to the master delete string.
@@ -268,7 +269,7 @@ public class SampleId implements Comparable<SampleId> {
             timeString = "ML";
         else {
             timeString = String.format("%1.1f", retVal.timePoint);
-            timeString = StringUtils.removeEnd(timeString, ".0");
+            timeString = Strings.CS.removeEnd(timeString, ".0");
             timeString = StringUtils.replaceChars(timeString, '.', 'p');
         }
         retVal.fragments[TIME_COL] = timeString;
@@ -408,7 +409,7 @@ public class SampleId implements Comparable<SampleId> {
      */
     private String parseModifier(String insert, String modifier) {
         // Remove the old pPH prefix.
-        modifier = RegExUtils.removeFirst(modifier, PLASMID_PREFIX);
+        modifier = RegExUtils.removeFirst((CharSequence) modifier, PLASMID_PREFIX);
         String[] plasmidInfo = PLASMID_MAP.get(modifier);
         if (plasmidInfo != null)
             System.arraycopy(plasmidInfo, 0, this.fragments, 1, plasmidInfo.length);
@@ -531,12 +532,12 @@ public class SampleId implements Comparable<SampleId> {
         String reducedName = fixRnaName(fileName);
         // Remove the IPTG flag (if any).
         String iptgFlag;
-        if (StringUtils.contains(reducedName, "_IPTG")) {
+        if (Strings.CS.contains(reducedName, "_IPTG")) {
             iptgFlag = "I";
-            reducedName = StringUtils.remove(reducedName, "_IPTG");
-        } else if (StringUtils.contains(reducedName, "_plus")) {
+            reducedName = Strings.CS.remove(reducedName, "_IPTG");
+        } else if (Strings.CS.contains(reducedName, "_plus")) {
             iptgFlag = "I";
-            reducedName = StringUtils.remove(reducedName, "_plus");
+            reducedName = Strings.CS.remove(reducedName, "_plus");
         } else
             iptgFlag = "0";
         // Remove the time specification.
@@ -581,14 +582,14 @@ public class SampleId implements Comparable<SampleId> {
         // Convert spaces to underscores.
         String reducedName = StringUtils.replaceChars(sampleName, ' ', '_');
         // Remove bad periods.
-        reducedName = StringUtils.replace(reducedName, "._", "_");
+        reducedName = Strings.CS.replace(reducedName, "._", "_");
         // Perform standard fixups.
         reducedName = fixRnaName(reducedName);
         // Remove the IPTG flag (if any).
         String iptgFlag;
-        if (StringUtils.contains(reducedName, "_+")) {
+        if (Strings.CS.contains(reducedName, "_+")) {
             iptgFlag = "I";
-            reducedName = StringUtils.remove(reducedName, "_+");
+            reducedName = Strings.CS.remove(reducedName, "_+");
         } else
             iptgFlag = "0";
         // Search for a time point override.
@@ -616,12 +617,12 @@ public class SampleId implements Comparable<SampleId> {
      * @param fileName	RNA file name or strain string
      */
     private static String fixRnaName(String fileName) {
-        String retVal = StringUtils.replaceOnce(fileName, "pta-", "ptac-");
-        retVal = StringUtils.replaceOnce(retVal, "D_lysC", "DlysC");
-        retVal = StringUtils.replaceOnce(retVal, "926_lysC", "926DlysC");
-        retVal = StringUtils.replace(retVal, "Dtd_h", "Dtdh");
+        String retVal = Strings.CS.replaceOnce(fileName, "pta-", "ptac-");
+        retVal = Strings.CS.replaceOnce(retVal, "D_lysC", "DlysC");
+        retVal = Strings.CS.replaceOnce(retVal, "926_lysC", "926DlysC");
+        retVal = Strings.CS.replace(retVal, "Dtd_h", "Dtdh");
         for (var nameMapEntry : FILE_NAME_PLASMID_MAP.entrySet())
-            retVal = StringUtils.replaceOnce(retVal, nameMapEntry.getKey(), nameMapEntry.getValue());
+            retVal = Strings.CS.replaceOnce(retVal, nameMapEntry.getKey(), nameMapEntry.getValue());
         // Fix the delete glitch.  This is caused by the weird untranslatable unicode character.
         Matcher m = DELETE_GLITCH.matcher(retVal);
         if (m.matches())
@@ -641,7 +642,7 @@ public class SampleId implements Comparable<SampleId> {
                     retVal.substring(m.end());
         }
         // Remove extra hyphens.
-        retVal = StringUtils.replace(retVal, "-_", "_");
+        retVal = Strings.CS.replace(retVal, "-_", "_");
         return retVal;
     }
 

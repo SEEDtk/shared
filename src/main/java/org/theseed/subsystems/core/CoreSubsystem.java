@@ -27,6 +27,7 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.theseed.basic.ParseFailureException;
@@ -56,11 +57,11 @@ public class CoreSubsystem {
     /** logging facility */
     private static final Logger log = LoggerFactory.getLogger(CoreSubsystem.class);
     /** subsystem name */
-    private String name;
+    private final String name;
     /** rule namespace */
-    private LinkedHashMap<String, SubsystemRule> ruleMap;
+    private final LinkedHashMap<String, SubsystemRule> ruleMap;
     /** map of variant rules, in priority order */
-    private LinkedHashMap<String, SubsystemRule> variantRules;
+    private final LinkedHashMap<String, SubsystemRule> variantRules;
     /** version number */
     private int version;
     /** TRUE if this is a good subsystem (exchangeable and non-experimental) */
@@ -70,23 +71,23 @@ public class CoreSubsystem {
     /** auxiliary role bit map */
     private BitSet auxMap;
     /** associated role ID computation map */
-    private StrictRoleMap roleMap;
+    private final StrictRoleMap roleMap;
     /** list of roles, in order */
-    private List<StrictRole> roles;
+    private final List<StrictRole> roles;
     /** role abbreviations, in order */
-    private List<String> roleAbbrs;
+    private final List<String> roleAbbrs;
     /** subsystem spreadsheet */
-    private Map<String, Row> spreadsheet;
+    private final Map<String, Row> spreadsheet;
     /** classifications */
     private List<String> classes;
     /** set of invalid identifiers */
-    private Set<String> badIds;
+    private final Set<String> badIds;
     /** number of invalid roles */
     private int badRoles;
     /** roles not found during current rule */
-    private Set<String> notFound;
+    private final Set<String> notFound;
     /** roles found during current rule */
-    private Set<String> found;
+    private final Set<String> found;
     /** description note */
     private String description;
     /** set of pubmed IDs from the notes */
@@ -110,19 +111,14 @@ public class CoreSubsystem {
     /** pattern for finding pubmed IDs */
     private static final Pattern PUBMED_REFERENCE = Pattern.compile("PMID:\\s+(\\d+)");
     /** subsystem directory filter */
-    private static final FileFilter DIR_SS_FILTER = new FileFilter() {
-
-        @Override
-        public boolean accept(File pathname) {
-            // We accept the file if it is a directory and has a spreadsheet file in it.
-            boolean retVal = pathname.isDirectory();
-            if (retVal) {
-                File ssFile = new File(pathname, "spreadsheet");
-                retVal = ssFile.exists();
-            }
-            return retVal;
+    private static final FileFilter DIR_SS_FILTER = (File pathname) -> {
+        // We accept the file if it is a directory and has a spreadsheet file in it.
+        boolean retVal = pathname.isDirectory();
+        if (retVal) {
+            File ssFile = new File(pathname, "spreadsheet");
+            retVal = ssFile.exists();
         }
-
+        return retVal;
     };
 
     /**
@@ -132,11 +128,11 @@ public class CoreSubsystem {
     public class Row {
 
         /** ID of the target genome */
-        private String genomeId;
+        private final String genomeId;
         /** variant code */
-        private String variantCode;
+        private final String variantCode;
         /** list of peg sets */
-        private List<Set<String>> columns;
+        private final List<Set<String>> columns;
 
         /**
          * Construct a subsystem row from a spreadsheet line.
@@ -151,7 +147,7 @@ public class CoreSubsystem {
             String prefix = "fig|" + this.genomeId + ".";
             // Create the column list.
             final int n = CoreSubsystem.this.roles.size();
-            this.columns = new ArrayList<Set<String>>(CoreSubsystem.this.roles.size());
+            this.columns = new ArrayList<>(CoreSubsystem.this.roles.size());
             while (this.columns.size() < CoreSubsystem.this.roles.size())
                 this.columns.add(EMPTY_CELL);
             for (int i = 0; i < n; i++) {
@@ -161,7 +157,7 @@ public class CoreSubsystem {
                 if (! column.isBlank()) {
                     // Here we have to parse the pegs.  Split up the peg specifiers (there is usually only 1).
                     String[] pegSpecs = StringUtils.split(column, ',');
-                    Set<String> roleSet = new TreeSet<String>();
+                    Set<String> roleSet = new TreeSet<>();
                     for (String pegSpec : pegSpecs) {
                         if (pegSpec.contains(".")) {
                             // A dot indicates it's not a peg, and has the type included.
@@ -216,7 +212,7 @@ public class CoreSubsystem {
          * @return the set of roles in this row
          */
         public Set<String> getRoles() {
-            Set<String> retVal = new TreeSet<String>();
+            Set<String> retVal = new TreeSet<>();
             for (int i = 0; i < this.columns.size(); i++) {
                 if (! this.columns.get(i).isEmpty()) {
                     String roleId = CoreSubsystem.this.getRoleId(CoreSubsystem.this.getRole(i));
@@ -242,7 +238,7 @@ public class CoreSubsystem {
         this.subDir = inDir;
         // Clear the error counters.
         this.badRoles = 0;
-        this.badIds = new TreeSet<String>();
+        this.badIds = new TreeSet<>();
         // Compute the real subsystem name.
         this.name = dirToName(inDir);
         log.info("Reading subsystem {}.", this.name);
@@ -251,20 +247,20 @@ public class CoreSubsystem {
         // Now get the classification and version.
         this.setClassification(inDir);
         // Initialize the rule namespace and the role list.
-        this.ruleMap = new LinkedHashMap<String, SubsystemRule>();
-        this.roles = new ArrayList<StrictRole>();
-        this.roleAbbrs = new ArrayList<String>();
+        this.ruleMap = new LinkedHashMap<>();
+        this.roles = new ArrayList<>();
+        this.roleAbbrs = new ArrayList<>();
         // Initialize the tracking sets.
-        this.found = new TreeSet<String>();
-        this.notFound = new TreeSet<String>();
+        this.found = new TreeSet<>();
+        this.notFound = new TreeSet<>();
         // Read in the subsystem spreadsheet.  This will initialize the name space, collect the
         // rule list and auxiliary rules, and store the rows.
-        this.spreadsheet = new HashMap<String, Row>();
+        this.spreadsheet = new HashMap<>();
         this.readSpreadsheet(roleDefs, inDir);
         // Now read in the notes.
         this.readNotes(inDir);
         // Compile the variant rules.
-        this.variantRules = new LinkedHashMap<String, SubsystemRule>();
+        this.variantRules = new LinkedHashMap<>();
         this.readRules(inDir, "checkvariant_definitions", this.ruleMap);
         this.readRules(inDir, "checkvariant_rules", this.variantRules);
         log.info("Subsystem {} v{} has {} roles, {} variant rules, {} namespace rules, and {} spreadsheet rows.",
@@ -287,8 +283,8 @@ public class CoreSubsystem {
         this.roleMap = new StrictRoleMap();
         this.roles = Collections.emptyList();
         this.roleAbbrs = Collections.emptyList();
-        this.ruleMap = new LinkedHashMap<String, SubsystemRule>();
-        this.variantRules = new LinkedHashMap<String, SubsystemRule>();
+        this.ruleMap = new LinkedHashMap<>();
+        this.variantRules = new LinkedHashMap<>();
         this.spreadsheet = Collections.emptyMap();
         this.version = 1;
         this.initNoteData();
@@ -300,8 +296,8 @@ public class CoreSubsystem {
     private void initNoteData() {
         this.note = "";
         this.description = "";
-        this.variantNotes = new TreeMap<String, String>();
-        this.pubmed = new TreeSet<Integer>();
+        this.variantNotes = new TreeMap<>();
+        this.pubmed = new TreeSet<>();
     }
 
     /**
@@ -342,11 +338,11 @@ public class CoreSubsystem {
                 this.roleAbbrs.add(line[0]);
                 ruleIdx++;
                 // Add the role to the internal role map.
-                var roles = roleDefs.getAllById(role.getId());
-                this.roleMap.putAll(roles);
+                var roles2 = roleDefs.getAllById(role.getId());
+                this.roleMap.putAll(roles2);
             }
             // The second section has the auxiliary roles.  These should be 1-based index numbers.
-            this.auxRoles = new TreeSet<String>();
+            this.auxRoles = new TreeSet<>();
             this.auxMap = new BitSet(roles.size());
             for (String[] line : reader.new Section(SECTION_MARKER)) {
                 if (line.length > 1 && line[0].toLowerCase().equals("aux")) {
@@ -395,10 +391,10 @@ public class CoreSubsystem {
         if (noteFile.exists()) {
             try (LineReader noteStream = new LineReader(noteFile)) {
                 // Here we have the note file.  Each section of the file begins with a line of pound signs.
-                String line = noteStream.next();
+                noteStream.next();
                 while (noteStream.hasNext()) {
                     // Here we are getting a section name.
-                    line = noteStream.next();
+                    String line = noteStream.next();
                     // Process the section according to the name.
                     switch (line) {
                     case "DESCRIPTION" :
@@ -430,7 +426,7 @@ public class CoreSubsystem {
         // We read in the lines until we hit a marker.  Each line is added to the line list
         // for the final join, but it is also parsed for pubmed IDs.
         boolean done = false;
-        List<String> retVal = new ArrayList<String>();
+        List<String> retVal = new ArrayList<>();
         while (noteStream.hasNext() && ! done) {
             String line = noteStream.next();
             if (NOTES_MARKER.matcher(line).matches())
@@ -442,7 +438,7 @@ public class CoreSubsystem {
                 Matcher m = PUBMED_REFERENCE.matcher(line);
                 while (m.find()) {
                     // The pubmed ID is in group 1.
-                    int pubmedId = Integer.valueOf(m.group(1));
+                    int pubmedId = Integer.parseInt(m.group(1));
                     this.pubmed.add(pubmedId);
                 }
             }
@@ -556,13 +552,12 @@ public class CoreSubsystem {
      */
     private void setClassification(File inDir) {
         String classData = MarkerFile.readSafe(new File(inDir, "CLASSIFICATION"));
-        this.classes = new ArrayList<String>(3);
+        this.classes = new ArrayList<>(3);
         String[] pieces = StringUtils.splitPreserveAllTokens(classData, '\t');
         // Copy the classification pieces to the classification list.  There are always
         // supposed to be 3.  If we find an experimental class, we mark the subsystem as bad.
         this.good = true;
-        for (int i = 0; i < pieces.length; i++) {
-            String piece = pieces[i];
+        for (String piece : pieces) {
             if (piece.isBlank())
                 this.classes.add("");
             else {
@@ -599,20 +594,21 @@ public class CoreSubsystem {
         while (i < n) {
             char chr = name.charAt(i);
             switch (chr) {
-            case '_' :
+            case '_' -> {
                 // Underscores are encoded from spaces.
                 retVal.append(' ');
                 i++;
-                break;
-            case '%' :
+                }
+            case '%' -> {
                 // Percent signs are used for hex encodings.
                 String hex = name.substring(i + 1, i + 3);
                 retVal.append((char) Integer.parseInt(hex, 16));
                 i += 3;
-                break;
-            default :
+                }
+            default -> {
                 retVal.append(chr);
                 i++;
+                }
             }
         }
         // Check for the pathological space trick.
@@ -724,7 +720,7 @@ public class CoreSubsystem {
      * @return the set of variant codes for this subsystem
      */
     public Set<String> getVariantCodes() {
-        Set<String> retVal = new TreeSet<String>();
+        Set<String> retVal = new TreeSet<>();
         // Add all the variant codes we used.
         for (Row row : this.spreadsheet.values())
             retVal.add(row.variantCode);
@@ -746,7 +742,7 @@ public class CoreSubsystem {
         // Create the rule generator.
         log.info("Generating rules for {}.", this.name);
         RuleGenerator ruleGen = new RuleGenerator(this);
-        List<String> variantRules = ruleGen.getVariantRules();
+        List<String> variantRules2 = ruleGen.getVariantRules();
         List<String> definitions = ruleGen.getGroupDefinitions();
         log.info("Writing rules to {}.", this.subDir);
         final File defFile = new File(this.subDir, "checkvariant_definitions");
@@ -756,7 +752,7 @@ public class CoreSubsystem {
         }
         final File ruleFile = new File(this.subDir, "checkvariant_rules");
         try (PrintWriter ruleStream = new PrintWriter(ruleFile)) {
-            for (String rule : variantRules)
+            for (String rule : variantRules2)
                 ruleStream.println(rule);
         }
         // Write out a generated-rules marker.
@@ -809,7 +805,7 @@ public class CoreSubsystem {
      * @return a set of the role IDs for the genome's roles
      */
     public static Set<String> getRoleSet(Genome genome, StrictRoleMap roleMap2) {
-        Set<String> retVal = new HashSet<String>(genome.getFeatureCount());
+        Set<String> retVal = new HashSet<>(genome.getFeatureCount());
         for (Feature feat : genome.getFeatures())
             roleMap2.usefulRoles(feat.getFunction()).stream().forEach(x -> retVal.add(x.getId()));
         return retVal;
@@ -869,7 +865,7 @@ public class CoreSubsystem {
      * @return TRUE if there are variant rules for this subsystem
      */
     public boolean hasRules() {
-        return this.variantRules.size() > 0;
+        return ! this.variantRules.isEmpty();
     }
 
     /**
@@ -962,7 +958,7 @@ public class CoreSubsystem {
      */
     public Map<String, String> getOriginalNameMap() {
         final int n = this.roles.size();
-        Map<String, String> retVal = new HashMap<String, String>(n * 4 / 3 + 1);
+        Map<String, String> retVal = new HashMap<>(n * 4 / 3 + 1);
         for (int i = 0; i < n; i++) {
             StrictRole role = this.roles.get(i);
             String roleId = role.getId();
@@ -986,7 +982,7 @@ public class CoreSubsystem {
         if (role == null)
             retVal = false;
         else
-            retVal = StringUtils.equals(roleString, role.getName());
+            retVal = Strings.CS.equals(roleString, role.getName());
         return retVal;
     }
 
@@ -1105,7 +1101,7 @@ public class CoreSubsystem {
      * @return the set of genomes in the spreadsheet that use the specified variant
      */
     public Set<String> getVariantGenomes(String variantCode) {
-        Set<String> retVal = new TreeSet<String>();
+        Set<String> retVal = new TreeSet<>();
         for (Row row : this.spreadsheet.values()) {
             if (row.variantCode.contentEquals(variantCode))
                 retVal.add(row.genomeId);

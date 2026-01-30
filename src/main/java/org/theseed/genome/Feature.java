@@ -20,6 +20,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.theseed.locations.Location;
@@ -197,13 +198,13 @@ public class Feature implements Comparable<Feature> {
             boolean hypo0 = isHypothetical(function0);
             boolean hypo1 = isHypothetical(function1);
             if (hypo0 && hypo1) {
-                retVal = StringUtils.compare(function0, function1);
+                retVal = Strings.CS.compare(function0, function1);
             } else if (hypo0) {
                 retVal = 1;
             } else if (hypo1) {
                 retVal = -1;
             } else {
-                retVal = StringUtils.compare(function0, function1);
+                retVal = Strings.CS.compare(function0, function1);
             }
             if (retVal == 0) {
                 // If the functions are the same, compare the feature IDs.
@@ -697,7 +698,7 @@ public class Feature implements Comparable<Feature> {
         if (retVal) {
             retVal = this.aliases.equals(other.aliases);
             if (retVal) {
-                retVal = (StringUtils.equals(this.pgfam, other.pgfam) && StringUtils.equals(this.plfam, other.plfam)
+                retVal = (Strings.CS.equals(this.pgfam, other.pgfam) && Strings.CS.equals(this.plfam, other.plfam)
                         && this.location.equals(other.location) && this.type.equals(other.type));
                 if (retVal) {
                     retVal = this.annotations.equals(other.annotations);

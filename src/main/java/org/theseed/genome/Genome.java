@@ -30,6 +30,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.theseed.locations.Location;
@@ -1383,7 +1384,7 @@ public class Genome  {
      * @param ssu	SSU sequence to check
      */
     public static boolean isValidSsuRRna(String ssu) {
-        return ! StringUtils.contains(ssu, BAD_AMBIGUITY_RUN);
+        return ! Strings.CS.contains(ssu, BAD_AMBIGUITY_RUN);
     }
 
     /**

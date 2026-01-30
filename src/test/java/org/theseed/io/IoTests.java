@@ -3,10 +3,6 @@
  */
 package org.theseed.io;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.*;
-import static org.junit.jupiter.api.Assertions.fail;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -15,10 +11,23 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.arrayContaining;
+import static org.hamcrest.Matchers.closeTo;
+import static org.hamcrest.Matchers.contains;
+import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.greaterThanOrEqualTo;
+import static org.hamcrest.Matchers.lessThan;
+import static org.hamcrest.Matchers.lessThanOrEqualTo;
+import static org.hamcrest.Matchers.not;
+import static org.hamcrest.Matchers.nullValue;
+import static org.hamcrest.Matchers.sameInstance;
+import static org.junit.jupiter.api.Assertions.fail;
+import org.junit.jupiter.api.Test;
 import org.theseed.counters.CountMap;
 import org.theseed.stats.Shuffler;
-import org.junit.jupiter.api.Test;
 
 /**
  * @author Bruce Parrello
@@ -77,11 +86,11 @@ public class IoTests {
         assertThat(reader.findField("type"), equalTo(0));
         assertThat(reader.findField("text"), equalTo(1));
         assertThat(reader.size(), equalTo(2));
-        CountMap<String> counts = new CountMap<String>();
+        CountMap<String> counts = new CountMap<>();
         for (TabbedLineReader.Line line : reader) {
             String label = line.get(0);
             String text = line.get(1);
-            assertThat("Text \"" + text + "\" has wrong label.", StringUtils.startsWith(text, label));
+            assertThat("Text \"" + text + "\" has wrong label.", Strings.CS.startsWith(text, label));
             counts.count(label);
         }
         assertThat(counts.getCount("a"), equalTo(7));
@@ -90,7 +99,7 @@ public class IoTests {
         reader.close();
         // Verify the first half of the file has half the objects.
         reader = new TabbedLineReader(testFile);
-        counts = new CountMap<String>();
+        counts = new CountMap<>();
         for (int i = 0; i < 13; i++) {
             TabbedLineReader.Line line = reader.next();
             String label = line.get(0);
@@ -178,7 +187,7 @@ public class IoTests {
      */
     @Test
     public void testShuffler() {
-        Shuffler<Integer> test1 = new Shuffler<Integer>(100);
+        Shuffler<Integer> test1 = new Shuffler<>(100);
         for (int i = 0; i < 100; i++)
             test1.add(i);
         for (int i = 0; i < 100; i++)
@@ -210,7 +219,7 @@ public class IoTests {
         test1.shuffle(101);
         test1.shuffle(99);
         // Test adding an iterable.
-        ArrayList<Integer> array1 = new ArrayList<Integer>(5);
+        ArrayList<Integer> array1 = new ArrayList<>(5);
         array1.add(200);
         array1.add(201);
         array1.add(202);
@@ -224,7 +233,7 @@ public class IoTests {
         assertThat(test1.get(103), equalTo(203));
         assertThat(test1.get(104), equalTo(204));
         assertThat(test1.size(), equalTo(105));
-        test1 = new Shuffler<Integer>(array1);
+        test1 = new Shuffler<>(array1);
         assertThat(test1.get(0), equalTo(200));
         assertThat(test1.get(1), equalTo(201));
         assertThat(test1.get(2), equalTo(202));
@@ -242,7 +251,7 @@ public class IoTests {
      */
     @Test
     public void testShufflerExtend() {
-        Shuffler<String> test = new Shuffler<String>(10);
+        Shuffler<String> test = new Shuffler<>(10);
         assertThat(test.get(6), nullValue());
         test.set(3, "frog");
         assertThat(test.get(0), nullValue());
@@ -263,7 +272,7 @@ public class IoTests {
      */
     @Test
     public void testShufflerRotate() {
-        Shuffler<Integer> test = new Shuffler<Integer>(10);
+        Shuffler<Integer> test = new Shuffler<>(10);
         for (int i = 0; i < 10; i++)
             test.add(i);
         test.rotate(1, -5);
@@ -354,7 +363,7 @@ public class IoTests {
         assertThat(test.get(7), equalTo(7));
         assertThat(test.get(8), equalTo(8));
         assertThat(test.get(9), equalTo(9));
-        test = new Shuffler<Integer>(120);
+        test = new Shuffler<>(120);
         for (int i = 0; i < 120; i++)
             test.add(i);
         // Test rotating different sizes.
@@ -380,59 +389,63 @@ public class IoTests {
     @Test
     public void testTabbedFile() throws IOException {
         File inFile = new File("data", "tabbed.txt");
-        TabbedLineReader tabReader = new TabbedLineReader(inFile);
-        assertThat("Header line wrong.", tabReader.header(), equalTo("genome_id\tgenome.genome_name\tcounter.0\tfraction\tflag"));
-        applyTabReaderTests(tabReader, "100.99\tname of 100.99\t10\t0.8");
-        // Reopen to test iteration.
-        tabReader = new TabbedLineReader(inFile);
-        String[] testLabels = new String[] { "100.99", "200.20", "1000.6", "4" };
-        int i = 0;
-        for (TabbedLineReader.Line l : tabReader) {
-            assertThat("Wrong record at index " + i, l.get(0), equalTo(testLabels[i]));
-            i++;
+        try (TabbedLineReader tabReader = new TabbedLineReader(inFile)) {
+            assertThat("Header line wrong.", tabReader.header(), equalTo("genome_id\tgenome.genome_name\tcounter.0\tfraction\tflag"));
+            applyTabReaderTests(tabReader, "100.99\tname of 100.99\t10\t0.8");
         }
-        assertThat("Wrong number of records", i, equalTo(4));
-        tabReader.close();
+        // Reopen to test iteration.
+        try (TabbedLineReader tabReader = new TabbedLineReader(inFile)) {
+            String[] testLabels = new String[] { "100.99", "200.20", "1000.6", "4" };
+            int i = 0;
+            for (TabbedLineReader.Line l : tabReader) {
+                assertThat("Wrong record at index " + i, l.get(0), equalTo(testLabels[i]));
+                i++;
+            }
+            assertThat("Wrong number of records", i, equalTo(4));
+        }
         // Try with a string list.
-        LineReader reader = new LineReader(inFile);
-        Shuffler<String> tabStrings = new Shuffler<String>(100);
-        tabStrings.addSequence(reader);
-        reader.close();
-        tabReader = new TabbedLineReader(tabStrings);
-        applyTabReaderTests(tabReader, "100.99\tname of 100.99\t10\t0.8");
+        Shuffler<String> tabStrings;
+        try (LineReader reader = new LineReader(inFile)) {
+            tabStrings = new Shuffler<>(100);
+            tabStrings.addSequence(reader);
+        }
+        try (TabbedLineReader tabReader = new TabbedLineReader(tabStrings)) {
+            applyTabReaderTests(tabReader, "100.99\tname of 100.99\t10\t0.8");
+        }
         // Try with comma delimiters.
         inFile = new File("data", "comma.txt");
-        tabReader = new TabbedLineReader(inFile, ',');
-        assertThat("Header line wrong.", tabReader.header(), equalTo("genome_id,genome.genome_name,counter.0,fraction,flag"));
-        applyTabReaderTests(tabReader, "100.99,name of 100.99,10,0.8");
-        // Reopen to test iteration.
-        tabReader = new TabbedLineReader(inFile, ',');
-        testLabels = new String[] { "100.99", "200.20", "1000.6", "4" };
-        i = 0;
-        for (TabbedLineReader.Line l : tabReader) {
-            assertThat("Wrong record at index " + i, l.get(0), equalTo(testLabels[i]));
-            i++;
+        try (TabbedLineReader tabReader = new TabbedLineReader(inFile, ',')) {
+            assertThat("Header line wrong.", tabReader.header(), equalTo("genome_id,genome.genome_name,counter.0,fraction,flag"));
+            applyTabReaderTests(tabReader, "100.99,name of 100.99,10,0.8");
         }
-        assertThat("Wrong number of records", i, equalTo(4));
-        tabReader.close();
+        // Reopen to test iteration.
+        try (TabbedLineReader tabReader = new TabbedLineReader(inFile, ',')) {
+            String[] testLabels = new String[] { "100.99", "200.20", "1000.6", "4" };
+            int i = 0;
+            for (TabbedLineReader.Line l : tabReader) {
+                assertThat("Wrong record at index " + i, l.get(0), equalTo(testLabels[i]));
+                i++;
+            }
+            assertThat("Wrong number of records", i, equalTo(4));
+        }
         // Test headerless files.
         File fixFile = new File("data", "fixed.txt");
-        tabReader = new TabbedLineReader(fixFile, 5);
-        TabbedLineReader.Line line = tabReader.next();
-        assertThat("Wrong value in column 0 of line 1", line.get(0), equalTo("100.99"));
-        assertThat("Wrong value in column 2 of line 1", line.getInt(2), equalTo(10));
-        assertThat("Wrong value in column 3 of line 1", line.getDouble(3), closeTo(0.8, 0.0001));
-        assertThat("Boolean adjustment fail in line 1", line.getFlag(4), equalTo(false));
-        assertThat("Line input not working", line.getAll(), equalTo("100.99\tname of 100.99\t10\t0.8"));
-        line = tabReader.next();
-        assertThat("Wrong value in column 2 of line 2", line.getInt(2), equalTo(-4));
-        assertThat("Wrong value in column 3 of line 2", line.getDouble(3), equalTo(12.0));
-        assertThat("Wrong value in column 4 of line 2", line.getFlag(4), equalTo(true));
-        line = tabReader.next();
-        assertThat("Wrong value in column 4 of line 3", line.getFlag(4), equalTo(false));
-        assertThat("End of file not detected", tabReader.hasNext(), equalTo(false));
-        assertThat("Error reading past end-of-file", tabReader.next(), nullValue());
-        tabReader.close();
+        try (TabbedLineReader tabReader = new TabbedLineReader(fixFile, 5)) {
+            TabbedLineReader.Line line = tabReader.next();
+            assertThat("Wrong value in column 0 of line 1", line.get(0), equalTo("100.99"));
+            assertThat("Wrong value in column 2 of line 1", line.getInt(2), equalTo(10));
+            assertThat("Wrong value in column 3 of line 1", line.getDouble(3), closeTo(0.8, 0.0001));
+            assertThat("Boolean adjustment fail in line 1", line.getFlag(4), equalTo(false));
+            assertThat("Line input not working", line.getAll(), equalTo("100.99\tname of 100.99\t10\t0.8"));
+            line = tabReader.next();
+            assertThat("Wrong value in column 2 of line 2", line.getInt(2), equalTo(-4));
+            assertThat("Wrong value in column 3 of line 2", line.getDouble(3), equalTo(12.0));
+            assertThat("Wrong value in column 4 of line 2", line.getFlag(4), equalTo(true));
+            line = tabReader.next();
+            assertThat("Wrong value in column 4 of line 3", line.getFlag(4), equalTo(false));
+            assertThat("End of file not detected", tabReader.hasNext(), equalTo(false));
+            assertThat("Error reading past end-of-file", tabReader.next(), nullValue());
+        }
     }
 
     @Test
@@ -460,7 +473,7 @@ public class IoTests {
         assertThat("Did not find fraction.", tabReader.findField("fraction"), equalTo(3));
         assertThat("Could not find column 3.", tabReader.findField("3"), equalTo(2));
         assertThat("Cound not find last column.", tabReader.findField("0"), equalTo(4));
-        int colIdx = 0;
+        int colIdx;
         try {
             colIdx = tabReader.findField("genome");
             fail("Found genome column at " + colIdx);
@@ -495,7 +508,6 @@ public class IoTests {
         assertThat("Blank column failure.", line.getInt(2), equalTo(5));
         assertThat("End of file not detected", tabReader.hasNext(), equalTo(false));
         assertThat("Error reading past end-of-file", tabReader.next(), nullValue());
-        tabReader.close();
     }
 
 
@@ -605,14 +617,9 @@ public class IoTests {
                 assertThat(Integer.toString(idx), ! found[idx]);
                 found[idx] = true;
                 switch (line.get(0)) {
-                case "yes" :
-                    smallCount++;
-                    break;
-                case "no" :
-                    largeCount++;
-                    break;
-                default :
-                    assertThat("Invalid label: " + line.get(0), false);
+                case "yes" -> smallCount++;
+                case "no" -> largeCount++;
+                default -> assertThat("Invalid label: " + line.get(0), false);
                 }
                 assertThat(Integer.toString(idx), largeCount / smallCount, lessThanOrEqualTo(4.5));
             }

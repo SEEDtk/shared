@@ -16,6 +16,7 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 
 /**
  * This is a utility class for managing parameter lists.  It provides methods to load
@@ -24,7 +25,7 @@ import org.apache.commons.lang3.StringUtils;
  * @author Bruce Parrello
  *
  */
-public class Parms {
+public class Parms implements Cloneable {
 
     // FIELDS
     /** map of parameters to values */
@@ -76,8 +77,8 @@ public class Parms {
      */
     private void init() {
         Comparator<String> compare = new Compare();
-        this.binary = new TreeMap<String, String>(compare);
-        this.unary = new TreeSet<String>(compare);
+        this.binary = new TreeMap<>(compare);
+        this.unary = new TreeSet<>(compare);
     }
 
     /**
@@ -103,7 +104,7 @@ public class Parms {
     /**
      * Set the default values of parameters.
      */
-    protected void setDefaults() { }
+    private void setDefaults() { }
 
     /**
      * Read a parameter list from a file.
@@ -112,7 +113,7 @@ public class Parms {
      *
      * @throws IOException
      */
-    protected void readFromFile(File inFile) throws IOException {
+    private void readFromFile(File inFile) throws IOException {
         // Get a scanner for the file.
         try (Scanner inStream = new Scanner(inFile)) {
             while (inStream.hasNext()) {
@@ -184,7 +185,7 @@ public class Parms {
      * @return the parameters as a string list.
      */
     public List<String> get() {
-        List<String> retVal = new ArrayList<String>(this.binary.size() * 2 + this.unary.size());
+        List<String> retVal = new ArrayList<>(this.binary.size() * 2 + this.unary.size());
         fillParmList(retVal);
         return retVal;
     }
@@ -205,7 +206,7 @@ public class Parms {
      * @return the parameters as a string list with a command in front
      */
     public List<String> get(String command) {
-        List<String> retVal = new ArrayList<String>(this.binary.size() * 2 + this.unary.size() + 1);
+        List<String> retVal = new ArrayList<>(this.binary.size() * 2 + this.unary.size() + 1);
         retVal.add(command);
         fillParmList(retVal);
         return retVal;
@@ -243,7 +244,7 @@ public class Parms {
                 String value = parm.getValue();
                 if (StringUtils.containsAny(value, ' ', '<', '>', '|')) {
                     // Here we have an internal special character so we have to quote the string.
-                    value = "\"" + StringUtils.replace(value, "\"", "\\\"") + "\"";
+                    value = "\"" + Strings.CS.replace(value, "\"", "\\\"") + "\"";
                 }
                 retVal.append(value);
                 retVal.append(' ');
@@ -256,11 +257,14 @@ public class Parms {
 
     /**
      * @return a safe copy of this object
+     * 
+     * @throws CloneNotSupportedException 
      */
     @Override
-    public Parms clone() {
+    public Parms clone() throws CloneNotSupportedException {
+        super.clone();
         Parms retVal = new Parms();
-        copyValues(retVal);
+        this.copyValues(retVal);
         return retVal;
     }
 

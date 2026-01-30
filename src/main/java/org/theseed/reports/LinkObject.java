@@ -3,15 +3,17 @@
  */
 package org.theseed.reports;
 
-import static j2html.TagCreator.*;
-
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 
+import static j2html.TagCreator.a;
+import static j2html.TagCreator.span;
+import static j2html.TagCreator.text;
 import j2html.tags.ContainerTag;
 import j2html.tags.DomContent;
 
@@ -105,7 +107,7 @@ public abstract class LinkObject {
 
         @Override
         public ContainerTag featureListLink(Collection<String> fidList) {
-            ContainerTag retVal = null;
+            ContainerTag retVal;
             if (fidList.size() == 1) {
                 // Only one feature.  We go to the feature landing page and display the feature ID.
                 String fid = fidList.iterator().next();
@@ -114,7 +116,7 @@ public abstract class LinkObject {
                 // Multiple features.  We go to a feature list view.  This requires the feature IDs to be enclosed in quotes.
                 String rawUrl = String.format(FEATURE_LIST_LINK, StringUtils.join(fidList, "\",\""));
                 // We also have to URLEncode the vertical bars.
-                String linkUrl = StringUtils.replace(rawUrl, "|", "%7c");
+                String linkUrl = Strings.CS.replace(rawUrl, "|", "%7c");
                 // Apply the URL to the text.
                 String linkText = String.format("%d features", fidList.size());
                 retVal = a(linkText).withHref(linkUrl).withTarget("_blank");
@@ -156,7 +158,7 @@ public abstract class LinkObject {
 
         @Override
         public ContainerTag featureListLink(Collection<String> fidList) {
-            ContainerTag retVal = null;
+            ContainerTag retVal;
             if (fidList.size() == 1) {
                 retVal = featureLink(fidList.iterator().next());
             } else {
@@ -224,7 +226,7 @@ public abstract class LinkObject {
 
         @Override
         public ContainerTag featureListLink(Collection<String> fidList) {
-            ContainerTag retVal = null;
+            ContainerTag retVal;
             if (fidList.size() == 1) {
                 retVal = featureLink(fidList.iterator().next());
             } else {

@@ -3,18 +3,20 @@
  */
 package org.theseed.shared;
 
-import org.junit.jupiter.api.Test;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.arrayContaining;
+import static org.hamcrest.Matchers.contains;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.hasItem;
+import static org.hamcrest.Matchers.not;
+import org.junit.jupiter.api.Test;
 import org.theseed.utils.MultiParms;
 import org.theseed.utils.Parms;
-
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.*;
 
 /**
  * @author Bruce Parrello
@@ -122,9 +124,11 @@ public class ParmsTest {
 
     /**
      * test parm object
+     * 
+     * @throws CloneNotSupportedException 
      */
     @Test
-    public void testParms2() {
+    public void testParms2() throws CloneNotSupportedException {
         Parms newParms = new Parms();
         newParms.set("--digits", 12);
         newParms.set("--batch");

@@ -24,7 +24,7 @@ import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -67,7 +67,7 @@ public class RnaData implements Iterable<RnaData.Row>, Serializable {
 
         @Override
         public boolean accept(File dir, String name) {
-            return StringUtils.endsWith(name, ".tpm.ser");
+            return Strings.CS.endsWith(name, ".tpm.ser");
         }
 
     }
@@ -360,10 +360,7 @@ public class RnaData implements Iterable<RnaData.Row>, Serializable {
             if (this.exactHit != other.exactHit) {
                 return false;
             }
-            if (Double.doubleToLongBits(this.weight) != Double.doubleToLongBits(other.weight)) {
-                return false;
-            }
-            return true;
+            return (Double.doubleToLongBits(this.weight) == Double.doubleToLongBits(other.weight));
         }
 
     }
@@ -508,7 +505,7 @@ public class RnaData implements Iterable<RnaData.Row>, Serializable {
          * @param pure	if TRUE, bad samples will be skipped
          */
         public GoodWeights(RnaData.Row row, boolean pure) {
-            setup(row, pure);
+            this.setup(row, pure);
         }
 
         /**
@@ -517,8 +514,8 @@ public class RnaData implements Iterable<RnaData.Row>, Serializable {
          * @param row	row containing the weights
          * @param pure	TRUE if only good samples should be included
          */
-        protected void setup(RnaData.Row row, boolean pure) {
-            this.weights = new ArrayList<Weight>(row.size());
+        private void setup(RnaData.Row row, boolean pure) {
+            this.weights = new ArrayList<>(row.size());
             for (int i = 0; i < row.size(); i++) {
                 if (! pure || RnaData.this.getJob(i).isGood()) {
                     Weight w = row.getWeight(i);
@@ -540,9 +537,9 @@ public class RnaData implements Iterable<RnaData.Row>, Serializable {
      * Create a new RNA data repository.
      */
     public RnaData() {
-        this.jobs = new ArrayList<JobData>();
-        this.rowMap = new HashMap<String, Row>();
-        this.colMap = new HashMap<String, Integer>();
+        this.jobs = new ArrayList<>();
+        this.rowMap = new HashMap<>();
+        this.colMap = new HashMap<>();
     }
 
     /**
@@ -554,7 +551,7 @@ public class RnaData implements Iterable<RnaData.Row>, Serializable {
      * @throws ClassNotFoundException
      */
     public static RnaData load(File file) throws IOException, ClassNotFoundException {
-        RnaData retVal = null;
+        RnaData retVal;
         try (FileInputStream fStream = new FileInputStream(file)) {
             ObjectInputStream oStream = new ObjectInputStream(fStream);
             retVal = (RnaData) oStream.readObject();
@@ -792,7 +789,7 @@ public class RnaData implements Iterable<RnaData.Row>, Serializable {
      * @return a map of feature IDs to baseline values for this RNA expression database
      */
     public SortedMap<String, Double> getBaselines() {
-        SortedMap<String, Double> retVal = new TreeMap<String, Double>(new NaturalSort());
+        SortedMap<String, Double> retVal = new TreeMap<>(new NaturalSort());
         for (Map.Entry<String, Row> rowEntry : this.rowMap.entrySet()) {
             double baseLine = this.getBaseline(rowEntry.getValue());
             retVal.put(rowEntry.getKey(), baseLine);
@@ -849,7 +846,7 @@ public class RnaData implements Iterable<RnaData.Row>, Serializable {
     public static Map<String, Set<String>> readClusterMap(File clusterFile) throws IOException {
         Map<String, Set<String>> retVal;
         try (TabbedLineReader inStream = new TabbedLineReader(clusterFile)) {
-            retVal = new HashMap<String, Set<String>>(100);
+            retVal = new HashMap<>(100);
             int count = 0;
             for (TabbedLineReader.Line line : inStream) {
                 String cluster = line.get(0);

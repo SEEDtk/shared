@@ -3,7 +3,7 @@
  */
 package org.theseed.locations;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 import org.theseed.proteins.CodonSet;
 import org.theseed.proteins.DnaTranslator;
 
@@ -18,11 +18,11 @@ public abstract class SequenceLocation {
 
     // FIELDS
     /** relevant DNA sequence */
-    private String sequence;
+    private final String sequence;
     /** location in the sequence */
-    private FLocation loc;
+    private final FLocation loc;
     /** DNA translator */
-    private DnaTranslator xlator;
+    private final DnaTranslator xlator;
     /** codon set for iteration */
     private CodonSet codons;
     /** current position in the sequence, for iteration */
@@ -127,7 +127,7 @@ public abstract class SequenceLocation {
     public String pegTranslate(int pos) {
         String retVal = this.xlator.pegTranslate(this.sequence, pos, this.loc.getEnd() + 1 - pos);
         // Note we chop off a stop codon if it is at the end.
-        return StringUtils.removeEnd(retVal, "*");
+        return Strings.CS.removeEnd(retVal, "*");
     }
 
     /**
