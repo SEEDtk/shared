@@ -3,6 +3,7 @@ package org.theseed.sequence;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.TreeSet;
+
 import murmur3.MurmurHash3;
 
 public abstract class SequenceKmers implements Iterable<String> {
@@ -26,7 +27,7 @@ public abstract class SequenceKmers implements Iterable<String> {
      * @param other		the sequence-kmers object for the other sequence
      */
     public int similarity(SequenceKmers other) {
-        int retVal = 0;
+        int retVal;
         if (this.sequence.contentEquals(other.sequence)) {
             // Identical sequences.  Use the fake infinity.  This will be
             // higher than the highest possible for the sequence, since the maximum otherwise
@@ -124,7 +125,7 @@ public abstract class SequenceKmers implements Iterable<String> {
      * @param size	number of integers to return
      */
     public int[] hashSet(int size) {
-        TreeSet<Integer> buffer = new TreeSet<Integer>();
+        TreeSet<Integer> buffer = new TreeSet<>();
         for (String kmer : this.kmerSet) {
             int shortHash = hashKmer(kmer);
             if (buffer.size() < size)
@@ -200,6 +201,16 @@ public abstract class SequenceKmers implements Iterable<String> {
      */
     public boolean contains(String kmer) {
         return this.kmerSet.contains(kmer);
+    }
+
+    /**
+     * This is a utility method for extracting the raw kmer set. Note that modifying the returned set will
+     * ruin the usefulness of this object.
+     * 
+     * @return the actual kmer set
+     */
+    public Set<String> getKmerSet() {
+        return this.kmerSet;
     }
 
     @Override

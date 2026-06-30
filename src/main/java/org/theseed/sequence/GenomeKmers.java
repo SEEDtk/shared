@@ -76,7 +76,7 @@ public class GenomeKmers extends SequenceKmers {
         this.genomeId = genome.getId();
         this.genomeName = genome.getName();
         // Create the kmer hash.
-        this.kmerSet = new HashSet<String>();
+        this.kmerSet = new HashSet<>();
         // Process the contigs.
         for (Contig contig : genome.getContigs()) {
             String seq = contig.getSequence();

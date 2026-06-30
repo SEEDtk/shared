@@ -57,7 +57,7 @@ public class DnaKmers extends SequenceKmers {
      */
     private void setup(String dna) {
         int cap = 8 * (dna.length() < K ? K : dna.length()) / 3 + 1;
-        this.kmerSet = new HashSet<String>(cap);
+        this.kmerSet = new HashSet<>(cap);
         // Get the reverse complement.
         this.original = dna.toLowerCase();
         String rDna = Contig.reverse(this.original);

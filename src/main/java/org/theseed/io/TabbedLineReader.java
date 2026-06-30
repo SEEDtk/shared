@@ -396,7 +396,7 @@ public class TabbedLineReader implements AutoCloseable, Iterable<TabbedLineReade
      *
      * @throws IOException
      */
-    protected void readHeader() {
+    private void readHeader() {
         // Denote no lines have been read.
         this.lineCount = 0;
         // Read the header.
@@ -418,7 +418,7 @@ public class TabbedLineReader implements AutoCloseable, Iterable<TabbedLineReade
      *
      * @param fields	number of fields to store
      */
-    protected void clearLabels(int fields) {
+    private void clearLabels(int fields) {
         this.labels = new String[fields];
         Arrays.fill(this.labels, "");
     }
@@ -431,10 +431,10 @@ public class TabbedLineReader implements AutoCloseable, Iterable<TabbedLineReade
     }
 
     /**
-     * @return the index of a field given a field name.  The name can be the label of the field,
-     * or it can be a 1-based numeric index.  An index of 0 indicates the last field.  A negative
-     * index indicates a position before the last field.  An invalid name will cause an
-     * IOException.
+     * Convert a field name into a column index.  The field name can be a number (1-based), a negative number 
+     * (counting from the end; 0 is the last column), or a name.
+     * 
+     * @return the index of a field given a field name.
      *
      * @param fieldName		field name/index specifier
      *
@@ -535,7 +535,7 @@ public class TabbedLineReader implements AutoCloseable, Iterable<TabbedLineReade
     /**
      * Prepare the line buffer with the next line of data.  Note we skip blank lines.
      */
-    protected void readAhead() {
+    private void readAhead() {
         if (! reader.hasNext()) {
             this.nextLine = null;
         } else {
@@ -579,7 +579,7 @@ public class TabbedLineReader implements AutoCloseable, Iterable<TabbedLineReade
      * @throws IOException
      */
     public static Map<String, String> readMap(File inFile, String kColumn, String vColumn) throws IOException {
-        Map<String, String> retVal = new HashMap<String, String>();
+        Map<String, String> retVal = new HashMap<>();
         try (TabbedLineReader inStream = new TabbedLineReader(inFile)) {
             int kCol = inStream.findField(kColumn);
             int vCol = inStream.findField(vColumn);
@@ -601,7 +601,7 @@ public class TabbedLineReader implements AutoCloseable, Iterable<TabbedLineReade
      * @throws IOException
      */
     public static Set<String> readSet(File inFile, String column) throws IOException {
-        Set<String> retVal = new HashSet<String>();
+        Set<String> retVal = new HashSet<>();
         try (TabbedLineReader reader = new TabbedLineReader(inFile)) {
             reader.readIntoSet(column, retVal);
         }
@@ -620,7 +620,7 @@ public class TabbedLineReader implements AutoCloseable, Iterable<TabbedLineReade
      * @throws IOException
      */
     public static Set<String> readSet(InputStream inStream, String column) throws IOException {
-        Set<String> retVal = new HashSet<String>();
+        Set<String> retVal = new HashSet<>();
         try (TabbedLineReader reader = new TabbedLineReader(inStream)) {
             reader.readIntoSet(column, retVal);
         }
@@ -657,7 +657,7 @@ public class TabbedLineReader implements AutoCloseable, Iterable<TabbedLineReade
      * @throws IOException
      */
     public static List<String> readColumn(File inFile, String string) throws IOException {
-        List<String> retVal = new ArrayList<String>(100);
+        List<String> retVal = new ArrayList<>(100);
         try (TabbedLineReader inStream = new TabbedLineReader(inFile)) {
             int inCol = inStream.findField(string);
             for (TabbedLineReader.Line line : inStream)
