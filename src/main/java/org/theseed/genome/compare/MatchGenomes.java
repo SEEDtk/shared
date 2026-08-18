@@ -25,9 +25,9 @@ import org.theseed.sequence.MD5Hex;
 public class MatchGenomes {
 
     /** logging facility */
-    private static final Logger log = LoggerFactory.getLogger(CompareORFs.class);
+    private static final Logger log = LoggerFactory.getLogger(MatchGenomes.class);
     /** MD5 computer */
-    private MD5Hex md5Computer;
+    private final MD5Hex md5Computer;
 
 
     /**
@@ -50,7 +50,7 @@ public class MatchGenomes {
     public Map<String, File> getMd5GenomeMap(File genomeDir) throws IOException {
 
         GenomeDirectory genomes = new GenomeDirectory(genomeDir);
-        Map<String, File> retVal = new HashMap<String, File>();
+        Map<String, File> retVal = new HashMap<>();
         for (Genome refGenome : genomes) {
             log.info("Scanning {}.", refGenome);
             // Get the MD5 for all the contig sequences.
