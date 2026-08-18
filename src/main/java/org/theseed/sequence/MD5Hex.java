@@ -63,7 +63,7 @@ public class MD5Hex {
      * @return the checksum in hexadecimal
      */
     private String hexOf(byte[] bytes) {
-        StringBuffer retVal = new StringBuffer(32);
+        StringBuilder retVal = new StringBuilder(32);
         for (int i = 0; i < bytes.length; i++) {
             String hex = Integer.toHexString((int) 0x00FF & bytes[i]);
             // Add the leading 0 if we need it.
@@ -111,7 +111,7 @@ public class MD5Hex {
      */
     public String sequenceMD5(Iterable<Sequence> seqs) throws UnsupportedEncodingException {
         // Loop through the sequences, accumulating the MD5s in lexical order.
-        SortedSet<String> md5s = new TreeSet<String>();
+        SortedSet<String> md5s = new TreeSet<>();
         for (Sequence seq : seqs) {
             String md5 = this.sequenceMD5(seq.getSequence());
             md5s.add(md5);

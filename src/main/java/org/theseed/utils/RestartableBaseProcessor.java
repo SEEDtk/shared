@@ -48,7 +48,7 @@ public abstract class RestartableBaseProcessor extends BaseProcessor {
 
     /** old output file if we are resuming */
     @Option(name = "--resume", metaVar = "output.log", usage = "if we are resuming, the output file from the interrupted run")
-    private File resumeFile;
+    private final File resumeFile;
 
     /**
      * Construct a restartable processor.
@@ -69,7 +69,7 @@ public abstract class RestartableBaseProcessor extends BaseProcessor {
      */
     protected int setup(String header, String idCol) throws IOException {
         int retVal = 0;
-        this.processedItems = new HashSet<String>();
+        this.processedItems = new HashSet<>();
         // Check for a resume situation.
         if (this.resumeFile == null) {
             // Normal processing.  Put the log to the standard output.
