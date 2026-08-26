@@ -30,7 +30,7 @@ import org.theseed.io.TabbedLineReader;
  * Call "println" or "format" to write to the output stream.
  *
  * Call "setup" to set up the output stream.
- *
+ * 
  * @author Bruce Parrello
  *
  */
@@ -81,7 +81,7 @@ public abstract class RestartableBaseProcessor extends BaseProcessor {
             this.output = new PrintStream(outStream, true);
             this.output.println(header);
         } else {
-            // Resume processing.  Save the roles we've already seen.
+            // Resume processing.  Save the input keys we've already seen.
             try (TabbedLineReader reader = new TabbedLineReader(this.resumeFile)) {
                 int idColIdx = reader.findField(idCol);
                 for (TabbedLineReader.Line line : reader) {
