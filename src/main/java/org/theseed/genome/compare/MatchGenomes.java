@@ -54,7 +54,7 @@ public class MatchGenomes {
         for (Genome refGenome : genomes) {
             log.info("Scanning {}.", refGenome);
             // Get the MD5 for all the contig sequences.
-            String key = this.md5Computer.sequenceMD5(refGenome);
+            String key = this.md5Computer.contigMD5(refGenome);
             // Map the file name to the MD5.
             retVal.put(key, genomes.currFile());
         }

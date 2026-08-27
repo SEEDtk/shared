@@ -100,11 +100,11 @@ public abstract class CompareORFs extends MatchGenomes {
             // Here it is likely we can pull it off. Get a map from MD5s to new-genome contig IDs.
             Map<String, String> md5Map = new HashMap<>(newGenome.getContigCount());
             for (Contig contig : newGenome.getContigs())
-                md5Map.put(this.getMd5Computer().sequenceMD5(contig.getSequence()), contig.getId());
+                md5Map.put(this.getMd5Computer().contigMD5(contig.getSequence()), contig.getId());
             // Loop through the old-genome contigs.
             for (Contig oldContig : oldGenome.getContigs()) {
                 // Get the MD5 of this contig.
-                String oldMd5 = this.getMd5Computer().sequenceMD5(oldContig.getSequence());
+                String oldMd5 = this.getMd5Computer().contigMD5(oldContig.getSequence());
                 String newContigId = md5Map.get(oldMd5);
                 if (newContigId == null)
                     retVal = false;

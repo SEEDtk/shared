@@ -42,7 +42,7 @@ public class MD5Hex {
     }
 
     /**
-     * Produce the checksum of a protein or DNA string.  In this case, the
+     * Produce the checksum of a protein string.  In this case, the
      * string is converted to uppercase before processing.
      *
      * @param sequence	incoming sequence to convert
@@ -51,8 +51,22 @@ public class MD5Hex {
      *
      * @throws UnsupportedEncodingException
      */
-    public String sequenceMD5(String sequence) throws UnsupportedEncodingException {
+    public String proteinMD5(String sequence) throws UnsupportedEncodingException {
         return checksum(sequence.toUpperCase());
+    }
+
+    /**
+     * Produce the checksum of a DNA string.  In this case, the
+     * string is converted to lowercase before processing.
+     *
+     * @param sequence	incoming sequence to convert
+     *
+     * @return the hexadecimal MD5 checksum
+     *
+     * @throws UnsupportedEncodingException
+     */
+    public String contigMD5(String sequence) throws UnsupportedEncodingException {
+        return checksum(sequence.toLowerCase());
     }
 
     /**
@@ -80,10 +94,11 @@ public class MD5Hex {
      * @param genome	genome whose MD5 is desired
      *
      * @return the MD5 of the genome's DNA
+     * 
      * @throws UnsupportedEncodingException
      */
-    public String sequenceMD5(Genome genome) throws UnsupportedEncodingException {
-        return sequenceMD5(genome.getContigs());
+    public String contigMD5(Genome genome) throws UnsupportedEncodingException {
+        return contigMD5(genome.getContigs());
     }
 
     /**
@@ -94,10 +109,10 @@ public class MD5Hex {
      * @return the MD5 of the DNA in the contigs
      * @throws UnsupportedEncodingException
      */
-    protected String sequenceMD5(Collection<Contig> contigs) throws UnsupportedEncodingException {
+    protected String contigMD5(Collection<Contig> contigs) throws UnsupportedEncodingException {
         // Loop through the contigs, accumulating the MD5s in lexical order.
         List<Sequence> seqs = contigs.stream().map(x -> new Sequence(x.getId(), "", x.getSequence())).collect(Collectors.toList());
-        return this.sequenceMD5(seqs);
+        return this.contigMD5(seqs);
     }
 
     /**
@@ -109,11 +124,11 @@ public class MD5Hex {
      *
      * @throws UnsupportedEncodingException
      */
-    public String sequenceMD5(Iterable<Sequence> seqs) throws UnsupportedEncodingException {
+    public String contigMD5(Iterable<Sequence> seqs) throws UnsupportedEncodingException {
         // Loop through the sequences, accumulating the MD5s in lexical order.
         SortedSet<String> md5s = new TreeSet<>();
         for (Sequence seq : seqs) {
-            String md5 = this.sequenceMD5(seq.getSequence());
+            String md5 = this.contigMD5(seq.getSequence());
             md5s.add(md5);
         }
         // Join the MD5s with commas and return the checksum.

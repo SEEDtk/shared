@@ -67,6 +67,7 @@ import org.theseed.sequence.Sequence;
 import org.theseed.stats.KeyPair;
 import org.theseed.stats.Shuffler;
 
+import com.github.cliftonlabs.json_simple.JsonException;
 import com.github.cliftonlabs.json_simple.JsonObject;
 
 /**
@@ -1178,13 +1179,14 @@ public class TestLibrary {
         prot = "MITHNPVIATVTDRVIRIDGGKIVEDYRNPNPVSIDSLTNL";
         assertThat(mdComputer.checksum(prot), equalTo("9e36013f41acf2443643cdcf178bda67"));
         Genome coreGenome = new Genome(new File("data", "360106.5.gto"));
-        String md5 = mdComputer.sequenceMD5(coreGenome);
-        assertThat(md5, equalTo("9606255e9c598c259f96a74083d87a35"));
+        String md5 = mdComputer.contigMD5(coreGenome);
+        assertThat(md5, equalTo("72c8c0d0b7bcfeb92d9094f21f4c6d49"));
         File testFile = File.createTempFile("test", ".fasta", new File("data"));
         coreGenome.saveDna(testFile);
         testFile.deleteOnExit();
         try (FastaInputStream gDnaStream = new FastaInputStream(testFile)) {
-            assertThat(mdComputer.sequenceMD5(gDnaStream), equalTo(md5));
+            String md5Computed = mdComputer.contigMD5(gDnaStream);
+            assertThat(md5Computed, equalTo(md5));
         }
     }
 

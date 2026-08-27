@@ -3,11 +3,12 @@
  */
 package org.theseed.sequence;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.*;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.hamcrest.Matchers.equalTo;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -21,7 +22,7 @@ class TestKmerSeries {
     @Test
     void testKmerSeries() {
         KmerSeries kSeries = new KmerSeries(TEST_LIST, 9);
-        List<String> testSet = new ArrayList<String>(kSeries.size());
+        List<String> testSet = new ArrayList<>(kSeries.size());
         for (String kmer : kSeries)
             testSet.add(kmer);
         assertThat(kSeries.size(), equalTo(testSet.size()));

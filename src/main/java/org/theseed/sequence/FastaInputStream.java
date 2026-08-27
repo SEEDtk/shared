@@ -137,7 +137,7 @@ public class FastaInputStream implements Iterable<Sequence>, AutoCloseable,
      * @throws IOException
      */
     public static List<Sequence> readAll(File fastaFile) throws IOException {
-        List<Sequence> retVal = new ArrayList<Sequence>(100);
+        List<Sequence> retVal = new ArrayList<>(100);
         try (FastaInputStream fastaStream = new FastaInputStream(fastaFile)) {
             for (Sequence fastaRecord : fastaStream) {
                 retVal.add(fastaRecord);

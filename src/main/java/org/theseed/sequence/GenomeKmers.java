@@ -71,7 +71,7 @@ public class GenomeKmers extends SequenceKmers {
     private void setup(Genome genome) throws NoSuchAlgorithmException, UnsupportedEncodingException {
         // Store the genome MD5 as the identifying sequence.
         MD5Hex md5Computer = new MD5Hex();
-        this.sequence = md5Computer.sequenceMD5(genome);
+        this.sequence = md5Computer.contigMD5(genome);
         // Save the genome ID and name.
         this.genomeId = genome.getId();
         this.genomeName = genome.getName();
