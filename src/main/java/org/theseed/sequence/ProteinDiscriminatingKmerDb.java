@@ -49,7 +49,7 @@ public class ProteinDiscriminatingKmerDb extends DiscriminatingKmerDb {
         // Get the sequence length.  The translator simply ignores fragments at the end.
         final int seqLen = contigSequence.length();
         // Translate the three frames.
-        Collection<String> seqs = new ArrayList<String>(6);
+        Collection<String> seqs = new ArrayList<>(6);
         for (int i = 1; i <= 3; i++) {
             seqs.add(this.xlate.translate(normalized, i, seqLen));
             seqs.add(this.xlate.translate(revSeq, i, seqLen));
@@ -70,7 +70,7 @@ public class ProteinDiscriminatingKmerDb extends DiscriminatingKmerDb {
      *
      * @param gc 	the geneticCode to set
      */
-    public void setGeneticCode(int gc) {
+    public final void setGeneticCode(int gc) {
         this.geneticCode = gc;
         this.xlate = new DnaTranslator(gc);
     }

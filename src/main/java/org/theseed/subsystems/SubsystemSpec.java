@@ -4,6 +4,7 @@
 package org.theseed.subsystems;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.theseed.proteins.Role;
@@ -21,11 +22,11 @@ public class SubsystemSpec implements Comparable<SubsystemSpec> {
 
     // FIELDS
     /** subsystem name */
-    private String name;
+    private final String name;
     /** roles in this subsystem */
-    private List<String> roles;
+    private final List<String> roles;
     /** classifications of this subsystem */
-    private List<String> classes;
+    private final List<String> classes;
 
     /**
      * Create a blank subsystem specification.
@@ -34,8 +35,8 @@ public class SubsystemSpec implements Comparable<SubsystemSpec> {
      */
     public SubsystemSpec(String name) {
         this.name = name;
-        this.roles = new ArrayList<String>(20);
-        this.classes = new ArrayList<String>(3);
+        this.roles = new ArrayList<>(20);
+        this.classes = new ArrayList<>(3);
     }
 
     /**
@@ -69,12 +70,11 @@ public class SubsystemSpec implements Comparable<SubsystemSpec> {
     /**
      * Specify the classifications.
      *
-     * @param classes	array of classifications
+     * @param classList	array of classifications
      */
-    public void setClassifications(String... classes) {
+    public void setClassifications(String... classList) {
         this.classes.clear();
-        for (String class0 : classes)
-            this.classes.add(class0);
+        this.classes.addAll(Arrays.asList(classList));
     }
 
     /**

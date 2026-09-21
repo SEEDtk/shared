@@ -25,7 +25,7 @@ public class ClassifierXMatrixReporter extends Dl4jDirXMatrixReporter {
     /** set of output label values */
     private Set<String> labels;
     /** negative label name */
-    private String negLabel;
+    private final String negLabel;
 
     /**
      * Construct a reporter to generate the DL4J XMatrix directory for a classifier.
@@ -43,7 +43,7 @@ public class ClassifierXMatrixReporter extends Dl4jDirXMatrixReporter {
         if (this.negLabel == null)
             throw new ParseFailureException("A negative-condition label value is required for this type of output.");
         // Create the label set.
-        this.labels = new TreeSet<String>();
+        this.labels = new TreeSet<>();
     }
 
 
@@ -64,7 +64,7 @@ public class ClassifierXMatrixReporter extends Dl4jDirXMatrixReporter {
     @Override
     protected List<String> getLabels() {
         // The negative label goes first, followed by the others.
-        List<String> retVal = new ArrayList<String>(this.labels.size() + 1);
+        List<String> retVal = new ArrayList<>(this.labels.size() + 1);
         retVal.add(this.negLabel);
         retVal.addAll(this.labels);
         return retVal;

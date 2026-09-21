@@ -62,8 +62,7 @@ public class SubsystemRowDescriptor extends MagicObject {
         this.classes = row.getClassifications();
         // Loop through the roles, creating the feature ID list.
         this.fidList = row.getRoles().stream().flatMap(r -> r.getFeatures().stream()).map(f -> f.getId()).collect(Collectors.toSet());
-        // Add this object to the table.  This creates the ID.
-        magicTable.put(this);
+        // Registration is performed by the caller after construction completes.
     }
 
     /**
@@ -89,11 +88,13 @@ public class SubsystemRowDescriptor extends MagicObject {
         SubsystemRowDescriptor blank = new SubsystemRowDescriptor();
         try (PrintWriter writer = new PrintWriter(outFile)) {
             // Create a magic map to generate compact subsystem IDs.
-            MagicMap<SubsystemRowDescriptor> subMap = new MagicMap<SubsystemRowDescriptor>(blank);
+            MagicMap<SubsystemRowDescriptor> subMap = new MagicMap<>(blank);
             // Loop through the subsystem rows in the genome, writing descriptors.
             int count = 0;
             for (SubsystemRow row : genome.getSubsystems()) {
                 SubsystemRowDescriptor desc = new SubsystemRowDescriptor(row, subMap);
+                // Add the fully initialized object to the table.  This creates the ID.
+                subMap.put(desc);
                 desc.write(writer);
                 count++;
             }

@@ -51,7 +51,7 @@ public class SubsystemRuleProjector implements Serializable {
      */
     public SubsystemRuleProjector() {
         this.roleMap = new StrictRoleMap();
-        this.subsystems = new HashMap<String, SubsystemDescriptor>();
+        this.subsystems = new HashMap<>();
     }
 
     /**
@@ -67,7 +67,7 @@ public class SubsystemRuleProjector implements Serializable {
             log.info("{} roles loaded from {}.", this.roleMap.size(), roleFile);
         } else
             this.roleMap = new StrictRoleMap();
-        this.subsystems = new HashMap<String, SubsystemDescriptor>(1000);
+        this.subsystems = new HashMap<>(1000);
     }
 
     /**
@@ -82,14 +82,12 @@ public class SubsystemRuleProjector implements Serializable {
      */
     public static SubsystemRuleProjector load(File projectorFile) throws IOException {
         SubsystemRuleProjector retVal = null;
-        try (FileInputStream inStream = new FileInputStream(projectorFile)) {
-            ObjectInputStream in = new ObjectInputStream(inStream);
+        try (FileInputStream inStream = new FileInputStream(projectorFile); ObjectInputStream in = new ObjectInputStream(inStream)) {
             try {
                 retVal = (SubsystemRuleProjector) in.readObject();
             } catch (ClassNotFoundException e) {
                 throw new IOException(e.toString());
             }
-            in.close();
         }
         return retVal;
     }
@@ -107,7 +105,7 @@ public class SubsystemRuleProjector implements Serializable {
         this.roleMap = new StrictRoleMap();
         this.roleMap.readObject(in);
         int subCount = in.readInt();
-        this.subsystems = new HashMap<String, SubsystemDescriptor>(subCount * 5 / 3 + 1);
+        this.subsystems = new HashMap<>(subCount * 5 / 3 + 1);
         log.info("Reading {} subsystem descriptors.", subCount);
         for (int i = 0; i < subCount; i++) {
             SubsystemDescriptor desc = (SubsystemDescriptor) in.readObject();
@@ -189,10 +187,8 @@ public class SubsystemRuleProjector implements Serializable {
      * @throws IOException
      */
     public void save(File projectorFile) throws IOException {
-        try (FileOutputStream fileStream = new FileOutputStream(projectorFile)) {
-            ObjectOutputStream out = new ObjectOutputStream(fileStream);
+        try (FileOutputStream fileStream = new FileOutputStream(projectorFile); ObjectOutputStream out = new ObjectOutputStream(fileStream)) {
             out.writeObject(this);
-            out.close();
         }
         log.info("Subsystem projector saved to {}.", projectorFile);
     }

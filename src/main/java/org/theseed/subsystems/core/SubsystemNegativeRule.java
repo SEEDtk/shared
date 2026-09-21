@@ -48,12 +48,14 @@ public class SubsystemNegativeRule extends SubsystemRule {
 
     @Override
     public boolean equals(Object other) {
-        boolean retVal;
-        SubsystemRule operand = this.normalize(other);
-        if (operand != null && operand instanceof SubsystemNegativeRule)
-            retVal = this.parm.equals(((SubsystemNegativeRule) operand).parm);
-        else
-            retVal = false;
+        boolean retVal = (other instanceof SubsystemRule);
+        if (retVal) {
+            SubsystemRule operand = this.normalize(other);
+            if (operand != null && operand instanceof SubsystemNegativeRule)
+                retVal = this.parm.equals(((SubsystemNegativeRule) operand).parm);
+            else
+                retVal = false;
+        }
         return retVal;
     }
 

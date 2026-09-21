@@ -16,8 +16,8 @@ import java.util.List;
 public class ErrorQueue extends Thread {
 
     // FIELDS
-    private LineReader errorStream;
-    private List<String> errorMessages;
+    private final LineReader errorStream;
+    private final List<String> errorMessages;
 
     public ErrorQueue(LineReader errorStream, List<String> messageBuffer) {
         this.errorMessages = messageBuffer;

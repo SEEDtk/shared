@@ -35,18 +35,18 @@ public class GenomeSubsystemTable {
     /** logging facility */
     private static final Logger log = LoggerFactory.getLogger(GenomeSubsystemTable.class);
     /** map of feature IDs to subsystems */
-    private Map<String, Set<SubData>> subMap;
+    private final Map<String, Set<SubData>> subMap;
     /** map of subsystem IDs to features IDs */
-    private SortedMap<String, Set<String>> subFeatureMap;
+    private final SortedMap<String, Set<String>> subFeatureMap;
 
     /**
      * This sub-object contains the ID and description of a single subsystem.
      */
     public static class SubData implements Comparable<SubData> {
 
-        private String id;
-        private String name;
-        private String[] classes;
+        private final String id;
+        private final String name;
+        private final String[] classes;
 
         private SubData(String id, String name, String classes) {
             this.id = id;
@@ -128,8 +128,8 @@ public class GenomeSubsystemTable {
      */
     public GenomeSubsystemTable(File inFile) throws IOException {
         // Initialize the subsystem map.
-        this.subMap = new HashMap<String, Set<SubData>>(3000);
-        this.subFeatureMap = new TreeMap<String, Set<String>>();
+        this.subMap = new HashMap<>(3000);
+        this.subFeatureMap = new TreeMap<>();
         // Loop through the subsystem file.
         try (LineReader reader = new LineReader(inFile)) {
             int count = 0;
@@ -138,12 +138,12 @@ public class GenomeSubsystemTable {
                 // Create the subsystem descriptor.
                 SubData sub = new SubData(parts[0], parts[1], parts[2]);
                 // Get the feature ID list.
-                Set<String> fidSet = new HashSet<String>(Arrays.asList(StringUtils.splitByWholeSeparator(parts[3], SubsystemRowDescriptor.FID_DELIM)));
+                Set<String> fidSet = new HashSet<>(Arrays.asList(StringUtils.splitByWholeSeparator(parts[3], SubsystemRowDescriptor.FID_DELIM)));
                 // Add it to the main list.
                 this.subFeatureMap.put(sub.getId(), fidSet);
                 // Add it to each feature's subsystem set.
                 for (String fid : fidSet) {
-                    Set<SubData> fidSubs = this.subMap.computeIfAbsent(fid, x -> new TreeSet<SubData>());
+                    Set<SubData> fidSubs = this.subMap.computeIfAbsent(fid, x -> new TreeSet<>());
                     fidSubs.add(sub);
                 }
                 count++;
@@ -178,7 +178,7 @@ public class GenomeSubsystemTable {
      * Get the list of subsystems for the genome.
      */
     public List<String> getAllSubsystems() {
-        return new ArrayList<String>(this.subFeatureMap.keySet());
+        return new ArrayList<>(this.subFeatureMap.keySet());
     }
 
     /**

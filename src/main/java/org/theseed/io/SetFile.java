@@ -42,7 +42,7 @@ public class SetFile {
      * @return a set of the strings in the file
      */
     public static Set<String> load(File inFile) {
-        Set<String> retVal = new HashSet<String>();
+        Set<String> retVal = new HashSet<>();
         try (var reader = new LineReader(inFile)) {
             for (var line : reader)
                 retVal.add(line);

@@ -63,11 +63,11 @@ public class SubsystemBasicRule extends SubsystemRule {
         // Equality is tricky, since the basic rule has no effect and just passes the check through
         // to the parameter.  We unspool both operands until we get something other that a basic rule.
         boolean retVal = false;
-        if (other instanceof SubsystemRule) {
+        if (other instanceof SubsystemRule subsystemRule) {
             SubsystemRule left = this.unspool();
-            SubsystemRule right = (SubsystemRule) other;
-            if (right instanceof SubsystemBasicRule)
-                right = ((SubsystemBasicRule) right).unspool();
+            SubsystemRule right = subsystemRule;
+            if (right instanceof SubsystemBasicRule subsystemBasicRule)
+                right = subsystemBasicRule.unspool();
             retVal = left.equals(right);
         }
         return retVal;

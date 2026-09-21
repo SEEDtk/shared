@@ -72,19 +72,19 @@ public abstract class BaselineComputer {
     public static BaselineComputer validateAndCreate(IBaselineParameters parms, BaselineComputer.Type type)
             throws ParseFailureException, FileNotFoundException {
         switch (type) {
-        case FILE:
+        case FILE -> {
             File bFile = parms.getFile();
             if (bFile == null)
                 throw new ParseFailureException("Baseline value file required for baseline type FILE.");
             else if (! bFile.canRead())
                 throw new FileNotFoundException("Baseline value file " + bFile + " not found or unreadable.");
-            break;
-        case SAMPLE:
+            }
+        case SAMPLE -> {
             if (parms.getSample() == null)
                 throw new ParseFailureException("Baseline sample ID required for baseline type SAMPLE.");
-            break;
-        default:
-            break;
+            }
+        default -> {
+            }
         }
         // Create the computation object.
         BaselineComputer retVal = type.create(parms);

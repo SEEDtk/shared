@@ -3,9 +3,6 @@
  */
 package org.theseed.subsystems.core;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.*;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -16,6 +13,15 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.greaterThan;
+import static org.hamcrest.Matchers.hasItem;
+import static org.hamcrest.Matchers.in;
+import static org.hamcrest.Matchers.lessThan;
+import static org.hamcrest.Matchers.not;
+import static org.hamcrest.Matchers.nullValue;
 import org.junit.jupiter.api.Test;
 import org.theseed.basic.ParseFailureException;
 import org.theseed.genome.Feature;
@@ -75,34 +81,36 @@ class TestCoreSubsystem {
         assertThat(vNotes.size(), equalTo(4));
         assertThat(vNotes.get("-1"), equalTo("organism incapable of de novo biosynthesis of tetrapyrroles"));
         assertThat(vNotes.get("1.AhbABCD"), equalTo("de novo bios of 5-ALA and siroheme asserted. HEME bios from sirocheme via AhbABCD path"));
-        assertThat(sub.getNote(), equalTo(" Thiamin monophosphate is formed by coupling of two independently synthesized moieties.\n"
-                + "\n"
-                + "#36	THI10: Thiamin transporter in yeast. PMID: 19348578\n"
-                + "\n"
-                + "References\n"
-                + "\n"
-                + "1.	Begley TP, Downs DM, Ealick SE, McLafferty FW, Van Loon AP, Taylor S, Campobasso N, Chiu HJ, Kinsland C, Reddick JJ, Xi J. Thiamin biosynthesis in prokaryotes. Arch Microbiol. 1999 Apr;171(5):293-300. Review. PMID: 10382260\n"
-                + "\n"
-                + "\n"
-                + "\n"
-                + "\n"
-                + "\n"
-                + "\n"
-                + "\n"
-                + "\n"
-                + "\n"
-                + "\n"
-                + "\n"
-                + "\n"
-                + "\n"
-                + "\n"
-                + "\n"
-                + "\n"
-                + ""));
-        assertThat(sub.getDescription(), equalTo(" Ubiquinone (Coenzyme Q) functions in the respiratory electron transport chain and serves as a lipophilic antioxidant. Ubiquinone is an acceptor of electrons from many cellular dehydrogenases involved in the oxidative metabolism of dihydroorotate, choline, fatty acyl-CoA, glycerolphosphate, sarcosine, and dimethylglycine .\n"
-                + " The UQ biosynthetic enzymes may constitute a complex that is tightly bound to the membrane.\n"
-                + "   In the biosythetic pathway the nucleus is derived from the shikimate pathway via chorismate in bacteria or tyrosin in higher eukaryotes. The prenyl side chain is derived from prenyl diphosphate (prenyl PPi) and the methyl groups are derived from S-adenosylmethionine.\n"
-                + ""));
+        assertThat(sub.getNote(), equalTo("""
+                                           Thiamin monophosphate is formed by coupling of two independently synthesized moieties.
+                                          
+                                          #36\tTHI10: Thiamin transporter in yeast. PMID: 19348578
+                                          
+                                          References
+                                          
+                                          1.\tBegley TP, Downs DM, Ealick SE, McLafferty FW, Van Loon AP, Taylor S, Campobasso N, Chiu HJ, Kinsland C, Reddick JJ, Xi J. Thiamin biosynthesis in prokaryotes. Arch Microbiol. 1999 Apr;171(5):293-300. Review. PMID: 10382260
+                                          
+                                          
+                                          
+                                          
+                                          
+                                          
+                                          
+                                          
+                                          
+                                          
+                                          
+                                          
+                                          
+                                          
+                                          
+                                          
+                                          """));
+        assertThat(sub.getDescription(), equalTo("""
+                                                  Ubiquinone (Coenzyme Q) functions in the respiratory electron transport chain and serves as a lipophilic antioxidant. Ubiquinone is an acceptor of electrons from many cellular dehydrogenases involved in the oxidative metabolism of dihydroorotate, choline, fatty acyl-CoA, glycerolphosphate, sarcosine, and dimethylglycine .
+                                                  The UQ biosynthetic enzymes may constitute a complex that is tightly bound to the membrane.
+                                                    In the biosythetic pathway the nucleus is derived from the shikimate pathway via chorismate in bacteria or tyrosin in higher eukaryotes. The prenyl side chain is derived from prenyl diphosphate (prenyl PPi) and the methyl groups are derived from S-adenosylmethionine.
+                                                 """));
         // Test the role helpers.
         assertThat(sub.getRoleId("Histidinol-phosphatase [alternative form] (EC 3.1.3.15)"), equalTo("HistPhosAlteForm"));
         assertThat(sub.isExactRole("HistPhosAlteForm", "Histidinol-phosphatase [alternative form] (EC 3.1.3.15)"), equalTo(true));
@@ -184,17 +192,13 @@ class TestCoreSubsystem {
         CoreSubsystem sub = new CoreSubsystem(inDir, roleMap);
         SubsystemDescriptor desc = new SubsystemDescriptor(sub);
         final File objTestFile = new File("data", "subsystem.ser");
-        try (FileOutputStream outStream = new FileOutputStream(objTestFile)) {
-            ObjectOutputStream objStream = new ObjectOutputStream(outStream);
+        try (FileOutputStream outStream = new FileOutputStream(objTestFile); ObjectOutputStream objStream = new ObjectOutputStream(outStream)) {
             objStream.writeObject(desc);
-            objStream.close();
         }
         // Now we read the object back in and verify it worked.
-        SubsystemDescriptor desc2 = null;
-        try (FileInputStream inStream = new FileInputStream(objTestFile)) {
-            ObjectInputStream objStream = new ObjectInputStream(inStream);
+        SubsystemDescriptor desc2;
+        try (FileInputStream inStream = new FileInputStream(objTestFile); ObjectInputStream objStream = new ObjectInputStream(inStream)) {
             desc2 = (SubsystemDescriptor) objStream.readObject();
-            objStream.close();
         }
         assertThat(desc2, equalTo(desc));
     }

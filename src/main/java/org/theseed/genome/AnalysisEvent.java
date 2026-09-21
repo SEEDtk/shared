@@ -32,11 +32,11 @@ public class AnalysisEvent {
     /** time of analysis, in seconds since the epoch */
     private double execute_time;
     /** host on which analysis was run */
-    private String hostname;
+    private final String hostname;
     /** analysis tool name */
-    private String tool_name;
+    private final String tool_name;
     /** parameter list */
-    private List<String> parameters;
+    private final List<String> parameters;
 
     /**
      * This enum defines the JSON keys for the event.
@@ -86,7 +86,7 @@ public class AnalysisEvent {
         if (parms == null)
             this.parameters = Collections.emptyList();
         else {
-            this.parameters = new ArrayList<String>(parms.size());
+            this.parameters = new ArrayList<>(parms.size());
             this.appendParms(parms);
         }
     }
@@ -100,8 +100,8 @@ public class AnalysisEvent {
     private void appendParms(JsonArray parms) {
         final int n = parms.size();
         for (int i = 0; i < n; i++) {
-            if (parms.get(i) instanceof JsonArray)
-                this.appendParms((JsonArray) parms.get(i));
+            if (parms.get(i) instanceof JsonArray jsonArray)
+                this.appendParms(jsonArray);
             else
                 this.parameters.add(parms.getString(i));
         }
@@ -116,11 +116,16 @@ public class AnalysisEvent {
     public AnalysisEvent(String command, BaseProcessor processor) {
         this.id = UUID.randomUUID().toString();
         this.execute_time = ((double) System.currentTimeMillis()) / 1000.0;
+        // The use of a temporary variable here is the only way to prevent a really stupid compiler warning.
+        // The compiler insists that hostname MUST be final, but if we make it final, it yaks about the try-catch 
+        // block.
+        String tempHostname;
         try {
-            this.hostname = InetAddress.getLocalHost().getCanonicalHostName();
+            tempHostname = InetAddress.getLocalHost().getCanonicalHostName();
         } catch (UnknownHostException e) {
-            this.hostname = "(unknown)";
+            tempHostname = "(unknown)";
         }
+        this.hostname = tempHostname;
         this.tool_name = command;
         // Set up the parameters.
         String[] parms = processor.getOptions();

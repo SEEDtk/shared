@@ -78,6 +78,7 @@ public abstract class Dl4jDirXMatrixReporter extends XMatrixReporter {
      *
      * @throws IOException
      */
+    @Override
     public void finish() throws IOException {
         // Ask for the label list and create the label file.
         List<String> labels = this.getLabels();

@@ -77,7 +77,7 @@ public class MarkerFile {
      * @param name		name of the file
      */
     public static int readInt(File name) {
-        int retVal = Integer.valueOf(MarkerFile.read(name));
+        int retVal = Integer.parseInt(MarkerFile.read(name));
         return retVal;
     }
 

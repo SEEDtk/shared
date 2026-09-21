@@ -35,7 +35,7 @@ public class ShuffledOutputStream implements AutoCloseable, ILabeledOutputStream
     /** output writer */
     private PrintStream outStream;
     /** TRUE if we opened the output stream internally */
-    private boolean openFlag;
+    private final boolean openFlag;
     /** maximum number of lines to buffer */
     private static int BUFFER_MAX = 100000;
     /** number of lines in the buffers */
@@ -87,8 +87,8 @@ public class ShuffledOutputStream implements AutoCloseable, ILabeledOutputStream
         // Compute the expected number of small-class and large-class lines, then create the line buffers.
         int smallLines = BUFFER_MAX / (int) (fuzzFactor + 1.0);
         int largeLines = BUFFER_MAX - smallLines;
-        this.smallBuffer = new Shuffler<String>(smallLines);
-        this.largeBuffer = new Shuffler<String>(largeLines);
+        this.smallBuffer = new Shuffler<>(smallLines);
+        this.largeBuffer = new Shuffler<>(largeLines);
         // Denote the buffers are empty.
         this.lineCount = 0;
     }
@@ -108,6 +108,7 @@ public class ShuffledOutputStream implements AutoCloseable, ILabeledOutputStream
      * @param label		label to put at the front of the line
      * @param text		body text of the line
      */
+    @Override
     public void writeImmediate(String label, String text) {
         this.outStream.format("%s\t%s%n", label, text);
     }
@@ -118,6 +119,7 @@ public class ShuffledOutputStream implements AutoCloseable, ILabeledOutputStream
      * @param label		label to put at the front of the line
      * @param text		body text of the line
      */
+    @Override
     public void write(String label, String text) {
         // Insure there is room in the buffer.
         if (this.lineCount >= BUFFER_MAX) {

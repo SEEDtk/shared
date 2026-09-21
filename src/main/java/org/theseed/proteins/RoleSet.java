@@ -92,7 +92,7 @@ public class RoleSet implements Iterable<String>, Comparable<RoleSet> {
      */
     public static RoleSet create(String function, StrictRoleMap roleMap) {
         String[] roleDescs = Feature.rolesOfFunction(function);
-        List<String> buffer = new ArrayList<String>(roleDescs.length);
+        List<String> buffer = new ArrayList<>(roleDescs.length);
         for (String roleDesc : roleDescs) {
             StrictRole found = roleMap.getByName(roleDesc);
             if (found != null)
@@ -126,10 +126,7 @@ public class RoleSet implements Iterable<String>, Comparable<RoleSet> {
 
         @Override
         public boolean hasNext() {
-            if (nextIdx >= RoleSet.this.size())
-                return false;
-            else
-                return true;
+            return (nextIdx < RoleSet.this.size());
         }
 
         @Override
@@ -206,9 +203,9 @@ public class RoleSet implements Iterable<String>, Comparable<RoleSet> {
             else {
                 // We need the intersection of the two sets.  We start by
                 // duplicating the current set and taking the intersection.
-                retVal = new HashSet<String>(retVal);
+                retVal = new HashSet<>(retVal);
                 retVal.retainAll(other);
-                if (retVal.size() == 0)
+                if (retVal.isEmpty())
                     retVal = null;
             }
         }
@@ -232,10 +229,7 @@ public class RoleSet implements Iterable<String>, Comparable<RoleSet> {
             return false;
         }
         RoleSet other = (RoleSet) obj;
-        if (!Arrays.equals(roles, other.roles)) {
-            return false;
-        }
-        return true;
+        return Arrays.equals(roles, other.roles);
     }
 
     /**

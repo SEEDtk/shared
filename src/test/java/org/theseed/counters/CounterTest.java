@@ -3,9 +3,6 @@
  */
 package org.theseed.counters;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.*;
-
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -19,6 +16,17 @@ import java.util.SortedSet;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.ArrayUtils;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.anyOf;
+import static org.hamcrest.Matchers.arrayContaining;
+import static org.hamcrest.Matchers.closeTo;
+import static org.hamcrest.Matchers.contains;
+import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.greaterThanOrEqualTo;
+import static org.hamcrest.Matchers.lessThan;
+import static org.hamcrest.Matchers.nullValue;
+import org.junit.jupiter.api.Test;
 import org.theseed.magic.MagicMap;
 import org.theseed.magic.MagicObject;
 import org.theseed.stats.BestColumn;
@@ -30,8 +38,6 @@ import org.theseed.utils.FloatList;
 import org.theseed.utils.IntegerList;
 import org.theseed.utils.SizeList;
 
-import org.junit.jupiter.api.Test;
-
 
 /**
  * @author Bruce Parrello
@@ -41,7 +47,7 @@ public class CounterTest  {
 
     @Test
     public void testCounts() {
-        QualityCountMap<String> testMap = new QualityCountMap<String>();
+        QualityCountMap<String> testMap = new QualityCountMap<>();
         testMap.setGood("AAA");
         testMap.setGood("AAA");
         testMap.setGood("AAA");
@@ -82,7 +88,7 @@ public class CounterTest  {
         Thing t3 = new Thing("T3", "third thing");
         Thing t4 = new Thing("T4", "fourth thing");
         Thing t5 = new Thing("T5", "fifth thing");
-        CountMap<Thing> thingCounter = new CountMap<Thing>();
+        CountMap<Thing> thingCounter = new CountMap<>();
         assertThat("New thingcounter not empty (items).", thingCounter.size(), equalTo(0));
         assertThat("Thing 5 count not zero.", thingCounter.getCount(t5), equalTo(0));
         assertThat("Asking about thing 5 added to map.", thingCounter.size(), equalTo(0));
@@ -109,7 +115,7 @@ public class CounterTest  {
         assertThat("Too many keys returned.", keysFound.size(), equalTo(4));
         assertThat("Wrong number of entries in counter.", thingCounter.size(), equalTo(4));
         List<CountMap<Thing>.Count> countsFound = thingCounter.sortedCounts();
-        List<Thing> keysCounted = new ArrayList<Thing>(4);
+        List<Thing> keysCounted = new ArrayList<>(4);
         int prev = Integer.MAX_VALUE;
         for (CountMap<Thing>.Count result : countsFound) {
             assertThat("Counts out of order for " + result.getKey() + ".", result.getCount(), lessThan(prev));
@@ -130,7 +136,7 @@ public class CounterTest  {
         assertThat("Wrong set of singletons", singletons, containsInAnyOrder(t1, t4));
         thingCounter.deleteAll();
         assertThat("Keys left after deleteAll", thingCounter.keys().size(), equalTo(0));
-        PairCounter<Thing> pairCounter = new PairCounter<Thing>();
+        PairCounter<Thing> pairCounter = new PairCounter<>();
         assertThat("Pair counter not empty after creation (pairs).", pairCounter.size(), equalTo(0));
         assertThat("Pair counter not empty after creation (items).", pairCounter.itemSize(), equalTo(0));
         assertThat("Pair counter nonzero at creation.", pairCounter.getCount(t1, t2), equalTo(0));
@@ -434,7 +440,7 @@ public class CounterTest  {
 
     @Test
     public void testEnumCounts() {
-        EnumCounter<Cats> counters = new EnumCounter<Cats>(Cats.class);
+        EnumCounter<Cats> counters = new EnumCounter<>(Cats.class);
         for (Cats cat : Cats.values())
             assertThat(cat.toString(), counters.getCount(cat), equalTo(0));
         counters.count(Cats.A);
@@ -456,7 +462,7 @@ public class CounterTest  {
         assertThat(counters.getCount(Cats.A), equalTo(0));
         assertThat(counters.getCount(Cats.B), equalTo(0));
         assertThat(counters.getCount(Cats.C), equalTo(1));
-        EnumCounter<Cats> count2 = new EnumCounter<Cats>(Cats.class);
+        EnumCounter<Cats> count2 = new EnumCounter<>(Cats.class);
         count2.count(Cats.A);
         counters.count(Cats.B);
         counters.count(Cats.B);
@@ -482,13 +488,13 @@ public class CounterTest  {
 
     @Test
     public void testAccumulate() {
-        CountMap<String> map1 = new CountMap<String>();
+        CountMap<String> map1 = new CountMap<>();
         map1.count("AAA", 1);
         map1.count("BBB", 2);
         map1.count("CCC", 3);
         assertThat(map1.sum(), equalTo(6));
         assertThat(map1.size(), equalTo(3));
-        CountMap<String> map2 = new CountMap<String>();
+        CountMap<String> map2 = new CountMap<>();
         map2.count("AAA", 10);
         map2.count("CCC", 30);
         map2.count("DDD", 40);
@@ -536,20 +542,11 @@ public class CounterTest  {
         assertThat(counts.size(), equalTo(4));
         for (var count : counts) {
             switch (count.getKey()) {
-            case "AAA" :
-                assertThat("AAA", count.getCount(), closeTo(2.7, 0.05));
-                break;
-            case "BBB" :
-                assertThat("BBB", count.getCount(), closeTo(2.0, 0.05));
-                break;
-            case "CCC" :
-                assertThat("CCC", count.getCount(), closeTo(3.7, 0.05));
-                break;
-            case "DDD" :
-                assertThat("DDD", count.getCount(), closeTo(0.6, 0.05));
-                break;
-            default :
-                assertThat("Invalid count key \"" + count.getKey() + "\".", false);
+            case "AAA" -> assertThat("AAA", count.getCount(), closeTo(2.7, 0.05));
+            case "BBB" -> assertThat("BBB", count.getCount(), closeTo(2.0, 0.05));
+            case "CCC" -> assertThat("CCC", count.getCount(), closeTo(3.7, 0.05));
+            case "DDD" -> assertThat("DDD", count.getCount(), closeTo(0.6, 0.05));
+            default -> assertThat("Invalid count key \"" + count.getKey() + "\".", false);
             }
         }
         assertThat(map1.sum(), closeTo(9.0, 0.05));
@@ -644,12 +641,10 @@ public class CounterTest  {
         }
 
         public void save(File saveFile) {
-            try {
-                PrintWriter printer = new PrintWriter(saveFile);
+            try (PrintWriter printer = new PrintWriter(saveFile)) {
                 for (Thing thing : this.objectValues()) {
                     printer.format("%s\t%s%n", thing.getId(), thing.getName());
                 }
-                printer.close();
             } catch (IOException e) {
                 throw new RuntimeException("Error saving thing map.", e);
             }

@@ -3,15 +3,14 @@
  */
 package org.theseed.genome;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.*;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
 import org.junit.jupiter.api.Test;
 import org.theseed.proteins.RoleMap;
 
@@ -27,7 +26,7 @@ class TestPegIterator {
         Genome genome = new Genome(gFile);
         RoleMap roleMap = RoleMap.load(new File("data", "roles.for.hammers"));
         Iterator<Feature> iter = genome.new InterestingPegs(roleMap);
-        Collection<Feature> found = new ArrayList<Feature>(20);
+        Collection<Feature> found = new ArrayList<>(20);
         while (iter.hasNext())
             found.add(iter.next());
         // Insure we found the correct number of pegs.

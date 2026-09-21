@@ -3,9 +3,6 @@
  */
 package org.theseed.subsystems.core;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.*;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
@@ -16,6 +13,11 @@ import java.util.Set;
 import java.util.TreeMap;
 
 import org.apache.commons.io.FileUtils;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.greaterThan;
+import static org.hamcrest.Matchers.lessThan;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,7 +43,7 @@ class TestRuleGenerator {
         Set<String> vCodes = ruleGen.getVariantCodes();
         assertThat(vCodes, containsInAnyOrder("0", "1", "9"));
         // Find a commons for each variant.
-        Map<String, RuleBits> commonMap = new TreeMap<String, RuleBits>();
+        Map<String, RuleBits> commonMap = new TreeMap<>();
         for (String vCode : vCodes) {
             Collection<RuleBits> ruleList = ruleGen.getRuleBits(vCode);
             RuleBits common = RuleBits.intersection(sub, ruleList);

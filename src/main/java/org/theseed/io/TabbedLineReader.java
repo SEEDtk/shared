@@ -494,6 +494,7 @@ public class TabbedLineReader implements AutoCloseable, Iterable<TabbedLineReade
     }
 
     @Override
+    @SuppressWarnings("UseSpecificCatch")
     public void close() {
         try {
             if (this.stream != null)

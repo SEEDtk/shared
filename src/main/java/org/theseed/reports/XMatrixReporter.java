@@ -29,9 +29,9 @@ public abstract class XMatrixReporter implements AutoCloseable {
     /** logging facility */
     private static final Logger log = LoggerFactory.getLogger(XMatrixReporter.class);
     /** controlling command processor */
-    private IParms command;
+    private final IParms command;
     /** output directory or file */
-    private File outLoc;
+    private final File outLoc;
     /** full array of header column names */
     private String[] headers;
     /** main data file output writer */
@@ -39,7 +39,7 @@ public abstract class XMatrixReporter implements AutoCloseable {
     /** data line output buffer */
     private StringBuffer buffer;
     /** delimiter to use for output rows in the main file */
-    private char delim;
+    private Character delim;
 
     /**
      * This interface defines the parameters a command processor needs to support in order to generate
@@ -117,7 +117,7 @@ public abstract class XMatrixReporter implements AutoCloseable {
         this.command = processor;
         this.outLoc = outDir;
         this.writer = null;
-        this.delim = this.getDelim();
+        this.delim = null;
     }
 
     /**
@@ -222,14 +222,20 @@ public abstract class XMatrixReporter implements AutoCloseable {
      * @param value		output value, in string form
      */
     protected void writeRow(String id, double[] feats, String value) {
+        // Resolve the delimiter after subclass construction is complete.  Calling
+        // getDelim() from the constructor would invoke an overridable method too
+        // early for subclasses that initialize their state in their constructors.
+        if (this.delim == null)
+            this.delim = this.getDelim();
+        final char myDelim = this.delim;
         // Empty the output buffer.
         this.buffer.setLength(0);
         // Add the ID column.
         this.buffer.append(id);
         // Add the feature values.
-        Arrays.stream(feats).forEach(x -> this.buffer.append(this.delim).append(x));
+        Arrays.stream(feats).forEach(x -> this.buffer.append(myDelim).append(x));
         // Add the output value.
-        this.buffer.append(this.delim).append(value);
+        this.buffer.append(myDelim).append(value);
         // Write the buffer.
         this.writeLine(this.buffer.toString());
     }
