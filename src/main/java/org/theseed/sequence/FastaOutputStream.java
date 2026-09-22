@@ -3,13 +3,13 @@
  */
 package org.theseed.sequence;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.Flushable;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.util.Collection;
-import java.io.File;
-import java.io.FileNotFoundException;
 
 /**
  * This class writes a set of sequences to a FASTA file.  It uses an underlying PrintWriter
@@ -27,6 +27,13 @@ public class FastaOutputStream implements AutoCloseable, Flushable {
      */
     public FastaOutputStream(OutputStream outStream) {
         writer = new PrintWriter(outStream);
+    }
+
+    /**
+     * Open a print writer for FASTA output.
+     */
+    public FastaOutputStream(PrintWriter writer) {
+        this.writer = writer;
     }
 
     /**

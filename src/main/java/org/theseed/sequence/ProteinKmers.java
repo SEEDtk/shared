@@ -50,7 +50,7 @@ public class ProteinKmers extends SequenceKmers {
         this.sequence = protein.toUpperCase();
         int n = this.sequence.length() - K;
         int cap = (n < K ? K : n) * 4 / 3 + 1;
-        this.kmerSet = new HashSet<String>(cap);
+        this.kmerSet = new HashSet<>(cap);
         for (int i = 0; i <= n; i++)
             kmerSet.add(this.sequence.substring(i, i + K));
     }
@@ -77,6 +77,19 @@ public class ProteinKmers extends SequenceKmers {
     public String getProtein() {
         return this.sequence;
     }
+
+    /**
+     * Merge the kmers from another ProteinKmers object into this one.
+     * 
+     * @param other    the other ProteinKmers object whose kmers are to be merged into this one
+     */
+    public void merge(ProteinKmers other) {
+        this.kmerSet.addAll(other.kmerSet);
+    }
+
+    /**
+     * @see org.theseed.sequence.SequenceKmers#getK()
+     */
 
     @Override
     public int getK() {

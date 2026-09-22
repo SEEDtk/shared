@@ -28,7 +28,7 @@ public class RnaKmers extends SequenceKmers {
      */
     public RnaKmers(int kSize) {
         this.sequence = "";
-        this.kmerSet = new HashSet<String>();
+        this.kmerSet = new HashSet<>();
         this.K = kSize;
     }
 
@@ -61,7 +61,7 @@ public class RnaKmers extends SequenceKmers {
     private void setup(String rna) {
         this.sequence = "";
         int cap = 4 * (rna.length() < K ? K : rna.length()) / 3 + 1;
-        this.kmerSet = new HashSet<String>(cap);
+        this.kmerSet = new HashSet<>(cap);
         this.addSequence(rna);
     }
 

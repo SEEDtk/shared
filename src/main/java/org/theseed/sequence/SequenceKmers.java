@@ -22,9 +22,12 @@ public abstract class SequenceKmers implements Iterable<String> {
     protected Set<String> kmerSet;
 
     /**
-     * @return the number of kmers in common between two proteins
-     *
+     * This counts the number of kmers in common between two sequences. It has a special case for identical sequences, 
+     * which returns a predefined infinity value.
+     * 
      * @param other		the sequence-kmers object for the other sequence
+     * 
+     * @return the number of kmers in common between this sequence and the other sequence
      */
     public int similarity(SequenceKmers other) {
         int retVal;
@@ -35,10 +38,23 @@ public abstract class SequenceKmers implements Iterable<String> {
             // equal to themselves.
             retVal = INFINITY;
         } else {
-            long count = this.kmerSet.stream().filter(x -> other.contains(x)).count();
-            retVal = (int) count;
+            retVal = this.rawSimilarity(other);
         }
         return retVal;
+    }
+
+    /**
+     * This counts the number of kmers in common between two sequences, but does not make a special
+     * provision for identical sequences. This is useful when computing Jaccard distances involving
+     * multiple kmer sets.
+     * 
+     * @param other		the sequence-kmers object for the other sequence
+     * 
+     * @return the number of kmers in common between this sequence and the other sequence, without special handling for identical sequences
+     */
+    public int rawSimilarity(SequenceKmers other) {
+        long count = this.kmerSet.stream().filter(x -> other.contains(x)).count();
+        return (int) count;
     }
 
     /**
@@ -67,7 +83,7 @@ public abstract class SequenceKmers implements Iterable<String> {
      */
     public static double distance(int sim, SequenceKmers curr, SequenceKmers other) {
         double retVal = 1.0;
-        if (sim == ProteinKmers.INFINITY)
+        if (sim == SequenceKmers.INFINITY)
             retVal = 0.0;
         else if (sim > 0) {
             double union = (curr.size() + other.size() - sim);
