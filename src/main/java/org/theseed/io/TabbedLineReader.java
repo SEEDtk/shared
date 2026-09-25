@@ -8,6 +8,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UncheckedIOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -673,6 +674,23 @@ public class TabbedLineReader implements AutoCloseable, Iterable<TabbedLineReade
     public Stream<Line> stream() {
         Stream<Line> retVal = StreamSupport.stream(this.spliterator(), false);
         return retVal;
+    }
+
+    /**
+     * Read a single column into a stream.
+     * 
+     * @param column	index (1-based) or name of the column to read
+     * 
+     * @return a stream of the values in the specified column
+     */
+    public Stream<String> readColumn(String column) {
+        int idx;
+        try {
+            idx = this.findField(column);
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        }
+        return this.stream().map(line -> line.get(idx));
     }
 
     /**
