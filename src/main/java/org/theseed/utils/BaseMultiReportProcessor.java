@@ -144,4 +144,11 @@ public abstract class BaseMultiReportProcessor extends BaseProcessor {
         return this.outDir;
     }
 
+    /**
+     * @return TRUE if the output directory should be cleared before processing
+     */
+    public boolean clearing() {
+        return this.clearFlag;
+    }
+
 }
