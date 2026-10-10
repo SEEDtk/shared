@@ -3,7 +3,9 @@
  */
 package org.theseed.sequence;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -19,6 +21,8 @@ public class ProteinKmers extends SequenceKmers {
     private final int K;
     /** default kmer size */
     private static int defaultK = 8;
+    /** list of additional protein sequences (usually empty) */
+    private List<String> additionalProteins;
 
     /**
      * Generate a sequence kmer set for a specified protein.
@@ -53,6 +57,7 @@ public class ProteinKmers extends SequenceKmers {
         this.kmerSet = new HashSet<>(cap);
         for (int i = 0; i <= n; i++)
             kmerSet.add(this.sequence.substring(i, i + K));
+        this.additionalProteins = null;
     }
 
     /**
@@ -85,6 +90,28 @@ public class ProteinKmers extends SequenceKmers {
      */
     public void merge(ProteinKmers other) {
         this.kmerSet.addAll(other.kmerSet);
+        // Make sure we have all the protein sequences recorded.
+        if (this.additionalProteins == null)
+            this.additionalProteins = new ArrayList<>(2);
+        if (other.additionalProteins != null)
+            this.additionalProteins.addAll(other.additionalProteins);
+        this.additionalProteins.add(other.sequence);
+    }
+
+    /**
+     * This method returns the total protein sequence for this ProteinKmers object. Normally, this
+     * is just the primary sequence, but if additional proteins have been merged in, it may be a 
+     * comma-separated string of multiple protein sequences.
+     * 
+     * @return a concatenated protein string
+     */
+    public String getFullProteinString() {
+        if (this.additionalProteins == null || this.additionalProteins.isEmpty())
+            return this.sequence;
+        StringBuilder sb = new StringBuilder(this.sequence);
+        for (String prot : this.additionalProteins)
+            sb.append(',').append(prot);
+        return sb.toString();
     }
 
     /**

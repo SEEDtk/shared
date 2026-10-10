@@ -3,15 +3,18 @@
  */
 package org.theseed.sequence;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.*;
-
 import java.io.File;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 
-import org.theseed.genome.Genome;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.closeTo;
+import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.lessThan;
+import static org.hamcrest.Matchers.lessThanOrEqualTo;
 import org.junit.jupiter.api.Test;
+import org.theseed.genome.Genome;
 /**
  * @author Bruce Parrello
  *
@@ -54,6 +57,16 @@ public class KmerTests {
         validateSignature("hash3", hash3);
         assertThat(SequenceKmers.signatureDistance(hash1, hash2), closeTo(1.000, 0.05));
         assertThat(SequenceKmers.signatureDistance(hash2, hash3), closeTo(0.950, 0.05));
+        assertThat(kmer1.getFullProteinString(), equalTo(myProt1));
+        assertThat(kmer2.getFullProteinString(), equalTo(myProt2));
+        assertThat(kmer3.getFullProteinString(), equalTo(myProt3));
+        // Merge kmer2 into kmer1 and check the full protein string.
+        kmer1.merge(kmer2);
+        assertThat(kmer1.getFullProteinString(), equalTo(myProt1 + "," + myProt2));
+        // Insure that all the kmers from kmer2 are now included in kmer1.
+        for (String kmer : kmer2) {
+            assertThat(kmer1.contains(kmer), equalTo(true));
+        }
     }
 
     /**
