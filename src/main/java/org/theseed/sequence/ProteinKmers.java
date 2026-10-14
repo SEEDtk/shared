@@ -123,6 +123,34 @@ public class ProteinKmers extends SequenceKmers {
         return this.K;
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null || getClass() != obj.getClass())
+            return false;
+        ProteinKmers other = (ProteinKmers) obj;
+        String[] thisProteins = this.getFullProteinString().split(",");
+        String[] otherProteins = other.getFullProteinString().split(",");
+        if (thisProteins.length != otherProteins.length)
+            return false;
+        if (thisProteins.length == 1)
+            return otherProteins[0].equals(thisProteins[0]);
+        boolean retVal = true;
+        for (int i = 0; i < thisProteins.length && retVal; i++) {
+            retVal = false;
+            for (int j = 0; j < otherProteins.length && ! retVal; j++)
+                if (thisProteins[i].equals(otherProteins[j]))
+                    retVal = true;
+        }
+        return retVal;
+    }
+
+    @Override
+    public int hashCode() {
+        return this.getFullProteinString().hashCode();
+    }
+
     /**
      * @return TRUE if the specified kmer has no ambiguity characters, else FALSE
      *
